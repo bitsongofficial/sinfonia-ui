@@ -1,11 +1,60 @@
-# Vue 3 + Typescript + Vite
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+# 🎵 Sinfonia
 
-## Recommended IDE Setup
+A frontend Vue app to manage BitSong Fan tokens pools on the Osmosis AMM.
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+Connecting to the keplr chrome extension, reading from BitSong chain, and using the Osmosis services, this app acts as an interface to work with BitSong related pools on Osmosis.
 
-## Type Support For `.vue` Imports in TS
+In particular, a user can:
+- Look at each Fan token market info
+- Have an overview of all his BitSong related assets
+- Swap between Fan tokens or between BTSG and Fan tokens
+- See an history of his swapping transactions
+- Take advantage of both monthly and transaction based reward systems
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+## 🚀 Tech Stack
+
+**Client:** Vite.js, Vue.js, Quasar, Pinia
+## ⚙️ Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/bitsongofficial/sinfonia-ui.git
+```
+
+Go to the project directory
+
+```bash
+  cd sinfonia-ui
+```
+
+Install dependencies
+
+```bash
+  pnpm i
+```
+
+Start the client
+
+```bash
+  pnpm dev
+```
+
+Build the app for production
+```bash
+  pnpm build
+```
+
+## 👤 Authors
+- `Angelo Recca` [@angelorc](https://github.com/angelorc)
+- `Davide Segullo` [@DavideSegullo](https://github.com/DavideSegullo)
+- `Enrico Barbieri` [@EnricoBarbieri](https://github.com/EnricoBarbieri1997)
+
+## 🆘 Support
+
+For support, email g.nocera@bitsong.io or join our [Discord](https://discord.gg/5VT5fJmF).
+## 🔏 License
+Copyright © 2022 [BitSong](https://github.com/bitsongofficial).
+
+This project is licensed by [MIT License](https://api.github.com/licenses/mit).
