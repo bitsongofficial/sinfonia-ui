@@ -1,0 +1,21 @@
+.menu-item {
+    color: white;
+    size: 16px;
+
+    .absolute {
+        display: none;
+        left: 250%;
+        top: -3px;
+    }
+
+    &.active,
+    &:hover {
+        .absolute {
+            display: block;
+        }
+    }
+
+    &.active {
+        font-weight: bold;
+    }
+}
