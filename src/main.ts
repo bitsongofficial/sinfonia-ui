@@ -4,6 +4,7 @@ import { Quasar } from 'quasar'
 
 // Import Quasar css
 import 'quasar/src/css/index.sass'
+import './css/main.scss'
 
 import App from './App.vue'
 
