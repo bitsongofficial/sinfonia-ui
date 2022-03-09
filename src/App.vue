@@ -2,6 +2,7 @@
   import Header from '@/components/navigation/Header.vue';
   import SideMenu from '@/components/navigation/SideMenu.vue';
   import WalletAddress from '@/components/WalletAddress.vue';
+  import Dex from '@/components/pages/Dex.vue';
 </script>
 
 <template>
@@ -21,6 +22,7 @@
           </div>
         </div>
         <div class="col-10">
+          <Dex></Dex>
         </div>
       </div>
     </div>
