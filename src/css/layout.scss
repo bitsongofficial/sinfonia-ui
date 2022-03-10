@@ -11,10 +11,28 @@
     width: fit-content;
 }
 
+.w-fit {
+    width: fit-content;
+}
+
 .top-0 {
     top: 0;
 }
 
 .min-h-fit {
     min-height: fit-content;
+}
+
+.min-h-window-height {
+    min-height: 100vh;
+}
+
+@media screen and (min-height: 500px) {
+    .vertical-sm-absolute {
+        position: absolute;
+    }
+
+    .vertica-sm-window-height {
+        height: 100vh;
+    }
 }

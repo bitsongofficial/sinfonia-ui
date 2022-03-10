@@ -1,7 +1,7 @@
 <script setup lang="ts">
 </script>
 <template>
-    <div class="row items-center bg-rounded-translucent q-px-lg q-py-sm no-wrap">
+    <div class="row items-center bg-rounded-translucent q-px-lg q-py-sm no-wrap w-fit">
         <q-icon name="svguse:icons.svg#arrow-right" size="sm" class="q-mr-lg rotate-180"></q-icon>
         <div class="q-mr-md">
             <p class="q-ml-sm text-uppercase q-mb-none text-caption">Address</p>
