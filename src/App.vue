@@ -10,7 +10,7 @@
     <div class="container column col-grow">
       <Header></Header>
       <div class="row col-grow q-col-gutter-x-xl">
-        <div class="col-4 col-lg-2 self-end">
+        <div class="col-4 col-lg-3 col-xl-2 self-end">
           <div class="column justify-end">
             <div class="vertical-sm-absolute top-0 vertica-sm-window-height min-h-fit column justify-center">
               <SideMenu></SideMenu>
@@ -21,7 +21,7 @@
             </div>
           </div>
         </div>
-        <div class="col-8 col-lg-10">
+        <div class="col-8 col-lg-9 col-xl-10">
           <Dex></Dex>
         </div>
       </div>

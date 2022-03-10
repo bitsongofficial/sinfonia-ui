@@ -8,7 +8,7 @@ import IconButton from '../buttons/IconButton.vue';
     const height = props.height ? props.height : 20
 </script>
 <template>
-    <div class="relative-position menu-item">
+    <div class="relative-position menu-item row items-center">
         <IconButton :icon="icon" :width="width" :height="height"></IconButton>
         <div class="absolute">
             <slot></slot>
