@@ -27,6 +27,10 @@
     min-height: 100vh;
 }
 
+.rounded {
+    border-radius: 99999999px;
+}
+
 @media screen and (min-height: 500px) {
     .vertical-sm-absolute {
         position: absolute;

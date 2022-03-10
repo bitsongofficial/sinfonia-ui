@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { balancedCurrency as currency, percentage } from "@/common/numbers"
+import LightTable from '../LightTable.vue'
     const columns = [
         {
             name: 'index',
@@ -9,23 +11,23 @@
         },
         { 
             name: 'token',
-            align: 'center',
+            align: 'left',
             label: 'Token',
             field: 'name',
             sortable: true
         },
         { 
-            name: 'icon',
-            align: 'center',
+            name: 'symbol',
+            align: 'left',
             label: '',
             field: 'symbol',
-            format: (val:any) => (`$${val}`),
             sortable: false,
+            format: (val:any) => `$${val}`,
         },
-        { name: 'price', label: 'Price', field: 'price', sortable: true, format: (val:any) => `${val.toFixed(2)} $`},
-        { name: 'marketcap', label: 'Market Cap', field: 'marketCap', format: (val:any) => `${val} $` },
-        { name: 'volume24H', label: 'Volume 24H', field: 'volumeLastDay', format: (val:any) => `${val} $` },
-        { name: 'lastDayGain', label: '24H', field: 'lastDayGain', format: (val:any) => `${val.toFixed(2)} %` },
+        { name: 'price', label: 'Price', field: 'price', sortable: true, format: (val:any) => `${currency(val)} $`},
+        { name: 'marketcap', label: 'Market Cap', field: 'marketCap', sortable: true, format: (val:any) => `${currency(val)} $` },
+        { name: 'volume24H', label: 'Volume 24H', field: 'volumeLastDay', sortable: true, format: (val:any) => `${currency(val)} $` },
+        { name: 'lastDayGain', label: '24H', field: 'lastDayGain', sortable: true, format: (val:any) => `${percentage(val)}` },
     ]
 
     let i = 0
@@ -36,11 +38,11 @@
             index: i,
             name,
             symbol,
-            coinIcon: "https://cdn.icon-icons.com/icons2/812/PNG/512/social_network_facebook_icon-icons.com_66156.png",
+            coinIcon: "https://i.scdn.co/image/ab6761610000e5eb608e188abbae6409698b8f5a",
             price: Math.random() * 1.5,
             marketCap: Math.random() * 15000000000,
             volumeLastDay: Math.random() * 60000000,
-            lastDayGain: Math.random() * 10,
+            lastDayGain: (Math.random() - 0.5) * 20,
         }
     }
 
@@ -58,9 +60,30 @@
 </script>
 <template>
     <h3 class="q-mb-xl">Dex</h3>
-    <q-table
-      row-key="index"
-      :rows="rows"
-      :columns="columns"
-    />
+    <LightTable :columns="columns" :rows="rows">
+        <template v-slot:body-cell-token="props">
+            <q-td :props="props">
+                <div class="row items-center">
+                    <q-img
+                        :src="props.row.coinIcon"
+                        :ratio="1/1"
+                        class="q-mr-md rounded"
+                        fit="cover"
+                        style="width:24px;"
+                        :alt="props.row.name"
+                    />
+                    <p class="text-weight-medium q-mb-none">
+                        {{props.row.name}}
+                    </p>
+                </div>
+            </q-td>
+        </template>
+        <template v-slot:body-cell-lastDayGain="props">
+            <q-td :props="props">
+                <p :class="props.row.lastDayGain > 0 ? 'text-positive' : ''">
+                    {{props.value}}
+                </p>
+            </q-td>
+        </template>
+    </LightTable>
 </template>
