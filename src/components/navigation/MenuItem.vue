@@ -1,10 +1,15 @@
 <script setup lang="ts">
-    const props = defineProps(['icon'])
-    const icon = "svguse:icons.svg#" + props.icon
+import { resolveIcon } from '@/common/resolvers';
+import IconButton from '../buttons/IconButton.vue';
+
+    const props = defineProps(['icon', 'width', 'height'])
+    const icon = props.icon
+    const width = props.width ? props.width : 20
+    const height = props.height ? props.height : 20
 </script>
 <template>
     <div class="relative-position menu-item">
-        <q-icon :name="icon" size="sm"></q-icon>
+        <IconButton :icon="icon" :width="width" :height="height"></IconButton>
         <div class="absolute">
             <slot></slot>
         </div>

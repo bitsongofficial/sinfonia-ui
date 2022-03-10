@@ -2,8 +2,8 @@
     import MenuItem from '@/components/navigation/MenuItem.vue';
 </script>
 <template>
-    <div class="column min-width justify-around items-center bg-rounded-translucent q-px-lg q-py-xl">
-        <MenuItem icon="list" class="active q-mb-lg">
+    <div class="column min-width justify-around items-center bg-rounded-translucent q-px-md q-py-xl">
+        <MenuItem icon="list" width="19" height="13" class="active q-mb-lg">
             DEX
         </MenuItem>
         <MenuItem icon="refresh" class="q-mb-lg">

@@ -1,0 +1,9 @@
+<script setup lang="ts">
+    import {resolveIcon} from "@/common/resolvers"
+    const props = defineProps(['icon', 'color', 'width', 'height'])
+    const icon = resolveIcon(props.icon, props.width, props.height)
+    const color = props.color ? props.color : "white"
+</script>
+<template>
+    <q-btn flat round :color="color" :icon="icon" />
+</template>
