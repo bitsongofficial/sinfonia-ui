@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import Header from '@/components/navigation/Header.vue';
-  import SideMenu from '@/components/navigation/SideMenu.vue';
-  import WalletAddress from '@/components/WalletAddress.vue';
-  import Dex from '@/components/pages/Dex.vue';
+  import {RouterView} from "vue-router"
+  import Header from '@/components/navigation/Header.vue'
+  import SideMenu from '@/components/navigation/SideMenu.vue'
+  import WalletAddress from '@/components/WalletAddress.vue'
+  import Dex from '@/components/pages/Dex.vue'
 </script>
 
 <template>
@@ -22,7 +23,7 @@
           </div>
         </div>
         <div class="col-8 col-lg-9 col-xl-10">
-          <Dex></Dex>
+          <RouterView></RouterView>
         </div>
       </div>
     </div>
