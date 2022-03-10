@@ -80,7 +80,7 @@ import LightTable from '../LightTable.vue'
         </template>
         <template v-slot:body-cell-lastDayGain="props">
             <q-td :props="props">
-                <p :class="props.row.lastDayGain > 0 ? 'text-positive' : ''">
+                <p :class="'q-mb-none ' + (props.row.lastDayGain > 0 ? 'text-positive' : '')">
                     {{props.value}}
                 </p>
             </q-td>
