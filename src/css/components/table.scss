@@ -1,5 +1,5 @@
 $table-padding: 30px;
-$row-padding-y: 20px;
+$row-padding-y: 18px;
 .q-table__container {
     color: white;
     background-color: transparent;
@@ -60,7 +60,7 @@ $row-padding-y: 20px;
                     background-color: $accent;
                     box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.15);
                     backdrop-filter: blur(60px);                    
-                    border-radius: 30px;
+                    border-radius: 60px;
                     margin-left: -$table-padding/2;
                 }
 
