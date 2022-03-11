@@ -63,12 +63,6 @@ $row-padding-y: 18px;
                     border-radius: 60px;
                     margin-left: -$table-padding/2;
                 }
-
-                td:first-child,
-                td:nth-child(3) {
-                    color: $dark;
-                    opacity: 0.5;
-                }
     
                 td {
                     border-bottom: 0;
@@ -91,8 +85,6 @@ $row-padding-y: 18px;
 
     .transactions-table-head-row {
         position: relative;
-        font-size: 14px;
-        line-height: 18px;
     
         .q-table__sort-icon {
             font-size: 0 !important;

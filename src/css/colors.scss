@@ -12,6 +12,9 @@
     border-radius: 30px;
 }
 
-.opacity-40 {
-    opacity: 0.4;
+@for $i from 3 through 4
+{
+    .opacity-#{$i*10} {
+        opacity: #{$i/10};
+    }
 }

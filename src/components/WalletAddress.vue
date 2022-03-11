@@ -1,13 +1,14 @@
 <script setup lang="ts">
     import {resolveIcon} from "@/common/resolvers"
+import IconButton from "./buttons/IconButton.vue";
 </script>
 <template>
     <div class="row items-center bg-rounded-translucent q-px-lg q-py-sm no-wrap w-fit">
-        <q-icon :name="resolveIcon('arrow-right')" size="sm" class="q-mr-lg rotate-180"></q-icon>
-        <div class="q-mr-md">
-            <p class="q-ml-sm text-uppercase q-mb-none text-caption">Address</p>
-            <p class="text-weight-bold text-subtitle1 q-mb-none">bitsong1...u085</p>
+        <IconButton icon="arrow-right" width="14" height="14" class="rotate-180 s-12 fs-12"></IconButton>
+        <div class="q-mx-15">
+            <p class="text-uppercase text-caption fs-8 opacity-40 q-mb-3">Address</p>
+            <p class="text-weight-bold text-subtitle1 fs-12">bitsong1...u085</p>
         </div>
-        <q-icon name="svguse:icons.svg#copy" size="sm"></q-icon>
+        <IconButton icon="copy" width="20" height="20" class="opacity-40 fs-15"></IconButton>
     </div>
 </template>

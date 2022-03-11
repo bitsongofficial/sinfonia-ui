@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $primary   : #FF005C;
 $secondary : #3A294F;
 $accent    : #220D32;
@@ -8,3 +10,27 @@ $positive  : #0AF9B1;
 $negative  : #C10015;
 $info      : #31CCEC;
 $warning   : #F2C037;
+
+$space-base   : 16px;
+$space-x-base : $space-base;
+$space-y-base : $space-base;
+
+$space-none : (x: 0, y: 0);
+$space-xs   : (x: ($space-x-base * .25), y: ($space-y-base * .25));
+$space-sm   : (x: ($space-x-base * .5), y: ($space-y-base * .5));
+$space-md   : (x: $space-x-base, y: $space-y-base);
+$space-lg   : (x: ($space-x-base * 1.5), y: ($space-y-base * 1.5));
+$space-xl   : (x: ($space-x-base * 3), y: ($space-y-base * 3));
+
+$spaces: ('none': $space-none, 'xs': $space-xs, 'sm': $space-sm, 'md': $space-md, 'lg': $space-lg, 'xl': $space-xl);
+$space2: 2;
+$space3: 3;
+
+@for $i from 0 through 100 {
+    $current2: #{$i * $space2}px;
+    $map2: (x: $current2, y: $current2);
+    $current3: #{$i * $space3}px;
+    $map3: (x: $current3, y: $current3);
+    $spaces: map.set($spaces, $i*$space2, $map2);
+    $spaces: map.set($spaces, $i*$space3, $map3);
+}

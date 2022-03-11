@@ -6,16 +6,16 @@
         <MenuItem icon="list" width="19" height="13" class="q-mb-lg">
             DEX
         </MenuItem>
-        <MenuItem icon="refresh" class="q-mb-lg">
+        <MenuItem icon="refresh" class="q-mb-lg" url="/2">
             Swap
         </MenuItem>
-        <MenuItem icon="stack" class="q-mb-lg">
+        <MenuItem icon="stack" class="q-mb-lg" url="/3">
             Pool
         </MenuItem>
-        <MenuItem icon="suitcase" class="q-mb-lg">
+        <MenuItem icon="suitcase" class="q-mb-lg" url="/4">
             history
         </MenuItem>
-        <MenuItem icon="swap">
+        <MenuItem icon="swap" url="/5">
             DEX
         </MenuItem>
     </div>

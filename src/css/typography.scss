@@ -19,6 +19,13 @@
     src: local('Circular Std Bold'), local('CircularStd-Bold'), url('@/assets/fonts/CircularStd-Bold.woff2') format('woff2');
 }
 
+@for $i from 0 through 20 {
+    .fs-#{$i*2} {
+        font-size: #{$i*2}px;
+        line-height: #{$i*2}px;
+    }
+}
+
 * {
     font-family: "Circular Std", sans-serif;
 }

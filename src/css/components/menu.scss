@@ -1,17 +1,29 @@
+@mixin menu-item-active-hover {
+    .absolute {
+        display: block;
+    }
+    opacity: 1;
+}
+
 .menu-item {
     color: white;
     size: 16px;
 
     .absolute {
         display: none;
-        left: 250%;
+        left: 200%;
     }
 
-    &.active,
-    &:hover {
-        .absolute {
-            display: block;
-        }
+    > a {
+        opacity: 0.2;
+    }
+
+    .router-link-active {
+        @include menu-item-active-hover();
+    }
+
+    &:hover > a {
+        @include menu-item-active-hover();
     }
 
     &.active {

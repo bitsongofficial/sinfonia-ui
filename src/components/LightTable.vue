@@ -14,7 +14,7 @@
                     v-for="col in props.cols"
                     :key="col.name"
                     :props="props"
-                    class="text-uppercase text-weight-medium transactions-table-head-row"
+                    class="fs-12 text-uppercase text-weight-medium transactions-table-head-row"
                 >
                     {{ col.label }}
                 </q-th>

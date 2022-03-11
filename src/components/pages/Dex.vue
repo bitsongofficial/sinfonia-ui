@@ -59,7 +59,7 @@ import LightTable from '../LightTable.vue'
     ]
 </script>
 <template>
-    <h3 class="q-mb-xl">Dex</h3>
+    <h3 class="q-mb-xl fs-27">Dex</h3>
     <LightTable :columns="columns" :rows="rows">
         <template v-slot:body-cell-token="props">
             <q-td :props="props">
@@ -67,20 +67,33 @@ import LightTable from '../LightTable.vue'
                     <q-img
                         :src="props.row.coinIcon"
                         :ratio="1/1"
-                        class="q-mr-md rounded"
+                        class="q-mr-md rounded s-24"
                         fit="cover"
-                        style="width:24px;"
                         :alt="props.row.name"
                     />
-                    <p class="text-weight-medium q-mb-none">
+                    <p class="text-weight-medium">
                         {{props.row.name}}
                     </p>
                 </div>
             </q-td>
         </template>
+        <template v-slot:body-cell-index="props">
+            <q-td :props="props">
+                <span class="opacity-40">
+                    {{props.value}}
+                </span>
+            </q-td>
+        </template>
+        <template v-slot:body-cell-symbol="props">
+            <q-td :props="props">
+                <span class="opacity-40 fs-10">
+                    {{props.value}}
+                </span>
+            </q-td>
+        </template>
         <template v-slot:body-cell-lastDayGain="props">
             <q-td :props="props">
-                <p :class="'q-mb-none ' + (props.row.lastDayGain > 0 ? 'text-positive' : '')">
+                <p :class="(props.row.lastDayGain > 0 ? 'text-positive' : 'opacity-40')">
                     {{props.value}}
                 </p>
             </q-td>
