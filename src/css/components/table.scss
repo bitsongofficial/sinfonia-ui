@@ -1,5 +1,6 @@
-$table-padding: 30px;
-$row-padding-y: 18px;
+$table-padding: 20px;
+$row-padding-y: 17px;
+$row-padding-x: 30px;
 .q-table__container {
     color: white;
     background-color: transparent;
@@ -55,13 +56,12 @@ $row-padding-y: 18px;
                     pointer-events: none;
                     left: 0;
                     top: 0;
-                    width: calc(100% + #{$table-padding});
+                    width: 100%;
                     height: 100%;
                     background-color: $accent;
                     box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.15);
                     backdrop-filter: blur(60px);                    
                     border-radius: 60px;
-                    margin-left: -$table-padding/2;
                 }
     
                 td {
@@ -72,7 +72,16 @@ $row-padding-y: 18px;
                     z-index: 1;
 
                     &::before {
+                        background: none;
                         content: '';
+                    }
+
+                    &:first-child {
+                        padding-left: $row-padding-x;
+                    }
+
+                    &:last-child {
+                        padding-right: $row-padding-x;
                     }
                 }
             }
