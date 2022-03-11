@@ -7,7 +7,7 @@
 </script>
 
 <template>
-  <div class="min-h-window-height window-width q-pt-70 q-pb-60 column">
+  <div class="min-h-window-height q-pt-70 q-pb-60 column">
     <div class="container column col-grow">
       <Header></Header>
       <div class="row col-grow q-col-gutter-x-xl">

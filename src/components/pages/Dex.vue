@@ -28,6 +28,13 @@ import LightTable from '../LightTable.vue'
         { name: 'marketcap', label: 'Market Cap', field: 'marketCap', sortable: true, format: (val:any) => `${currency(val)} $` },
         { name: 'volume24H', label: 'Volume 24H', field: 'volumeLastDay', sortable: true, format: (val:any) => `${currency(val)} $` },
         { name: 'lastDayGain', label: '24H', field: 'lastDayGain', sortable: true, format: (val:any) => `${percentage(val)}` },
+        { 
+            name: 'chart',
+            align: 'right',
+            label: '',
+            field: 'chart',
+            sortable: false,
+        },
     ]
 
     let i = 0
@@ -43,6 +50,7 @@ import LightTable from '../LightTable.vue'
             marketCap: Math.random() * 15000000000,
             volumeLastDay: Math.random() * 60000000,
             lastDayGain: (Math.random() - 0.5) * 20,
+            chart: 0,
         }
     }
 
@@ -96,6 +104,12 @@ import LightTable from '../LightTable.vue'
                 <p :class="(props.row.lastDayGain > 0 ? 'text-positive' : 'opacity-40')">
                     {{props.value}}
                 </p>
+            </q-td>
+        </template>
+        <template v-slot:body-cell-chart="props">
+            <q-td :props="props">
+                <img v-if="props.row.lastDayGain > 0" src="@/assets/images/chart_placeholder_active.png" alt="">
+                <img v-else="props.row.lastDayGain > 0" src="@/assets/images/chart_placeholder.png" alt="">
             </q-td>
         </template>
     </LightTable>
