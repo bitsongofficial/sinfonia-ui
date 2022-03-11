@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .text-primary-dark {
     color: #220D32 !important;
 }
@@ -10,6 +12,13 @@
     box-shadow: 0px 0px 20px #14142E;
     backdrop-filter: blur(60px);
     border-radius: 30px;
+}
+
+@for $i from 1 through 4
+{
+    .bg-white-#{$i*10} {
+        background-color: color.adjust(#FFFFFF, $alpha: -(1 - $i/10));
+    }
 }
 
 @for $i from 3 through 4

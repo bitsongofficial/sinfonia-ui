@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { balancedCurrency as currency, percentage } from "@/common/numbers"
 import LightTable from '../LightTable.vue'
+import Card from "../Card.vue";
     const columns = [
         {
             name: 'index',
@@ -113,4 +114,8 @@ import LightTable from '../LightTable.vue'
             </q-td>
         </template>
     </LightTable>
+
+    <Card>
+        Prova
+    </Card>
 </template>
