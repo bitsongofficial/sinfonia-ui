@@ -27,7 +27,7 @@ import LightTable from '@/components/LightTable.vue'
         { name: 'price', label: 'Price', field: 'price', sortable: true, format: (val:any) => `${currency(val)} $`},
         { name: 'marketcap', label: 'Market Cap', field: 'marketCap', sortable: true, format: (val:any) => `${currency(val)} $` },
         { name: 'volume24H', label: 'Volume 24H', field: 'volumeLastDay', sortable: true, format: (val:any) => `${currency(val)} $` },
-        { name: 'lastDayGain', label: '24H', field: 'lastDayGain', sortable: true, format: (val:any) => `${percentage(val)}` },
+        { name: 'lastDayGain', label: '24H', field: 'lastDayGain', sortable: true, format: (val:any) => `${percentage(val)}%` },
         { 
             name: 'chart',
             align: 'right',

@@ -6,7 +6,7 @@
         <MenuItem icon="list" width="19" height="13" class="q-mb-lg">
             DEX
         </MenuItem>
-        <MenuItem icon="refresh" class="q-mb-lg" url="/2">
+        <MenuItem icon="refresh" class="q-mb-lg" url="/pools">
             Swap
         </MenuItem>
         <MenuItem icon="stack" class="q-mb-lg" url="/3">

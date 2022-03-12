@@ -14,5 +14,5 @@ export const balancedCurrency = (number: number): string =>
 
 export const percentage = (number: number): string =>
 {
-    return number.toFixed(2)+"%" 
+    return number.toFixed(2)
 }

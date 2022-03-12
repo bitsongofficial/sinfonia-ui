@@ -16,8 +16,14 @@
 
 @for $i from 1 through 4
 {
-    .bg-white-#{$i*10} {
-        background-color: color.adjust(#FFFFFF, $alpha: -(1 - $i/10));
+    $name: $i*10;
+    $val: -(1 - $i/10);
+    .bg-white-#{$name} {
+        background-color: color.adjust(#FFFFFF, $alpha: $val);
+    }
+
+    .hover\:bg-white-#{$name}:hover {
+        background-color: color.adjust(#FFFFFF, $alpha: $val);
     }
 }
 
