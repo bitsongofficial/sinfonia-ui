@@ -43,6 +43,16 @@
     display: inline-block;
 }
 
+.separator {
+    opacity: 0.3;
+    border: 1px solid #FFFFFF;
+}
+
+.separator-light {
+    opacity: 0.1;
+    border: 1px solid #85798D;
+}
+
 @for $border from 0 to 10 {
     $val: $border * 5;
     .rounded-#{$val} {
@@ -50,27 +60,14 @@
     }
 }
 
-@for $i from 0 through 20 {
-    $s: $i*3;
-    .s-#{$i*2} {
-        width: #{$s}px;
-        height: #{$s}px;
+@each $k, $s in $custom-sizes {  
+    .s-#{$k} {
+        width: $s;
+        height: $s;
     }
-    .min-s-#{$s} {
-        min-width: #{$s}px;
-        min-height: #{$s}px;
-    }
-    
-    $s: $i*2;
-    @if(($s % 3) != 0) {
-        .s-#{$s} {
-            width: #{$s}px;
-            height: #{$s}px;
-        }
-        .min-s-#{$s} {
-            min-width: #{$s}px;
-            min-height: #{$s}px;
-        }
+    .min-s-#{$k} {
+        min-width: $s;
+        min-height: $s;
     }
 }
 

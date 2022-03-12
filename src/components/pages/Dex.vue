@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { balancedCurrency as currency, percentage } from "@/common/numbers"
-import LightTable from '../LightTable.vue'
-import Card from "../Card.vue";
+import LightTable from '@/components/LightTable.vue'
     const columns = [
         {
             name: 'index',
@@ -46,7 +45,7 @@ import Card from "../Card.vue";
             index: i,
             name,
             symbol,
-            coinIcon: "https://i.scdn.co/image/ab6761610000e5eb608e188abbae6409698b8f5a",
+            iconUrl: "https://i.scdn.co/image/ab6761610000e5eb608e188abbae6409698b8f5a",
             price: Math.random() * 1.5,
             marketCap: Math.random() * 15000000000,
             volumeLastDay: Math.random() * 60000000,
@@ -73,13 +72,11 @@ import Card from "../Card.vue";
         <template v-slot:body-cell-token="props">
             <q-td :props="props">
                 <div class="row items-center">
-                    <q-img
-                        :src="props.row.coinIcon"
-                        :ratio="1/1"
-                        class="q-mr-md rounded s-24"
-                        fit="cover"
-                        :alt="props.row.name"
-                    />
+                    <q-avatar
+                        size="sm"
+                        class="q-mr-22">
+                        <img :src="props.row.iconUrl" alt="">                   
+                    </q-avatar>
                     <p class="text-weight-medium">
                         {{props.row.name}}
                     </p>
@@ -114,8 +111,4 @@ import Card from "../Card.vue";
             </q-td>
         </template>
     </LightTable>
-
-    <Card>
-        Prova
-    </Card>
 </template>
