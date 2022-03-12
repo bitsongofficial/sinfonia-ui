@@ -2,7 +2,7 @@
     import { Pool, UserPoolView } from '@/types/pool'
     import Title from '@/components/typography/Title.vue'
     import PoolHeader from '@/components/pools/PoolHeader.vue'
-    import Card from '@/components/Card.vue'
+    import Card from '@/components/cards/Card.vue'
     import {balancedCurrency} from "@/common/numbers"
     import { newMyPool, newPool } from '@/common/mockups'
 
