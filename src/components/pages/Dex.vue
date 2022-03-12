@@ -16,7 +16,7 @@ import LightTable from '@/components/LightTable.vue'
             field: 'name',
             sortable: true
         },
-        { 
+        {
             name: 'symbol',
             align: 'left',
             label: '',
