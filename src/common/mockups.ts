@@ -1,4 +1,5 @@
 import { Pool, UserPoolView } from "@/types/pool"
+import { User } from "@/types/user"
 
 export const newCoin = (symbol: string, name="") =>
 {
@@ -31,5 +32,27 @@ export const newMyPool = (): UserPoolView =>
     return {
         pool: newPool(),
         user: {liquidity: 0, bonded: Math.random()*1500}
+    }
+}
+
+export const newUser = ():User =>
+{
+    const total = Math.random() * 30000
+    const i = [
+        ["Bitsong", "BTSG"],
+        ["Adam Clay", "$CLAY"],
+        ["Fonti", "$FONTI"],
+        ["Del Vento", "$DLVNT"],
+    ]
+    return {
+        totalAssets: total,
+        bondedAssets: Math.min(total, Math.random() * 20000),
+        coins: i.map(i => {
+            return {
+                coin: newCoin(i[1], i[0]),
+                total: Math.random() * 20000000,
+                bonded: Math.random() * 200000000,
+            }
+        }),
     }
 }

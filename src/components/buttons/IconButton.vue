@@ -5,5 +5,5 @@
     const color = props.color ? props.color : "white"
 </script>
 <template>
-    <q-btn flat round :color="color" :icon="icon" :size="size" />
+    <q-btn flat round :color="color" :icon="icon" :size="props.size" />
 </template>
