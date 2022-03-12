@@ -80,8 +80,12 @@
         position: absolute;
     }
 
-    .vertica-sm-window-height {
+    .vertical-sm-window-height {
         height: 100vh;
+    }
+
+    .vertical-sm-fixed {
+        position: fixed;
     }
 }
 

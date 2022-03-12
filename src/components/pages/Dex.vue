@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { newCoin } from "@/common/mockups";
 import { balancedCurrency as currency, percentage } from "@/common/numbers"
 import LightTable from '@/components/LightTable.vue'
     const columns = [
@@ -32,38 +33,22 @@ import LightTable from '@/components/LightTable.vue'
             name: 'chart',
             align: 'right',
             label: '',
-            field: 'chart',
+            field: 'lastNDaysPrice',
             sortable: false,
         },
     ]
 
     let i = 0
-    const newCoin = (name: string, symbol: string) =>
-    {
-        i++
-        return {
-            index: i,
-            name,
-            symbol,
-            iconUrl: "https://i.scdn.co/image/ab6761610000e5eb608e188abbae6409698b8f5a",
-            price: Math.random() * 1.5,
-            marketCap: Math.random() * 15000000000,
-            volumeLastDay: Math.random() * 60000000,
-            lastDayGain: (Math.random() - 0.5) * 20,
-            chart: 0,
-        }
-    }
-
     const rows = [
-        newCoin("Adam Clay", "CLAY"),
-        newCoin("Fonti", "FNTY"),
-        newCoin("Vibranium", "VBRN"),
-        newCoin("Mace", "MCX"),
-        newCoin("Adam Clay", "CLAY"),
-        newCoin("Fonti", "FNTY"),
-        newCoin("Vibranium", "VBRN"),
-        newCoin("Mace", "MCX"),
-        newCoin("Adam Clay", "CLAY"),
+        newCoin("CLAY", "Adam Clay"),
+        newCoin("FNTY", "Fonti"),
+        newCoin("VBRN", "Vibranium"),
+        newCoin("MCX", "Mace"),
+        newCoin("CLAY", "Adam Clay"),
+        newCoin("FNTY", "Fonti"),
+        newCoin("VBRN", "Vibranium"),
+        newCoin("MCX", "Mace"),
+        newCoin("CLAY", "Adam Clay"),
     ]
 </script>
 <template>
