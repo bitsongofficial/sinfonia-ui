@@ -15,6 +15,16 @@ export const newCoin = (symbol: string, name="") =>
     }
 }
 
+export const newUserCoin = (symbol: string, name="") =>
+{
+    const total = Math.random() * 5000
+    return {
+        coin: newCoin(symbol, name),
+        total,
+        bonded: Math.min(total, Math.random() * 5000),
+    }
+}
+
 export const newPool = ():Pool =>
 {
     return {

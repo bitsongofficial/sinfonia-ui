@@ -7,7 +7,7 @@
 
     const classes = computed(() =>
     {
-        return "bg-white-" + (props.transparency ? props.transparency : 10) + " q-pa-22 rounded-20 inline-block"
+        return "bg-white-" + (props.transparency ? props.transparency : 10) + " q-pa-22 rounded-20 inline-block full-width"
     })
 </script>
 <template>

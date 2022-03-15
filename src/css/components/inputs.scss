@@ -45,3 +45,25 @@
         background-repeat: no-repeat;
     }
 }
+
+.q-field__native,
+.q-field__native,
+.q-field__control {
+    height: fit-content;
+}
+
+[class*="fs-"] {
+    .q-field__control,
+    .q-field__native {
+        font-size: inherit;
+        line-height: inherit;
+    }
+}
+
+[class*="text-"] {
+    .q-field__control,
+    .q-field__native,
+    .q-field__label {
+        color: inherit;
+    }
+}

@@ -31,6 +31,10 @@
     bottom: 0;
 }
 
+.grow-1 {
+    flex-grow: 1;
+}
+
 .min-h-fit {
     min-height: fit-content;
 }
@@ -55,6 +59,11 @@
 .separator-light {
     opacity: 0.1;
     border: 1px solid #85798D;
+}
+
+.vertical-separator {
+    opacity: 0.1;
+    border: 1px solid #FFFFFF;
 }
 
 @for $border from 0 to 10 {
