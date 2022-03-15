@@ -7,7 +7,7 @@ import Card from '../cards/Card.vue';
     <div class="row font-weight-medium">
         <div class="col-12 col-md-7">
             <Title class="q-mb-36 opacity-30">Swap Tokens</Title>
-            <Card class="q-pa-36">
+            <Card class="q-pa-36" transparency="5">
                 <p class="fs-14 q-mb-20">Swap from</p>
                 <CardDark>
                     <div class="flex justify-between">

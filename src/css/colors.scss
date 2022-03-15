@@ -14,10 +14,10 @@
     border-radius: 30px;
 }
 
-@for $i from 1 through 4
+@for $i from 1 through 8
 {
-    $name: $i*10;
-    $val: -(1 - $i/10);
+    $name: $i*5;
+    $val: -(1 - $i/20);
     .bg-white-#{$name} {
         background-color: color.adjust(#FFFFFF, $alpha: $val);
     }
