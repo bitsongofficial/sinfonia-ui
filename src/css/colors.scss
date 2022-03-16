@@ -43,7 +43,7 @@
 }
 
 .border-gradient-primary::before {
-    background: linear-gradient(to left, $primary-complementary, $primary);
+    background: linear-gradient(to right, $primary-complementary, $primary);
 }
 
 @for $i from 1 through 8

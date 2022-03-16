@@ -7,6 +7,8 @@
     import LightTable from '../LightTable.vue'
     import IconButton from '../buttons/IconButton.vue'
 import InfoCard from '../cards/InfoCard.vue'
+import PercentageWithImage from '../infographics/PercentageWithImage.vue'
+import Progress from '../Progress.vue'
 
     const btsg:Coin = newCoin("BTSG")
     const user:User = newUser()
@@ -64,7 +66,7 @@ import InfoCard from '../cards/InfoCard.vue'
             </InfoCard>
         </div>
     </div>
-    <p class="q-mb-36 fs-18 font-weight-medium">Tokens</p>
+    <p class="q-mb-21 fs-18 font-weight-medium">Tokens</p>
     <div>
         <LightTable :columns="columns" :rows="user.coins">
             <template v-slot:body-cell-token="props">
