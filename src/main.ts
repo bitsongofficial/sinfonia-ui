@@ -20,6 +20,11 @@ const app = createApp(App)
 
 app.use(Quasar, {
   plugins: {},
+  config: {
+    framework: {
+      cssAddon: true,
+    },
+  },
 })
 
 app.use(createPinia())

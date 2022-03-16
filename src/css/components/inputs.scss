@@ -67,3 +67,13 @@
         color: inherit;
     }
 }
+
+.q-field__control {
+    align-items: center;
+}
+
+.q-menu {
+    background: $primary-dark;
+    border: 0;
+    padding: 20px;
+}

@@ -29,12 +29,13 @@ $row-padding-x: 30px;
         }
     
         tbody {
-            box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.15);
+            box-shadow: none;
             backdrop-filter: blur(60px);
             position: relative;
 
             &::before {
                 content: "";
+                box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.15);
                 background: rgba(255, 255, 255, 0.05);
                 position: absolute;
                 left: 0;
@@ -110,5 +111,26 @@ $row-padding-x: 30px;
                 opacity: 1;
             }
         }
+    }
+    &.bg-transparent {
+        tbody {
+            &::before {
+                background: none;
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+.hide-header {
+    thead {
+        display: none;
+    }
+}
+
+.small-rows {
+    .q-table__container .q-table tbody tr td {
+        padding-top: 12px;
+        padding-bottom: 12px;
     }
 }

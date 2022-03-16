@@ -2,6 +2,7 @@
 import { newCoin } from "@/common/mockups";
 import { balancedCurrency as currency, percentage } from "@/common/numbers"
 import LightTable from '@/components/LightTable.vue'
+import CryptoTable from "../CryptoTable.vue";
     const columns = [
         {
             name: 'index',
@@ -53,35 +54,7 @@ import LightTable from '@/components/LightTable.vue'
 </script>
 <template>
     <h3 class="q-mb-xl fs-27">Dex</h3>
-    <LightTable :columns="columns" :rows="rows">
-        <template v-slot:body-cell-token="props">
-            <q-td :props="props">
-                <div class="row items-center">
-                    <q-avatar
-                        size="sm"
-                        class="q-mr-22">
-                        <img :src="props.row.iconUrl" alt="">                   
-                    </q-avatar>
-                    <p class="text-weight-medium">
-                        {{props.row.name}}
-                    </p>
-                </div>
-            </q-td>
-        </template>
-        <template v-slot:body-cell-index="props">
-            <q-td :props="props">
-                <span class="opacity-40">
-                    {{props.value}}
-                </span>
-            </q-td>
-        </template>
-        <template v-slot:body-cell-symbol="props">
-            <q-td :props="props">
-                <span class="opacity-40 fs-10">
-                    {{props.value}}
-                </span>
-            </q-td>
-        </template>
+    <CryptoTable :columns="columns" :rows="rows">
         <template v-slot:body-cell-lastDayGain="props">
             <q-td :props="props">
                 <p :class="(props.row.lastDayGain > 0 ? 'text-positive' : 'opacity-40')">
@@ -95,5 +68,5 @@ import LightTable from '@/components/LightTable.vue'
                 <img v-else="props.row.lastDayGain > 0" src="@/assets/images/chart_placeholder.png" alt="">
             </q-td>
         </template>
-    </LightTable>
+    </CryptoTable>
 </template>
