@@ -151,8 +151,8 @@
                     <p class="fs-18">DEX</p>
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
-                <Card class="q-py-10 q-px-none q-mb-62" :padding="0" transparency="5">
-                    <CryptoTable :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
+                <Card class="q-py-10 q-px-none q-mb-51" :padding="0" transparency="5">
+                    <CryptoTable virtual-scroll style="max-height: 24vh" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
 
                     </CryptoTable>
                 </Card>
@@ -161,7 +161,7 @@
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
                 <Card class="q-py-10 q-px-none" :padding="0" transparency="5">
-                    <CryptoTable :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
+                    <CryptoTable virtual-scroll style="max-height: 24vh" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
 
                     </CryptoTable>
                 </Card>
