@@ -8,7 +8,7 @@
 
     const classes = computed(() =>
     {
-        return "bg-white-" + (props.transparency ? props.transparency : 10) + " q-pa-" + (props.padding !== undefined ? props.padding : 22) + " rounded-20 inline-block full-width"
+        return "bg-white-" + (props.transparency ? props.transparency : 10) + " q-pa-" + (props.padding !== undefined ? props.padding : 22) + " shadow-20 rounded-20 inline-block full-width"
     })
 </script>
 <template>
