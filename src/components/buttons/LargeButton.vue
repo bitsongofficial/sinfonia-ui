@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import StandardButton from "./StandardButton.vue";
 </script>
 
 <template>
-    <q-btn flat rounded class="fs-16 text-weight-medium q-py-20 full-width text-center text-capitalize bg-gradient">
+    <StandardButton class="fs-16 q-py-20 full-width text-center">
         <slot></slot>
-    </q-btn>
+    </StandardButton>
 </template>
