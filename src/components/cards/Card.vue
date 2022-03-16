@@ -2,7 +2,7 @@
     import { computed } from 'vue'
 
     const props = defineProps<{
-        transparency: string | number | undefined,
+        transparency?: string | number | undefined,
         padding?: number | undefined,
     }>()
 
