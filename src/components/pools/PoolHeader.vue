@@ -2,6 +2,7 @@
     import {Pool} from "@/types/pool"
     import IconButton from "../buttons/IconButton.vue"
     import {balancedCurrency, percentage} from "@/common/numbers"
+import ImagePair from "../ImagePair.vue";
 
     const props = defineProps<
         {
@@ -13,20 +14,10 @@
     <div class="row q-mb-34">
         <div class="col-4">
             <div class="q-pr-24">
-                <div class="relative-position w-fit">
-                    <q-img
-                        :src="props.pool.coin1.iconUrl"
-                        class="s-60 rounded cover"
-                        fit="cover"
-                    />
-                    <div class="absolute right-0 bottom-0">
-                        <q-img
-                            :src="props.pool.coin2.iconUrl"
-                            class="s-22 rounded cover"
-                            fit="cover"
-                        />
-                    </div>
-                </div>
+                <ImagePair
+                    :image1="props.pool.coin1.iconUrl"
+                    :image2="props.pool.coin2.iconUrl">
+                </ImagePair>
             </div>
         </div>
         <div class="col-4">
