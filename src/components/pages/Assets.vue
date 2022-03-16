@@ -3,10 +3,10 @@
     import { Coin } from '@/types/coin'
     import { User } from '@/types/user'
     import Title from '../typography/Title.vue'
-    import WideCard from '../cards/WideCard.vue'
     import { balancedCurrency } from '@/common/numbers'
     import LightTable from '../LightTable.vue'
-import IconButton from '../buttons/IconButton.vue'
+    import IconButton from '../buttons/IconButton.vue'
+import InfoCard from '../cards/InfoCard.vue'
 
     const btsg:Coin = newCoin("BTSG")
     const user:User = newUser()
@@ -44,44 +44,24 @@ import IconButton from '../buttons/IconButton.vue'
     <Title class="q-mb-36">Assets</Title>
     <div class="row font-weight-medium q-col-gutter-lg q-mb-75">
         <div class="col-2">
-            <WideCard>
-                <p class="fs-10 opacity-50 q-mb-30 uppercase">
-                    Total assets
-                </p>
-                <p class="fs-24">
-                    {{balancedCurrency(user.totalAssets)}} $
-                </p>
-            </WideCard>
+            <InfoCard header="Total assets">
+                {{balancedCurrency(user.totalAssets)}} $
+            </InfoCard>
         </div>
         <div class="col-2">
-            <WideCard>
-                <p class="fs-10 opacity-50 q-mb-30 uppercase">
-                    Available assets
-                </p>
-                <p class="fs-24">
+            <InfoCard header="Available assets">
                     {{balancedCurrency(user.totalAssets - user.bondedAssets)}} $
-                </p>
-            </WideCard>
+            </InfoCard>
         </div>
         <div class="col-2">
-            <WideCard>
-                <p class="fs-10 opacity-50 q-mb-30 uppercase">
-                    Bonded assets
-                </p>
-                <p class="fs-24">
+            <InfoCard header="Bonded assets">
                     {{balancedCurrency(user.bondedAssets)}} $
-                </p>
-            </WideCard>
+            </InfoCard>
         </div>
         <div class="col-2">
-            <WideCard>
-                <p class="fs-10 opacity-50 q-mb-30 uppercase">
-                    BTSG price
-                </p>
-                <p class="fs-24">
+            <InfoCard header="BTSG price">
                     {{balancedCurrency(btsg.price)}} $
-                </p>
-            </WideCard>
+            </InfoCard>
         </div>
     </div>
     <p class="q-mb-36 fs-18 font-weight-medium">Tokens</p>
