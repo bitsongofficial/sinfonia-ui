@@ -15,8 +15,31 @@
 }
 
 .bg-gradient {
-    background: linear-gradient(147.07deg, #9C589C 21.78%, #FF005C 79.22%);
+    background: linear-gradient(147.07deg, $primary-complementary 21.78%, $primary 79.22%);
     border-radius: 30px;
+}
+
+[class*="border-gradient-"] {
+    position: relative;
+    &::before {
+        content:"";
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        border-radius:50px;
+        padding: 3px;
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box, 
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+    }
+}
+
+.border-gradient-primary::before {
+    background: linear-gradient(to left, $primary-complementary, $primary);
 }
 
 @for $i from 1 through 8
