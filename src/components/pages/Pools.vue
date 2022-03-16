@@ -14,7 +14,7 @@
     <Title class="q-mb-50">Your Pools</Title>
     <div class="row q-mb-72 q-col-gutter-xl">
         <div v-for="userPool in myPools" class="col-2">
-            <Card class="full-width cursor-pointer hover:bg-white-20">
+            <Card class="full-width cursor-pointer">
                 <PoolHeader :pool="userPool.pool">
 
                 </PoolHeader>
@@ -35,7 +35,7 @@
     <Title class="q-mb-50">All Pools</Title>
     <div class="row q-col-gutter-xl">
         <div v-for="pool in pools" class="col-2">
-            <Card class="full-width cursor-pointer hover:bg-white-20">
+            <Card class="full-width cursor-pointer">
                 <PoolHeader :pool="pool">
 
                 </PoolHeader>

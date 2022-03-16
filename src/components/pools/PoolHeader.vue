@@ -2,7 +2,7 @@
     import {Pool} from "@/types/pool"
     import IconButton from "../buttons/IconButton.vue"
     import {balancedCurrency, percentage} from "@/common/numbers"
-import ImagePair from "../ImagePair.vue";
+    import ImagePair from "../ImagePair.vue"
 
     const props = defineProps<
         {
@@ -35,7 +35,7 @@ import ImagePair from "../ImagePair.vue";
                     </p>
                 </div>
                 <div>
-                    <IconButton icon="vertical-dots" width="4" height="16" class="fs-14 s-0"></IconButton>
+                    <IconButton icon="vertical-dots" width="4" height="16" class="fs-14 s-28 q-mr--12"></IconButton>
                 </div>
             </div>
         </div>
