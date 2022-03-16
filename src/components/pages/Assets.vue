@@ -43,7 +43,7 @@ import IconButton from '../buttons/IconButton.vue'
 <template>
     <Title class="q-mb-36">Assets</Title>
     <div class="row font-weight-medium q-col-gutter-lg q-mb-75">
-        <div class="col-3">
+        <div class="col-2">
             <WideCard>
                 <p class="fs-10 opacity-50 q-mb-30 uppercase">
                     Total assets
@@ -53,7 +53,7 @@ import IconButton from '../buttons/IconButton.vue'
                 </p>
             </WideCard>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <WideCard>
                 <p class="fs-10 opacity-50 q-mb-30 uppercase">
                     Available assets
@@ -63,7 +63,7 @@ import IconButton from '../buttons/IconButton.vue'
                 </p>
             </WideCard>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <WideCard>
                 <p class="fs-10 opacity-50 q-mb-30 uppercase">
                     Bonded assets
@@ -73,7 +73,7 @@ import IconButton from '../buttons/IconButton.vue'
                 </p>
             </WideCard>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <WideCard>
                 <p class="fs-10 opacity-50 q-mb-30 uppercase">
                     BTSG price

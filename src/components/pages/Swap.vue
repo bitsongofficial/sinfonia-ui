@@ -75,10 +75,10 @@
 <template>
     <div class="font-weight-medium">
         <div class="row q-mb-36 q-col-gutter-x-xl">
-            <div class="col-12 col-md-7 flex items-center">
+            <div class="col-8 col-md-5 flex items-center">
                 <Title>Swap Tokens</Title>
             </div>
-            <div class="col-12 col-md-5 gt-md items-center">
+            <div class="col-8 col-md-3 gt-md items-center">
                 <div class="flex justify-between items-center flex-1">
                     <p class="fs-18">DEX</p>
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
@@ -86,7 +86,7 @@
             </div>
         </div>
         <div class="row q-col-gutter-x-xl">
-            <div class="col-12 col-md-7 q-mb-40 q-mb-md-none">
+            <div class="col-8 col-md-5 q-mb-40 q-mb-md-none">
                 <Card class="q-pa-36" transparency="5">
                     <p class="fs-14 q-mb-20 opacity-30">Swap from</p>
                     <CardDark>
@@ -146,7 +146,7 @@
                     </div>
                 </Card>
             </div>
-            <div class="col-12 col-md-5">
+            <div class="col-8 col-md-3">
                 <div class="flex justify-between lt-md items-center q-mb-30">
                     <p class="fs-18">DEX</p>
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />

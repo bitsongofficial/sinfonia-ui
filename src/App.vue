@@ -10,7 +10,7 @@
     <div class="container column col-grow">
       <Header></Header>
       <div class="row col-grow q-col-gutter-x-xl">
-        <div class="col-4 col-lg-3 col-xl-2 self-end absolute-sm left-0 bottom-0">
+        <div class="col-2 col-lg-2 col-xl-2 self-end absolute-sm left-0 bottom-0">
           <div class="column justify-end">
             <div class="vertical-sm-fixed top-0 vertical-sm-window-height min-h-fit column justify-center">
               <SideMenu></SideMenu>
@@ -21,7 +21,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-md-8 col-lg-9 col-xl-10 q-pt-74">
+        <div class="col-6 col-lg-6 col-xl-10 q-pt-74">
           <RouterView></RouterView>
         </div>
       </div>
