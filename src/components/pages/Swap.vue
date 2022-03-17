@@ -4,7 +4,7 @@
     import Card from '../cards/Card.vue'
     import Title from '../typography/Title.vue'
     import { newCoin, newUser, newUserCoin } from '@/common/mockups'
-    import { computed, ref } from 'vue'
+    import { computed, onMounted, onUnmounted, ref } from 'vue'
     import { balancedCurrency, currency, smallNumber } from '@/common/numbers'
     import CoinSelect from '../inputs/CoinSelect.vue'
     import InlineButton from '../buttons/InlineButton.vue'
@@ -71,6 +71,28 @@
         },
         { name: 'price', label: '', field: 'price', sortable: false, format: (val:any) => `${smallNumber(val)} $`},
     ]
+
+    const boxesStyle = ref({maxHeight: "0"})
+    const heightRef = ref<{element:HTMLElement} | null>(null)
+
+    const setSize = () =>
+    {
+        if(heightRef.value && heightRef.value.element)
+        {
+            console.log(heightRef.value.element.clientHeight)
+            boxesStyle.value.maxHeight = ((heightRef.value.element.clientHeight - 157) / 2) + "px"
+        }
+    }
+
+    onMounted(() => {
+        window.addEventListener("resize", setSize)
+        setSize()
+    })
+
+    onUnmounted(() =>
+    {
+        window.removeEventListener("resize", setSize);
+    })
 </script>
 <template>
     <div class="font-weight-medium">
@@ -87,7 +109,7 @@
         </div>
         <div class="row q-col-gutter-x-xl">
             <div class="col-8 col-md-5 q-mb-40 q-mb-md-none">
-                <Card class="q-pa-36" transparency="5">
+                <Card ref="heightRef" class="q-pa-36" transparency="5">
                     <p class="fs-14 q-mb-20 opacity-30">Swap from</p>
                     <CardDark>
                         <div class="flex justify-between no-wrap">
@@ -152,7 +174,7 @@
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
                 <Card class="q-py-10 q-px-none q-mb-51" :padding="0" transparency="5">
-                    <CryptoTable virtual-scroll style="max-height: 24vh" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
+                    <CryptoTable virtual-scroll :style="boxesStyle" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
 
                     </CryptoTable>
                 </Card>
@@ -161,7 +183,7 @@
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
                 <Card class="q-py-10 q-px-none" :padding="0" transparency="5">
-                    <CryptoTable virtual-scroll style="max-height: 24vh" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
+                    <CryptoTable virtual-scroll :style="boxesStyle" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
 
                     </CryptoTable>
                 </Card>
