@@ -11,6 +11,7 @@
     import { resolveIcon } from '@/common/resolvers'
     import LargeButton from '../buttons/LargeButton.vue'
     import CryptoTable from '../CryptoTable.vue'
+import ExpandableCard from '../cards/ExpandableCard.vue'
 
     let user = newUser()
 
