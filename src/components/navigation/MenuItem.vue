@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { resolveIcon } from '@/common/resolvers';
 import { RouterLink } from "vue-router"
 import IconButton from '../buttons/IconButton.vue';
 

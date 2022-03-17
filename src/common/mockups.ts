@@ -33,15 +33,17 @@ export const newPool = ():Pool =>
         coin2: newCoin("BTSG"),
         APR: Math.random() * 110,
         liquidity: Math.random() * 20000000,
-        swapFee: 0,
+        swapFee: Math.random() / 2,
+        coin1Percentage: Math.random(),
     }
 }
 
 export const newMyPool = (): UserPoolView =>
 {
+    const total = Math.random()*3000
     return {
         pool: newPool(),
-        user: {liquidity: 0, bonded: Math.random()*1500}
+        user: {liquidity: total, bonded: Math.min(total, Math.random()*1500)}
     }
 }
 

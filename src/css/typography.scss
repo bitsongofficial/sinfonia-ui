@@ -40,3 +40,8 @@ $font-sizes: ();
 * {
     font-family: "Circular Std", sans-serif;
 }
+
+a {
+    text-decoration: inherit;
+    color: inherit;
+}

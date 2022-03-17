@@ -7,6 +7,7 @@ export interface Pool {
     APR: number,
     liquidity: number,
     swapFee: number,
+    coin1Percentage: number,
 }
 
 export interface PoolUser {
