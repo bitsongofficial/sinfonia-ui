@@ -14,6 +14,12 @@ import routes from '@/configs/routes'
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+  scrollBehavior: function(to, from, savedPosition) {
+    if (to.hash) {
+
+      return { el: to.hash }
+    }
+  },
 })
 
 const app = createApp(App)
