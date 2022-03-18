@@ -22,7 +22,7 @@
         </template>
         <template v-slot:body-cell-token="props">
             <q-td :props="props">
-                <div class="row items-center">
+                <div class="row items-center no-wrap">
                     <q-avatar
                         size="sm"
                         class="q-mr-22">
