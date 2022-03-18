@@ -32,6 +32,7 @@
         :options="options"
         :dropdown-icon="resolveIcon('dropdown', 11, 7)"
         borderless
+        class="text-white"
     >
         <template v-slot:option="{itemProps, opt}">
             <CoinSelectItem v-bind="itemProps" :coin="opt" class="cursor-pointer"></CoinSelectItem>
