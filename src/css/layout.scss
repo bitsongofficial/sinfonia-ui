@@ -35,6 +35,14 @@
     flex-grow: 1;
 }
 
+.flex-0 {
+    flex: 0;
+}
+
+.\!flex-0 {
+    flex: 0 !important;
+}
+
 .flex-1 {
     flex: 1;
 }

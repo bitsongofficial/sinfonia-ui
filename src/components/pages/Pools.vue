@@ -5,18 +5,9 @@
     import {balancedCurrency} from "@/common/numbers"
     import { newMyPool, newPool } from '@/common/mockups'
     import { RouterLink } from "vue-router"
-import StandardSelect from '../inputs/StandardSelect.vue'
-import { ref } from 'vue'
 
     const myPools = [newMyPool()]
     const pools = [newPool(), newPool(), newPool()]
-
-    const options = [
-        "Today",
-        "Tomorrow",
-        "Toyota"
-    ]
-    const test = ref(options[0])
 </script>
 
 <template>
@@ -55,7 +46,4 @@ import { ref } from 'vue'
             </RouterLink>
         </div>
     </div>
-
-    <StandardSelect color="dark" v-model="test" :options="options">
-    </StandardSelect>
 </template>

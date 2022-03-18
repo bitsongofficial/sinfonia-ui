@@ -1,5 +1,9 @@
 @use "sass:color";
 
+:root {
+    --text-color: #fff;
+}
+
 .text-primary-dark {
     color: $primary-dark !important;
 }
