@@ -10,8 +10,6 @@
         {
             const currentActive = document.querySelector(".section-anchor.active")
             const nextActive = document.querySelector('[href*="#' + entry.target.id + '"]')
-            console.log(currentActive)
-            console.log(nextActive)
             if(currentActive != nextActive)
             {
                 currentActive?.classList.remove("active")

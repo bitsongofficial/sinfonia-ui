@@ -5,3 +5,22 @@
         min-height: auto;
     }
 }
+
+.q-btn-group {
+    height: fit-content;
+
+    button {
+        font-size: inherit;
+        text-transform: none;
+    }
+
+    .q-btn.q-btn-item {
+        justify-content: center;
+        padding-top: 0;
+        padding-bottom: 0;
+
+        .q-btn__content {
+            flex-grow: 0;
+        }
+    }
+}

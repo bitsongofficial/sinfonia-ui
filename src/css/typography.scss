@@ -23,7 +23,7 @@
 
 $font-sizes: ();
 
-@for $i from 0 through 20 {
+@for $i from 0 through 22 {
     $s: $i * 2;
     $font-sizes: map.set($font-sizes, $s, $s);
     $s: $i * 3;
