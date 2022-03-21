@@ -11,7 +11,7 @@
 
     .absolute {
         display: none;
-        left: 200%;
+        left: 280%;
     }
 
     > a {
@@ -20,13 +20,14 @@
 
     .router-link-active {
         @include menu-item-active-hover();
+
+        button.q-btn.q-btn-item.text-white {
+            color: $primary !important;
+            font-weight: bold;
+        }
     }
 
     &:hover > a {
         @include menu-item-active-hover();
-    }
-
-    &.active {
-        font-weight: bold;
     }
 }

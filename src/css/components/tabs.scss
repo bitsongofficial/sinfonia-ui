@@ -1,0 +1,38 @@
+.q-tab-panel {
+    padding: 0;
+}
+
+.q-tab {    
+    .q-tab__indicator {
+        display: none;
+    }
+
+    &.q-tab--active {
+        opacity: 1 !important;
+        color: var(--text-color) !important;
+    }
+
+    .q-ripple {
+        display: none;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+        opacity: 0.8;
+
+        .q-focus-helper {
+            &,
+            &::before,
+            &::after {
+                background-color: transparent !important;
+            }
+        }
+    }
+
+    .q-tab__icon {
+        width: inherit;
+        height: inherit;
+        font-size: inherit;
+    }
+}

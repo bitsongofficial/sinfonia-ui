@@ -1,3 +1,5 @@
+@use "sass:map";
+
 @font-face {
     font-family: Circular Std;
     font-weight: normal;
@@ -19,13 +21,27 @@
     src: local('Circular Std Bold'), local('CircularStd-Bold'), url('@/assets/fonts/CircularStd-Bold.woff2') format('woff2');
 }
 
-@for $i from 0 through 20 {
-    .fs-#{$i*2} {
-        font-size: #{$i*2}px;
-        line-height: #{$i*2}px;
+$font-sizes: ();
+
+@for $i from 0 through 22 {
+    $s: $i * 2;
+    $font-sizes: map.set($font-sizes, $s, $s);
+    $s: $i * 3;
+    $font-sizes: map.set($font-sizes, $s, $s);
+}
+
+@each $k, $v in $font-sizes {
+    .fs-#{$k} {
+        font-size: $v * 1px;
+        line-height: $v * 1px;
     }
 }
 
 * {
     font-family: "Circular Std", sans-serif;
+}
+
+a {
+    text-decoration: inherit;
+    color: inherit;
 }

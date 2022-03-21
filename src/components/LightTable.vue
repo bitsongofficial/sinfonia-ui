@@ -4,9 +4,9 @@
 </script>
 <template>
     <q-table
-      row-key="index"
-      :rows="props.rows"
-      :columns="props.columns"
+        row-key="index"
+        :rows="props.rows"
+        :columns="props.columns"
     >
         <template v-slot:header="props">
             <q-tr :props="props">

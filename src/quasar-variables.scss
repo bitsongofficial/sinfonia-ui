@@ -1,6 +1,8 @@
-@use 'sass:map';
+@use "sass:map";
+@import "@/css/variables";
 
 $primary   : #FF005C;
+$primary-complementary: #9C589C;
 $secondary : #3A294F;
 $accent    : #220D32;
 
@@ -10,6 +12,9 @@ $positive  : #0AF9B1;
 $negative  : #C10015;
 $info      : #31CCEC;
 $warning   : #F2C037;
+
+$flex-cols: 8;
+$flex-gutter-xl: 40px;
 
 $space-base   : 16px;
 $space-x-base : $space-base;
@@ -22,7 +27,7 @@ $space-md   : (x: $space-x-base, y: $space-y-base);
 $space-lg   : (x: ($space-x-base * 1.5), y: ($space-y-base * 1.5));
 $space-xl   : (x: ($space-x-base * 3), y: ($space-y-base * 3));
 
-$spaces: ('none': $space-none, 'xs': $space-xs, 'sm': $space-sm, 'md': $space-md, 'lg': $space-lg, 'xl': $space-xl);
+$spaces: ('none': $space-none, 'xs': $space-xs, 'sm': $space-sm, 'md': $space-md, 'lg': $space-lg, 'xl': $space-xl, '-12': (x: -12px, y: -12px));
 $space2: 2;
 $space3: 3;
 
@@ -34,3 +39,14 @@ $space3: 3;
     $spaces: map.set($spaces, $i*$space2, $map2);
     $spaces: map.set($spaces, $i*$space3, $map3);
 }
+
+$breakpoint-xs: 599px;
+$breakpoint-sm: 1023px;
+$breakpoint-md: 1439px;
+$breakpoint-lg: 1919px;
+
+$sizes: ('xs': 0, 'sm': ($breakpoint-xs + 1), 'md': ($breakpoint-sm + 1), 'lg': ($breakpoint-md + 1), 'xl': ($breakpoint-lg + 1));
+
+// @each $k, $s in $custom-sizes {
+//     $sizes: map.set($sizes, $k, $s);
+// }

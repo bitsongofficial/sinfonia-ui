@@ -45,3 +45,65 @@
         background-repeat: no-repeat;
     }
 }
+
+.q-field__native,
+.q-field__native,
+.q-field__control {
+    height: fit-content;
+}
+
+[class*="fs-"] {
+    .q-field__control,
+    .q-field__native {
+        font-size: inherit;
+        line-height: inherit;
+    }
+}
+
+[class*="text-"] {
+    .q-field__control,
+    .q-field__native,
+    .q-field__label {
+        color: inherit;
+    }
+}
+
+.q-field__control {
+    align-items: center;
+}
+
+.q-menu {
+    background: $primary-dark;
+    border: 0;
+    padding: 20px;
+}
+
+.q-field__marginal {
+    color: inherit;
+}
+
+.input-top-attached {
+    margin-top: -18px;
+}
+
+.q-checkbox__inner {
+    color: white;
+    opacity: 0.3;
+    margin-right: 20px;
+    min-width: 0;
+    width: 20px;
+    height: 20px;
+
+    .q-checkbox__bg {
+        border-radius: 5px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    &.q-checkbox__inner--truthy {
+        color: $primary;
+        opacity: 1;
+    }
+}

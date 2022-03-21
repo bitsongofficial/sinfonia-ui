@@ -1,0 +1,10 @@
+.gradient-progress.q-linear-progress {
+    .q-linear-progress__track {
+        background-color: $dark-background;
+        color: transparent;
+    }
+    .q-linear-progress__model {
+        background: linear-gradient(to right, $primary-complementary, $primary);
+        color: transparent;
+    }
+}

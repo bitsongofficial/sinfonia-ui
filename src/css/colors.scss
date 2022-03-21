@@ -1,8 +1,21 @@
+@use "sass:color";
+
+:root {
+    --text-color: #fff;
+}
+
 .text-primary-dark {
-    color: #220D32 !important;
+    color: $primary-dark !important;
 }
 .bg-primary-dark {
-    background: #220D32 !important;
+    background: $primary-dark !important;
+}
+
+.text-dark-light {
+    color: $dark-light !important;
+}
+.bg-dark-light {
+    background: $dark-light !important;
 }
 
 .bg-rounded-translucent {
@@ -12,9 +25,58 @@
     border-radius: 30px;
 }
 
-@for $i from 3 through 4
+.bg-gradient {
+    background: linear-gradient(147.07deg, $primary-complementary 21.78%, $primary 79.22%);
+    border-radius: 30px;
+}
+
+.shadow-20 {
+    box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.2);
+}
+
+[class*="border-gradient-"] {
+    position: relative;
+    &::before {
+        content:"";
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        border-radius:50px;
+        padding: 2px;
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box, 
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+    }
+}
+
+.border-gradient-primary::before {
+    background: linear-gradient(to right, $primary-complementary, $primary);
+}
+
+@for $i from 1 through 8
+{
+    $name: $i*5;
+    $val: -(1 - $i/20);
+    .bg-white-#{$name} {
+        background-color: color.adjust(#FFFFFF, $alpha: $val);
+    }
+
+    .hover\:bg-white-#{$name}:hover {
+        background-color: color.adjust(#FFFFFF, $alpha: $val);
+    }
+}
+
+@for $i from 1 through 10
 {
     .opacity-#{$i*10} {
+        opacity: #{$i/10};
+    }
+    
+    .hover\:opacity-#{$i*10}:hover {
         opacity: #{$i/10};
     }
 }

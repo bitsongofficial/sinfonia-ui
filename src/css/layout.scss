@@ -1,3 +1,7 @@
+* {
+    scroll-behavior: smooth;
+}
+
 .container {
     --offset-left: 30px;
     --offset-right: 30px;
@@ -23,8 +27,28 @@
     left: 0;
 }
 
+.right-0 {
+    right: 0;
+}
+
 .bottom-0 {
     bottom: 0;
+}
+
+.grow-1 {
+    flex-grow: 1;
+}
+
+.flex-0 {
+    flex: 0;
+}
+
+.\!flex-0 {
+    flex: 0 !important;
+}
+
+.flex-1 {
+    flex: 1;
 }
 
 .min-h-fit {
@@ -39,27 +63,68 @@
     border-radius: 99999999px;
 }
 
-@for $i from 0 through 20 {
-    $s: $i*3;
-    .s-#{$i*2} {
-        width: #{$s}px;
-        height: #{$s}px;
+.inline-block {
+    display: inline-block;
+}
+
+.separator {
+    opacity: 0.3;
+    border: 1px solid #FFFFFF;
+}
+
+.separator-light {
+    opacity: 0.1;
+    border: 1px solid #85798D;
+}
+
+.vertical-separator {
+    opacity: 0.1;
+    border: 1px solid #FFFFFF;
+}
+
+.w-1\/6 {
+    width: 17%;
+}
+
+.\!w-1\/3 {
+    width: 33.33% !important;
+}
+
+.w-5\/6 {
+    width: 83%;
+}
+
+.w-46 {
+    width: 46px;
+}
+
+.h-21 {
+    height: 21px;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.max-w-582 {
+    max-width: 582px;
+}
+
+@for $border from 0 to 10 {
+    $val: $border * 5;
+    .rounded-#{$val} {
+        border-radius: #{$val}px;
     }
-    .min-s-#{$s} {
-        min-width: #{$s}px;
-        min-height: #{$s}px;
+}
+
+@each $k, $s in $custom-sizes {  
+    .s-#{$k} {
+        width: $s;
+        height: $s;
     }
-    
-    $s: $i*2;
-    @if(($s % 3) != 0) {
-        .s-#{$s} {
-            width: #{$s}px;
-            height: #{$s}px;
-        }
-        .min-s-#{$s} {
-            min-width: #{$s}px;
-            min-height: #{$s}px;
-        }
+    .min-s-#{$k} {
+        min-width: $s;
+        min-height: $s;
     }
 }
 
@@ -68,8 +133,12 @@
         position: absolute;
     }
 
-    .vertica-sm-window-height {
+    .vertical-sm-window-height {
         height: 100vh;
+    }
+
+    .vertical-sm-fixed {
+        position: fixed;
     }
 }
 

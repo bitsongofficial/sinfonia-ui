@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { newCoin } from "@/common/mockups";
 import { balancedCurrency as currency, percentage } from "@/common/numbers"
-import LightTable from '../LightTable.vue'
+import LightTable from '@/components/LightTable.vue'
+import CryptoTable from "../CryptoTable.vue";
     const columns = [
         {
             name: 'index',
@@ -16,7 +18,7 @@ import LightTable from '../LightTable.vue'
             field: 'name',
             sortable: true
         },
-        { 
+        {
             name: 'symbol',
             align: 'left',
             label: '',
@@ -27,78 +29,32 @@ import LightTable from '../LightTable.vue'
         { name: 'price', label: 'Price', field: 'price', sortable: true, format: (val:any) => `${currency(val)} $`},
         { name: 'marketcap', label: 'Market Cap', field: 'marketCap', sortable: true, format: (val:any) => `${currency(val)} $` },
         { name: 'volume24H', label: 'Volume 24H', field: 'volumeLastDay', sortable: true, format: (val:any) => `${currency(val)} $` },
-        { name: 'lastDayGain', label: '24H', field: 'lastDayGain', sortable: true, format: (val:any) => `${percentage(val)}` },
+        { name: 'lastDayGain', label: '24H', field: 'lastDayGain', sortable: true, format: (val:any) => `${percentage(val)}%` },
         { 
             name: 'chart',
             align: 'right',
             label: '',
-            field: 'chart',
+            field: 'lastNDaysPrice',
             sortable: false,
         },
     ]
 
     let i = 0
-    const newCoin = (name: string, symbol: string) =>
-    {
-        i++
-        return {
-            index: i,
-            name,
-            symbol,
-            coinIcon: "https://i.scdn.co/image/ab6761610000e5eb608e188abbae6409698b8f5a",
-            price: Math.random() * 1.5,
-            marketCap: Math.random() * 15000000000,
-            volumeLastDay: Math.random() * 60000000,
-            lastDayGain: (Math.random() - 0.5) * 20,
-            chart: 0,
-        }
-    }
-
     const rows = [
-        newCoin("Adam Clay", "CLAY"),
-        newCoin("Fonti", "FNTY"),
-        newCoin("Vibranium", "VBRN"),
-        newCoin("Mace", "MCX"),
-        newCoin("Adam Clay", "CLAY"),
-        newCoin("Fonti", "FNTY"),
-        newCoin("Vibranium", "VBRN"),
-        newCoin("Mace", "MCX"),
-        newCoin("Adam Clay", "CLAY"),
+        newCoin("CLAY", "Adam Clay"),
+        newCoin("FNTY", "Fonti"),
+        newCoin("VBRN", "Vibranium"),
+        newCoin("MCX", "Mace"),
+        newCoin("CLAY", "Adam Clay"),
+        newCoin("FNTY", "Fonti"),
+        newCoin("VBRN", "Vibranium"),
+        newCoin("MCX", "Mace"),
+        newCoin("CLAY", "Adam Clay"),
     ]
 </script>
 <template>
     <h3 class="q-mb-xl fs-27">Dex</h3>
-    <LightTable :columns="columns" :rows="rows">
-        <template v-slot:body-cell-token="props">
-            <q-td :props="props">
-                <div class="row items-center">
-                    <q-img
-                        :src="props.row.coinIcon"
-                        :ratio="1/1"
-                        class="q-mr-md rounded s-24"
-                        fit="cover"
-                        :alt="props.row.name"
-                    />
-                    <p class="text-weight-medium">
-                        {{props.row.name}}
-                    </p>
-                </div>
-            </q-td>
-        </template>
-        <template v-slot:body-cell-index="props">
-            <q-td :props="props">
-                <span class="opacity-40">
-                    {{props.value}}
-                </span>
-            </q-td>
-        </template>
-        <template v-slot:body-cell-symbol="props">
-            <q-td :props="props">
-                <span class="opacity-40 fs-10">
-                    {{props.value}}
-                </span>
-            </q-td>
-        </template>
+    <CryptoTable :columns="columns" :rows="rows">
         <template v-slot:body-cell-lastDayGain="props">
             <q-td :props="props">
                 <p :class="(props.row.lastDayGain > 0 ? 'text-positive' : 'opacity-40')">
@@ -112,5 +68,5 @@ import LightTable from '../LightTable.vue'
                 <img v-else="props.row.lastDayGain > 0" src="@/assets/images/chart_placeholder.png" alt="">
             </q-td>
         </template>
-    </LightTable>
+    </CryptoTable>
 </template>
