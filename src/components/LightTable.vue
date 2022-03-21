@@ -1,19 +1,24 @@
 
 <script setup lang="ts">
-    const props = defineProps(['rows', 'columns'])
+    import {TableColumn} from "@/types/table"
+    defineProps
+    <{
+        rows: any[],
+        columns: TableColumn[],
+    }>()
 </script>
 <template>
     <q-table
         row-key="index"
-        :rows="props.rows"
-        :columns="props.columns"
+        :rows="rows"
+        :columns="columns"
     >
-        <template v-slot:header="props">
-            <q-tr :props="props">
+        <template v-slot:header="slotProps">
+            <q-tr :props="slotProps">
                 <q-th
-                    v-for="col in props.cols"
+                    v-for="col in slotProps.cols"
                     :key="col.name"
-                    :props="props"
+                    :props="slotProps"
                     class="fs-12 text-uppercase text-weight-medium transactions-table-head-row"
                 >
                     {{ col.label }}
