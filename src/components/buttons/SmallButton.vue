@@ -4,8 +4,8 @@
 <template>
     <q-btn
         rounded
-        color="primary"
         size="sm"
         :label="props.label"
+        class="bg-gradient"
     />
 </template>
