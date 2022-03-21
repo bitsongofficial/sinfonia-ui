@@ -106,6 +106,10 @@
     position: fixed;
 }
 
+.max-w-582 {
+    max-width: 582px;
+}
+
 @for $border from 0 to 10 {
     $val: $border * 5;
     .rounded-#{$val} {

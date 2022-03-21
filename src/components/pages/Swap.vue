@@ -97,26 +97,17 @@ import ExpandableCard from '../cards/ExpandableCard.vue'
 </script>
 <template>
     <div class="font-weight-medium">
-        <div class="row q-mb-36 q-col-gutter-x-xl">
-            <div class="col-8 col-md-5 flex items-center">
-                <Title>Swap Tokens</Title>
-            </div>
-            <div class="col-8 col-md-3 gt-md items-center">
-                <div class="flex justify-between items-center flex-1">
-                    <p class="fs-18">DEX</p>
-                    <q-btn outline rounded color="white" label="View all" class="q-px-22" />
-                </div>
-            </div>
-        </div>
         <div class="row q-col-gutter-x-xl">
-            <div class="col-8 col-md-5 q-mb-40 q-mb-md-none">
+            <div class="col-8 col-md-5 q-mb-40 q-mb-md-none flex justify-center">
+                <div class="max-w-582">
+                <Title class="q-mb-36">Swap Tokens</Title>
                 <Card ref="heightRef" class="q-pa-36" transparency="5">
                     <p class="fs-14 q-mb-20 opacity-30">Swap from</p>
                     <CardDark>
                         <div class="flex justify-between no-wrap">
-                            <div class="flex-1 flex justify-between items-center q-py-12 no-wrap">
+                            <div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
                                 <div class="q-mr-24">
-                                    <q-input borderless v-model="swapAmountWrapper" class="fs-24 q-mb-4 text-white" />
+                                    <q-input borderless v-model="swapAmountWrapper" class="fs-24 q-mb-0 text-white" />
                                     <p v-if="coin1" class="fs-12 text-dark">{{balancedCurrency(swapAmountNumber * coin1.coin.price)}} $</p>
                                 </div>
                                 <div>
@@ -140,7 +131,7 @@ import ExpandableCard from '../cards/ExpandableCard.vue'
                     </div>
                     <CardDark class="q-mb-24">
                         <div class="flex justify-between no-wrap">
-                            <div class="flex-1 flex justify-between items-center q-py-12 no-wrap">
+                            <div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
                                 <div class="q-mr-24">
                                     <p v-if="coin1 && coin2" class="fs-24">{{balancedCurrency(swapRatio * swapAmountNumber)}}</p>
                                 </div>
@@ -168,9 +159,10 @@ import ExpandableCard from '../cards/ExpandableCard.vue'
                         </div>
                     </div>
                 </Card>
+                </div>
             </div>
             <div class="col-8 col-md-3">
-                <div class="flex justify-between lt-md items-center q-mb-30">
+                <div class="flex justify-between items-center q-mb-30">
                     <p class="fs-18">DEX</p>
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
