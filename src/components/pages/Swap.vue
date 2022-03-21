@@ -11,7 +11,8 @@
     import { resolveIcon } from '@/common/resolvers'
     import LargeButton from '../buttons/LargeButton.vue'
     import CryptoTable from '../CryptoTable.vue'
-import ExpandableCard from '../cards/ExpandableCard.vue'
+    import ExpandableCard from '../cards/ExpandableCard.vue'
+    import { TableColumn } from '@/types/table'
 
     let user = newUser()
 
@@ -54,7 +55,7 @@ import ExpandableCard from '../cards/ExpandableCard.vue'
         newCoin("MCX", "Mace"),
     ]
     
-    const columns = [
+    const columns:TableColumn[] = [
         { 
             name: 'token',
             align: 'left',
