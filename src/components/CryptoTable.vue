@@ -1,7 +1,12 @@
 <script setup lang="ts">
     import { computed } from 'vue'
     import LightTable from './LightTable.vue'
-    const props = defineProps(['rows', 'columns'])
+    import {TableColumn} from "@/types/table"
+    const props = defineProps
+    <{
+        rows: any[],
+        columns: TableColumn[],
+    }>()
     const actualRows = computed(() =>
     {
         return props.rows.map((r:any, i:number) => (Object.assign({index: i+1}, r)))
@@ -11,25 +16,25 @@
 <template>
     <LightTable
         :rows="actualRows"
-        :columns="props.columns"
+        :columns="columns"
         >
-        <template v-slot:body-cell-symbol="props">
-            <q-td :props="props">
+        <template v-slot:body-cell-symbol="slotProps">
+            <q-td :props="slotProps">
                 <span class="opacity-40 fs-10">
-                    {{props.value}}
+                    {{slotProps.value}}
                 </span>
             </q-td>
         </template>
-        <template v-slot:body-cell-token="props">
-            <q-td :props="props">
+        <template v-slot:body-cell-token="slotProps">
+            <q-td :props="slotProps">
                 <div class="row items-center no-wrap">
                     <q-avatar
                         size="sm"
                         class="q-mr-22">
-                        <img :src="props.row.iconUrl" alt="">                   
+                        <img :src="slotProps.row.iconUrl" alt="">                   
                     </q-avatar>
                     <p class="text-weight-medium">
-                        {{props.row.name}}
+                        {{slotProps.row.name}}
                     </p>
                 </div>
             </q-td>

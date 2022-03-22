@@ -8,6 +8,17 @@
     /* Note: backdrop-filter has minimal browser support */
 
     border-radius: 20px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        right: 8px;
+        background: url('@/assets/images/icons/sun.svg') no-repeat center;
+        background-size: 100% 100%;
+        width: 16px;
+        height: 17px;
+        top: 8px;
+    }
 }
 
 .q-toggle__inner {
@@ -26,6 +37,10 @@
 .q-toggle__thumb {
     color: white;
     left: 0.5em;
+
+    &::before {
+        display: none;
+    }
 }
 
 .settings .q-toggle__inner .q-toggle__track {

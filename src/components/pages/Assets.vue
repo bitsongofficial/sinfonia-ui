@@ -6,14 +6,13 @@
     import { balancedCurrency } from '@/common/numbers'
     import LightTable from '../LightTable.vue'
     import IconButton from '../buttons/IconButton.vue'
-import InfoCard from '../cards/InfoCard.vue'
-import PercentageWithImage from '../infographics/PercentageWithImage.vue'
-import Progress from '../Progress.vue'
+    import InfoCard from '../cards/InfoCard.vue'
+    import { TableColumn } from '@/types/table'
 
     const btsg:Coin = newCoin("BTSG")
     const user:User = newUser()
     user.coins = user.coins.map((c,i) => (Object.assign(c, {index:i+1})))
-    const columns = [
+    const columns: TableColumn[] = [
         {
             name: 'index',
             required: true,

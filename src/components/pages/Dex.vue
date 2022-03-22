@@ -1,8 +1,10 @@
 <script setup lang="ts">
     import { newCoin } from "@/common/mockups"
     import { balancedCurrency as currency, percentage } from "@/common/numbers"
+    import { TableColumn } from "@/types/table"
     import CryptoTable from "../CryptoTable.vue"
-    const columns = [
+
+    const columns: TableColumn[] = [
         {
             name: 'index',
             required: true,

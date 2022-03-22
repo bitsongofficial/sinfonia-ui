@@ -10,7 +10,7 @@
     import ExpandableCard from '../cards/ExpandableCard.vue'
     import Progress from '../Progress.vue'
     import LightTable from '../LightTable.vue'
-import InlineButton from '../buttons/InlineButton.vue'
+    import { TableColumn } from '@/types/table'
 
     const userPool = newMyPool()
     const unbondings = [
@@ -37,7 +37,7 @@ import InlineButton from '../buttons/InlineButton.vue'
         },
     ]
 
-    const columns = [
+    const columns: TableColumn[] = [
         {
             name: 'title',
             required: true,
