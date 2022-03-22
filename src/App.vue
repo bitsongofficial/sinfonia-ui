@@ -1,8 +1,13 @@
 <script setup lang="ts">
-  import {RouterView} from "vue-router"
+  import { RouterView } from 'vue-router'
   import Header from '@/components/navigation/Header.vue'
   import SideMenu from '@/components/navigation/SideMenu.vue'
   import WalletAddress from '@/components/WalletAddress.vue'
+  import useConfig from '@/store/config'
+
+  const configStore = useConfig()
+
+  configStore.init()
 </script>
 
 <template>

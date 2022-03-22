@@ -1,5 +1,7 @@
 export * from './chain'
 export * from './osmosis'
+export * from './config'
+export * from './auth'
 export * from './coin'
 export * from './pool'
 export * from './table'

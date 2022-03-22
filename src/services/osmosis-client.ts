@@ -10,7 +10,7 @@ import {
 import { Coin } from '@cosmjs/proto-signing';
 import ChainApi from './chain-client';
 
-export default class OsmosisApi extends ChainApi {
+export default class OsmosisClient extends ChainApi {
   public constructor(url: string) {
     super(url);
   }

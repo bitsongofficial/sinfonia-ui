@@ -3,7 +3,7 @@ import { ChainError, ChainResponse } from '@/types';
 import { Coin } from '@cosmjs/proto-signing';
 import { AxiosError } from 'axios';
 
-export default class ChainApi extends HttpClient {
+export default class ChainClient extends HttpClient {
   public constructor(url: string) {
     super(url)
   }
