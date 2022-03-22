@@ -8,7 +8,7 @@
     <div class="row justify-between items-center">
         <Logo></Logo>
         <div class="row items-center">
-            <IconButton icon="setting" width="20" height="20" size="sm"></IconButton>
+            <IconButton class="q-mr-20" icon="setting" width="20" height="20" size="sm"></IconButton>
             <div class="settings">
                 <q-toggle
                     v-model="first"
