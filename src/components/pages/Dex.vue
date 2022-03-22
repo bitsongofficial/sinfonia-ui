@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { newCoin } from "@/common/mockups";
-import { balancedCurrency as currency, percentage } from "@/common/numbers"
-import LightTable from '@/components/LightTable.vue'
-import CryptoTable from "../CryptoTable.vue";
+    import { newCoin } from "@/common/mockups"
+    import { balancedCurrency as currency, percentage } from "@/common/numbers"
+    import CryptoTable from "../CryptoTable.vue"
     const columns = [
         {
             name: 'index',
