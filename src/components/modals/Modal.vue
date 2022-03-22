@@ -18,8 +18,8 @@
 </script>
 
 <template>
-    <q-dialog v-model="model">
-        <div class="rounded-20 bg-dark-lighter shadow-20-alt blur-60 q-px-34 q-py-30">
+    <q-dialog v-model="model" full-height>
+        <div class="text-white !rounded-20 bg-dark-lighter shadow-20-alt blur-60 q-px-34 q-py-30">
             <slot></slot>
         </div>
     </q-dialog>
