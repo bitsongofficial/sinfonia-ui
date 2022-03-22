@@ -81,7 +81,6 @@
     {
         if(heightRef.value && heightRef.value.element)
         {
-            console.log(heightRef.value.element.clientHeight)
             boxesStyle.value.maxHeight = ((heightRef.value.element.clientHeight - 157) / 2) + "px"
         }
     }
@@ -167,8 +166,8 @@
                     <p class="fs-18">DEX</p>
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
-                <Card class="q-py-10 q-px-none q-mb-51" :padding="0" transparency="5">
-                    <CryptoTable virtual-scroll :style="boxesStyle" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
+                <Card class="q-py-10 q-px-none q-mb-51 scroll-container" :padding="0" :transparency="5" :style="boxesStyle">
+                    <CryptoTable :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
 
                     </CryptoTable>
                 </Card>
@@ -176,8 +175,8 @@
                     <p class="fs-18">DEX</p>
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
-                <Card class="q-py-10 q-px-none" :padding="0" transparency="5">
-                    <CryptoTable virtual-scroll :style="boxesStyle" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
+                <Card class="q-py-10 q-px-none overflow-auto" :padding="0" :transparency="5" :style="boxesStyle">
+                    <CryptoTable :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
 
                     </CryptoTable>
                 </Card>

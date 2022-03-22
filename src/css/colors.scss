@@ -18,6 +18,13 @@
     background: $dark-light !important;
 }
 
+.text-dark-lighter {
+    color: $dark-lighter !important;
+}
+.bg-dark-lighter {
+    background: $dark-lighter !important;
+}
+
 .bg-rounded-translucent {
     background: rgba(112, 110, 124, 0.15);
     box-shadow: 0px 0px 20px #14142E;
@@ -32,6 +39,10 @@
 
 .shadow-20 {
     box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.2);
+}
+
+.shadow-20-alt {
+    box-shadow: 0px 0px 20px 20px rgba(34, 13, 51, 0.3);
 }
 
 [class*="border-gradient-"] {
@@ -57,6 +68,10 @@
     background: linear-gradient(to right, $primary-complementary, $primary);
 }
 
+.text-overlay-gradient {
+    background: linear-gradient(180deg, rgba(72, 60, 88, 0) 0%, #483B58 100%);
+}
+
 @for $i from 1 through 8
 {
     $name: $i*5;
@@ -78,5 +93,12 @@
     
     .hover\:opacity-#{$i*10}:hover {
         opacity: #{$i/10};
+    }
+}
+
+@for $i from 1 through 10
+{
+    .blur-#{$i*10} {
+        backdrop-filter: blur(#{$i*10}px);
     }
 }

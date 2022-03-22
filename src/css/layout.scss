@@ -110,14 +110,32 @@
     max-width: 582px;
 }
 
+.max-h-360 {
+    max-height: 360px;
+}
+
+.z-1 {
+    z-index: 1;
+}
+
+.sticky-bottom {
+    position: sticky;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 @for $border from 0 to 10 {
     $val: $border * 5;
     .rounded-#{$val} {
         border-radius: #{$val}px;
     }
+    .\!rounded-#{$val} {
+        border-radius: #{$val}px !important;
+    }
 }
 
-@each $k, $s in $custom-sizes {  
+@each $k, $s in $custom-sizes {
     .s-#{$k} {
         width: $s;
         height: $s;
@@ -125,6 +143,9 @@
     .min-s-#{$k} {
         min-width: $s;
         min-height: $s;
+    }
+    .h-#{$k} {
+        height: $s;
     }
 }
 
