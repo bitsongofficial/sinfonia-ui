@@ -8,9 +8,9 @@ import {
 	IncentivizedPool,
 } from '@/types';
 import { Coin } from '@cosmjs/proto-signing';
-import ChainApi from './chain-client';
+import ChainClient from './chain-client';
 
-export default class OsmosisClient extends ChainApi {
+export default class OsmosisClient extends ChainClient {
   public constructor(url: string) {
     super(url);
   }

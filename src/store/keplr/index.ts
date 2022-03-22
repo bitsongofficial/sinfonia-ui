@@ -23,62 +23,60 @@ const useKeplr = defineStore('keplr', {
         this.loading = true
 				const configStore = useConfig()
 
-				if (window.keplr && configStore.mainToken) {
-					const stakeCurrency = tokenToKeplrCoin(configStore.mainToken, configStore.mainToken.symbol);
-					const currencies: AppCurrency[] = [];
-					const feeCurrencies: AppCurrency[] = [];
+				if (window.keplr && configStore.bitsongToken) {
+					const stakeCurrency = tokenToKeplrCoin(configStore.bitsongToken, configStore.bitsongToken.symbol)
+					const currencies: AppCurrency[] = []
+					const feeCurrencies: AppCurrency[] = []
 
-					for (const lookup of configStore.mainToken.coinLookup) {
-						const coin = tokenToKeplrCoin(configStore.mainToken, lookup.viewDenom)
+					for (const lookup of configStore.bitsongToken.coinLookup) {
+						const coin = tokenToKeplrCoin(configStore.bitsongToken, lookup.viewDenom)
 	
 						if (coin) {
-							currencies.push(coin);
-							feeCurrencies.push(coin);
+							currencies.push(coin)
+							feeCurrencies.push(coin)
 						}
 					}
 
 					if (stakeCurrency) {
 						await window.keplr.experimentalSuggestChain({
-							chainId: configStore.mainToken.chainID,
-							chainName: configStore.mainToken.name,
-							rpc: configStore.mainToken.rpcURL,
-							rest: configStore.mainToken.apiURL,
+							chainId: configStore.bitsongToken.chainID,
+							chainName: configStore.bitsongToken.name,
+							rpc: configStore.bitsongToken.rpcURL,
+							rest: configStore.bitsongToken.apiURL,
 							stakeCurrency,
 							bip44: {
-								coinType: configStore.mainToken.coinType,
+								coinType: configStore.bitsongToken.coinType,
 							},
 							bech32Config: {
-								bech32PrefixAccAddr: configStore.mainToken.addressPrefix,
-								bech32PrefixAccPub: configStore.mainToken.addressPrefix + 'pub',
-								bech32PrefixValAddr: configStore.mainToken.addressPrefix + 'valoper',
-								bech32PrefixValPub: configStore.mainToken.addressPrefix + 'valoperpub',
-								bech32PrefixConsAddr: configStore.mainToken.addressPrefix + 'valcons',
-								bech32PrefixConsPub: configStore.mainToken.addressPrefix + 'valconspub',
+								bech32PrefixAccAddr: configStore.bitsongToken.addressPrefix,
+								bech32PrefixAccPub: configStore.bitsongToken.addressPrefix + 'pub',
+								bech32PrefixValAddr: configStore.bitsongToken.addressPrefix + 'valoper',
+								bech32PrefixValPub: configStore.bitsongToken.addressPrefix + 'valoperpub',
+								bech32PrefixConsAddr: configStore.bitsongToken.addressPrefix + 'valcons',
+								bech32PrefixConsPub: configStore.bitsongToken.addressPrefix + 'valconspub',
 							},
 							currencies,
 							feeCurrencies,
-							coinType: configStore.mainToken.coinType,
+							coinType: configStore.bitsongToken.coinType,
 							gasPriceStep: {
 								low: 0.01,
 								average: 0.025,
 								high: 0.04,
 							},
 							features: ['stargate', 'ibc-transfer', 'no-legacy-stdTx', 'ibc-go'],
-						});
+						})
 
-						await window.keplr.enable(configStore.mainToken.chainID);
+						await window.keplr.enable(configStore.bitsongToken.chainID)
 	
-						const offlineSigner = await window.keplr.getOfflineSignerAuto(configStore.mainToken.chainID);
-						const accounts = [...await offlineSigner.getAccounts()];
+						const offlineSigner = await window.keplr.getOfflineSignerAuto(configStore.bitsongToken.chainID)
+						const accounts = [...await offlineSigner.getAccounts()]
 
-						if (configStore.tokens) {
-							for (const token of configStore.tokens) {
-								await window.keplr.enable(token.chainID);
-								const offlineTokenSigner = await window.keplr.getOfflineSignerAuto(token.chainID);
-								const tokenAccounts = [...await offlineTokenSigner.getAccounts()];
+						if (configStore.osmosisToken) {
+							await window.keplr.enable(configStore.osmosisToken.chainID);
+							const offlineTokenSigner = await window.keplr.getOfflineSignerAuto(configStore.osmosisToken.chainID)
+							const tokenAccounts = [...await offlineTokenSigner.getAccounts()]
 
-								accounts.push(...tokenAccounts)
-							}
+							accounts.push(...tokenAccounts)
 						}
 
 						this.accounts = [...accounts]
@@ -93,11 +91,11 @@ const useKeplr = defineStore('keplr', {
         this.loading = false
       }
     },
-	}
+	},
 })
 
 if (import.meta.hot) {
 	import.meta.hot.accept(acceptHMRUpdate(useKeplr, import.meta.hot))
 }
 
-export default useKeplr;
+export default useKeplr

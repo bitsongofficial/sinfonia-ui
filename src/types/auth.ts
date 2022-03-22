@@ -6,5 +6,5 @@ export enum SessionType {
 
 export interface Session {
 	sessionType: SessionType;
-	address: string;
+	addresses: string[];
 }

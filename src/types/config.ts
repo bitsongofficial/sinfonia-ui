@@ -1,22 +1,27 @@
+import { FantokenMedia, FantokenSocial, FantokenWhitePaper } from './fantoken'
+
 export type TokenLogo = 'svg' | 'png'
 
 export interface BaseToken {
 	name: string
 	symbol: string
 	logos: { [key in TokenLogo]: string }
-	ibcDenom: string // IBC Denom on Osmosis Chain
 }
 
 export interface CoinLookup {
 	viewDenom: string
 	chainDenom: string
+	fantokenDenom?: string
 	chainToViewConversionFactor: number
 }
+
+export type IBCChain = 'osmosis';
 
 export interface IBC {
 	sourceChannelId: string
 	destChannelId: string
-	sourceDenom: string
+	destDenom: string // IBC Denom on Destination Chain (Ex: Osmosis)
+	sourceDenom: string // IBC Denom on Source Chain (Ex: Bitsong)
 }
 
 export interface Token extends BaseToken {
@@ -29,70 +34,12 @@ export interface Token extends BaseToken {
 	addressPrefix: string
 	coinGeckoId: string
 	coinType: number
-	ibc: IBC
-	ibcEnabled: boolean
-}
-
-export type Social = 'instagram' | 'facebook' | 'website' | 'twitter' | 'spotify'
-
-export interface FantokenSocialLink {
-	type: Social
-	url: string
-}
-
-export interface FantokenSocial {
-	mailchimpID: string
-	links: FantokenSocialLink[]
-}
-
-export interface FantokenMedia {
-	hero: string
-}
-
-export interface FantokenContentBlock {
-	title: string
-	content: string
-}
-
-export interface FantokenUseCases extends FantokenContentBlock {
-	cases: FantokenContentBlock[]
-}
-
-export interface FantokenTokenomicsQuantity extends FantokenContentBlock {
-	percentage: string
-}
-
-export interface FantokenTokenomics {
-	title: string
-	totalSupply: string
-	initialMarketCap: string
-	quantities: FantokenTokenomicsQuantity[]
-	vestingTokens: string
-}
-
-export interface FantokenRoadmapEntry {
-	title: string
-	time: string
-	events: Partial<FantokenContentBlock>[]
-}
-
-export interface FantokenRoadmap {
-	list: FantokenRoadmapEntry[]
-}
-
-export interface FantokenWhitePaper {
-	biography: FantokenContentBlock
-	project: FantokenContentBlock
-	useCases: FantokenUseCases[]
-	tokenomics: FantokenTokenomics
-	roadmap: FantokenRoadmap
-}
-
-export interface Fantoken extends BaseToken {
-	denom: string
-	socials: FantokenSocial[]
-	media: FantokenMedia
-	whitepaper: FantokenWhitePaper
+	ibc: { [key in IBCChain]: IBC }
+	ibcEnabled?: boolean
+	fantoken?: boolean
+	socials?: FantokenSocial[]
+	media?: FantokenMedia
+	whitepaper?: FantokenWhitePaper
 }
 
 export interface ConfigVersion {
@@ -102,9 +49,10 @@ export interface ConfigVersion {
 }
 
 export interface AssetListConfig {
-	mainToken: Token
+	bitsongToken: Token
+	osmosisToken: Token
 	tokens: Token[]
-	fantokens: Fantoken[]
+	fantokens: Token[]
 	timestamp: string
 	version: ConfigVersion
 }
