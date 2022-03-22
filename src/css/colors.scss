@@ -68,6 +68,10 @@
     background: linear-gradient(to right, $primary-complementary, $primary);
 }
 
+.text-overlay-gradient {
+    background: linear-gradient(180deg, rgba(72, 60, 88, 0) 0%, #483B58 100%);
+}
+
 @for $i from 1 through 8
 {
     $name: $i*5;
