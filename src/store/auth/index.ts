@@ -28,7 +28,7 @@ const useAuth = defineStore('auth', {
 					addresses: keplrStore.accounts.map(el => el.address)
 				}
 
-				bankStore.init()
+				bankStore.loadBalances()
       } catch (error) {
         console.error(error)
         throw error

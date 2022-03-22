@@ -7,10 +7,12 @@ specifiers:
   '@keplr-wallet/types': ^0.9.12
   '@quasar/extras': ^1.12.5
   '@quasar/vite-plugin': ^1.0.5
+  '@types/lodash': ^4.14.180
   '@vitejs/plugin-vue': ^2.2.0
   axios: ^0.26.1
   bech32: ^2.0.0
   bignumber.js: ^9.0.2
+  lodash: ^4.17.21
   path: ^0.12.7
   pinia: ^2.0.11
   quasar: ^2.5.5
@@ -29,6 +31,7 @@ dependencies:
   axios: 0.26.1
   bech32: 2.0.0
   bignumber.js: 9.0.2
+  lodash: 4.17.21
   path: 0.12.7
   pinia: 2.0.11_typescript@4.6.2+vue@3.2.31
   vue: 3.2.31
@@ -37,6 +40,7 @@ dependencies:
 devDependencies:
   '@keplr-wallet/types': 0.9.12
   '@quasar/vite-plugin': 1.0.5_ae74a32690f930bc9da5b21100df949a
+  '@types/lodash': 4.14.180
   '@vitejs/plugin-vue': 2.2.4_vite@2.8.6+vue@3.2.31
   quasar: 2.5.5
   sass: 1.32.0
@@ -352,6 +356,10 @@ packages:
       quasar: 2.5.5
       vite: 2.8.6_sass@1.32.0
       vue: 3.2.31
+    dev: true
+
+  /@types/lodash/4.14.180:
+    resolution: {integrity: sha512-XOKXa1KIxtNXgASAnwj7cnttJxS4fksBRywK/9LzRV5YxrF80BXZIGeQSuoESQ/VkUj30Ae0+YcuHc15wJCB2g==}
     dev: true
 
   /@types/long/4.0.1:
@@ -1234,6 +1242,10 @@ packages:
 
   /libsodium/0.7.9:
     resolution: {integrity: sha512-gfeADtR4D/CM0oRUviKBViMGXZDgnFdMKMzHsvBdqLBHd9ySi6EtYnmuhHVDDYgYpAO8eU8hEY+F8vIUAPh08A==}
+
+  /lodash/4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: false
 
   /long/4.0.0:
     resolution: {integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==}

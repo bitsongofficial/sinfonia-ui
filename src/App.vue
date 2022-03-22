@@ -3,11 +3,11 @@
   import Header from '@/components/navigation/Header.vue'
   import SideMenu from '@/components/navigation/SideMenu.vue'
   import WalletAddress from '@/components/WalletAddress.vue'
-  import useConfig from '@/store/config'
+  import useBootstrap from '@/hooks/useBootstrap'
 
-  const configStore = useConfig()
+  const { bootstrap } = useBootstrap()
 
-  configStore.init()
+  bootstrap()
 </script>
 
 <template>

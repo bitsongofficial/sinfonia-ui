@@ -1,7 +1,9 @@
-import OsmosisClient from './osmosis-client';
-import ConfigClient from './config-client';
-import { AssetListConfig } from '@/types';
-import BitsongClient from './bitsong-client';
+import OsmosisClient from './osmosis-client'
+import ConfigClient from './config-client'
+import BitsongClient from './bitsong-client'
+import { AssetListConfig, ChainData, OsmosisPool } from '@/types'
+import { AxiosResponse } from 'axios'
+import { Coin } from '@cosmjs/proto-signing'
 
 export default class SinfoniaClient {
   private assetListsConfig?: AssetListConfig
@@ -13,12 +15,54 @@ export default class SinfoniaClient {
     this.configClient = new ConfigClient(configUrl)
   }
 
-	public pools = async () => {
+  public totalBurnedFantokens = async () => {
     try {
-      if (this.osmosisClient) {
-        const response = await this.osmosisClient.pools({ 'pagination.limit': '750' })
+      if (this.bitsongClient) {
+        const response = await this.bitsongClient.totalBurnedFantokens()
 
-        return response.data.pools
+        return response.data.burned_coins
+      }
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+
+    return []
+  }
+
+  public totalMintedFantokens = async (): Promise<Coin[]> => {
+    try {
+      if (this.bitsongClient && this.assetListsConfig) {
+        const requests: Promise<AxiosResponse<ChainData<'amount', Coin>>>[] = []
+
+        for (const fantokenDenom of this.allowedFantokenDenom) {
+          requests.push(this.bitsongClient.supplyByDenom(fantokenDenom))
+        }
+
+        const supplyResponses = await Promise.all(requests)
+
+        return supplyResponses.map(el => el.data.amount)
+      }
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+
+    return []
+  }
+
+	public pools = async (): Promise<OsmosisPool[]> => {
+    try {
+      if (this.osmosisClient && this.assetListsConfig) {
+        const requests: Promise<AxiosResponse<ChainData<"pool", OsmosisPool>>>[] = []
+
+        for (const pool of this.assetListsConfig.pools) {
+          requests.push(this.osmosisClient.poolDetails(pool.id))
+        }
+
+        const poolResponses = await Promise.all(requests)
+
+        return poolResponses.map(el => el.data.pool)
       }
     } catch (error) {
       console.error(error)
@@ -52,23 +96,28 @@ export default class SinfoniaClient {
 
   public balances = async (bitsongAddress: string, osmosisAddress: string) => {
     try {
-      if (this.bitsongClient && this.osmosisClient) {
-        const [bitsongResponse, osmosisResponse] = await Promise.all([
+      if (this.bitsongClient && this.osmosisClient && this.assetListsConfig) {
+        const [bitsongResponse, osmosisResponse, lockedCoinsResponse] = await Promise.all([
           this.bitsongClient.bankBalances(bitsongAddress),
-          this.osmosisClient.bankBalances(osmosisAddress)
+          this.osmosisClient.bankBalances(osmosisAddress),
+          this.osmosisClient.accountLockedCoins(osmosisAddress)
         ])
 
-        return [
-          ...bitsongResponse.data.balances,
-          ...osmosisResponse.data.balances
-        ]
+        return {
+          osmosisBalance: osmosisResponse.data.balances,
+          bitsongBalance: bitsongResponse.data.balances.filter(
+            el => !this.allowedFantokenDenom.includes(el.denom)
+          ),
+          fantokensBalance: bitsongResponse.data.balances.filter(
+            el => this.allowedFantokenDenom.includes(el.denom)
+          ),
+          lockedCoinsBalance: lockedCoinsResponse.data.coins,
+        }
       }
     } catch (error) {
       console.error(error)
       throw error
     }
-
-    return []
   }
 
   get allowedIbcDenomOsmosis() {
@@ -78,7 +127,14 @@ export default class SinfoniaClient {
       const denoms: string[] = []
 
       denoms.push(assetListsConfig.bitsongToken.ibc.osmosis.destDenom)
-      denoms.push(assetListsConfig.osmosisToken.ibc.osmosis.destDenom)
+
+      const coinLookup = assetListsConfig.osmosisToken.coinLookup.find(
+        (coin) => coin.viewDenom === assetListsConfig.osmosisToken.symbol
+      )
+
+      if (coinLookup) {
+        denoms.push(coinLookup.viewDenom)
+      }
 
       for (const token of assetListsConfig.tokens) {
         denoms.push(token.ibc.osmosis.destDenom)

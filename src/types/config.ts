@@ -48,11 +48,16 @@ export interface ConfigVersion {
 	patch: number
 }
 
+export interface ActivePool {
+	id: string
+}
+
 export interface AssetListConfig {
 	bitsongToken: Token
 	osmosisToken: Token
 	tokens: Token[]
 	fantokens: Token[]
+	pools: ActivePool[]
 	timestamp: string
 	version: ConfigVersion
 }
