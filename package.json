@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@bitsongjs/sdk": "^1.0.0-dev-14",
     "@cosmjs/encoding": "^0.28.0",
     "@cosmjs/proto-signing": "^0.28.0",
     "@cosmjs/stargate": "^0.28.0",
