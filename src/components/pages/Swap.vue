@@ -6,7 +6,7 @@
     import { smallNumber } from '@/common/numbers'
     import CryptoTable from '../CryptoTable.vue'
     import { TableColumn } from '@/types/table'
-import Swapper from '../inputs/Swapper.vue'
+    import Swapper from '../inputs/Swapper.vue'
 
     let coin1 = ref(newUserCoin("BTSG", "Bitsong"))
     let coin2 = ref(newUserCoin("CLAY", "Adam"))
