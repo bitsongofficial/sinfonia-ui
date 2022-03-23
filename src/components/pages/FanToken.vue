@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { newCoin } from '@/common/mockups'
+    import { newCoin, newMyPool } from '@/common/mockups'
     import { balancedCurrency, percentage, smallNumber } from '@/common/numbers'
     import { ref } from 'vue'
     import OutlineButton from '../buttons/OutlineButton.vue'
@@ -15,6 +15,9 @@
     import Sections from '../Sections.vue'
     import LargeButton from '../buttons/LargeButton.vue'
     import Socials from '../Socials.vue'
+import LightTable from '../LightTable.vue'
+import { TableColumn } from '@/types/table'
+import ImagePair from '../ImagePair.vue'
 
     const coin = newCoin("$CLAY", "Adam Clay")
     const timeOptions = [
@@ -48,6 +51,57 @@
         instagram: 'www.instagram.com',
         twitter: 'www.twitter.com',
     }
+    let pools = [
+        newMyPool(),
+        newMyPool(),
+        newMyPool(),
+        newMyPool(),
+    ]
+    pools = pools.map((c,i) => (Object.assign(c, {index:i+1})))
+    const poolsColumns:TableColumn[] = [
+        {
+            name: 'index',
+            required: true,
+            label: '',
+            align: 'left',
+            field: 'index',
+        },
+        { 
+            name: 'tokenPair',
+            align: 'left',
+            label: coin.symbol + " Pools",
+            field: 'name',
+            sortable: true
+        },
+        {
+            name: 'apr',
+            label: 'APR',
+            field: row => row.pool.APR,
+            sortable: true,
+            format: (val:any) => `${percentage(val)} %`,
+        },
+        {
+            name: 'liquidity',
+            label: 'Liquidity',
+            field: row => row.pool.liquidity,
+            sortable: true,
+            format: (val:any) => `${balancedCurrency(val)} $`,
+        },
+        {
+            name: 'my_liquidity',
+            label: 'My Liquidity',
+            field: row => row.user.liquidity,
+            sortable: true,
+            format: (val:any) => `${balancedCurrency(val)} $`,
+        },
+        {
+            name: 'my_bonding',
+            label: 'My Bonding',
+            field: row => row.user.bonded,
+            sortable: true,
+            format: (val:any) => `${balancedCurrency(val)} $`,
+        },
+    ]
 </script>
 
 <template>
@@ -302,6 +356,32 @@
                         </div>
                     </template>
                 </Sections>
+            </template>
+            <template v-slot:pools>
+                <LightTable
+                    :rows="pools"
+                    :columns="poolsColumns"
+                    no-background
+                    >
+                    <template v-slot:body-cell-tokenPair="slotProps">
+                        <q-td :props="slotProps">
+                            <div class="flex no-wrap items-center">
+                                <ImagePair
+                                    :image1="slotProps.row.pool.coin1.iconUrl"
+                                    :image2="slotProps.row.pool.coin2.iconUrl"
+                                    class="q-mr-30"
+                                    :size="32"
+                                    :smaller-size="26"
+                                    :offset="[-8, -1]"
+                                >
+                                </ImagePair>
+                                <p class="fs-14 font-weight-medium">
+                                    {{slotProps.row.pool.coin1.symbol}} / {{slotProps.row.pool.coin2.symbol}}
+                                </p>
+                            </div>
+                        </q-td>
+                    </template>
+                </LightTable>
             </template>
             <template v-slot:social>
                 <div class="row q-pt-18">

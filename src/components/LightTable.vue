@@ -5,6 +5,7 @@
     <{
         rows: any[],
         columns: TableColumn[],
+        noBackground? : boolean,
     }>()
 </script>
 <template>
@@ -12,6 +13,7 @@
         row-key="index"
         :rows="rows"
         :columns="columns"
+        :class="(noBackground ? 'table-no-background' : '')"
     >
         <template v-slot:header="slotProps">
             <q-tr :props="slotProps">

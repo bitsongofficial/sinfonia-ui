@@ -120,6 +120,10 @@ $row-padding-x: 30px;
             }
         }
     }
+
+    &.table-no-background .q-table tbody::before {
+        display: none;
+    }
 }
 
 .hide-header {
