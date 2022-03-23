@@ -1,8 +1,13 @@
 <script setup lang="ts">
-  import {RouterView} from "vue-router"
+  import { RouterView } from 'vue-router'
   import Header from '@/components/navigation/Header.vue'
   import SideMenu from '@/components/navigation/SideMenu.vue'
   import WalletAddress from '@/components/WalletAddress.vue'
+  import useBootstrap from '@/hooks/useBootstrap'
+
+  const { bootstrap } = useBootstrap()
+
+  bootstrap()
 </script>
 
 <template>
