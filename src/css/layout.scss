@@ -82,6 +82,28 @@
     border: 1px solid #FFFFFF;
 }
 
+.row.row-cols-3 {
+    .col {
+        width: 33.33%;
+    }
+}
+
+.w-1\/4 {
+    width: 25%;
+}
+
+.w-2\/4 {
+    width: 50%;
+}
+
+.w-3\/4 {
+    width: 75%;
+}
+
+.w-4\/4 {
+    width: 100%;
+}
+
 .w-1\/6 {
     width: 17%;
 }
@@ -118,11 +140,20 @@
     z-index: 1;
 }
 
+.-z-1 {
+    z-index: -1;
+}
+
 .sticky-bottom {
     position: sticky;
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+.q-px-select-20 .q-field__control{
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 @for $border from 0 to 10 {

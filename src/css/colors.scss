@@ -4,11 +4,28 @@
     --text-color: #fff;
 }
 
+.text-primary-darker {
+    color: $primary-darker !important;
+}
+.bg-primary-darker {
+    background: $primary-darker !important;
+}
+.border-primary-darker {
+    border: 2px solid $primary-darker;
+}
+
 .text-primary-dark {
     color: $primary-dark !important;
 }
 .bg-primary-dark {
     background: $primary-dark !important;
+}
+
+.text-primary-dark-700 {
+    color: $primary-dark-700 !important;
+}
+.bg-primary-dark-700 {
+    background: $primary-dark-700 !important;
 }
 
 .text-dark-light {
@@ -85,14 +102,18 @@
     }
 }
 
-@for $i from 1 through 10
+@for $i from 1 through 20
 {
-    .opacity-#{$i*10} {
-        opacity: #{$i/10};
+    .opacity-#{$i*5} {
+        opacity: #{$i/20};
     }
     
-    .hover\:opacity-#{$i*10}:hover {
-        opacity: #{$i/10};
+    .hover\:opacity-#{$i*5}:hover {
+        opacity: #{$i/20};
+    }
+    
+    .group:hover .group-hover\:opacity-#{$i*5} {
+        opacity: #{$i/20};
     }
 }
 

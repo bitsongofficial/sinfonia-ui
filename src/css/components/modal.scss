@@ -6,3 +6,9 @@
 .q-dialog__inner > div {
     max-width: 508px;
 }
+
+.bigger-modal {
+    .q-dialog__inner > div {
+        max-width: 608px;
+    }
+}

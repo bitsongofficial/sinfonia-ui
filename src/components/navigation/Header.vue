@@ -13,6 +13,7 @@
                 <q-toggle
                     v-model="first"
                     color="white"
+                    class="dark-mode-toggle"
                 />
             </div>
         </div>
