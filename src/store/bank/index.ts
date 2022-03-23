@@ -3,7 +3,7 @@ import { sinfoniaClient } from '@/services'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import useAuth from '@/store/auth'
 import useConfig from '@/store/config';
-import { ChainBalance, TokenBalance } from '@/types';
+import { ChainBalance, OsmosisLock, TokenBalance } from '@/types';
 import { compact, reduce } from 'lodash';
 import { toViewDenom } from '@/common/numbers';
 import { BigNumber } from 'bignumber.js';
@@ -16,6 +16,7 @@ export interface BankState {
   lockedCoinsBalance: Coin[]
   totalMintedFantokens: Coin[]
   totalBurnedFantokens: Coin[]
+  lockedLongerDuration: OsmosisLock[]
 }
 
 const useBank = defineStore('bank', {
@@ -26,7 +27,8 @@ const useBank = defineStore('bank', {
     fantokensBalance: [],
     lockedCoinsBalance: [],
     totalMintedFantokens: [],
-    totalBurnedFantokens: []
+    totalBurnedFantokens: [],
+    lockedLongerDuration: []
   }),
   actions: {
     async init() {
@@ -57,6 +59,7 @@ const useBank = defineStore('bank', {
             this.bitsongBalance = data.bitsongBalance
             this.fantokensBalance = data.fantokensBalance
             this.lockedCoinsBalance = data.lockedCoinsBalance
+            this.lockedLongerDuration = data.lockedLongerDuration
           }
 				}
       } catch (error) {
@@ -166,6 +169,9 @@ const useBank = defineStore('bank', {
         return all.plus(balance.available ?? '0')
       }, new BigNumber('0')).toString()
     },
+    allGamms({ osmosisBalance, lockedCoinsBalance }) {
+      return [...osmosisBalance, ...lockedCoinsBalance]
+    }
   },
   persistedState: {
 		persist: false,

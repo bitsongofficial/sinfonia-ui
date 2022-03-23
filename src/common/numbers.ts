@@ -31,6 +31,10 @@ export const toFiatValue = (value: string | number, fiat: string | number) => {
 	return new BigNumber(value).multipliedBy(fiat)
 }
 
+export const toDecimalGamm = (value: string) => {
+	return new BigNumber(value).multipliedBy(1e-18).toString() 
+}
+
 export const toViewDenom = (value: string | number, chainToViewConversionFactor: string | number) => {
 	return new BigNumber(value).multipliedBy(chainToViewConversionFactor).toString()
 }

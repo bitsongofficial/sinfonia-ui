@@ -1,7 +1,7 @@
 import OsmosisClient from './osmosis-client'
 import ConfigClient from './config-client'
 import BitsongClient from './bitsong-client'
-import { AssetListConfig, ChainData, OsmosisPool } from '@/types'
+import { AssetListConfig, ChainData, IncentivizedPool, OsmosisPool } from '@/types'
 import { AxiosResponse } from 'axios'
 import { Coin } from '@cosmjs/proto-signing'
 import { mapTokensWithDefaults, tokenWithDefaults } from '@/common'
@@ -52,6 +52,23 @@ export default class SinfoniaClient {
     return []
   }
 
+  public incentivizedPools = async () => {
+    try {
+      if (this.osmosisClient && this.assetListsConfig) {
+        const response = await this.osmosisClient.incentivizedPools()
+
+        return response.data.incentivized_pools.filter(
+          pool => this.allowedPoolIDs.includes(pool.pool_id)
+        )
+      }
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+
+    return []
+  }
+
 	public pools = async (): Promise<OsmosisPool[]> => {
     try {
       if (this.osmosisClient && this.assetListsConfig) {
@@ -62,6 +79,8 @@ export default class SinfoniaClient {
         }
 
         const poolResponses = await Promise.all(requests)
+
+        console.log(poolResponses)
 
         return poolResponses.map(el => el.data.pool)
       }
@@ -101,10 +120,11 @@ export default class SinfoniaClient {
   public balances = async (bitsongAddress: string, osmosisAddress: string) => {
     try {
       if (this.bitsongClient && this.osmosisClient && this.assetListsConfig) {
-        const [bitsongResponse, osmosisResponse, lockedCoinsResponse] = await Promise.all([
+        const [bitsongResponse, osmosisResponse, lockedCoinsResponse, lockedLongerDurationResponse] = await Promise.all([
           this.bitsongClient.bankBalances(bitsongAddress),
           this.osmosisClient.bankBalances(osmosisAddress),
-          this.osmosisClient.accountLockedCoins(osmosisAddress)
+          this.osmosisClient.accountLockedCoins(osmosisAddress),
+          this.osmosisClient.accountLockedLongerDuration(osmosisAddress)
         ])
 
         return {
@@ -116,6 +136,7 @@ export default class SinfoniaClient {
             el => this.allowedFantokenDenom.includes(el.denom)
           ),
           lockedCoinsBalance: lockedCoinsResponse.data.coins,
+          lockedLongerDuration: lockedLongerDurationResponse.data.locks
         }
       }
     } catch (error) {
@@ -171,6 +192,16 @@ export default class SinfoniaClient {
       }
 
       return denoms
+    }
+
+    return []
+  }
+
+  get allowedPoolIDs() {
+    const assetListsConfig = this.assetListsConfig
+
+    if (assetListsConfig) {
+      return assetListsConfig.pools.map(el => el.id)
     }
 
     return []

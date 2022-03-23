@@ -21,6 +21,14 @@ export interface OsmosisPool {
 	totalWeight: string;
 }
 
+export interface OsmosisLock {
+	ID: string
+	duration: string
+	end_time: string
+	owner: string
+	coins: Coin[]
+}
+
 export interface IncentivizedPool {
 	gauge_id: string
 	lockable_duration: string
