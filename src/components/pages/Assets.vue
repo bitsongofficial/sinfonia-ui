@@ -8,10 +8,11 @@
     import IconButton from '../buttons/IconButton.vue'
     import InfoCard from '../cards/InfoCard.vue'
     import { TableColumn } from '@/types/table'
+import { resolveIcon } from '@/common/resolvers'
 
     const btsg:Coin = newCoin("BTSG")
     const user:User = newUser()
-    user.coins = user.coins.map((c,i) => (Object.assign(c, {index:i+1})))
+    user.coins = user.coins.map((c,i) => (Object.assign(c, {index:i+1, chains: [Math.random() > 0.5 ? 'bitsong' : 'osmosis']})))
     const columns: TableColumn[] = [
         {
             name: 'index',
@@ -29,15 +30,23 @@
         },
         {
             name: 'symbol',
-            align: 'left',
-            label: '',
+            align: 'center',
+            label: 'Symbol',
             field: (row:any) => row.coin.symbol,
             sortable: false,
             format: (val:any) => `${val}`,
         },
-        { name: 'available', label: 'Available assets', field: 'total', sortable: true, format: (val:any) => `${balancedCurrency(val)} $`},
-        { name: 'bonded', label: 'Available tokens', field: 'bonded', sortable: true, format: (val:any, row:any) => `${balancedCurrency(val)} ${row.coin.symbol}`},
+        {
+            name: 'chain',
+            align: 'center',
+            label: 'Chain',
+            field: 'chains',
+            sortable: false,
+        },
+        { name: 'available', label: 'Available', field: 'total', sortable: true, format: (val:any) => `${balancedCurrency(val)} $`},
+        { name: 'quantity', label: 'QTY', field: 'bonded', sortable: true, format: (val:any, row:any) => `${balancedCurrency(val)} ${row.coin.symbol}`},
         { name: 'arrows', label: '', field: '', sortable: false},
+        { name: 'expandIcon', label: '', field: '', sortable: false},
     ]
 </script>
 
@@ -68,55 +77,90 @@
     <p class="q-mb-21 fs-18 font-weight-medium">Tokens</p>
     <div>
         <LightTable :columns="columns" :rows="user.coins">
-            <template v-slot:body-cell-token="props">
-                <q-td :props="props">
-                    <div class="row items-center">
-                        <q-avatar
-                            size="sm"
-                            class="q-mr-22">
-                            <img :src="props.row.coin.iconUrl" alt="">                   
-                        </q-avatar>
-                        <p class="text-weight-medium fs-14">
-                            {{props.row.coin.name}}
+            <template v-slot:body="props">
+                <q-tr :props="props">
+                    <q-td>
+                        <span class="opacity-40">
+                            {{props.row.index}}
+                        </span>
+                    </q-td>
+                    <q-td>
+                        <div class="row items-center">
+                            <q-avatar
+                                size="sm"
+                                class="q-mr-22">
+                                <img :src="props.row.coin.iconUrl" alt="">                   
+                            </q-avatar>
+                            <p class="text-weight-medium fs-14">
+                                {{props.row.coin.name}}
+                            </p>
+                        </div>
+                    </q-td>
+                    <q-td>
+                        <p class="text-white text-center">{{props.row.coin.symbol}}</p>
+                    </q-td>
+                    <q-td>
+                        <div class="flex justify-center">
+                            <q-icon
+                                v-for="(chain, i) in props.row.chains"
+                                :name="resolveIcon(chain, 20, 20)"
+                                size="20px"
+                                :class="i > 0 ? 'q-ml-8' : ''"
+                            >
+                            </q-icon>
+                        </div>
+                    </q-td>
+                    <q-td>
+                        <p :class="'text-right ' + (props.row.total > 0 ? '' : 'opacity-40')">
+                            {{balancedCurrency(props.row.total - props.row.bonded)}} $
                         </p>
-                    </div>
-                </q-td>
-            </template>
-            <template v-slot:body-cell-index="props">
-                <q-td :props="props">
-                    <span class="opacity-40">
-                        {{props.value}}
-                    </span>
-                </q-td>
-            </template>
-            <template v-slot:body-cell-symbol="props">
-                <q-td :props="props">
-                    <span class="opacity-40 fs-12">
-                        {{props.value}}
-                    </span>
-                </q-td>
-            </template>
-            <template v-slot:body-cell-available="props">
-                <q-td :props="props">
-                    <p :class="(props.row.total > 0 ? '' : 'opacity-40')">
-                        {{props.value}}
-                    </p>
-                </q-td>
-            </template>
-            <template v-slot:body-cell-bonded="props">
-                <q-td :props="props">
-                    <p :class="(props.row.bonded > 0 ? '' : 'opacity-40')">
-                        {{props.value}}
-                    </p>
-                </q-td>
-            </template>
-            <template v-slot:body-cell-arrows="props">
-                <q-td :props="props">
-                    <div>
-                        <IconButton icon="arrow-up" height="12" width="14" class="q-mr-42 fs-12 s-20"></IconButton>
-                        <IconButton icon="arrow-up" height="12" width="14" class="rotate-180 fs-12 s-20"></IconButton>
-                    </div>
-                </q-td>
+                    </q-td>
+                    <q-td>
+                        <p :class="'text-right ' + (props.row.bonded > 0 ? '' : 'opacity-40')">
+                            {{balancedCurrency((props.row.total - props.row.bonded) * 100)}} {{props.row.coin.symbol}}
+                        </p>
+                    </q-td>
+                    <q-td>
+                        <div class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right">
+                            <q-icon :name="resolveIcon('swap', 21, 16)"></q-icon>
+                        </div>
+                    </q-td>
+                    <q-td>
+                        <div class="opacity-40 flex justify-end hover:opacity-100 cursor-pointer fs-12" @click="props.expand = !props.expand">
+                            <div :class="'w-fit ' + (props.expand ? 'rotate-180' : '')">
+                                <q-icon :name="resolveIcon('keyboard-arrow-down', 10, 6)"></q-icon>
+                            </div>
+                        </div>
+                    </q-td>
+                </q-tr>
+                <q-tr v-for="chain in props.row.chains" v-show="props.expand" :props="props" no-hover>
+                    <q-td>
+                    </q-td>
+                    <q-td>
+                        <div class="flex justify-start q-ml-46">
+                            <div class="text-capitalize text-primary-light flex items-center">
+                                <p>
+                                    {{chain}}
+                                </p>
+                                <q-icon :name="resolveIcon(chain, 20, 20)" class="q-ml-10"></q-icon>
+                            </div>
+                        </div>
+                    </q-td>
+                    <q-td>
+                    </q-td>
+                    <q-td>
+                    </q-td>
+                    <q-td>
+                        <p :class="'text-right ' + (props.row.total > 0 ? '' : 'opacity-40')">
+                            {{balancedCurrency(props.row.total - props.row.bonded)}} $
+                        </p>
+                    </q-td>
+                    <q-td>
+                        <p :class="'text-right ' + (props.row.bonded > 0 ? '' : 'opacity-40')">
+                            {{balancedCurrency((props.row.total - props.row.bonded) * 100)}} {{props.row.coin.symbol}}
+                        </p>
+                    </q-td>
+                </q-tr>
             </template>
         </LightTable>
     </div>

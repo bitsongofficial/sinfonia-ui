@@ -366,6 +366,7 @@ import ImagePair from '../ImagePair.vue'
                     :rows="pools"
                     :columns="poolsColumns"
                     no-background
+                    class="q-px-0 q-py-0 table-no-padding"
                     >
                     <template v-slot:body-cell-tokenPair="slotProps">
                         <q-td :props="slotProps">

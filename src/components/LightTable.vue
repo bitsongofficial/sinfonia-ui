@@ -14,7 +14,6 @@
         :rows="rows"
         :columns="columns"
         :class="(noBackground ? 'table-no-background' : '')"
-        virtual-scroll
     >
         <template v-slot:header="slotProps">
             <q-tr :props="slotProps">

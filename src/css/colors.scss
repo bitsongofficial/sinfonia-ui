@@ -28,6 +28,13 @@
     background: $primary-dark-700 !important;
 }
 
+.text-primary-light {
+    color: $primary-light !important;
+}
+.bg-primary-light {
+    background: $primary-light !important;
+}
+
 .border-primary-light {
     border: 2px solid rgba(122, 110, 124, 0.15);
 }
