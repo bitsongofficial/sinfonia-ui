@@ -92,6 +92,9 @@ const useKeplr = defineStore('keplr', {
       }
     },
 	},
+  persistedState: {
+		persist: false,
+	}
 })
 
 if (import.meta.hot) {

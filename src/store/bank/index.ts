@@ -145,7 +145,10 @@ const useBank = defineStore('bank', {
         }
       })
     }
-  }
+  },
+  persistedState: {
+		persist: false,
+	}
 });
 
 if (import.meta.hot) {

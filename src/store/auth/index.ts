@@ -13,6 +13,7 @@ export interface AuthState {
 const useAuth = defineStore('auth', {
 	state: (): AuthState => ({
 		loading: false,
+		session: undefined,
 	}),
 	actions: {
 		async signIn() {

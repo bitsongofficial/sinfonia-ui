@@ -79,6 +79,9 @@ const usePools = defineStore('pools', {
         })
       })
 		},
+	},
+  persistedState: {
+		persist: false,
 	}
 });
 
