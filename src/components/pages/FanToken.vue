@@ -102,10 +102,14 @@ import ImagePair from '../ImagePair.vue'
             format: (val:any) => `${balancedCurrency(val)} $`,
         },
     ]
+    const image = "https://i.scdn.co/image/ab6761610000e5eb608e188abbae6409698b8f5a"
+    const topImageStyle = 'background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(' + image + ');'
 </script>
 
 <template>
     <div class="text-white font-weight-500">
+        <div class="fixed-top full-width -z-1 hv-3/5 !bg-cover" :style="topImageStyle">
+        </div>
         <div class="row q-mb-60">
             <div class="col-8 col-md-4">
                 <div class="flex q-mb-60 items-center">
