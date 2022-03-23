@@ -30,3 +30,7 @@ export const percentage = (number: number): string =>
 export const toFiatValue = (value: string | number, fiat: string | number) => {
 	return new BigNumber(value).multipliedBy(fiat)
 }
+
+export const toViewDenom = (value: string | number, chainToViewConversionFactor: string | number) => {
+	return new BigNumber(value).multipliedBy(chainToViewConversionFactor).toString()
+}
