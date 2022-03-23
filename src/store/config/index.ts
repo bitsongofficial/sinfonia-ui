@@ -1,11 +1,11 @@
 import { sinfoniaClient } from '@/services'
-import { AssetListConfig, TokenBalance } from '@/types'
+import { AssetListConfig, Token, TokenBalance } from '@/types'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { BigNumber } from 'bignumber.js'
-import { reduce } from 'lodash'
+import { compact, reduce } from 'lodash'
 import useBank from '@/store/bank'
 import { Coin } from '@cosmjs/proto-signing'
-import { balancedCurrency } from '@/common/numbers'
+import { balancedCurrency, currency } from '@/common/numbers'
 
 export interface ConfigState {
   loading: boolean
@@ -15,6 +15,7 @@ export interface ConfigState {
 const useConfig = defineStore('config', {
   state: (): ConfigState => ({
     loading: false,
+    assetsConfig: undefined,
   }),
   actions: {
     async init() {
@@ -31,13 +32,13 @@ const useConfig = defineStore('config', {
     },
   },
   getters: {
-    bitsongToken: ({ assetsConfig }) => assetsConfig ? assetsConfig.bitsongToken : undefined,
-    osmosisToken: ({ assetsConfig }) => assetsConfig ? assetsConfig.osmosisToken : undefined,
-    fantokens: ({ assetsConfig }): TokenBalance[] => {
+    bitsongToken: ({ assetsConfig }): Token | undefined => assetsConfig ? assetsConfig.bitsongToken : undefined,
+    osmosisToken: ({ assetsConfig }): Token | undefined => assetsConfig ? assetsConfig.osmosisToken : undefined,
+    rawFantokens: ({ assetsConfig }): Token[] => assetsConfig ? assetsConfig.fantokens : [],
+    fantokens (): TokenBalance[] {
       const bankStore = useBank()
-      const data = assetsConfig ? assetsConfig.fantokens : []
 
-      return data.map(fantoken => {
+      return this.rawFantokens.map(fantoken => {
         const coinLookup = fantoken.coinLookup.find(
           (coin) => coin.viewDenom === fantoken.symbol
         )
@@ -68,13 +69,39 @@ const useConfig = defineStore('config', {
 
         return {
           ...fantoken,
-          circulatingSupply: balancedCurrency(circulatingSupply.toNumber()),
-          totalMintedTokens: balancedCurrency(totalMintedTokens.toNumber()),
-          totalBurnedTokens: balancedCurrency(totalBurnedTokens.toNumber())
+          price: '0.15',
+          marketCap: circulatingSupply.multipliedBy('0.15').toString(),
+          circulatingSupply: circulatingSupply.toString(),
+          totalMintedTokens: totalMintedTokens.toString(),
+          totalBurnedTokens: totalBurnedTokens.toString()
         }
       })
     },
     tokens: ({ assetsConfig }) => assetsConfig ? assetsConfig.tokens : [],
+    allTokens (): Token[] {
+      return compact([
+        this.bitsongToken,
+        this.osmosisToken,
+        ...this.rawFantokens
+      ])
+    },
+    findTokenByIBCDenom () {
+      return (denom: string) => this.allTokens.find(token => {
+        if (!token.ibcEnabled) {
+          const coinLookup = token.coinLookup.find(
+            (coin) => coin.viewDenom === token.symbol
+          )
+
+          if (coinLookup) {
+            return coinLookup.chainDenom === denom
+          }
+
+          return undefined
+        }
+
+        return token.ibc.osmosis.destDenom === denom
+      })
+    }
   },
 });
 

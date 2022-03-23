@@ -6,7 +6,7 @@ export interface PoolParams {
 	smoothWeightChangeParams: string | null
 }
 
-export interface PoolAsset {
+export interface OsmosisPoolAsset {
 	token: Coin;
 	weight: string;
 }
@@ -17,7 +17,7 @@ export interface OsmosisPool {
 	poolParams: PoolParams
 	future_pool_governor: string
 	totalShares: Coin
-	poolAssets: PoolAsset[]
+	poolAssets: OsmosisPoolAsset[]
 	totalWeight: string;
 }
 

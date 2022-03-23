@@ -4,6 +4,7 @@ import BitsongClient from './bitsong-client'
 import { AssetListConfig, ChainData, OsmosisPool } from '@/types'
 import { AxiosResponse } from 'axios'
 import { Coin } from '@cosmjs/proto-signing'
+import { mapTokensWithDefaults, tokenWithDefaults } from '@/common'
 
 export default class SinfoniaClient {
   private assetListsConfig?: AssetListConfig
@@ -78,9 +79,12 @@ export default class SinfoniaClient {
 
       this.assetListsConfig = {
         ...response.data,
-        fantokens: response.data.fantokens.map(fantoken => ({
+        bitsongToken: tokenWithDefaults(response.data.bitsongToken),
+        osmosisToken: tokenWithDefaults(response.data.osmosisToken),
+        tokens: mapTokensWithDefaults(response.data.tokens),
+        fantokens: mapTokensWithDefaults(response.data.fantokens).map(fantoken => ({
           ...response.data.bitsongToken,
-          ...fantoken,
+          ...fantoken
         }))
       }
 

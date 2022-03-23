@@ -1,23 +1,32 @@
-export const currency = (number: number): string =>
+import { BigNumber } from 'bignumber.js'
+
+export const currency = (number: number | string): string =>
 {
-    return (new Intl.NumberFormat('en-US', {maximumFractionDigits: 2}).format(number))
+	return (new Intl.NumberFormat('en-US', {maximumFractionDigits: 2}).format(new BigNumber(number).toNumber()))
 }
 
-export const balancedCurrency = (number: number): string =>
+export const balancedCurrency = (number: number | string): string =>
 {
-    if(Math.abs(number) > 1000)
-    {
-        number = Math.floor(number)
-    }
-    return currency(number)
+	const value = new BigNumber(number)
+
+	if(value.abs().gt(1000))
+	{
+		number = Math.floor(value.toNumber())
+	}
+
+	return currency(value.toString())
 }
 
-export const smallNumber = (number: number): string =>
+export const smallNumber = (number: number | string): string =>
 {
-    return number.toFixed(2)
+	return new BigNumber(number).toFixed(2)
 }
 
 export const percentage = (number: number): string =>
 {
-    return number.toFixed(2)
+	return number.toFixed(2)
+}
+
+export const toFiatValue = (value: string | number, fiat: string | number) => {
+	return new BigNumber(value).multipliedBy(fiat)
 }

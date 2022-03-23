@@ -1,11 +1,11 @@
 import { FantokenMedia, FantokenSocial, FantokenWhitePaper } from './fantoken'
 
-export type TokenLogo = 'svg' | 'png'
+export type TokenLogo = 'default' | 'svg' | 'png'
 
 export interface BaseToken {
 	name: string
 	symbol: string
-	logos: { [key in TokenLogo]: string }
+	logos: { [key in TokenLogo]?: string }
 }
 
 export interface CoinLookup {

@@ -1,100 +1,103 @@
 <script setup lang="ts">
-    import CardDark from '../cards/CardDark.vue'
-    import SmallButton from '../buttons/SmallButton.vue'
-    import Card from '../cards/Card.vue'
-    import Title from '../typography/Title.vue'
-    import { newCoin, newUser, newUserCoin } from '@/common/mockups'
-    import { computed, onMounted, onUnmounted, ref } from 'vue'
-    import { balancedCurrency, currency, smallNumber } from '@/common/numbers'
-    import CoinSelect from '../inputs/CoinSelect.vue'
-    import InlineButton from '../buttons/InlineButton.vue'
-    import { resolveIcon } from '@/common/resolvers'
-    import LargeButton from '../buttons/LargeButton.vue'
-    import CryptoTable from '../CryptoTable.vue'
-    import ExpandableCard from '../cards/ExpandableCard.vue'
-    import { TableColumn } from '@/types/table'
+	import CardDark from '../cards/CardDark.vue'
+	import SmallButton from '../buttons/SmallButton.vue'
+	import Card from '../cards/Card.vue'
+	import Title from '../typography/Title.vue'
+	import { newCoin, newUser, newUserCoin } from '@/common/mockups'
+	import { computed, onMounted, onUnmounted, ref } from 'vue'
+	import { balancedCurrency, currency, smallNumber } from '@/common/numbers'
+	import CoinSelect from '../inputs/CoinSelect.vue'
+	import InlineButton from '../buttons/InlineButton.vue'
+	import { resolveIcon } from '@/common/resolvers'
+	import LargeButton from '../buttons/LargeButton.vue'
+	import CryptoTable from '../CryptoTable.vue'
+	import ExpandableCard from '../cards/ExpandableCard.vue'
+	import { TableColumn } from '@/types/table'
+	import useConfig from '@/store/config'
 
-    let user = newUser()
+	const configStore = useConfig()
 
-    let coin1 = ref(newUserCoin("BTSG", "Bitsong"))
-    let coin2 = ref(newUserCoin("CLAY", "Adam"))
-    const slippage = -0.210
+	let user = newUser()
 
-    const swapAmount = ref("0")
+	let coin1 = ref(newUserCoin("BTSG", "Bitsong"))
+	let coin2 = ref(newUserCoin("CLAY", "Adam"))
+	const slippage = -0.210
 
-    const swapAmountWrapper = computed<string>({
-        get() {
-            return swapAmount.value
-        },
-        set(value) {
-            swapAmount.value = ((value != "" && parseInt(value) > 0 ) ? value : "0")
-        }
-    })
+	const swapAmount = ref("0")
 
-    const swapRatio = computed<number>(() =>
-    {
-        return coin1.value.coin.price / coin2.value.coin.price
-    })
+	const swapAmountWrapper = computed<string>({
+			get() {
+					return swapAmount.value
+			},
+			set(value) {
+					swapAmount.value = ((value != "" && parseInt(value) > 0 ) ? value : "0")
+			}
+	})
 
-    const swapAmountNumber = computed<number>(() =>
-    {
-        return parseInt(swapAmountWrapper.value)
-    })
+	const swapRatio = computed<number>(() =>
+	{
+			return coin1.value.coin.price / coin2.value.coin.price
+	})
 
-    const invert = () =>
-    {
-        const tmp = coin1.value
-        coin1.value = coin2.value
-        coin2.value = tmp
-    }
-    
-    const dex = [
-        newCoin("CLAY", "Adam Clay"),
-        newCoin("FNTY", "Fonti"),
-        newCoin("VBRN", "Vibranium"),
-        newCoin("MCX", "Mace"),
-    ]
-    
-    const columns:TableColumn[] = [
-        { 
-            name: 'token',
-            align: 'left',
-            label: '',
-            field: 'name',
-            sortable: false
-        },
-        {
-            name: 'symbol',
-            align: 'left',
-            label: '',
-            field: 'symbol',
-            sortable: false,
-            format: (val:any) => `$${val}`,
-        },
-        { name: 'price', label: '', field: 'price', sortable: false, format: (val:any) => `${smallNumber(val)} $`},
-    ]
+	const swapAmountNumber = computed<number>(() =>
+	{
+			return parseInt(swapAmountWrapper.value)
+	})
 
-    const boxesStyle = ref({maxHeight: "0"})
-    const heightRef = ref<{element:HTMLElement} | null>(null)
+	const invert = () =>
+	{
+			const tmp = coin1.value
+			coin1.value = coin2.value
+			coin2.value = tmp
+	}
+	
+	const dex = [
+			newCoin("CLAY", "Adam Clay"),
+			newCoin("FNTY", "Fonti"),
+			newCoin("VBRN", "Vibranium"),
+			newCoin("MCX", "Mace"),
+	]
+	
+	const columns:TableColumn[] = [
+			{ 
+					name: 'token',
+					align: 'left',
+					label: '',
+					field: 'name',
+					sortable: false
+			},
+			{
+					name: 'symbol',
+					align: 'left',
+					label: '',
+					field: 'symbol',
+					sortable: false,
+					format: (val:any) => `$${val}`,
+			},
+			{ name: 'price', label: '', field: 'price', sortable: false, format: (val:any) => `${smallNumber(val)} $`},
+	]
 
-    const setSize = () =>
-    {
-        if(heightRef.value && heightRef.value.element)
-        {
-            console.log(heightRef.value.element.clientHeight)
-            boxesStyle.value.maxHeight = ((heightRef.value.element.clientHeight - 157) / 2) + "px"
-        }
-    }
+	const boxesStyle = ref({maxHeight: "0"})
+	const heightRef = ref<{element:HTMLElement} | null>(null)
 
-    onMounted(() => {
-        window.addEventListener("resize", setSize)
-        setSize()
-    })
+	const setSize = () =>
+	{
+		if(heightRef.value && heightRef.value.element)
+		{
+			console.log(heightRef.value.element.clientHeight)
+			boxesStyle.value.maxHeight = ((heightRef.value.element.clientHeight - 157) / 2) + "px"
+		}
+	}
 
-    onUnmounted(() =>
-    {
-        window.removeEventListener("resize", setSize);
-    })
+	onMounted(() => {
+		window.addEventListener("resize", setSize)
+		setSize()
+	})
+
+	onUnmounted(() =>
+	{
+		window.removeEventListener("resize", setSize);
+	})
 </script>
 <template>
     <div class="font-weight-medium">
@@ -168,7 +171,7 @@
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
                 <Card class="q-py-10 q-px-none q-mb-51" :padding="0" transparency="5">
-                    <CryptoTable virtual-scroll :style="boxesStyle" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
+                    <CryptoTable virtual-scroll :style="boxesStyle" :rows="configStore.fantokens" :columns="columns" class="bg-transparent hide-header small-rows">
 
                     </CryptoTable>
                 </Card>
@@ -177,7 +180,7 @@
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
                 <Card class="q-py-10 q-px-none" :padding="0" transparency="5">
-                    <CryptoTable virtual-scroll :style="boxesStyle" :rows="dex" :columns="columns" class="bg-transparent hide-header small-rows">
+                    <CryptoTable virtual-scroll :style="boxesStyle" :rows="configStore.fantokens" :columns="columns" class="bg-transparent hide-header small-rows">
 
                     </CryptoTable>
                 </Card>
