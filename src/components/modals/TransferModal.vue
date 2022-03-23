@@ -1,13 +1,11 @@
 <script setup lang="ts">
-    import { UserCoinInfo } from '@/types/user'
-    import { computed, ref } from 'vue'
-    import ModalWithClose from './ModalWithClose.vue'
-    import AddressesSelect from '../inputs/AddressesSelect.vue'
-    import { resolveIcon } from '@/common/resolvers';
-import SmallButton from '../buttons/SmallButton.vue';
-import StandardButton from '../buttons/StandardButton.vue';
-import LargeButton from '../buttons/LargeButton.vue';
-import Amount from '../inputs/Amount.vue';
+	import { UserCoinInfo } from '@/types/user'
+	import { computed, ref } from 'vue'
+	import ModalWithClose from './ModalWithClose.vue'
+	import AddressesSelect from '../inputs/AddressesSelect.vue'
+	import { resolveIcon } from '@/common/resolvers';
+	import LargeButton from '../buttons/LargeButton.vue';
+	import Amount from '../inputs/Amount.vue';
 
     const props = defineProps<
     {

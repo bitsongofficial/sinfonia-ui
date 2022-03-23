@@ -2,6 +2,7 @@ import { sinfoniaClient } from '@/services'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { IncentivizedPool, OsmosisPool, Pool } from '@/types'
 import { mapPools } from '@/common'
+import useBank from '@/store/bank'
 
 export interface PoolsState {
   loading: boolean
@@ -39,6 +40,18 @@ const usePools = defineStore('pools', {
 		pools({ rawPools }): Pool[] {
 			return mapPools(rawPools)
 		},
+    myPools(): Pool[] {
+      const bankStore = useBank()
+
+			return this.pools.filter(pool => {
+        const gammIds = bankStore.allGamms.filter(el => `gamm/pool/${pool.id}`)
+
+        return gammIds.length > 0
+      })
+		},
+    poolById() {
+      return (id: string) => this.pools.find(pool => pool.id === id)
+    }
 	},
   persistedState: {
 		persist: false,

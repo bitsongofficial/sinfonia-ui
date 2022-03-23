@@ -1,8 +1,16 @@
-import { OsmosisPool, OsmosisPoolAsset, PoolAsset } from '@/types'
-import { toDecimalGamm, toViewDenom } from './numbers'
+import { CoinLookup, OsmosisPool, OsmosisPoolAsset, PoolAsset } from '@/types'
+import { toViewDenom } from './numbers'
 import useBank from '@/store/bank'
 import useConfig from '@/store/config'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
+
+export const gammToPoolAmount = (currentAmount: BigNumber, totalPoolGamm: BigNumber, totalTokenGamm: BigNumber, coinLookup: CoinLookup) => {
+	const shareRation = currentAmount.div(totalPoolGamm)
+
+	const amount = totalTokenGamm.multipliedBy(shareRation).toString()
+
+	return toViewDenom(amount.toString(), coinLookup.chainToViewConversionFactor)
+}
 
 export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): PoolAsset | undefined => {
 	const configStore = useConfig()
@@ -10,7 +18,7 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 	const token = configStore.findTokenByIBCDenom(rawCoin.token.denom)
 	const totalPoolGamm = new BigNumber(pool.totalShares.amount)
 	const totalTokenGamm = new BigNumber(rawCoin.token.amount)  // For example, total BTSG inside the pool
-	const weightPercentage = new BigNumber(rawCoin.weight).div(pool.totalWeight).toString()
+	const weightPercentage = new BigNumber(rawCoin.weight).div(pool.totalWeight).toNumber()
 
 	if (token) {
 		const coinLookup = token.coinLookup.find(
@@ -18,18 +26,21 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 		)
 
 		let userTotalGamm = new BigNumber('0')
-		let userAmount = '0'
-		const gammBalances = bankStore.allGamms.filter(coin => coin.denom === `gamm/pool/${pool.id}`)
-		
-		if (gammBalances.length > 0) {
-			for (const gammBalance of gammBalances) {
-				userTotalGamm = userTotalGamm.plus(gammBalance.amount)
-			}
+		let bondedAmount = new BigNumber('0')
+		let availableAmount = new BigNumber('0')
 
-			const shareRation = userTotalGamm.div(totalPoolGamm)
+		const bondedBalances = bankStore.lockedCoinsBalance.filter(coin => coin.denom === `gamm/pool/${pool.id}`)
+		const availableBalances = bankStore.osmosisBalance.filter(coin => coin.denom === `gamm/pool/${pool.id}`)
 
-			userAmount = totalTokenGamm.multipliedBy(shareRation).toString()
+		for (const bondedBalance of bondedBalances) {
+			bondedAmount = bondedAmount.plus(bondedBalance.amount)
 		}
+
+		for (const availableBalance of availableBalances) {
+			availableAmount = availableAmount.plus(availableBalance.amount)
+		}
+
+		userTotalGamm = bondedAmount.plus(availableAmount)
 
 		if (coinLookup) {
 			return {
@@ -38,7 +49,9 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 					symbol: token.symbol,
 					logos: token.logos,
 					amount: toViewDenom(totalTokenGamm.toString(), coinLookup.chainToViewConversionFactor),
-					userAmount: toViewDenom(userAmount.toString(), coinLookup.chainToViewConversionFactor),
+					userTotalAmount: gammToPoolAmount(userTotalGamm, totalPoolGamm, totalTokenGamm, coinLookup),
+					availableAmount: gammToPoolAmount(availableAmount, totalPoolGamm, totalTokenGamm, coinLookup),
+					bondedAmount: gammToPoolAmount(bondedAmount, totalPoolGamm, totalTokenGamm, coinLookup)
 				},
 				weightPercentage,
 				weight: rawCoin.weight,
@@ -71,6 +84,8 @@ export const mapPools = (rawPools: OsmosisPool[]) => {
 			coin2,
 			APR: 0,
 			liquidity: 0,
+			userLiquidity: 0,
+			bonded: 0,
 			coin1Percentage: 0
 		})
 	})

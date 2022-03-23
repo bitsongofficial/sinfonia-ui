@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createPersistedStatePlugin } from 'pinia-plugin-persistedstate-2'
-import { Quasar } from 'quasar'
+import { Quasar, Dialog } from 'quasar'
 import {createRouter, createWebHashHistory} from 'vue-router'
 
 // Import Quasar css
@@ -26,7 +26,9 @@ const router = createRouter({
 const app = createApp(App)
 
 app.use(Quasar, {
-  plugins: {},
+  plugins: {
+    Dialog,
+  },
   config: {
     framework: {
       cssAddon: true,

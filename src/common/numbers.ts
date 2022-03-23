@@ -22,9 +22,9 @@ export const smallNumber = (number: number | string): string =>
 	return new BigNumber(number).toFixed(2)
 }
 
-export const percentage = (number: number): string =>
+export const percentage = (number: number | string): string =>
 {
-	return number.toFixed(2)
+	return new BigNumber(number).toFixed(2)
 }
 
 export const toFiatValue = (value: string | number, fiat: string | number) => {

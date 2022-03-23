@@ -3,16 +3,16 @@
 	import LightTable from '@/components/LightTable.vue'
 	import IconButton from '@/components/buttons/IconButton.vue'
 	import InfoCard from '@/components/cards/InfoCard.vue'
-	import { newCoin, newUser } from '@/common/mockups'
-	import { Coin } from '@/types/coin'
-	import { User } from '@/types/user'
-	import { balancedCurrency } from '@/common/numbers'
+	import TransferModal from '@/components/modals/TransferModal.vue'
 	import { TableColumn } from '@/types/table'
+	import { balancedCurrency } from '@/common/numbers'
+	import { useQuasar } from 'quasar'
+	import { ref } from 'vue'
 	import useBank from '@/store/bank'
 
+	const quasar = useQuasar()
 	const bankStore = useBank()
-
-	const btsg:Coin = newCoin("BTSG")
+	const openTransferDialog = ref(false)
 
 	const columns: TableColumn[] = [
 		{
@@ -62,7 +62,7 @@
 		</div>
 		<div class="col-2">
 			<InfoCard header="BTSG price">
-				{{ balancedCurrency(btsg.price) }} $
+				{{ balancedCurrency('0') }} $
 			</InfoCard>
 		</div>
 	</div>
@@ -114,11 +114,12 @@
 			<template v-slot:body-cell-arrows="props">
 				<q-td :props="props">
 					<div>
-						<IconButton icon="arrow-up" height="12" width="14" class="q-mr-42 fs-12 s-20" />
-						<IconButton icon="arrow-up" height="12" width="14" class="rotate-180 fs-12 s-20" />
+						<IconButton @click="openTransferDialog = true" icon="arrow-up" height="12" width="14" class="q-mr-42 fs-12 s-20" />
+						<IconButton @click="openTransferDialog = true" icon="arrow-up" height="12" width="14" class="rotate-180 fs-12 s-20" />
 					</div>
 				</q-td>
 			</template>
 		</LightTable>
+		<!-- <TransferModal v-model="openTransferDialog" /> -->
 	</div>
 </template>
