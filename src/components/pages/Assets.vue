@@ -13,7 +13,6 @@
 	const bankStore = useBank()
 
 	const btsg:Coin = newCoin("BTSG")
-	const user:User = newUser()
 
 	const columns: TableColumn[] = [
 		{
@@ -48,17 +47,17 @@
 	<div class="row font-weight-medium q-col-gutter-lg q-mb-75">
 		<div class="col-2">
 			<InfoCard header="Total assets">
-				{{ balancedCurrency(user.totalAssets) }} $
+				{{ balancedCurrency(bankStore.total) }} $
 			</InfoCard>
 		</div>
 		<div class="col-2">
 			<InfoCard header="Available assets">
-				{{ balancedCurrency(user.totalAssets - user.bondedAssets) }} $
+				{{ balancedCurrency(bankStore.available) }} $
 			</InfoCard>
 		</div>
 		<div class="col-2">
 			<InfoCard header="Bonded assets">
-				{{ balancedCurrency(user.bondedAssets) }} $
+				{{ balancedCurrency(bankStore.bonded) }} $
 			</InfoCard>
 		</div>
 		<div class="col-2">

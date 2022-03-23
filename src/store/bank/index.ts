@@ -95,7 +95,7 @@ const useBank = defineStore('bank', {
 
           if (osmosisBalance && configStore.osmosisToken) {
             const osmosisAvailable = toViewDenom(osmosisBalance.amount, coinLookup.chainToViewConversionFactor)
-            const osmosisBonded = toViewDenom(osmosisBalance.amount, coinLookup.chainToViewConversionFactor)
+            const osmosisBonded = toViewDenom('0', coinLookup.chainToViewConversionFactor)
             const osmosisTotal = new BigNumber(osmosisAvailable).plus(osmosisBonded)
 
             osmosisChain = {
@@ -112,7 +112,7 @@ const useBank = defineStore('bank', {
 
           if (bitsongBalance) {
             const osmosisAvailable = toViewDenom(bitsongBalance.amount, coinLookup.chainToViewConversionFactor)
-            const osmosisBonded = toViewDenom(bitsongBalance.amount, coinLookup.chainToViewConversionFactor)
+            const osmosisBonded = toViewDenom('0', coinLookup.chainToViewConversionFactor)
             const osmosisTotal = new BigNumber(osmosisAvailable).plus(osmosisBonded)
 
             bitsongChain = {
@@ -144,7 +144,28 @@ const useBank = defineStore('bank', {
           chains
         }
       })
-    }
+    },
+    total() {
+      const balances = this.balances as TokenBalance[]
+
+      return reduce<TokenBalance, BigNumber>(balances, (all, balance) => {
+        return all.plus(balance.total ?? '0')
+      }, new BigNumber('0')).toString()
+    },
+    bonded() {
+      const balances = this.balances as TokenBalance[]
+
+      return reduce<TokenBalance, BigNumber>(balances, (all, balance) => {
+        return all.plus(balance.bonded ?? '0')
+      }, new BigNumber('0')).toString()
+    },
+    available() {
+      const balances = this.balances as TokenBalance[]
+
+      return reduce<TokenBalance, BigNumber>(balances, (all, balance) => {
+        return all.plus(balance.available ?? '0')
+      }, new BigNumber('0')).toString()
+    },
   },
   persistedState: {
 		persist: false,
