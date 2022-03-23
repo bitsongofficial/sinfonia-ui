@@ -108,7 +108,7 @@ import ImagePair from '../ImagePair.vue'
 
 <template>
     <div class="text-white font-weight-500">
-        <div class="fixed-top full-width -z-1 hv-3/5 !bg-cover" :style="topImageStyle">
+        <div class="absolute-top full-width -z-1 hv-3/5 !bg-cover" :style="topImageStyle">
         </div>
         <div class="row q-mb-60">
             <div class="col-8 col-md-4">

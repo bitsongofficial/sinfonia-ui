@@ -28,6 +28,10 @@
     background: $primary-dark-700 !important;
 }
 
+.border-primary-light {
+    border: 2px solid rgba(122, 110, 124, 0.15);
+}
+
 .text-dark-light {
     color: $dark-light !important;
 }
