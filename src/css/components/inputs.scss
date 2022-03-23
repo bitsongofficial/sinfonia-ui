@@ -8,17 +8,10 @@
     /* Note: backdrop-filter has minimal browser support */
 
     border-radius: 20px;
+    background-color: $dark;
+    opacity: 0.3;
 
-    &::before {
-        content: "";
-        position: absolute;
-        right: 8px;
-        background: url('@/assets/images/icons/sun.svg') no-repeat center;
-        background-size: 100% 100%;
-        width: 16px;
-        height: 17px;
-        top: 8px;
-    }
+    transition: background-color 200ms, opacity 200ms;
 }
 
 .q-toggle__inner {
@@ -29,8 +22,14 @@
     width: 2em;
     height: 1em;
 
-    &.q-toggle__inner--truthy .q-toggle__thumb {
-        left: 1em !important;
+    &.q-toggle__inner--truthy {
+        .q-toggle__track {
+            opacity: 1;
+            background: linear-gradient(147.07deg, #9C589C 21.78%, #FF005C 79.22%);
+        }
+        .q-toggle__thumb {
+            left: 1em !important;
+        }
     }
 }
 
@@ -43,21 +42,34 @@
     }
 }
 
-.settings .q-toggle__inner .q-toggle__track {
-    position: relative;
+.dark-mode-toggle {
+    .q-toggle__track {
+        position: relative;
 
-    &::after {
-        content: "";
-        position: absolute;
-        left: 0.15em;
-        top: 0.2em;
-        width: 0.4em;
-        height: 0.4em;
-        z-index: 1;
-        display: block;
-        background-image: url("@/assets/images/icons/moon.svg");
-        background-position: center;
-        background-repeat: no-repeat;
+        &::before {
+            content: "";
+            position: absolute;
+            right: 8px;
+            background: url('@/assets/images/icons/sun.svg') no-repeat center;
+            background-size: 100% 100%;
+            width: 16px;
+            height: 17px;
+            top: 8px;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0.15em;
+            top: 0.2em;
+            width: 0.4em;
+            height: 0.4em;
+            z-index: 1;
+            display: block;
+            background-image: url("@/assets/images/icons/moon.svg");
+            background-position: center;
+            background-repeat: no-repeat;
+        }
     }
 }
 
@@ -121,4 +133,8 @@
         color: $primary;
         opacity: 1;
     }
+}
+
+.select-border {
+    border: 2px solid rgba(255, 255, 255, 0.15);
 }
