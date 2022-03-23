@@ -4,6 +4,16 @@
     --text-color: #fff;
 }
 
+.text-primary-darker {
+    color: $primary-darker !important;
+}
+.bg-primary-darker {
+    background: $primary-darker !important;
+}
+.border-primary-darker {
+    border: 2px solid $primary-darker;
+}
+
 .text-primary-dark {
     color: $primary-dark !important;
 }
@@ -11,11 +21,25 @@
     background: $primary-dark !important;
 }
 
+.text-primary-dark-700 {
+    color: $primary-dark-700 !important;
+}
+.bg-primary-dark-700 {
+    background: $primary-dark-700 !important;
+}
+
 .text-dark-light {
     color: $dark-light !important;
 }
 .bg-dark-light {
     background: $dark-light !important;
+}
+
+.text-dark-lighter {
+    color: $dark-lighter !important;
+}
+.bg-dark-lighter {
+    background: $dark-lighter !important;
 }
 
 .bg-rounded-translucent {
@@ -32,6 +56,10 @@
 
 .shadow-20 {
     box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.2);
+}
+
+.shadow-20-alt {
+    box-shadow: 0px 0px 20px 20px rgba(34, 13, 51, 0.3);
 }
 
 [class*="border-gradient-"] {
@@ -57,6 +85,10 @@
     background: linear-gradient(to right, $primary-complementary, $primary);
 }
 
+.text-overlay-gradient {
+    background: linear-gradient(180deg, rgba(72, 60, 88, 0) 0%, #483B58 100%);
+}
+
 @for $i from 1 through 8
 {
     $name: $i*5;
@@ -70,13 +102,24 @@
     }
 }
 
-@for $i from 1 through 10
+@for $i from 1 through 20
 {
-    .opacity-#{$i*10} {
-        opacity: #{$i/10};
+    .opacity-#{$i*5} {
+        opacity: #{$i/20};
     }
     
-    .hover\:opacity-#{$i*10}:hover {
-        opacity: #{$i/10};
+    .hover\:opacity-#{$i*5}:hover {
+        opacity: #{$i/20};
+    }
+    
+    .group:hover .group-hover\:opacity-#{$i*5} {
+        opacity: #{$i/20};
+    }
+}
+
+@for $i from 1 through 10
+{
+    .blur-#{$i*10} {
+        backdrop-filter: blur(#{$i*10}px);
     }
 }

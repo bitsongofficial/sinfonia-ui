@@ -82,6 +82,28 @@
     border: 1px solid #FFFFFF;
 }
 
+.row.row-cols-3 {
+    .col {
+        width: 33.33%;
+    }
+}
+
+.w-1\/4 {
+    width: 25%;
+}
+
+.w-2\/4 {
+    width: 50%;
+}
+
+.w-3\/4 {
+    width: 75%;
+}
+
+.w-4\/4 {
+    width: 100%;
+}
+
 .w-1\/6 {
     width: 17%;
 }
@@ -110,14 +132,41 @@
     max-width: 582px;
 }
 
+.max-h-360 {
+    max-height: 360px;
+}
+
+.z-1 {
+    z-index: 1;
+}
+
+.-z-1 {
+    z-index: -1;
+}
+
+.sticky-bottom {
+    position: sticky;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.q-px-select-20 .q-field__control{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
 @for $border from 0 to 10 {
     $val: $border * 5;
     .rounded-#{$val} {
         border-radius: #{$val}px;
     }
+    .\!rounded-#{$val} {
+        border-radius: #{$val}px !important;
+    }
 }
 
-@each $k, $s in $custom-sizes {  
+@each $k, $s in $custom-sizes {
     .s-#{$k} {
         width: $s;
         height: $s;
@@ -125,6 +174,9 @@
     .min-s-#{$k} {
         min-width: $s;
         min-height: $s;
+    }
+    .h-#{$k} {
+        height: $s;
     }
 }
 

@@ -6,7 +6,7 @@ import useAuth from "@/store/auth";
 	const authStore = useAuth()
 </script>
 <template>
-    <div class="row items-center bg-rounded-translucent q-px-lg q-py-sm no-wrap w-fit">
+    <div class="row items-center bg-rounded-translucent q-px-21 q-py-14 no-wrap w-fit">
         <IconButton icon="arrow-right" width="14" height="14" class="rotate-180 s-12 fs-12"></IconButton>
         <div class="q-mx-15">
             <p class="text-uppercase text-caption fs-8 opacity-40 q-mb-3">Address</p>
