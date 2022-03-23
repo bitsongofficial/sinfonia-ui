@@ -115,8 +115,8 @@
             <div class="flex-1 flex justify-between" v-if="coin1Wrapper && coin2Wrapper">
                 <p class="fs-16">Rates</p>
                 <div class="fs-12">
-                    <p class="q-mb-6"><span class="opacity-40">{{coin1Wrapper.coin.symbol}} =</span> {{smallNumber(swapRatio)}} <span class="opacity-40">{{coin2.coin.symbol}}</span></p>
-                    <p><span class="opacity-40">{{coin2Wrapper.coin.symbol}} =</span> {{smallNumber(1/swapRatio)}} <span class="opacity-40">{{coin1.coin.symbol}}</span></p>
+                    <p class="q-mb-6"><span class="opacity-40">{{coin1Wrapper.coin.symbol}} =</span> {{smallNumber(swapRatio)}} <span class="opacity-40">{{coin2Wrapper.coin.symbol}}</span></p>
+                    <p><span class="opacity-40">{{coin2Wrapper.coin.symbol}} =</span> {{smallNumber(1/swapRatio)}} <span class="opacity-40">{{coin1Wrapper.coin.symbol}}</span></p>
                 </div>
             </div>
             <div class="flex-1">
