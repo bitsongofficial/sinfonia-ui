@@ -44,7 +44,7 @@ const usePools = defineStore('pools', {
       const bankStore = useBank()
 
 			return this.pools.filter(pool => {
-        const gammIds = bankStore.allGamms.filter(el => `gamm/pool/${pool.id}`)
+        const gammIds = bankStore.allGamms.filter(el => el.denom === `gamm/pool/${pool.id}`)
 
         return gammIds.length > 0
       })

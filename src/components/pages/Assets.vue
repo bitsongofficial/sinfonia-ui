@@ -6,13 +6,13 @@
 	import TransferModal from '@/components/modals/TransferModal.vue'
 	import { TableColumn } from '@/types/table'
 	import { balancedCurrency } from '@/common/numbers'
-	import { useQuasar } from 'quasar'
 	import { ref } from 'vue'
 	import useBank from '@/store/bank'
+	import { TokenBalance } from '@/types'
 
-	const quasar = useQuasar()
 	const bankStore = useBank()
 	const openTransferDialog = ref(false)
+	const transferFrom = ref<TokenBalance>()
 
 	const columns: TableColumn[] = [
 		{
@@ -40,6 +40,11 @@
 		{ name: 'bonded', label: 'Available tokens', field: 'bonded', sortable: true },
 		{ name: 'arrows', label: '', field: '', sortable: false},
 	]
+
+	const openTransfer = (from: TokenBalance) => {
+		transferFrom.value = from
+		openTransferDialog.value = true
+	}
 </script>
 
 <template>
@@ -114,12 +119,22 @@
 			<template v-slot:body-cell-arrows="props">
 				<q-td :props="props">
 					<div>
-						<IconButton @click="openTransferDialog = true" icon="arrow-up" height="12" width="14" class="q-mr-42 fs-12 s-20" />
+						<IconButton
+							@click="openTransfer(props.row)"
+							icon="arrow-up"
+							height="12"
+							width="14"
+							class="q-mr-42 fs-12 s-20"
+						/>
 						<IconButton @click="openTransferDialog = true" icon="arrow-up" height="12" width="14" class="rotate-180 fs-12 s-20" />
 					</div>
 				</q-td>
 			</template>
 		</LightTable>
-		<!-- <TransferModal v-model="openTransferDialog" /> -->
+		<TransferModal
+			v-model="openTransferDialog"
+			:coin="transferFrom"
+			v-if="transferFrom"
+		/>
 	</div>
 </template>

@@ -61,8 +61,6 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 }
 
 export const mapPools = (rawPools: OsmosisPool[]) => {
-	const bankStore = useBank()
-
 	return rawPools.map(pool => {
 		const poolAssets = [...pool.poolAssets]
 		let rawCoin1 = poolAssets.shift()

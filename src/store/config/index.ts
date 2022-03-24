@@ -82,6 +82,7 @@ const useConfig = defineStore('config', {
       return compact([
         this.bitsongToken,
         this.osmosisToken,
+        ...this.tokens,
         ...this.rawFantokens
       ])
     },
