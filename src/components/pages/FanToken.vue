@@ -27,7 +27,7 @@
     ]
     const selected = ref(timeOptions[0])
     const tabs = [
-        {name: "info", icon:{name:"info", width: 15, height:15}},
+        {name: "info", tooltip: "Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.", icon:{name:"info", width: 15, height:15}},
         {name: "whitepaper", label:"Whitepaper"},
         {name: "pools", label:"Pools"},
         {name: "analytics", label:"Analytics"},
@@ -166,6 +166,9 @@
             </div>
         </div>
         <Tabs :options="tabs">
+            <template v-slot:info>
+
+            </template>
             <template v-slot:analytics>
                 <p class="fs-16 opacity-30 q-mb-12">Token</p>
                 <div class="flex justify-between items-center q-mb-30">
