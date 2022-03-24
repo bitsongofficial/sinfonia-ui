@@ -29,7 +29,7 @@ $space-md   : (x: $space-x-base, y: $space-y-base);
 $space-lg   : (x: ($space-x-base * 1.5), y: ($space-y-base * 1.5));
 $space-xl   : (x: ($space-x-base * 3), y: ($space-y-base * 3));
 
-$spaces: ('none': $space-none, 'xs': $space-xs, 'sm': $space-sm, 'md': $space-md, 'lg': $space-lg, 'xl': $space-xl, '-12': (x: -12px, y: -12px), '16-5': (x: 16.5px, y: 16.5px));
+$spaces: ('none': $space-none, 'xs': $space-xs, 'sm': $space-sm, 'md': $space-md, 'lg': $space-lg, 'xl': $space-xl, '-12': (x: -12px, y: -12px), '16-5': (x: 16.5px, y: 16.5px), '-30': (x: -30px, y: -30px));
 $space2: 2;
 $space3: 3;
 
