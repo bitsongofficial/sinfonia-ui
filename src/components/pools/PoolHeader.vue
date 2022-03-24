@@ -1,13 +1,16 @@
 <script setup lang="ts">
     import {Pool} from "@/types/pool"
-    import IconButton from "../buttons/IconButton.vue"
     import {balancedCurrency, percentage} from "@/common/numbers"
     import ImagePair from "../ImagePair.vue"
+    import { resolveIcon } from "@/common/resolvers"
+import { ref } from "vue";
+import PoolContextMenu from "../navigation/PoolContextMenu.vue";
 
     const props = defineProps<
         {
             pool: Pool
         }>()
+    const show = ref(false)
 </script>
 
 <template>
@@ -34,8 +37,9 @@
                         {{props.pool.coin2.symbol}}
                     </p>
                 </div>
-                <div>
-                    <IconButton icon="vertical-dots" width="4" height="16" class="fs-14 s-28 q-mr--12"></IconButton>
+                <div @click.native.prevent="show = true">
+                    <q-icon :name="resolveIcon('vertical-dots', 4, 16)" class="fs-14 s-28 q-mr--12 opacity-30 hover:opacity-100"></q-icon>
+                    <PoolContextMenu v-model="show"></PoolContextMenu>
                 </div>
             </div>
         </div>
