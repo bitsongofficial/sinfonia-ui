@@ -86,6 +86,13 @@ const useConfig = defineStore('config', {
         ...this.rawFantokens
       ])
     },
+    allMainTokens (): Token[] {
+      return compact([
+        this.bitsongToken,
+        this.osmosisToken,
+        ...this.tokens,
+      ])
+    },
     findTokenByIBCDenom () {
       return (denom: string) => this.allTokens.find(token => {
         if (!token.ibcEnabled) {

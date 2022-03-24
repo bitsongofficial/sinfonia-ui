@@ -4,6 +4,9 @@ export interface Balance {
 	total?: string
 	available?: string
 	bonded?: string
+	totalFiat?: string
+	availableFiat?: string
+	bondedFiat?: string
 }
 
 export type ChainBalance = BaseToken & Balance
