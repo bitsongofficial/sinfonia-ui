@@ -48,7 +48,7 @@ import Progress from '../Progress.vue';
                 <div class="flex items-center no-wrap q-mb-9">
                     <Amount v-model="amount1" class="q-mr-24 "></Amount>
                     <div class="flex items-center no-wrap">
-                        <div class="font-weight-medium text-right q-mr-16">
+                        <div class="text-weight-medium text-right q-mr-16">
                             <p class="fs-12 text-dark q-mb-6">{{pool.pool.coin1.symbol}}</p>
                             <p class="fs-21 text-no-wrap">{{percentage(pool.pool.coin1Percentage * 100)}} %</p>
                         </div>
@@ -61,7 +61,7 @@ import Progress from '../Progress.vue';
                 <div class="flex items-center no-wrap q-mb-9">
                     <Amount v-model="amount2" class="q-mr-24 "></Amount>
                     <div class="flex items-center no-wrap">
-                        <div class="font-weight-medium text-right q-mr-16">
+                        <div class="text-weight-medium text-right q-mr-16">
                             <p class="fs-12 text-dark q-mb-6">{{pool.pool.coin2.symbol}}</p>
                             <p class="fs-21 text-no-wrap">{{percentage((1 - pool.pool.coin1Percentage) * 100)}} %</p>
                         </div>
@@ -74,7 +74,7 @@ import Progress from '../Progress.vue';
                 <div class="absolute-full rounded-20 bg-dark opacity-20 group-hover:opacity-40">
 
                 </div>
-                <p class="text-center fs-12 q-pa-12 font-weight-medium">Change token</p>
+                <p class="text-center fs-12 q-pa-12 text-weight-medium">Change token</p>
             </div>
             <div class="flex justify-between no-wrap">
                 <div class="q-mr-20 flex no-wrap items-center">
@@ -83,7 +83,7 @@ import Progress from '../Progress.vue';
                         color="white"
                         class="q-mr-8"
                     />
-                    <p class="fs-12 font-weight-medium q-mr-12">
+                    <p class="fs-12 text-weight-medium q-mr-12">
                         Single Asset LP
                     </p>
                     <q-icon :name="resolveIcon('info', 15, 15)" class="text-dark cursor-pointer">
@@ -108,7 +108,7 @@ import Progress from '../Progress.vue';
                 </div>
             </div>
             <Progress :progress="removePercent" class="q-mb-16"></Progress>
-            <div class="rounded-20 overflow-hidden relative-position font-weight-medium row q-mb-20">
+            <div class="rounded-20 overflow-hidden relative-position text-weight-medium row q-mb-20">
                 <div :class="'absolute-full bg-primary-dark rounded-20 opacity-30 w-' + (removeValues.indexOf(removePercent) + 1) + '/4'">
 
                 </div>

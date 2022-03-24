@@ -15,9 +15,9 @@
     import Sections from '../Sections.vue'
     import LargeButton from '../buttons/LargeButton.vue'
     import Socials from '../Socials.vue'
-import LightTable from '../LightTable.vue'
-import { TableColumn } from '@/types/table'
-import ImagePair from '../ImagePair.vue'
+    import LightTable from '../LightTable.vue'
+    import { TableColumn } from '@/types/table'
+    import ImagePair from '../ImagePair.vue'
 
     const coin = newCoin("$CLAY", "Adam Clay")
     const timeOptions = [
@@ -27,7 +27,7 @@ import ImagePair from '../ImagePair.vue'
     ]
     const selected = ref(timeOptions[0])
     const tabs = [
-        {name: "info", icon:{name:"info", width: 15, height:15}},
+        {name: "info", tooltip: "Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.", icon:{name:"info", width: 15, height:15}},
         {name: "whitepaper", label:"Whitepaper"},
         {name: "pools", label:"Pools"},
         {name: "analytics", label:"Analytics"},
@@ -166,6 +166,9 @@ import ImagePair from '../ImagePair.vue'
             </div>
         </div>
         <Tabs :options="tabs">
+            <template v-slot:info>
+
+            </template>
             <template v-slot:analytics>
                 <p class="fs-16 opacity-30 q-mb-12">Token</p>
                 <div class="flex justify-between items-center q-mb-30">
@@ -334,7 +337,7 @@ import ImagePair from '../ImagePair.vue'
                     <template v-slot:bio>
                         <div class="q-mb-60">
                             <p class="fs-21 q-mb-48">BitSong introduces: Adam Clay</p>
-                            <p class="fs-14 font-weight-medium opacity-40">
+                            <p class="fs-14 text-weight-medium opacity-40">
                                 Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many international hits, among which the best-known is undoubtedly Born Again (Babylonia). Recognized as a dance music anthem worldwide, the song has been played and supported for more than a decade by the greatest international DJs, TVs and radio stations across the globe.
     Other tracks such as Beautiful Life, Be Together, Shake It and Follow My Pamp (Gold record award in Italy and awarded Best Song at Italy’s Dance Music Awards 2018) have cemented the international caliber of Adam as an artist, topping the charts in many countries and collecting millions of views on YouTube and as many streamings on Spotify.
 
@@ -348,7 +351,7 @@ import ImagePair from '../ImagePair.vue'
                     <template v-slot:altro>
                         <div class="q-mb-60">
                             <p class="fs-21 q-mb-48">BitSong introduces: Adam Clay</p>
-                            <p class="fs-14 font-weight-medium opacity-40">
+                            <p class="fs-14 text-weight-medium opacity-40">
                                 Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many international hits, among which the best-known is undoubtedly Born Again (Babylonia). Recognized as a dance music anthem worldwide, the song has been played and supported for more than a decade by the greatest international DJs, TVs and radio stations across the globe.
     Other tracks such as Beautiful Life, Be Together, Shake It and Follow My Pamp (Gold record award in Italy and awarded Best Song at Italy’s Dance Music Awards 2018) have cemented the international caliber of Adam as an artist, topping the charts in many countries and collecting millions of views on YouTube and as many streamings on Spotify.
 
@@ -380,7 +383,7 @@ import ImagePair from '../ImagePair.vue'
                                     :offset="[-8, -1]"
                                 >
                                 </ImagePair>
-                                <p class="fs-14 font-weight-medium">
+                                <p class="fs-14 text-weight-medium">
                                     {{slotProps.row.pool.coin1.symbol}} / {{slotProps.row.pool.coin2.symbol}}
                                 </p>
                             </div>

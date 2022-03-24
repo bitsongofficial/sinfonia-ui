@@ -81,7 +81,7 @@
                 </div>
                 <div class="vertical-separator q-mx-28"></div>
                 <div class="flex-1">
-                    <CoinSelect v-model="coin1"></CoinSelect>
+                    <CoinSelect v-model="coin1" class="q-mx--30"></CoinSelect>
                 </div>
             </div>
         </CardDark>
@@ -103,7 +103,7 @@
                 </div>
                 <div class="vertical-separator q-mx-28"></div>
                 <div class="flex-1">
-                    <CoinSelect v-model="coin2"></CoinSelect>
+                    <CoinSelect v-model="coin2" class="q-mx--30"></CoinSelect>
                 </div>
             </div>
         </CardDark>

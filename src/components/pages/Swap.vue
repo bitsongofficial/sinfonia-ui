@@ -141,7 +141,7 @@
 	})
 </script>
 <template>
-    <div class="font-weight-medium">
+    <div class="text-weight-medium">
         <div class="row q-col-gutter-x-xl">
             <div class="col-8 col-md-5 q-mb-40 q-mb-md-none flex justify-center">
                 <div class="max-w-582">

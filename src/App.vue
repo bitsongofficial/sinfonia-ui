@@ -21,7 +21,7 @@
               <SideMenu></SideMenu>
             </div>
             <div class="vertical-sm-fixed bottom-0 q-mb-40 q-pt-lg w-fit">
-              <p class="text-center fs-12 font-weight-medium opacity-30 q-mb-15">Price Data by CoinGecko</p>
+              <p class="text-center fs-12 text-weight-medium opacity-30 q-mb-15">Price Data by CoinGecko</p>
               <WalletAddress></WalletAddress>
             </div>
           </div>

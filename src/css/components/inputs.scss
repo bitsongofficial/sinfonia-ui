@@ -138,3 +138,37 @@
 .select-border {
     border: 2px solid rgba(255, 255, 255, 0.15);
 }
+
+:not(.q-field--with-bottom) {
+    .q-field__bottom {
+        display: none;
+    }
+}
+
+.address-select-tile {
+    .q-icon {
+        visibility: hidden;
+    }
+}
+
+.q-field--error {
+    border-color: $primary;
+
+    .text-negative {
+        color: inherit !important;
+    }
+
+    .q-icon.text-negative {
+        display: none;
+    }
+
+    .address-select-tile {
+        color: $primary;
+        p {
+            opacity: 1;
+        }
+        .q-icon {
+            visibility: visible;
+        }
+    }
+}

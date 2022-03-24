@@ -23,7 +23,7 @@
 
 <template>
     <Modal v-model="model">
-        <div class="q-pt-8 q-pb-44 flex justify-between font-weight-medium items-center">
+        <div class="q-pt-8 q-pb-44 flex justify-between text-weight-medium items-center">
             <p class="fs-24 q-mr-120">{{title}}</p>
             <div class="flex opacity-40 hover:opacity-100 cursor-pointer" @click="model = false">
                 <p class="fs-10 text-uppercase q-mr-15">close</p>
