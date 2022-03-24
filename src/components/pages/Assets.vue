@@ -70,7 +70,7 @@
 		</div>
 		<div class="col-2">
 			<InfoCard header="BTSG price">
-				{{ balancedCurrency(btsg.price) }} $
+				{{ balancedCurrency('0') }} $
 			</InfoCard>
 		</div>
     </div>
@@ -101,13 +101,14 @@
                     </q-td>
                     <q-td>
                         <div class="flex justify-center">
-                            <q-icon
+                            <q-avatar
                                 v-for="(chain, i) in props.row.chains"
-                                :name="resolveIcon(chain, 20, 20)"
+								:key="i"
                                 size="20px"
                                 :class="i > 0 ? 'q-ml-8' : ''"
                             >
-                            </q-icon>
+								<img :src="chain.logos.default" />
+                            </q-avatar>
                         </div>
                     </q-td>
                     <q-td>
@@ -142,7 +143,9 @@
                                 <p>
                                     {{ chain.name }}
                                 </p>
-                                <q-icon :name="resolveIcon(chain.logos.default, 20, 20)" class="q-ml-10"></q-icon>
+								<q-avatar size="20px" class="q-ml-10">
+									<img :src="chain.logos.default" />
+								</q-avatar>
                             </div>
                         </div>
                     </q-td>

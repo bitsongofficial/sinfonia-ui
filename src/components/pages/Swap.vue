@@ -2,7 +2,7 @@
     import Card from '../cards/Card.vue'
     import Title from '../typography/Title.vue'
     import { newCoin, newUser, newUserCoin } from '@/common/mockups'
-    import { onMounted, onUnmounted, ref } from 'vue'
+    import { onMounted, onUnmounted, ref, computed } from 'vue'
     import { balancedCurrency, smallNumber } from '@/common/numbers'
     import CryptoTable from '../CryptoTable.vue'
     import { TableColumn } from '@/types/table'
@@ -87,14 +87,6 @@
     const boxesStyle = ref({height: "0"})
     const heightRef = ref<{element:HTMLElement} | null>(null)
 
-    const setSize = () =>
-    {
-        if(heightRef.value && heightRef.value.element)
-        {
-            boxesStyle.value.height = ((heightRef.value.element.clientHeight - 157) / 2) + "px"
-        }
-    }
-
 	const swapAmount = ref("0")
 
 	const swapAmountWrapper = computed<string>({
@@ -129,36 +121,14 @@
 			newCoin("VBRN", "Vibranium"),
 			newCoin("MCX", "Mace"),
 	]
-	
-	const columns:TableColumn[] = [
-			{ 
-					name: 'token',
-					align: 'left',
-					label: '',
-					field: 'name',
-					sortable: false
-			},
-			{
-					name: 'symbol',
-					align: 'left',
-					label: '',
-					field: 'symbol',
-					sortable: false,
-					format: (val:any) => `$${val}`,
-			},
-			{ name: 'price', label: '', field: 'price', sortable: false, format: (val:any) => `${smallNumber(val)} $`},
-	]
 
-  const boxesStyle = ref({maxHeight: "0"})
-	const heightRef = ref<{element:HTMLElement} | null>(null)
-
-	const setSize = () =>
-	{
-		if(heightRef.value && heightRef.value.element)
-		{
-			boxesStyle.value.maxHeight = ((heightRef.value.element.clientHeight - 157) / 2) + "px"
-		}
-	}
+    const setSize = () =>
+    {
+        if(heightRef.value && heightRef.value.element)
+        {
+            boxesStyle.value.height = ((heightRef.value.element.clientHeight - 157) / 2) + "px"
+        }
+    }
 
 	onMounted(() => {
 		window.addEventListener("resize", setSize)
