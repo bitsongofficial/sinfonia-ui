@@ -7,9 +7,11 @@ import { ChainBalance, OsmosisLock, TokenBalance } from '@/types';
 import { compact, reduce } from 'lodash';
 import { toViewDenom } from '@/common/numbers';
 import { BigNumber } from 'bignumber.js';
+import usePrices from '@/store/prices';
 
 export interface BankState {
   loading: boolean
+  otherBalance: Coin[]
   osmosisBalance: Coin[]
   bitsongBalance: Coin[]
   fantokensBalance: Coin[]
@@ -22,6 +24,7 @@ export interface BankState {
 const useBank = defineStore('bank', {
   state: (): BankState => ({
     loading: false,
+    otherBalance: [],
     osmosisBalance: [],
     bitsongBalance: [],
     fantokensBalance: [],
@@ -42,6 +45,22 @@ const useBank = defineStore('bank', {
         throw error;
       } finally {
         this.loading = false;
+      }
+    },
+    async loadBalance(address: string, chainID: string) {
+      try {
+        const configStore = useConfig()
+        const token = configStore.allTokens.find(el => el.chainID === chainID)
+        this.loading = true
+
+        if (token) {
+          this.otherBalance = await sinfoniaClient.balance(address, token.apiURL)
+        }
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+        this.loading = false
       }
     },
     async loadBalances() {
@@ -75,6 +94,7 @@ const useBank = defineStore('bank', {
       const configStore = useConfig()
 
       return configStore.allTokens.map(token => {
+        const price = new BigNumber(token.price ?? '0')
         let osmosisChain: ChainBalance | undefined = undefined
         let bitsongChain: ChainBalance | undefined = undefined
         const chains: ChainBalance[] = []
@@ -107,24 +127,30 @@ const useBank = defineStore('bank', {
               logos: configStore.osmosisToken.logos,
               total: osmosisTotal.toString(),
               available: osmosisAvailable.toString(),
-              bonded: osmosisBonded.toString()
+              bonded: osmosisBonded.toString(),
+              totalFiat: price.multipliedBy(osmosisTotal.toString()).toString(),
+              availableFiat: price.multipliedBy(osmosisAvailable.toString()).toString(),
+              bondedFiat: price.multipliedBy(osmosisBonded.toString()).toString()
             }
 
             chains.push(osmosisChain)
           }
 
           if (bitsongBalance) {
-            const osmosisAvailable = toViewDenom(bitsongBalance.amount, coinLookup.chainToViewConversionFactor)
-            const osmosisBonded = toViewDenom('0', coinLookup.chainToViewConversionFactor)
-            const osmosisTotal = new BigNumber(osmosisAvailable).plus(osmosisBonded)
+            const bitsongAvailable = toViewDenom(bitsongBalance.amount, coinLookup.chainToViewConversionFactor)
+            const bitsongBonded = toViewDenom('0', coinLookup.chainToViewConversionFactor)
+            const bitsongTotal = new BigNumber(bitsongAvailable).plus(bitsongBonded)
 
             bitsongChain = {
               name: token.name,
               symbol: token.symbol,
               logos: token.logos,
-              total: osmosisTotal.toString(),
-              available: osmosisAvailable.toString(),
-              bonded: osmosisBonded.toString()
+              total: bitsongTotal.toString(),
+              available: bitsongAvailable.toString(),
+              bonded: bitsongBonded.toString(),
+              totalFiat: price.multipliedBy(bitsongTotal.toString()).toString(),
+              availableFiat: price.multipliedBy(bitsongAvailable.toString()).toString(),
+              bondedFiat: price.multipliedBy(bitsongBonded.toString()).toString()
             }
 
             chains.push(bitsongChain)
@@ -144,6 +170,9 @@ const useBank = defineStore('bank', {
           total,
           available,
           bonded,
+          totalFiat: price.multipliedBy(total).toString(),
+          availableFiat: price.multipliedBy(available).toString(),
+          bondedFiat: price.multipliedBy(bonded).toString(),
           chains
         }
       })
@@ -152,25 +181,28 @@ const useBank = defineStore('bank', {
       const balances = this.balances as TokenBalance[]
 
       return reduce<TokenBalance, BigNumber>(balances, (all, balance) => {
-        return all.plus(balance.total ?? '0')
+        return all.plus(balance.totalFiat ?? '0')
       }, new BigNumber('0')).toString()
     },
     bonded() {
       const balances = this.balances as TokenBalance[]
 
       return reduce<TokenBalance, BigNumber>(balances, (all, balance) => {
-        return all.plus(balance.bonded ?? '0')
+        return all.plus(balance.bondedFiat ?? '0')
       }, new BigNumber('0')).toString()
     },
     available() {
       const balances = this.balances as TokenBalance[]
 
       return reduce<TokenBalance, BigNumber>(balances, (all, balance) => {
-        return all.plus(balance.available ?? '0')
+        return all.plus(balance.availableFiat ?? '0')
       }, new BigNumber('0')).toString()
     },
     allGamms({ osmosisBalance, lockedCoinsBalance }) {
       return [...osmosisBalance, ...lockedCoinsBalance]
+    },
+    allBalances({ bitsongBalance, osmosisBalance, otherBalance }) {
+      return [...bitsongBalance, ...osmosisBalance, ...otherBalance]
     }
   },
   persistedState: {

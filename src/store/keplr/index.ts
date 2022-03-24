@@ -91,6 +91,19 @@ const useKeplr = defineStore('keplr', {
         this.loading = false
       }
     },
+		async getAddress(chainId: string) {
+			if (window.keplr) {
+				await window.keplr.enable(chainId)
+	
+				const offlineSigner = await window.keplr.getOfflineSignerAuto(chainId)
+				const accounts = [...await offlineSigner.getAccounts()]
+
+				return accounts.shift()
+			}
+		}
+	},
+	getters: {
+		addresses: ({ accounts }) => accounts.map(account => account.address)
 	},
   persistedState: {
 		persist: false,

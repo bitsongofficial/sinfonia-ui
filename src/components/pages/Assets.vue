@@ -1,20 +1,24 @@
 <script setup lang="ts">
-    import { newCoin, newUser } from '@/common/mockups'
-    import { Coin } from '@/types/coin'
-    import { User } from '@/types/user'
-    import Title from '../typography/Title.vue'
-    import { balancedCurrency } from '@/common/numbers'
-    import LightTable from '../LightTable.vue'
-    import IconButton from '../buttons/IconButton.vue'
-    import InfoCard from '../cards/InfoCard.vue'
-    import { TableColumn } from '@/types/table'
+	import Title from '@/components/typography/Title.vue'
+	import LightTable from '@/components/LightTable.vue'
+	import IconButton from '@/components/buttons/IconButton.vue'
+	import InfoCard from '@/components/cards/InfoCard.vue'
+	import TransferModal from '@/components/modals/TransferModal.vue'
+	import { TableColumn } from '@/types/table'
+	import { balancedCurrency } from '@/common/numbers'
+	import { ref } from 'vue'
+	import { TokenBalance } from '@/types'
     import { resolveIcon } from '@/common/resolvers'
     import useBank from '@/store/bank'
+	import usePrices from '@/store/prices'
 
-	  const bankStore = useBank()
+	const bankStore = useBank()
+	const pricesStore = usePrices()
+	const openTransferDialog = ref(false)
+	const transferFrom = ref<TokenBalance>()
 
-    const columns: TableColumn[] = [
-        {
+	const columns: TableColumn[] = [
+		{
             name: 'index',
             required: true,
             label: '',
@@ -47,7 +51,12 @@
         { name: 'quantity', label: 'QTY', field: 'bonded', sortable: true },
         { name: 'arrows', label: '', field: '', sortable: false },
         { name: 'expandIcon', label: '', field: '', sortable: false },
-    ]
+	]
+
+	const openTransfer = (from: TokenBalance) => {
+		transferFrom.value = from
+		openTransferDialog.value = true
+	}
 </script>
 
 <template>
@@ -70,13 +79,13 @@
 		</div>
 		<div class="col-2">
 			<InfoCard header="BTSG price">
-				{{ balancedCurrency('0') }} $
+				{{ balancedCurrency(pricesStore.btsgPrice) }} $
 			</InfoCard>
 		</div>
-    </div>
-    <p class="q-mb-21 fs-18 text-weight-medium">Tokens</p>
-    <div>
-        <LightTable :columns="columns" :rows="bankStore.balances">
+	</div>
+	<p class="q-mb-21 fs-18 font-weight-medium">Tokens</p>
+	<div>
+		<LightTable :columns="columns" :rows="bankStore.balances">
             <template v-slot:body="props">
                 <q-tr :props="props">
                     <q-td>
@@ -103,11 +112,11 @@
                         <div class="flex justify-center">
                             <q-avatar
                                 v-for="(chain, i) in props.row.chains"
-								:key="i"
+								                :key="i"
                                 size="20px"
                                 :class="i > 0 ? 'q-ml-8' : ''"
                             >
-								<img :src="chain.logos.default" />
+								              <img :src="chain.logos.default" />
                             </q-avatar>
                         </div>
                     </q-td>
@@ -166,5 +175,10 @@
                 </q-tr>
             </template>
         </LightTable>
-    </div>
+		<TransferModal
+			v-model="openTransferDialog"
+			:coin="transferFrom"
+			v-if="transferFrom"
+		/>
+	</div>
 </template>

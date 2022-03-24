@@ -14,10 +14,13 @@ specifiers:
   axios: ^0.26.1
   bech32: ^2.0.0
   bignumber.js: ^9.0.2
+  cosmjs-types: ^0.4.1
   lodash: ^4.17.21
+  long: ^5.2.0
   path: ^0.12.7
   pinia: ^2.0.11
   pinia-plugin-persistedstate-2: ^1.0.0
+  protobufjs: ^6.11.2
   quasar: ^2.5.5
   sass: 1.32.0
   typescript: ^4.5.4
@@ -36,10 +39,13 @@ dependencies:
   axios: 0.26.1
   bech32: 2.0.0
   bignumber.js: 9.0.2
+  cosmjs-types: 0.4.1
   lodash: 4.17.21
+  long: 5.2.0
   path: 0.12.7
   pinia: 2.0.11_typescript@4.6.2+vue@3.2.31
   pinia-plugin-persistedstate-2: 1.0.0_pinia@2.0.11
+  protobufjs: 6.11.2
   vue: 3.2.31
   vue-router: 4.0.13_vue@3.2.31
 
@@ -1512,6 +1518,10 @@ packages:
 
   /long/4.0.0:
     resolution: {integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==}
+
+  /long/5.2.0:
+    resolution: {integrity: sha512-9RTUNjK60eJbx3uz+TEGF7fUr29ZDxR5QzXcyDpeSfeH28S9ycINflOgOlppit5U+4kNTe83KQnMEerw7GmE8w==}
+    dev: false
 
   /lru-cache/6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}

@@ -24,6 +24,16 @@ export interface IBC {
 	sourceDenom: string // IBC Denom on Source Chain (Ex: Bitsong)
 }
 
+export interface NetworkConfigFeeOption {
+  denom: string;
+  amount: string;
+}
+
+export interface NetworkConfigFee {
+  gasEstimate: number;
+  feeOptions: NetworkConfigFeeOption[],
+}
+
 export interface Token extends BaseToken {
 	chainID: string
 	apiURL: string
@@ -35,11 +45,22 @@ export interface Token extends BaseToken {
 	coinGeckoId: string
 	coinType: number
 	ibc: { [key in IBCChain]: IBC }
+	fees: {
+		default: NetworkConfigFee,
+		[key: string]: NetworkConfigFee
+	},
+	routes?: {
+		poolID: string
+	}
 	ibcEnabled?: boolean
 	fantoken?: boolean
 	socials?: FantokenSocial[]
 	media?: FantokenMedia
 	whitepaper?: FantokenWhitePaper
+}
+
+export interface TokenWithAddress extends Token {
+	address?: string
 }
 
 export interface ConfigVersion {

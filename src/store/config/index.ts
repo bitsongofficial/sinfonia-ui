@@ -5,7 +5,7 @@ import { BigNumber } from 'bignumber.js'
 import { compact, reduce } from 'lodash'
 import useBank from '@/store/bank'
 import { Coin } from '@cosmjs/proto-signing'
-import { balancedCurrency, currency } from '@/common/numbers'
+import usePrices from '@/store/prices'
 
 export interface ConfigState {
   loading: boolean
@@ -15,7 +15,7 @@ export interface ConfigState {
 const useConfig = defineStore('config', {
   state: (): ConfigState => ({
     loading: false,
-    assetsConfig: undefined,
+    assetsConfig: undefined
   }),
   actions: {
     async init() {
@@ -37,6 +37,7 @@ const useConfig = defineStore('config', {
     rawFantokens: ({ assetsConfig }): Token[] => assetsConfig ? assetsConfig.fantokens : [],
     fantokens (): TokenBalance[] {
       const bankStore = useBank()
+      const pricesStore = usePrices()
 
       return this.rawFantokens.map(fantoken => {
         const coinLookup = fantoken.coinLookup.find(
@@ -46,8 +47,11 @@ const useConfig = defineStore('config', {
         let circulatingSupply = new BigNumber('0')
         let totalMintedTokens = new BigNumber('0')
         let totalBurnedTokens = new BigNumber('0')
+        let price = '0'
 
         if (coinLookup) {
+          price = pricesStore.getFantokenPriceById(coinLookup.fantokenDenom ?? coinLookup.viewDenom)
+  
           const totalBurnedFantokens = bankStore.totalBurnedFantokens.filter(
             el => el.denom === coinLookup.fantokenDenom
           )
@@ -69,8 +73,8 @@ const useConfig = defineStore('config', {
 
         return {
           ...fantoken,
-          price: '0.15',
-          marketCap: circulatingSupply.multipliedBy('0.15').toString(),
+          price,
+          marketCap: circulatingSupply.multipliedBy(price).toString(),
           circulatingSupply: circulatingSupply.toString(),
           totalMintedTokens: totalMintedTokens.toString(),
           totalBurnedTokens: totalBurnedTokens.toString()
@@ -78,12 +82,30 @@ const useConfig = defineStore('config', {
       })
     },
     tokens: ({ assetsConfig }) => assetsConfig ? assetsConfig.tokens : [],
-    allTokens (): Token[] {
+    allTokens (): TokenBalance[] {
+      return compact([
+        ...this.allMainTokens,
+        ...this.fantokens
+      ])
+    },
+    allMainTokens (): TokenBalance[] {
       return compact([
         this.bitsongToken,
         this.osmosisToken,
-        ...this.rawFantokens
-      ])
+        ...this.tokens,
+      ]).map(el => {
+        const pricesStore = usePrices()
+        let price = '0'
+
+        if (pricesStore.coinGeckoPrices) {
+          price = pricesStore.coinGeckoPrices[el.coinGeckoId]['usd']
+        }
+
+        return ({
+          ...el,
+          price
+        })
+      })
     },
     findTokenByIBCDenom () {
       return (denom: string) => this.allTokens.find(token => {
@@ -103,6 +125,9 @@ const useConfig = defineStore('config', {
       })
     }
   },
+  persistedState: {
+		persist: false,
+	}
 });
 
 if (import.meta.hot) {

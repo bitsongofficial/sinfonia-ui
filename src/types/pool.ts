@@ -14,20 +14,24 @@ export interface UserPoolView {
 }
 
 export interface PoolToken extends BaseToken {
+	price: string
 	amount: string // Divided for chainToViewConversionFactor of current token
-	userAmount: string
+	userTotalAmount: string
+	availableAmount: string
+	bondedAmount: string
 }
 
 export interface PoolAsset {
 	token: PoolToken
-	weightPercentage: string
+	weightPercentage: number
 	weight: string
 }
 
 export interface Pool extends OsmosisPool {
 	coin1?: PoolAsset
 	coin2?: PoolAsset
-	APR: number
-	liquidity: number
-	coin1Percentage: number
+	APR: string
+	liquidity: string
+	userLiquidity: string
+	bonded: string
 }

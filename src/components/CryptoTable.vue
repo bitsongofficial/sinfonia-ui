@@ -4,7 +4,7 @@
 
 	defineProps<{
 		rows: TokenBalance[],
-		columns: TableColumn[],
+		columns: TableColumn[]
 	}>()
 </script>
 
