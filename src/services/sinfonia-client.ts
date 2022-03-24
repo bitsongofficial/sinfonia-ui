@@ -5,6 +5,7 @@ import { AssetListConfig, ChainData, IncentivizedPool, OsmosisPool } from '@/typ
 import { AxiosResponse } from 'axios'
 import { Coin } from '@cosmjs/proto-signing'
 import { mapTokensWithDefaults, tokenWithDefaults } from '@/common'
+import ChainClient from './chain-client'
 
 export default class SinfoniaClient {
   private assetListsConfig?: AssetListConfig
@@ -111,6 +112,18 @@ export default class SinfoniaClient {
       this.bitsongClient = new BitsongClient(this.assetListsConfig.bitsongToken.apiURL)
 
       return this.assetListsConfig
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  public balance = async (address: string, url: string) => {
+    try {
+      const chainClient = new ChainClient(url)
+      const response = await chainClient.bankBalances(address)
+
+      return response.data.balances
     } catch (error) {
       console.error(error)
       throw error

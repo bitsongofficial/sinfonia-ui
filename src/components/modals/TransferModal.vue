@@ -1,8 +1,8 @@
 <script setup lang="ts">
 	import { Token, TokenWithAddress } from '@/types'
-	import { computed, ref, watch, onMounted } from 'vue'
+	import { computed, ref, watch } from 'vue'
 	import { resolveIcon } from '@/common/resolvers'
-	import { balancedCurrency } from '@/common/numbers'
+	import { balancedCurrency, amountToCoin } from '@/common/numbers'
 	import ModalWithClose from '@/components/modals/ModalWithClose.vue'
 	import AddressesSelect from '@/components/inputs/AddressesSelect.vue'
 	import LargeButton from '@/components/buttons/LargeButton.vue'
@@ -11,10 +11,13 @@
 	import useKeplr from '@/store/keplr'
 	import { isValidAddress } from '@/common'
 	import useTransactionManager from '@/store/transaction-manager'
+	import useBank from '@/store/bank'
+	import { Coin } from '@cosmjs/proto-signing'
 
 	const configStore = useConfig()
 	const keplrStore = useKeplr()
 	const transactionManagerStore = useTransactionManager()
+	const bankStore = useBank()
 
 	const props = defineProps<{
 		modelValue: boolean,
@@ -67,6 +70,10 @@
 			
 			if (account) {
 				tempAddress.value = account.address
+
+				if (fromToken.value && !fromToken.value.address) {
+					bankStore.loadBalance(account.address, fromToken.value.chainID)
+				}
 			}
 		}
 	}
@@ -142,7 +149,32 @@
 	})
 
 	const available = computed(() => {
-		return balancedCurrency('0')
+		const balances = [...bankStore.allBalances]
+		let coin: Coin | undefined = undefined
+		const from = fromToken.value
+		const to = toToken.value
+
+		if (from && from.ibcEnabled) {
+			const coinLookup = from.coinLookup.find(
+				(coin) => coin.viewDenom === from.symbol
+			)
+
+			if (coinLookup) {
+				const balance = balances.find(el => el.denom === coinLookup.chainDenom)
+
+				coin = amountToCoin(balance?.amount ?? '0', from)
+			}
+		} else if (to) {
+			const balance = balances.find(el => el.denom === to.ibc.osmosis.destDenom)
+
+			coin = amountToCoin(balance?.amount ?? '0', to)
+		}
+
+		if (coin) {
+			return coin.amount
+		}
+
+		return '0'
 	})
 
 	const amount = ref('0')
@@ -177,10 +209,10 @@
 
 			<div class="flex justify-between items-center q-mb-16 fs-12 text-dark">
 				<p class="font-weight-medium text-uppercase">Amount to transfer</p>
-				<p>Available <span class="q-ml-8 text-white">{{available}}</span></p>
+				<p>Available <span class="q-ml-8 text-white">{{ balancedCurrency(available) }}</span></p>
 			</div>
 
-			<Amount v-model="amount" max="1200" class="q-mb-32" />
+			<Amount v-model="amount" :max="available" class="q-mb-32" />
 
 			<div class="flex justify-center">
 				<LargeButton type="submit" fit class="q-px-80" :padding-y="14">

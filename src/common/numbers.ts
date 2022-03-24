@@ -47,6 +47,19 @@ export const amountToCoin = (value: string, network: Token) => {
 	)
 
 	if (coinLookup) {
+		return {
+			amount: toViewDenom(value, coinLookup.chainToViewConversionFactor),
+			denom: coinLookup.chainDenom
+		}
+	}
+}
+
+export const amountFromCoin = (value: string, network: Token) => {
+	const coinLookup = network.coinLookup.find(
+		(coin) => coin.viewDenom === network.symbol
+	)
+
+	if (coinLookup) {
 		return coin(
 			fromViewDenom(value, coinLookup.chainToViewConversionFactor),
 			coinLookup.chainDenom
@@ -54,7 +67,7 @@ export const amountToCoin = (value: string, network: Token) => {
 	}
 }
 
-export const amountIBCToCoin = (value: string, network: Token) => {
+export const amountIBCFromCoin = (value: string, network: Token) => {
 	const coinLookup = network.coinLookup.find(
 		(coin) => coin.viewDenom === network.symbol
 	)
@@ -65,4 +78,35 @@ export const amountIBCToCoin = (value: string, network: Token) => {
 			network.ibc.osmosis.destDenom
 		)
 	}
+}
+
+export const compareBalance = (amount: string, compare: string): boolean => {
+  const number = new BigNumber(amount)
+  const compareNumber = new BigNumber(compare)
+
+  return number.lte(compareNumber)
+}
+
+export const isNegative = (amount: string): boolean => {
+  const number = new BigNumber(amount)
+
+  return number.isNegative()
+}
+
+export const isNaN = (amount: string): boolean => {
+  const number = new BigNumber(amount)
+
+  return number.isNaN()
+}
+
+export const gtnZero = (amount: string): boolean => {
+  const number = new BigNumber(amount)
+
+  return number.gt(0)
+}
+
+export const gteCompare = (amount: string, compare: string): boolean => {
+  const number = new BigNumber(amount)
+
+  return number.gte(new BigNumber(compare))
 }

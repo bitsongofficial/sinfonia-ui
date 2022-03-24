@@ -1,4 +1,4 @@
-import { amountIBCToCoin, amountToCoin } from '@/common/numbers'
+import { amountIBCFromCoin, amountFromCoin } from '@/common/numbers'
 import { TransactionManager } from '@/signing/transaction-manager'
 import { Token, Transaction } from '@/types'
 import { Coin } from '@cosmjs/proto-signing'
@@ -28,10 +28,10 @@ const useTransactionManager = defineStore('transactionManager', {
 
 					if (from.ibcEnabled) {
 						sourceChannel = from.ibc.osmosis.destChannelId
-						transferAmount = amountToCoin(amount, from)
+						transferAmount = amountFromCoin(amount, from)
 					} else {
 						sourceChannel = to.ibc.osmosis.sourceChannelId
-						transferAmount = amountIBCToCoin(amount, to)
+						transferAmount = amountIBCFromCoin(amount, to)
 					}
 
 					if (transferAmount) {

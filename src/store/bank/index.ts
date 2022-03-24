@@ -10,6 +10,7 @@ import { BigNumber } from 'bignumber.js';
 
 export interface BankState {
   loading: boolean
+  otherBalance: Coin[]
   osmosisBalance: Coin[]
   bitsongBalance: Coin[]
   fantokensBalance: Coin[]
@@ -22,6 +23,7 @@ export interface BankState {
 const useBank = defineStore('bank', {
   state: (): BankState => ({
     loading: false,
+    otherBalance: [],
     osmosisBalance: [],
     bitsongBalance: [],
     fantokensBalance: [],
@@ -42,6 +44,22 @@ const useBank = defineStore('bank', {
         throw error;
       } finally {
         this.loading = false;
+      }
+    },
+    async loadBalance(address: string, chainID: string) {
+      try {
+        const configStore = useConfig()
+        const token = configStore.allTokens.find(el => el.chainID === chainID)
+        this.loading = true
+
+        if (token) {
+          this.otherBalance = await sinfoniaClient.balance(address, token.apiURL)
+        }
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+        this.loading = false
       }
     },
     async loadBalances() {
@@ -171,6 +189,9 @@ const useBank = defineStore('bank', {
     },
     allGamms({ osmosisBalance, lockedCoinsBalance }) {
       return [...osmosisBalance, ...lockedCoinsBalance]
+    },
+    allBalances({ bitsongBalance, osmosisBalance, otherBalance }) {
+      return [...bitsongBalance, ...osmosisBalance, ...otherBalance]
     }
   },
   persistedState: {
