@@ -131,7 +131,7 @@
                         </p>
                     </q-td>
                     <q-td>
-                        <div class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right">
+                        <div class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right" @click="openTransfer(props.row)">
                             <q-icon :name="resolveIcon('swap', 21, 16)"></q-icon>
                         </div>
                     </q-td>

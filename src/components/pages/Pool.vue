@@ -181,13 +181,13 @@
                                 class="q-mr-9"
                                 size="24px"
                             >
-                                <img :src="userPool.pool.coin1.iconUrl" alt="">
+                                <img :src="pool.coin1?.token.logos.default" alt="">
                             </q-avatar>
                             <q-avatar
                                 class="q-mr-9"
                                 size="24px"
                             >
-                                <img :src="userPool.pool.coin2.iconUrl" alt="">
+                                <img :src="pool.coin2?.token.logos.default" alt="">
                             </q-avatar>
                         </div>
                     </div>
@@ -210,16 +210,16 @@
                         </div>
                     </div>
                     <template #extra>
-                        <div v-for="coin in [userPool.pool.coin1, userPool.pool.coin2]" class="rounded-20 border-primary-light q-pa-18 flex items-center q-mb-6">
+                        <div v-for="coin in [pool.coin1, pool.coin2]" class="rounded-20 border-primary-light q-pa-18 flex items-center q-mb-6">
                             <q-avatar
                                 class="q-mr-18"
                                 size="25px"
                             >
-                                <img :src="coin.iconUrl" alt="">
+                                <img :src="coin?.token.logos.default" alt="">
                             </q-avatar>
                             <div class="flex-1">
                                 <div class="flex no-wrap items-center q-mb-10">
-                                    <p class="fs-14 text-weight-medium q-mr-30">BTSG</p>
+                                    <p class="fs-14 text-weight-medium q-mr-30">{{ coin?.token.symbol }}</p>
                                     <Progress :height="6" :value="unbonding.value" :max="unbonding.max"></Progress>
                                     <p class="fs-14 text-weight-medium q-ml-22 text-no-wrap">
                                         18 epochs left
@@ -227,7 +227,7 @@
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <p class="fs-10 text-primary text-uppercase text-weight-medium">
-                                        Incentive <span class="text-white">{{balancedCurrency(100000)}}</span> {{coin.symbol}}
+                                        Incentive <span class="text-white">{{balancedCurrency(100000)}}</span> {{ coin?.token.symbol }}
                                     </p>
                                     <div class="flex">
                                         <p class="q-mr-12 opacity-30">APR</p>

@@ -77,8 +77,12 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 
 			if (coin1) {
 				const coinLiquidity = new BigNumber(coin1.token.amount)
+				const userTotalAmount = new BigNumber(coin1.token.userTotalAmount)
+				const bondedAmount = new BigNumber(coin1.token.bondedAmount)
 
 				liquidity = liquidity.plus(coinLiquidity.multipliedBy(coin1.token.price))
+				userLiquidity = userLiquidity.plus(userTotalAmount.multipliedBy(coin1.token.price))
+				bonded = bonded.plus(bondedAmount.multipliedBy(coin1.token.price))
 			}
 		}
 
@@ -87,8 +91,12 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 
 			if (coin2) {
 				const coinLiquidity = new BigNumber(coin2.token.amount)
+				const userTotalAmount = new BigNumber(coin2.token.userTotalAmount)
+				const bondedAmount = new BigNumber(coin2.token.bondedAmount)
 
 				liquidity = liquidity.plus(coinLiquidity.multipliedBy(coin2.token.price))
+				userLiquidity = userLiquidity.plus(userTotalAmount.multipliedBy(coin2.token.price))
+				bonded = bonded.plus(bondedAmount.multipliedBy(coin2.token.price))
 			}
 		}
 
