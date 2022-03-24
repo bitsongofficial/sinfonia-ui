@@ -1,4 +1,4 @@
-import { CoinLookup, OsmosisPool, OsmosisPoolAsset, PoolAsset } from '@/types'
+import { CoinLookup, OsmosisPool, OsmosisPoolAsset, Pool, PoolAsset } from '@/types'
 import { toViewDenom } from './numbers'
 import useBank from '@/store/bank'
 import useConfig from '@/store/config'
@@ -45,6 +45,7 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 		if (coinLookup) {
 			return {
 				token: {
+					price: token.price ?? '0',
 					name: token.name,
 					symbol: token.symbol,
 					logos: token.logos,
@@ -60,31 +61,45 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 	}
 }
 
-export const mapPools = (rawPools: OsmosisPool[]) => {
+export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 	return rawPools.map(pool => {
 		const poolAssets = [...pool.poolAssets]
 		let rawCoin1 = poolAssets.shift()
 		let rawCoin2 = poolAssets.pop()
 		let coin1: PoolAsset | undefined = undefined
 		let coin2: PoolAsset | undefined = undefined
+		let liquidity = new BigNumber('0')
+		let userLiquidity = new BigNumber('0')
+		let bonded = new BigNumber('0')
 
 		if (rawCoin1) {
 			coin1 = tokenToPoolAsset(pool, rawCoin1)
+
+			if (coin1) {
+				const coinLiquidity = new BigNumber(coin1.token.amount)
+
+				liquidity = liquidity.plus(coinLiquidity.multipliedBy(coin1.token.price))
+			}
 		}
 
 		if (rawCoin2) {
 			coin2 = tokenToPoolAsset(pool, rawCoin2)
+
+			if (coin2) {
+				const coinLiquidity = new BigNumber(coin2.token.amount)
+
+				liquidity = liquidity.plus(coinLiquidity.multipliedBy(coin2.token.price))
+			}
 		}
 
 		return ({
 			...pool,
 			coin1,
 			coin2,
-			APR: 0,
-			liquidity: 0,
-			userLiquidity: 0,
-			bonded: 0,
-			coin1Percentage: 0
+			APR: '0',
+			liquidity: liquidity.toString(),
+			userLiquidity: userLiquidity.toString(),
+			bonded: bonded.toString()
 		})
 	})
 }

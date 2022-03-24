@@ -81,8 +81,6 @@ export default class SinfoniaClient {
 
         const poolResponses = await Promise.all(requests)
 
-        console.log(poolResponses)
-
         return poolResponses.map(el => el.data.pool)
       }
     } catch (error) {

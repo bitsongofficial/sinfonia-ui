@@ -3,7 +3,19 @@ import { coin } from '@cosmjs/proto-signing'
 import { BigNumber } from 'bignumber.js'
 
 export const currency = (number: number | string): string => {
-	return (new Intl.NumberFormat('en-US', {maximumFractionDigits: 2}).format(new BigNumber(number).toNumber()))
+	const amount = new BigNumber(number)
+
+	if (amount.isEqualTo(0)) {
+		return '0'
+	}
+
+	if (amount.gt(0.01)) {
+		return new Intl.NumberFormat('en-US', {
+			maximumFractionDigits: 2
+		}).format(amount.toNumber())
+	}
+
+	return '< 0.01'
 }
 
 export const balancedCurrency = (number: number | string): string => {
@@ -62,7 +74,7 @@ export const amountFromCoin = (value: string, network: Token) => {
 	if (coinLookup) {
 		return coin(
 			fromViewDenom(value, coinLookup.chainToViewConversionFactor),
-			coinLookup.chainDenom
+			coinLookup.fantokenDenom ? coinLookup.fantokenDenom : coinLookup.chainDenom
 		)
 	}
 }

@@ -9,8 +9,10 @@
 	import { ref } from 'vue'
 	import useBank from '@/store/bank'
 	import { TokenBalance } from '@/types'
+	import usePrices from '@/store/prices'
 
 	const bankStore = useBank()
+	const pricesStore = usePrices()
 	const openTransferDialog = ref(false)
 	const transferFrom = ref<TokenBalance>()
 
@@ -67,7 +69,7 @@
 		</div>
 		<div class="col-2">
 			<InfoCard header="BTSG price">
-				{{ balancedCurrency('0') }} $
+				{{ balancedCurrency(pricesStore.btsgPrice) }} $
 			</InfoCard>
 		</div>
 	</div>

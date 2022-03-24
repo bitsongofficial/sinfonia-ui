@@ -92,10 +92,9 @@ const useBank = defineStore('bank', {
   getters: {
     balances(): TokenBalance[] {
       const configStore = useConfig()
-      const pricesStore = usePrices()
 
       return configStore.allTokens.map(token => {
-        const price = new BigNumber(pricesStore.getPriceById(token.coinGeckoId))
+        const price = new BigNumber(token.price ?? '0')
         let osmosisChain: ChainBalance | undefined = undefined
         let bitsongChain: ChainBalance | undefined = undefined
         const chains: ChainBalance[] = []

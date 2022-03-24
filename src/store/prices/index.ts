@@ -69,24 +69,20 @@ const usePrices = defineStore('prices', {
 							const fantokenAsset = pool.poolAssets.find(
 								asset => asset.token.denom === fantoken.ibc.osmosis.destDenom
 							)
-	
+
 							if (btsgAsset && fantokenAsset) {
 								const inSpotPrice = calculateSpotPrice(fantokenAsset, btsgAsset)
 								const spotPriceDec = inSpotPrice.isEqualTo(0) ? new BigNumber(0) : new BigNumber(1).div(inSpotPrice)
 	
 								const destCoinPrice = coinGeckoPrices[bitsongToken.coinGeckoId]['usd']
 		
-								if (!destCoinPrice) {
-									return;
-								}
-	
-								const res = spotPriceDec.multipliedBy(destCoinPrice);
+								if (destCoinPrice) {
+									const res = spotPriceDec.multipliedBy(destCoinPrice)
 
-								if (res.isNaN()) {
-									return
+									if (!res.isNaN()) {
+										price = res.toFixed(10)
+									}
 								}
-
-								price = res.toFixed(10)
 							}
 						}
 					}
@@ -99,6 +95,30 @@ const usePrices = defineStore('prices', {
 					}
 				})
 			}
+		},
+		getFantokenPriceById() {
+			return (denom: string) => {
+				if (this.getFantokensPrices) {
+					const fantokenPrice = this.getFantokensPrices.find(
+						price => price.denom === denom
+					)
+
+					if (fantokenPrice) {
+						return fantokenPrice.price
+					}
+				}
+
+				return '0'
+			}
+		},
+		btsgPrice({ coinGeckoPrices }) {
+			const configStore = useConfig()
+
+			if (coinGeckoPrices && configStore.bitsongToken) {
+				return coinGeckoPrices[configStore.bitsongToken.coinGeckoId]['usd']
+			}
+
+			return '0'
 		}
 	}
 });

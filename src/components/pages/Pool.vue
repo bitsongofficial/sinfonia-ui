@@ -140,12 +140,12 @@
 					{{ balancedCurrency(pool.liquidity) }} $
 				</InfoCard>
 				<InfoCard header="Bonded">
-					{{ balancedCurrency(pool.liquidity) }} $
+					{{ balancedCurrency(pool.bonded) }} $
 				</InfoCard>
 			</div>
 			<div class="col-2">
 					<InfoCard header="My liquidity" class="q-mb-27">
-							{{ balancedCurrency(pool.liquidity) }} $
+							{{ balancedCurrency(pool.userLiquidity) }} $
 					</InfoCard>
 					<InfoCard header="Swap fee">
 							{{ percentage(pool.poolParams.swapFee) }} %

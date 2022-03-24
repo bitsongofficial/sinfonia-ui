@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { balancedCurrency as currency, toFiatValue, percentage } from '@/common/numbers'
+	import { balancedCurrency as currency, toFiatValue, percentage, balancedCurrency } from '@/common/numbers'
 	import useConfig from '@/store/config'
 	import { TableColumn } from '@/types/table'
 	import CryptoTable from "../CryptoTable.vue"
@@ -27,16 +27,22 @@
 			label: 'Symbol',
 			field: 'symbol',
 			sortable: false,
-			format: (val:any) => `$${val}`,
+			format: (val: string) => `$${val}`,
 		},
-		{ name: 'price', label: 'Price', field: 'price', sortable: true, format: (val: string) => `${currency(val)} $`},
+		{
+			name: 'price',
+			label: 'Price',
+			field: 'price',
+			sortable: true,
+			format: (val: string) => `${balancedCurrency(val)} $`
+		},
 		{
 			name: 'marketcap',
 			label: 'Market Cap',
 			field: 'marketCap',
 			sortable: true,
-			format: (val: string) => `${currency(val)} $`
-			}
+			format: (val: string) => `${balancedCurrency(val)} $`
+		}
 	]
 </script>
 <template>

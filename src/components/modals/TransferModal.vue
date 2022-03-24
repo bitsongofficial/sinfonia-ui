@@ -160,11 +160,13 @@
 			)
 
 			if (coinLookup) {
-				const balance = balances.find(el => el.denom === coinLookup.chainDenom)
+				const balance = balances.find(
+					el => (!from.fantoken && el.denom === coinLookup.chainDenom) || (from.fantoken && el.denom === coinLookup.fantokenDenom)
+				)
 
 				coin = amountToCoin(balance?.amount ?? '0', from)
 			}
-		} else if (to) {
+		} else if (to && to.ibc) {
 			const balance = balances.find(el => el.denom === to.ibc.osmosis.destDenom)
 
 			coin = amountToCoin(balance?.amount ?? '0', to)
@@ -180,8 +182,6 @@
 	const amount = ref('0')
 
 	const onSubmit = () => {
-		console.log(amount.value)
-
 		if (fromToken.value && toToken.value && fromToken.value.address && toToken.value.address) {
 			transactionManagerStore.sendIbcTokens(
 				fromToken.value.address,
