@@ -15,9 +15,9 @@
     import Sections from '../Sections.vue'
     import LargeButton from '../buttons/LargeButton.vue'
     import Socials from '../Socials.vue'
-import LightTable from '../LightTable.vue'
-import { TableColumn } from '@/types/table'
-import ImagePair from '../ImagePair.vue'
+    import LightTable from '../LightTable.vue'
+    import { TableColumn } from '@/types/table'
+    import ImagePair from '../ImagePair.vue'
 
     const coin = newCoin("$CLAY", "Adam Clay")
     const timeOptions = [

@@ -9,7 +9,7 @@ function notify(message: string, secondaryMessage: string, success, position: No
     spinner: success === undefined ? Spinner : false,
     icon: success ? resolveIcon('success', 32, 32) : resolveIcon('error', 30, 30),
     position,
-    timeout: 250000,
+    timeout: 2500,
     actions: [
       { label: '',}
     ],
