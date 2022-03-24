@@ -49,6 +49,9 @@ export interface Token extends BaseToken {
 		default: NetworkConfigFee,
 		[key: string]: NetworkConfigFee
 	},
+	routes?: {
+		poolID: string
+	}
 	ibcEnabled?: boolean
 	fantoken?: boolean
 	socials?: FantokenSocial[]

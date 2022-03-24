@@ -111,6 +111,9 @@ const useConfig = defineStore('config', {
       })
     }
   },
+  persistedState: {
+		persist: false,
+	}
 });
 
 if (import.meta.hot) {

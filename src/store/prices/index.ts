@@ -1,7 +1,10 @@
+import { BigNumber } from 'bignumber.js';
 import { coinGeckoClient } from '@/services'
 import { CoinGeckoPriceResponse } from '@/types'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import useConfig from '@/store/config'
+import usePools from '@/store/pools'
+import { calculateSpotPrice } from '@/common/numbers'
 
 export interface PricesState {
   loading: boolean
@@ -40,6 +43,61 @@ const usePrices = defineStore('prices', {
 				}
 
 				return '0'
+			}
+		},
+		getFantokensPrices: ({ coinGeckoPrices }) => {
+			const configStore = useConfig()
+			const poolsStore = usePools()
+			const bitsongToken = configStore.bitsongToken
+
+			if (coinGeckoPrices && bitsongToken) {
+				return configStore.rawFantokens.map(fantoken => {
+					let price = '0'
+
+					const coinLookup = fantoken.coinLookup.find(
+						(coin) => coin.viewDenom === fantoken.symbol
+					)
+
+					if (fantoken.routes) {
+						const pool = poolsStore.poolById(fantoken.routes.poolID)
+	
+						if (pool) {
+							const btsgAsset = pool.poolAssets.find(
+								asset => asset.token.denom === bitsongToken.ibc.osmosis.destDenom
+							)
+	
+							const fantokenAsset = pool.poolAssets.find(
+								asset => asset.token.denom === fantoken.ibc.osmosis.destDenom
+							)
+	
+							if (btsgAsset && fantokenAsset) {
+								const inSpotPrice = calculateSpotPrice(fantokenAsset, btsgAsset)
+								const spotPriceDec = inSpotPrice.isEqualTo(0) ? new BigNumber(0) : new BigNumber(1).div(inSpotPrice)
+	
+								const destCoinPrice = coinGeckoPrices[bitsongToken.coinGeckoId]['usd']
+		
+								if (!destCoinPrice) {
+									return;
+								}
+	
+								const res = spotPriceDec.multipliedBy(destCoinPrice);
+
+								if (res.isNaN()) {
+									return
+								}
+
+								price = res.toFixed(10)
+							}
+						}
+					}
+
+					const denom = coinLookup ? coinLookup.fantokenDenom ?? fantoken.symbol : fantoken.symbol
+
+					return {
+						denom,
+						price
+					}
+				})
 			}
 		}
 	}

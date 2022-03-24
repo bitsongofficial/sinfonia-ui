@@ -1,4 +1,4 @@
-import { Token } from '@/types'
+import { Token, OsmosisPoolAsset } from '@/types'
 import { coin } from '@cosmjs/proto-signing'
 import { BigNumber } from 'bignumber.js'
 
@@ -109,4 +109,17 @@ export const gteCompare = (amount: string, compare: string): boolean => {
   const number = new BigNumber(amount)
 
   return number.gte(new BigNumber(compare))
+}
+
+export const calculateSpotPrice = (assetIn: OsmosisPoolAsset, assetOut: OsmosisPoolAsset, swapFee = '0') => {
+	const tokenBalanceIn = new BigNumber(assetIn.token.amount)
+	const tokenWeightIn = new BigNumber(assetIn.weight)
+	const tokenBalanceOut = new BigNumber(assetOut.token.amount)
+	const tokenWeightOut = new BigNumber(assetOut.weight)
+
+	const number = tokenBalanceIn.div(tokenWeightIn);
+	const denom = tokenBalanceOut.div(tokenWeightOut);
+	const scale = new BigNumber(1).div(new BigNumber(1).minus(swapFee));
+
+	return number.div(denom).multipliedBy(scale);
 }

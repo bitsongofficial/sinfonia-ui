@@ -4,6 +4,8 @@ import { SignerMessage } from '@/types'
 import { Coin } from '@cosmjs/proto-signing'
 import Long from 'long'
 
+export type messageTimestamp = string | number | Long.Long | undefined
+
 export const SendIbcTokens = (
 	senderAddress: string,
 	recipientAddress: string,
@@ -13,7 +15,7 @@ export const SendIbcTokens = (
 	timeoutHeight?: Height,
 	timeoutTimestamp?: number,
 ): SignerMessage<MsgTransfer> => {
-	const timeoutTimestampNanoseconds = timeoutTimestamp ? Long.fromNumber(timeoutTimestamp).multiply(1_000_000_000) : undefined
+	const timeoutTimestampNanoseconds: messageTimestamp = timeoutTimestamp ? Long.fromNumber(timeoutTimestamp).multiply(1_000_000_000) : undefined
 
 	return {
 		typeUrl: '/ibc.applications.transfer.v1.MsgTransfer',
@@ -23,7 +25,6 @@ export const SendIbcTokens = (
 			sender: senderAddress,
 			receiver: recipientAddress,
 			token: transferAmount,
-			timeoutHeight: timeoutHeight,
 			timeoutTimestamp: timeoutTimestampNanoseconds,
 		})
 	}
