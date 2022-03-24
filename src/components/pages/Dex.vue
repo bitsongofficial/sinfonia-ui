@@ -1,9 +1,7 @@
 <script setup lang="ts">
     import { newCoin } from "@/common/mockups"
-import { notifyError, notifyLoading, notifySuccess } from "@/common/notifications";
     import { balancedCurrency as currency, percentage } from "@/common/numbers"
     import { TableColumn } from "@/types/table"
-import { onMounted } from "vue";
     import CryptoTable from "../CryptoTable.vue"
 
     const columns: TableColumn[] = [

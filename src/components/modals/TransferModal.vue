@@ -3,11 +3,9 @@
     import { computed, ref } from 'vue'
     import ModalWithClose from './ModalWithClose.vue'
     import AddressesSelect from '../inputs/AddressesSelect.vue'
-    import { resolveIcon } from '@/common/resolvers';
-import SmallButton from '../buttons/SmallButton.vue';
-import StandardButton from '../buttons/StandardButton.vue';
-import LargeButton from '../buttons/LargeButton.vue';
-import Amount from '../inputs/Amount.vue';
+    import { resolveIcon } from '@/common/resolvers'
+    import LargeButton from '../buttons/LargeButton.vue'
+    import Amount from '../inputs/Amount.vue'
 
     const props = defineProps<
     {
@@ -52,7 +50,7 @@ import Amount from '../inputs/Amount.vue';
             <AddressesSelect v-model="address2" :addresses="addresses" title="To" class="flex-1"></AddressesSelect>
         </div>
         <div class="flex justify-between items-center q-mb-16 fs-12 text-dark">
-            <p class="font-weight-medium text-uppercase">
+            <p class="text-weight-medium text-uppercase">
                 Amount to transfer
             </p>
             <p>Available <span class="q-ml-8 text-white">{{available}}</span></p>
