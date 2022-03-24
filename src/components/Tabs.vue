@@ -17,8 +17,6 @@ import { onMounted, ref, useSlots } from 'vue'
     {
         return props.options.find(o => (o.name == name && o.tooltip)) != undefined
     }
-
-    const showing = ref(true)
 </script>
 
 <template>
@@ -48,7 +46,6 @@ import { onMounted, ref, useSlots } from 'vue'
                 <q-tooltip
                     anchor="bottom right"
                     self="top left"
-                    v-model="showing"
                     :offset="[17, -40]">
                     <div class="q-mb-10">
                         <q-icon size="12px" :name="resolveIcon(option.icon.name, option.icon.width, option.icon.height)"></q-icon>
