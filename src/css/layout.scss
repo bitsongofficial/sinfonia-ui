@@ -124,6 +124,22 @@
     height: 21px;
 }
 
+.hv-1\/2 {
+    height: 50vh;
+}
+
+.hv-3\/5 {
+    height: 60vh;
+}
+
+.hv-7\/10 {
+    height: 70vh;
+}
+
+.hv-4\/5 {
+    height: 80vh;
+}
+
 .fixed {
     position: fixed;
 }
@@ -134,6 +150,10 @@
 
 .max-h-360 {
     max-height: 360px;
+}
+
+.min-w-440 {
+    min-width: 440px;
 }
 
 .z-1 {
@@ -154,6 +174,14 @@
 .q-px-select-20 .q-field__control{
     padding-left: 20px;
     padding-right: 20px;
+}
+
+.bg-cover {
+    background-size: cover;
+}
+
+.\!bg-cover {
+    background-size: cover !important;
 }
 
 @for $border from 0 to 10 {

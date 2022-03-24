@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { newCoin } from '@/common/mockups'
+    import { newCoin, newMyPool } from '@/common/mockups'
     import { balancedCurrency, percentage, smallNumber } from '@/common/numbers'
     import { ref } from 'vue'
     import OutlineButton from '../buttons/OutlineButton.vue'
@@ -15,6 +15,9 @@
     import Sections from '../Sections.vue'
     import LargeButton from '../buttons/LargeButton.vue'
     import Socials from '../Socials.vue'
+    import LightTable from '../LightTable.vue'
+    import { TableColumn } from '@/types/table'
+    import ImagePair from '../ImagePair.vue'
 
     const coin = newCoin("$CLAY", "Adam Clay")
     const timeOptions = [
@@ -24,7 +27,7 @@
     ]
     const selected = ref(timeOptions[0])
     const tabs = [
-        {name: "info", icon:{name:"info", width: 15, height:15}},
+        {name: "info", tooltip: "Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.", icon:{name:"info", width: 15, height:15}},
         {name: "whitepaper", label:"Whitepaper"},
         {name: "pools", label:"Pools"},
         {name: "analytics", label:"Analytics"},
@@ -48,10 +51,65 @@
         instagram: 'www.instagram.com',
         twitter: 'www.twitter.com',
     }
+    let pools = [
+        newMyPool(),
+        newMyPool(),
+        newMyPool(),
+        newMyPool(),
+    ]
+    pools = pools.map((c,i) => (Object.assign(c, {index:i+1})))
+    const poolsColumns:TableColumn[] = [
+        {
+            name: 'index',
+            required: true,
+            label: '',
+            align: 'left',
+            field: 'index',
+        },
+        { 
+            name: 'tokenPair',
+            align: 'left',
+            label: coin.symbol + " Pools",
+            field: 'name',
+            sortable: true
+        },
+        {
+            name: 'apr',
+            label: 'APR',
+            field: row => row.pool.APR,
+            sortable: true,
+            format: (val:any) => `${percentage(val)} %`,
+        },
+        {
+            name: 'liquidity',
+            label: 'Liquidity',
+            field: row => row.pool.liquidity,
+            sortable: true,
+            format: (val:any) => `${balancedCurrency(val)} $`,
+        },
+        {
+            name: 'my_liquidity',
+            label: 'My Liquidity',
+            field: row => row.user.liquidity,
+            sortable: true,
+            format: (val:any) => `${balancedCurrency(val)} $`,
+        },
+        {
+            name: 'my_bonding',
+            label: 'My Bonding',
+            field: row => row.user.bonded,
+            sortable: true,
+            format: (val:any) => `${balancedCurrency(val)} $`,
+        },
+    ]
+    const image = "https://i.scdn.co/image/ab6761610000e5eb608e188abbae6409698b8f5a"
+    const topImageStyle = 'background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(' + image + ');'
 </script>
 
 <template>
     <div class="text-white font-weight-500">
+        <div class="absolute-top full-width -z-1 hv-3/5 !bg-cover" :style="topImageStyle">
+        </div>
         <div class="row q-mb-60">
             <div class="col-8 col-md-4">
                 <div class="flex q-mb-60 items-center">
@@ -108,6 +166,9 @@
             </div>
         </div>
         <Tabs :options="tabs">
+            <template v-slot:info>
+
+            </template>
             <template v-slot:analytics>
                 <p class="fs-16 opacity-30 q-mb-12">Token</p>
                 <div class="flex justify-between items-center q-mb-30">
@@ -276,7 +337,7 @@
                     <template v-slot:bio>
                         <div class="q-mb-60">
                             <p class="fs-21 q-mb-48">BitSong introduces: Adam Clay</p>
-                            <p class="fs-14 font-weight-medium opacity-40">
+                            <p class="fs-14 text-weight-medium opacity-40">
                                 Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many international hits, among which the best-known is undoubtedly Born Again (Babylonia). Recognized as a dance music anthem worldwide, the song has been played and supported for more than a decade by the greatest international DJs, TVs and radio stations across the globe.
     Other tracks such as Beautiful Life, Be Together, Shake It and Follow My Pamp (Gold record award in Italy and awarded Best Song at Italy’s Dance Music Awards 2018) have cemented the international caliber of Adam as an artist, topping the charts in many countries and collecting millions of views on YouTube and as many streamings on Spotify.
 
@@ -290,7 +351,7 @@
                     <template v-slot:altro>
                         <div class="q-mb-60">
                             <p class="fs-21 q-mb-48">BitSong introduces: Adam Clay</p>
-                            <p class="fs-14 font-weight-medium opacity-40">
+                            <p class="fs-14 text-weight-medium opacity-40">
                                 Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many international hits, among which the best-known is undoubtedly Born Again (Babylonia). Recognized as a dance music anthem worldwide, the song has been played and supported for more than a decade by the greatest international DJs, TVs and radio stations across the globe.
     Other tracks such as Beautiful Life, Be Together, Shake It and Follow My Pamp (Gold record award in Italy and awarded Best Song at Italy’s Dance Music Awards 2018) have cemented the international caliber of Adam as an artist, topping the charts in many countries and collecting millions of views on YouTube and as many streamings on Spotify.
 
@@ -302,6 +363,33 @@
                         </div>
                     </template>
                 </Sections>
+            </template>
+            <template v-slot:pools>
+                <LightTable
+                    :rows="pools"
+                    :columns="poolsColumns"
+                    no-background
+                    class="q-px-0 q-py-0 table-no-padding"
+                    >
+                    <template v-slot:body-cell-tokenPair="slotProps">
+                        <q-td :props="slotProps">
+                            <div class="flex no-wrap items-center">
+                                <ImagePair
+                                    :image1="slotProps.row.pool.coin1.iconUrl"
+                                    :image2="slotProps.row.pool.coin2.iconUrl"
+                                    class="q-mr-30"
+                                    :size="32"
+                                    :smaller-size="26"
+                                    :offset="[-8, -1]"
+                                >
+                                </ImagePair>
+                                <p class="fs-14 text-weight-medium">
+                                    {{slotProps.row.pool.coin1.symbol}} / {{slotProps.row.pool.coin2.symbol}}
+                                </p>
+                            </div>
+                        </q-td>
+                    </template>
+                </LightTable>
             </template>
             <template v-slot:social>
                 <div class="row q-pt-18">

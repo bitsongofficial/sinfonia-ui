@@ -1,0 +1,55 @@
+.q-notification {
+    .q-icon.q-notification__icon,
+    .q-spinner.q-spinner-mat.q-notification__spinner {
+        margin-right: 34px;
+    }
+
+    .q-notification__message {
+        padding: 0;
+    }
+
+    .q-notification__actions {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 0;
+        margin: 0;
+
+        button {
+            width: 10px;
+            height: 10px;
+            display: block;
+            padding: 0;
+            min-height: auto;
+            max-height: auto;
+
+            &::before {
+                display: none;
+            }
+
+            .q-focus-helper {
+                display: none;
+            }
+
+            .q-btn__content {
+                display: block;
+                width: 10px;
+                height: 10px;
+                opacity: 0.5;
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                &::after {
+                    content: '';
+                    display: block;
+                    width: 10px;
+                    height: 10px;
+                    background-image: url("@/assets/images/icons/close.svg");
+                    background-size: 100%;
+                }
+            }
+        }
+    }
+}

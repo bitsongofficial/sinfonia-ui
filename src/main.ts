@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { Quasar, Notify } from 'quasar'
 import { createPersistedStatePlugin } from 'pinia-plugin-persistedstate-2'
 import { Quasar, Dialog } from 'quasar'
 import {createRouter, createWebHashHistory} from 'vue-router'
@@ -28,11 +29,17 @@ const app = createApp(App)
 app.use(Quasar, {
   plugins: {
     Dialog,
+    Notify
   },
   config: {
     framework: {
       cssAddon: true,
     },
+    notify: {
+      classes: 'bg-notification-background rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440',
+      iconSize: '28px',
+      html: true,
+    }
   },
 })
 

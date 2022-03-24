@@ -13,8 +13,8 @@
 	<Title class="q-mb-50">Your Pools</Title>
 	<div class="row q-mb-72 q-col-gutter-xl">
 		<div v-for="(userPool, index) in poolsStore.myPools" class="col-2">
-			<RouterLink :to="'/pools/' + userPool.id">
-				<Card class="full-width cursor-pointer">
+			<RouterLink :to="'/pools/' + userPool.id" class="block">
+				<Card class="full-width cursor-pointer hover:bg-white-15">
 					<PoolHeader :pool="userPool" />
 					<div class="separator-light q-my-20"></div>
 					<div class="row">
@@ -34,8 +34,8 @@
 	<Title class="q-mb-50">All Pools</Title>
 	<div class="row q-col-gutter-xl">
 		<div v-for="(pool) in poolsStore.pools" class="col-2">
-			<RouterLink :to="'/pools/' + pool.id">
-				<Card class="full-width cursor-pointer">
+			<RouterLink :to="'/pools/' + pool.id" class="block">
+				<Card class="full-width cursor-pointer hover:bg-white-15">
 					<PoolHeader :pool="pool" />
 				</Card>
 			</RouterLink>

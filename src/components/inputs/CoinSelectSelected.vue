@@ -8,15 +8,16 @@
 </script>
 
 <template>
-    <q-item class="full-width q-pa-0 text-white">
-        <div class="flex-1 flex justify-between items-center q-py-0 no-wrap">
-            <div class="q-mr-20">
-                <p class="fs-12">{{coin.coin.name}}</p>
+    <q-item class="full-width q-pa-0">
+        <div class="flex-1 flex justify-between items-center q-py-12 no-wrap">
+            <div>
+                <p class="fs-15 q-mb-4 text-white">{{coin.coin.name}}</p>
+                <p class="fs-12 text-dark">{{balancedCurrency(coin.total)}} {{coin.coin.symbol}}</p>
             </div>
-            <div class="flex items-center">
-                <p class="fs-10 q-mr-20 q-mt-2">{{coin.coin.symbol}}</p>
+            <div>
                 <q-avatar
-                    size="24px">
+                    size="40px"
+                    class="q-mr-22">
                     <img :src="coin.coin.iconUrl" alt="">
                 </q-avatar>
             </div>

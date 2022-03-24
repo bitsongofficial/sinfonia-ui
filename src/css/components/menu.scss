@@ -31,3 +31,34 @@
         @include menu-item-active-hover();
     }
 }
+
+.q-menu {
+    border-radius: 20px;
+    min-width: 130px !important;
+    padding: 24px;
+    padding-bottom: 14px;
+    padding-top: 14px;
+
+    .q-item {
+        padding: 0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        opacity: 0.5 !important;
+        min-height: 0;
+        &:hover,
+        &:active,
+        &:focus,
+        &.q-manual-focusable--focused,
+        &.q-item--active {
+            opacity: 1 !important;
+            color: white;
+            .q-focus-helper {
+                &,
+                &::after,
+                &::before {
+                    background: transparent !important;
+                }
+            }
+        }
+    }
+}
