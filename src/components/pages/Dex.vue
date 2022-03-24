@@ -54,11 +54,6 @@ import { onMounted } from "vue";
         newCoin("MCX", "Mace"),
         newCoin("CLAY", "Adam Clay"),
     ]
-
-    onMounted(() =>
-    {
-        notifyLoading('Prova', 'giorgio merda')
-    })
 </script>
 <template>
     <h3 class="q-mb-xl fs-27">Dex</h3>
