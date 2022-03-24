@@ -28,7 +28,7 @@
     const selected = ref(timeOptions[0])
     const tabs = [
         {name: "info", tooltip: "Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.", icon:{name:"info", width: 15, height:15}},
-        {name: "whitepaper", label:"Whitepaper"},
+        {name: "whitepaper", label:"Whitepaper", url:"https://bitsong.io/fantokens/adam-clay"},
         {name: "pools", label:"Pools"},
         {name: "analytics", label:"Analytics"},
         {name: "social", label:"Social"},
@@ -337,7 +337,7 @@
                     </div>
                 </div>
             </template>
-            <template v-slot:whitepaper>
+            <!-- <template v-slot:whitepaper>
                 <Sections :sections="sections">
                     <template v-slot:bio>
                         <div class="q-mb-60">
@@ -368,7 +368,7 @@
                         </div>
                     </template>
                 </Sections>
-            </template>
+            </template> -->
             <template v-slot:pools>
                 <LightTable
                     :rows="pools"

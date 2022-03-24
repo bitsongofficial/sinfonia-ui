@@ -2,7 +2,12 @@
     padding: 0;
 }
 
-.q-tab {    
+.q-tab {
+    text-transform: none;
+    .q-tab__label {
+        font-size: inherit;
+    }
+
     .q-tab__indicator {
         display: none;
     }
