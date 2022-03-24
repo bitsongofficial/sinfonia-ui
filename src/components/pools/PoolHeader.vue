@@ -3,13 +3,12 @@
     import {balancedCurrency, percentage} from "@/common/numbers"
     import ImagePair from "../ImagePair.vue"
     import { resolveIcon } from "@/common/resolvers"
-import { ref } from "vue";
-import PoolContextMenu from "../navigation/PoolContextMenu.vue";
+    import { ref } from "vue";
+    import PoolContextMenu from "../navigation/PoolContextMenu.vue";
 
-    const props = defineProps<
-        {
-            pool: Pool
-        }>()
+    const props = defineProps<{
+		pool: Pool
+	}>()
     const show = ref(false)
 </script>
 
@@ -18,8 +17,8 @@ import PoolContextMenu from "../navigation/PoolContextMenu.vue";
         <div class="col-4">
             <div class="q-pr-24">
                 <ImagePair
-                    :image1="props.pool.coin1.iconUrl"
-                    :image2="props.pool.coin2.iconUrl">
+                   :image1="props.pool.coin1?.token.logos.default"
+                   :image2="props.pool.coin2?.token.logos.default">
                 </ImagePair>
             </div>
         </div>
@@ -27,14 +26,14 @@ import PoolContextMenu from "../navigation/PoolContextMenu.vue";
             <div class="row justify-between no-wrap">
                 <div>
                     <p class="fs-10 opacity-40 font-weight-medium q-mb-8">
-                        {{props.pool.name}}
+                        Pool {{ props.pool.id }}
                     </p>
                     <p class="fs-16 font-weight-bold w-fit">
-                        {{props.pool.coin1.symbol}}
+                        {{ props.pool.coin1.token.symbol }}
                     </p>
                     <div class="separator q-my-4"></div>
                     <p class="fs-16 font-weight-bold w-fit">
-                        {{props.pool.coin2.symbol}}
+                        {{ props.pool.coin2.token.symbol }}
                     </p>
                 </div>
                 <div @click.native.prevent="show = true">

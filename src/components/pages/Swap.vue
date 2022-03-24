@@ -10,16 +10,12 @@
     import LightTable from '../LightTable.vue'
     import ImagePair from '../ImagePair.vue'
     import { formatDistanceToNow } from 'date-fns'
+    import useConfig from '@/store/config'
+
+    const configStore = useConfig()
 
     let coin1 = ref(newUserCoin("BTSG", "Bitsong"))
     let coin2 = ref(newUserCoin("CLAY", "Adam"))
-    
-    const dex = [
-        newCoin("CLAY", "Adam Clay"),
-        newCoin("FNTY", "Fonti"),
-        newCoin("VBRN", "Vibranium"),
-        newCoin("MCX", "Mace"),
-    ]
 
     const transactions = [
         {
@@ -99,15 +95,80 @@
         }
     }
 
-    onMounted(() => {
-        window.addEventListener("resize", setSize)
-        setSize()
-    })
+	const swapAmount = ref("0")
 
-    onUnmounted(() =>
-    {
-        window.removeEventListener("resize", setSize);
-    })
+	const swapAmountWrapper = computed<string>({
+			get() {
+					return swapAmount.value
+			},
+			set(value) {
+					swapAmount.value = ((value != "" && parseInt(value) > 0 ) ? value : "0")
+			}
+	})
+
+	const swapRatio = computed<number>(() =>
+	{
+			return coin1.value.coin.price / coin2.value.coin.price
+	})
+
+	const swapAmountNumber = computed<number>(() =>
+	{
+			return parseInt(swapAmountWrapper.value)
+	})
+
+	const invert = () =>
+	{
+			const tmp = coin1.value
+			coin1.value = coin2.value
+			coin2.value = tmp
+	}
+	
+	const dex = [
+			newCoin("CLAY", "Adam Clay"),
+			newCoin("FNTY", "Fonti"),
+			newCoin("VBRN", "Vibranium"),
+			newCoin("MCX", "Mace"),
+	]
+	
+	const columns:TableColumn[] = [
+			{ 
+					name: 'token',
+					align: 'left',
+					label: '',
+					field: 'name',
+					sortable: false
+			},
+			{
+					name: 'symbol',
+					align: 'left',
+					label: '',
+					field: 'symbol',
+					sortable: false,
+					format: (val:any) => `$${val}`,
+			},
+			{ name: 'price', label: '', field: 'price', sortable: false, format: (val:any) => `${smallNumber(val)} $`},
+	]
+
+  const boxesStyle = ref({maxHeight: "0"})
+	const heightRef = ref<{element:HTMLElement} | null>(null)
+
+	const setSize = () =>
+	{
+		if(heightRef.value && heightRef.value.element)
+		{
+			boxesStyle.value.maxHeight = ((heightRef.value.element.clientHeight - 157) / 2) + "px"
+		}
+	}
+
+	onMounted(() => {
+		window.addEventListener("resize", setSize)
+		setSize()
+	})
+
+	onUnmounted(() =>
+	{
+		window.removeEventListener("resize", setSize);
+	})
 </script>
 <template>
     <div class="font-weight-medium">
@@ -126,8 +187,7 @@
                     <q-btn outline rounded color="white" label="View all" class="q-px-22" />
                 </div>
                 <Card class="q-py-10 q-px-none q-mb-51 scroll-container" :padding="0" :transparency="5" :style="boxesStyle">
-                    <CryptoTable :rows="dex" :columns="columns" no-background hide-header class="small-rows full-height">
-
+                    <CryptoTable :rows="configStore.fantokens" :columns="columns" no-background hide-header class="small-rows full-height">
                     </CryptoTable>
                 </Card>
                 <div class="flex justify-between items-center q-mb-30">

@@ -2,8 +2,10 @@
     import { ref } from "vue";
     import IconButton from "./buttons/IconButton.vue"
     import LargeButton from "./buttons/LargeButton.vue"
+    import useAuth from "@/store/auth";
 
     const connected = ref(false)
+    const authStore = useAuth()
 </script>
 <template>
     <div v-if="connected" class="row items-center bg-rounded-translucent q-px-32 q-py-16-5 no-wrap w-fit">
@@ -12,7 +14,7 @@
             <p class="text-uppercase text-caption fs-8 opacity-40 q-mb-3">Address</p>
             <p class="text-weight-bold text-subtitle1 fs-12">bitsong1...u085</p>
         </div>
-        <IconButton icon="copy" width="20" height="20" class="opacity-40 fs-15"></IconButton>
+        <IconButton @click="authStore.signIn" icon="copy" width="20" height="20" class="opacity-40 fs-15"></IconButton>
     </div>
     <div v-else>
         <LargeButton fit @click="connected = true">Connect to Keplr</LargeButton>

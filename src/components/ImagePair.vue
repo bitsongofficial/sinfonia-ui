@@ -1,8 +1,8 @@
 <script setup lang="ts">import { computed } from 'vue';
 
     const props = defineProps<{
-        image1: string,
-        image2: string,
+        image1?: string,
+        image2?: string,
         size?: number,
         smallerSize? : number,
         offset?: number[],
@@ -21,11 +21,12 @@
 <template>
     <div class="relative-position w-fit">
         <q-img
+            v-if="image1"
             :src="image1"
             :class="'rounded cover ' + sizeClass"
             fit="cover"
         />
-        <div class="absolute right-0 bottom-0" :style="style">
+        <div class="absolute right-0 bottom-0" :style="style" v-if="image2">
             <q-img
                 :src="image2"
                 :class="'rounded cover ' + smallerSizeClass"

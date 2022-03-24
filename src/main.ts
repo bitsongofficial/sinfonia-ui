@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { createPersistedStatePlugin } from 'pinia-plugin-persistedstate-2'
 import { Quasar } from 'quasar'
 import {createRouter, createWebHashHistory} from 'vue-router'
 
@@ -33,7 +34,11 @@ app.use(Quasar, {
   },
 })
 
-app.use(createPinia())
+const pinia = createPinia()
+
+pinia.use(createPersistedStatePlugin())
+
+app.use(pinia)
 
 app.use(router)
 
