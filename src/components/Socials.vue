@@ -6,10 +6,10 @@
 </script>
 
 <template>
-    <div class="flex justify-between">
-        <div v-for="(url, social) in socials">
+    <div class="flex">
+        <div v-for="(url, social) in socials" class="q-mr-24">
             <a :href="url" class="fs-24 opacity-30 hover:opacity-100 text-white">
-                <q-icon :name="resolveIcon(social, 25, 25, 'socials')"></q-icon>
+                <q-icon :name="resolveIcon(social, 25, 25)"></q-icon>
             </a>
         </div>
     </div>
