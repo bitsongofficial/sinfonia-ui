@@ -20,7 +20,7 @@
 
     const isTab = (name): boolean =>
     {
-        return props.options.find(o => (o.name == name && (o.tooltip || o.url))) == undefined
+        return props.options.find(o => (o.name != undefined && o.name == name)) != undefined
     }
 </script>
 
@@ -36,7 +36,7 @@
         >
         <template v-for="option in options">
             <q-tab
-                v-if="option.label && !option.url"
+                v-if="option.name && !option.url"
                 :name="option.name"
                 :label="option.label"
                 class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0"
