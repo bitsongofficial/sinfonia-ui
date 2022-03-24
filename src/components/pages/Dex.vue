@@ -1,7 +1,9 @@
 <script setup lang="ts">
     import { newCoin } from "@/common/mockups"
+import { notifyError, notifyLoading, notifySuccess } from "@/common/notifications";
     import { balancedCurrency as currency, percentage } from "@/common/numbers"
     import { TableColumn } from "@/types/table"
+import { onMounted } from "vue";
     import CryptoTable from "../CryptoTable.vue"
 
     const columns: TableColumn[] = [
@@ -52,6 +54,11 @@
         newCoin("MCX", "Mace"),
         newCoin("CLAY", "Adam Clay"),
     ]
+
+    onMounted(() =>
+    {
+        notifyLoading('Prova', 'giorgio merda')
+    })
 </script>
 <template>
     <h3 class="q-mb-xl fs-27">Dex</h3>

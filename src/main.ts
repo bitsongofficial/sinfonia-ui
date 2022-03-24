@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { Quasar } from 'quasar'
+import { Quasar, Notify } from 'quasar'
 import {createRouter, createWebHashHistory} from 'vue-router'
 
 // Import Quasar css
@@ -25,11 +25,18 @@ const router = createRouter({
 const app = createApp(App)
 
 app.use(Quasar, {
-  plugins: {},
+  plugins: {
+    Notify
+  },
   config: {
     framework: {
       cssAddon: true,
     },
+    notify: {
+      classes: 'bg-notification-background rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440',
+      iconSize: '28px',
+      html: true,
+    }
   },
 })
 

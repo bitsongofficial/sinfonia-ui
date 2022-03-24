@@ -8,7 +8,7 @@
     import IconButton from '../buttons/IconButton.vue'
     import InfoCard from '../cards/InfoCard.vue'
     import { TableColumn } from '@/types/table'
-import { resolveIcon } from '@/common/resolvers'
+    import { resolveIcon } from '@/common/resolvers'
 
     const btsg:Coin = newCoin("BTSG")
     const user:User = newUser()
