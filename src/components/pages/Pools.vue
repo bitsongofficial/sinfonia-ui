@@ -22,12 +22,12 @@
                     <div class="separator-light q-my-20"></div>
                     <div class="row">
                         <div class="col-4">
-                            <p class="fs-10 font-weight-medium opacity-40 q-pb-10">My Liquidity</p>
-                            <p class="fs-16 font-weight-medium text-no-wrap">{{balancedCurrency(userPool.user.liquidity)}} $</p>
+                            <p class="fs-10 text-weight-medium opacity-40 q-pb-10">My Liquidity</p>
+                            <p class="fs-16 text-weight-medium text-no-wrap">{{balancedCurrency(userPool.user.liquidity)}} $</p>
                         </div>
                         <div class="col-4">
-                            <p class="fs-10 font-weight-medium opacity-40 q-pb-10">My Bonded Tokens</p>
-                            <p class="fs-16 font-weight-medium text-no-wrap">{{balancedCurrency(userPool.user.bonded)}} $</p>
+                            <p class="fs-10 text-weight-medium opacity-40 q-pb-10">My Bonded Tokens</p>
+                            <p class="fs-16 text-weight-medium text-no-wrap">{{balancedCurrency(userPool.user.bonded)}} $</p>
                         </div>
                     </div>
                 </Card>

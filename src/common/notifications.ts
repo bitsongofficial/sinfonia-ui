@@ -5,7 +5,7 @@ import Spinner from "@/components/Spinner";
 function notify(message: string, secondaryMessage: string, success, position: NotificationPosition = "top")
 {
   return Notify.create({
-    message: '<div class="q-mr-15"><p class="fs-16 font-weight-medium' + (secondaryMessage ? ' q-mb-10' : '') + '">' + message + '</p><p class="fs-14 opacity-40">' + secondaryMessage + '</p></div>',
+    message: '<div class="q-mr-15"><p class="fs-16 text-weight-medium' + (secondaryMessage ? ' q-mb-10' : '') + '">' + message + '</p><p class="fs-14 opacity-40">' + secondaryMessage + '</p></div>',
     spinner: success === undefined ? Spinner : false,
     icon: success ? resolveIcon('success', 32, 32) : resolveIcon('error', 30, 30),
     position,

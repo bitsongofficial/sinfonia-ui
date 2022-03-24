@@ -52,7 +52,7 @@
 
 <template>
     <Title class="q-mb-36">Assets</Title>
-    <div class="row font-weight-medium q-col-gutter-lg q-mb-75">
+    <div class="row text-weight-medium q-col-gutter-lg q-mb-75">
         <div class="col-2">
             <InfoCard header="Total assets">
                 {{balancedCurrency(user.totalAssets)}} $
@@ -74,7 +74,7 @@
             </InfoCard>
         </div>
     </div>
-    <p class="q-mb-21 fs-18 font-weight-medium">Tokens</p>
+    <p class="q-mb-21 fs-18 text-weight-medium">Tokens</p>
     <div>
         <LightTable :columns="columns" :rows="user.coins">
             <template v-slot:body="props">

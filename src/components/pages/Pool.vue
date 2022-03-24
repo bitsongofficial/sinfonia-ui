@@ -79,7 +79,7 @@
 </script>
 
 <template>
-    <div class="text-white font-weight-medium">
+    <div class="text-white text-weight-medium">
         <div class="q-mb-90 flex justify-between items-center">
             <div class="flex">
                 <ImagePair
@@ -166,7 +166,7 @@
                     <div class="q-mb-20">
                         <p class="fs-36 q-mb-8">{{percentage(unbonding.apr)}}</p>
                         <div class="flex items-center">
-                            <p class="text-primary fs-14 q-mr-16 font-weight-medium">External Incentives Pool</p>
+                            <p class="text-primary fs-14 q-mr-16 text-weight-medium">External Incentives Pool</p>
                             <q-avatar
                                 class="q-mr-9"
                                 size="24px"
@@ -184,7 +184,7 @@
                     <p class="fs-12 opacity-40 font-weight-regular q-mb-20">
                         BitSong Launchpad is the platform where you can buy and. Incentives for 22 epochs.
                     </p>
-                    <div class="flex no-wrap items-center font-weight-medium">
+                    <div class="flex no-wrap items-center text-weight-medium">
                         <div class="q-mr-21">
                             <p class="fs-12 text-uppercase opacity-50 q-mb-8">
                                 Start
@@ -209,14 +209,14 @@
                             </q-avatar>
                             <div class="flex-1">
                                 <div class="flex no-wrap items-center q-mb-10">
-                                    <p class="fs-14 font-weight-medium q-mr-30">BTSG</p>
+                                    <p class="fs-14 text-weight-medium q-mr-30">BTSG</p>
                                     <Progress :height="6" :value="unbonding.value" :max="unbonding.max"></Progress>
-                                    <p class="fs-14 font-weight-medium q-ml-22 text-no-wrap">
+                                    <p class="fs-14 text-weight-medium q-ml-22 text-no-wrap">
                                         18 epochs left
                                     </p>
                                 </div>
                                 <div class="flex justify-between items-center">
-                                    <p class="fs-10 text-primary text-uppercase font-weight-medium">
+                                    <p class="fs-10 text-primary text-uppercase text-weight-medium">
                                         Incentive <span class="text-white">{{balancedCurrency(100000)}}</span> {{coin.symbol}}
                                     </p>
                                     <div class="flex">

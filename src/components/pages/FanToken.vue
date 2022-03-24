@@ -337,7 +337,7 @@
                     <template v-slot:bio>
                         <div class="q-mb-60">
                             <p class="fs-21 q-mb-48">BitSong introduces: Adam Clay</p>
-                            <p class="fs-14 font-weight-medium opacity-40">
+                            <p class="fs-14 text-weight-medium opacity-40">
                                 Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many international hits, among which the best-known is undoubtedly Born Again (Babylonia). Recognized as a dance music anthem worldwide, the song has been played and supported for more than a decade by the greatest international DJs, TVs and radio stations across the globe.
     Other tracks such as Beautiful Life, Be Together, Shake It and Follow My Pamp (Gold record award in Italy and awarded Best Song at Italy’s Dance Music Awards 2018) have cemented the international caliber of Adam as an artist, topping the charts in many countries and collecting millions of views on YouTube and as many streamings on Spotify.
 
@@ -351,7 +351,7 @@
                     <template v-slot:altro>
                         <div class="q-mb-60">
                             <p class="fs-21 q-mb-48">BitSong introduces: Adam Clay</p>
-                            <p class="fs-14 font-weight-medium opacity-40">
+                            <p class="fs-14 text-weight-medium opacity-40">
                                 Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many international hits, among which the best-known is undoubtedly Born Again (Babylonia). Recognized as a dance music anthem worldwide, the song has been played and supported for more than a decade by the greatest international DJs, TVs and radio stations across the globe.
     Other tracks such as Beautiful Life, Be Together, Shake It and Follow My Pamp (Gold record award in Italy and awarded Best Song at Italy’s Dance Music Awards 2018) have cemented the international caliber of Adam as an artist, topping the charts in many countries and collecting millions of views on YouTube and as many streamings on Spotify.
 
@@ -383,7 +383,7 @@
                                     :offset="[-8, -1]"
                                 >
                                 </ImagePair>
-                                <p class="fs-14 font-weight-medium">
+                                <p class="fs-14 text-weight-medium">
                                     {{slotProps.row.pool.coin1.symbol}} / {{slotProps.row.pool.coin2.symbol}}
                                 </p>
                             </div>

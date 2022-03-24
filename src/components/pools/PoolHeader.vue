@@ -26,7 +26,7 @@ import PoolContextMenu from "../navigation/PoolContextMenu.vue";
         <div class="col-4">
             <div class="row justify-between no-wrap">
                 <div>
-                    <p class="fs-10 opacity-40 font-weight-medium q-mb-8">
+                    <p class="fs-10 opacity-40 text-weight-medium q-mb-8">
                         {{props.pool.name}}
                     </p>
                     <p class="fs-16 font-weight-bold w-fit">
@@ -46,12 +46,12 @@ import PoolContextMenu from "../navigation/PoolContextMenu.vue";
     </div>
     <div class="row">
         <div class="col-4">
-            <p class="fs-10 font-weight-medium opacity-40 q-pb-10">APR</p>
-            <p class="fs-16 font-weight-medium">{{percentage(props.pool.APR)}} %</p>
+            <p class="fs-10 text-weight-medium opacity-40 q-pb-10">APR</p>
+            <p class="fs-16 text-weight-medium">{{percentage(props.pool.APR)}} %</p>
         </div>
         <div class="col-4">
-            <p class="fs-10 font-weight-medium opacity-40 q-pb-10">Liquidity</p>
-            <p class="fs-16 font-weight-medium text-no-wrap">{{balancedCurrency(props.pool.liquidity)}} $</p>
+            <p class="fs-10 text-weight-medium opacity-40 q-pb-10">Liquidity</p>
+            <p class="fs-16 text-weight-medium text-no-wrap">{{balancedCurrency(props.pool.liquidity)}} $</p>
         </div>
     </div>
 </template>

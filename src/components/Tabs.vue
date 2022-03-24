@@ -1,6 +1,7 @@
 <script setup lang="ts">
-    import { resolveIcon } from '@/common/resolvers';
-import { onMounted, ref, useSlots } from 'vue'
+    import { resolveIcon } from '@/common/resolvers'
+    import { ref } from 'vue'
+    import InformativeTooltip from './tooltips/InformativeTooltip.vue'
 
     const props = defineProps<
     {
@@ -43,17 +44,14 @@ import { onMounted, ref, useSlots } from 'vue'
                 class="opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100"
                 content-class="q-py-0"
             >
-                <q-tooltip
+                <InformativeTooltip
                     anchor="bottom right"
                     self="top left"
                     :offset="[17, -40]">
-                    <div class="q-mb-10">
-                        <q-icon size="12px" :name="resolveIcon(option.icon.name, option.icon.width, option.icon.height)"></q-icon>
-                    </div>
                     <p>
                         {{option.tooltip}}
                     </p>
-                </q-tooltip>
+                </InformativeTooltip>
             </q-icon>
         </template>
     </q-tabs>
