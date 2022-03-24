@@ -2,7 +2,7 @@
     import WideCardWithHeader from './WideCardWithHeader.vue'
 
     const props = defineProps<{
-        header?: string
+        header?: string,
     }>()
 </script>
 

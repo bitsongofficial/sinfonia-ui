@@ -86,7 +86,7 @@
 </script>
 
 <template>
-	<div class="text-white font-weight-medium" v-if="pool">
+	<div class="text-white text-weight-medium" v-if="pool">
 		<div class="q-mb-90 flex justify-between items-center">
 			<div class="flex">
 				<ImagePair
@@ -104,7 +104,8 @@
 		</div>
 		<div class="row q-col-gutter-xl q-mb-72">
 			<div class="col-2">
-				<img src="@/assets/images/round_chart_placeholder.png" alt="">
+				<PercentageWithImage class="full-width full-height" imageSize="48px" :thickness="0.35" :icon="{name: 'bitsong', width: 48, height: 47}" :value="50" full>
+				</PercentageWithImage>
 			</div>
 			<div class="col-2">
 				<CardWithHeader header="Pool composition">

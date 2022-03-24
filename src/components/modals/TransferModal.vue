@@ -208,7 +208,7 @@
 			</div>
 
 			<div class="flex justify-between items-center q-mb-16 fs-12 text-dark">
-				<p class="font-weight-medium text-uppercase">Amount to transfer</p>
+				<p class="text-weight-medium text-uppercase">Amount to transfer</p>
 				<p>Available <span class="q-ml-8 text-white">{{ balancedCurrency(available) }}</span></p>
 			</div>
 

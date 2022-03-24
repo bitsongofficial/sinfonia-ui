@@ -270,10 +270,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="row q-col-gutter-xl">
+                <div class="row q-col-gutter-x-xl">
                     <div class="col-4">
                         <p class="fs-16 opacity-30 q-mb-24">Bonding</p>
-                        <div class="row q-col-gutter-xl">
+                        <div class="row q-col-gutter-x-xl">
                             <div class="col-4">
                                 <CardWithHeader header="bonded tokens" class="q-py-34">
                                     <div class="flex justify-between items-center text-center q-mb-20">
@@ -293,18 +293,23 @@
                                         </p>
                                     </div>
                                     <div class="flex">
-                                        <PercentageWithImage :value="50" :image="coin.iconUrl"></PercentageWithImage>
+                                        <PercentageWithImage :value="50" :image="coin.iconUrl" class="q-mr-20"></PercentageWithImage>
+                                        <div class="text-weight-medium">
+                                            <p class="fs-12 text-uppercase q-mb-10 opacity-50">% bonded</p>
+                                            <p class="fs-18">50%</p>
+                                        </div>
                                     </div>
                                 </CardWithHeader>
                             </div>
                             <div class="col-4">
-                                <img src="@/assets/images/round_chart_placeholder.png" alt="">
+                                <PercentageWithImage alt-style full negative class="full-width full-height--15" imageSize="48px" :thickness="0.35" :image="coin.iconUrl" :value="50">
+                                </PercentageWithImage>
                             </div>
                         </div>
                     </div>
                     <div class="col-4">
                         <p class="fs-16 opacity-30 q-mb-24">Community</p>
-                        <Card class="q-py-34 q-mb-22">
+                        <Card class="q-mb-22" :padding="20">
                             <div class="flex justify-between items-stretch">
                                 <div class="column justify-between">
                                     <p class="fs-12 opacity-50 text-uppercase">liquidity</p>
@@ -317,14 +322,14 @@
                                 </div>
                             </div>
                         </Card>
-                        <div class="row q-col-gutter-xl">
+                        <div class="row q-col-gutter-x-xl">
                             <div class="col-4">
-                                <InfoCard header="$CLAY CIRCULATING " class="q-py-34">
+                                <InfoCard header="$CLAY CIRCULATING " :padding="20">
                                     {{balancedCurrency(21600000)}}
                                 </InfoCard>                                
                             </div>
                             <div class="col-4">
-                                <InfoCard header="$CLAY CIRCULATING " class="q-py-34">
+                                <InfoCard header="$CLAY CIRCULATING " :padding="20">
                                     {{balancedCurrency(21600000)}}
                                 </InfoCard>                                
                             </div>
