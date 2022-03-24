@@ -9,10 +9,10 @@
     import InfoCard from '../cards/InfoCard.vue'
     import { TableColumn } from '@/types/table'
     import { resolveIcon } from '@/common/resolvers'
+    import useBank from '@/store/bank'
 
-    const btsg:Coin = newCoin("BTSG")
-    const user:User = newUser()
-    user.coins = user.coins.map((c,i) => (Object.assign(c, {index:i+1, chains: [Math.random() > 0.5 ? 'bitsong' : 'osmosis']})))
+	  const bankStore = useBank()
+
     const columns: TableColumn[] = [
         {
             name: 'index',
@@ -43,10 +43,10 @@
             field: 'chains',
             sortable: false,
         },
-        { name: 'available', label: 'Available', field: 'total', sortable: true, format: (val:any) => `${balancedCurrency(val)} $`},
-        { name: 'quantity', label: 'QTY', field: 'bonded', sortable: true, format: (val:any, row:any) => `${balancedCurrency(val)} ${row.coin.symbol}`},
-        { name: 'arrows', label: '', field: '', sortable: false},
-        { name: 'expandIcon', label: '', field: '', sortable: false},
+        { name: 'available', label: 'Available', field: 'total', sortable: true },
+        { name: 'quantity', label: 'QTY', field: 'bonded', sortable: true },
+        { name: 'arrows', label: '', field: '', sortable: false },
+        { name: 'expandIcon', label: '', field: '', sortable: false },
     ]
 </script>
 
@@ -54,34 +54,34 @@
     <Title class="q-mb-36">Assets</Title>
     <div class="row text-weight-medium q-col-gutter-lg q-mb-75">
         <div class="col-2">
-            <InfoCard header="Total assets">
-                {{balancedCurrency(user.totalAssets)}} $
-            </InfoCard>
-        </div>
-        <div class="col-2">
-            <InfoCard header="Available assets">
-                    {{balancedCurrency(user.totalAssets - user.bondedAssets)}} $
-            </InfoCard>
-        </div>
-        <div class="col-2">
-            <InfoCard header="Bonded assets">
-                    {{balancedCurrency(user.bondedAssets)}} $
-            </InfoCard>
-        </div>
-        <div class="col-2">
-            <InfoCard header="BTSG price">
-                    {{balancedCurrency(btsg.price)}} $
-            </InfoCard>
-        </div>
+			<InfoCard header="Total assets">
+				{{ balancedCurrency(bankStore.total) }} $
+			</InfoCard>
+		</div>
+		<div class="col-2">
+			<InfoCard header="Available assets">
+				{{ balancedCurrency(bankStore.available) }} $
+			</InfoCard>
+		</div>
+		<div class="col-2">
+			<InfoCard header="Bonded assets">
+				{{ balancedCurrency(bankStore.bonded) }} $
+			</InfoCard>
+		</div>
+		<div class="col-2">
+			<InfoCard header="BTSG price">
+				{{ balancedCurrency('0') }} $
+			</InfoCard>
+		</div>
     </div>
     <p class="q-mb-21 fs-18 text-weight-medium">Tokens</p>
     <div>
-        <LightTable :columns="columns" :rows="user.coins">
+        <LightTable :columns="columns" :rows="bankStore.balances">
             <template v-slot:body="props">
                 <q-tr :props="props">
                     <q-td>
                         <span class="opacity-40">
-                            {{props.row.index}}
+                            {{ props.rowIndex + 1 }}
                         </span>
                     </q-td>
                     <q-td>
@@ -89,35 +89,36 @@
                             <q-avatar
                                 size="sm"
                                 class="q-mr-22">
-                                <img :src="props.row.coin.iconUrl" alt="">                   
+                                <img :src="props.row.logos.default" :alt="props.row.name">                
                             </q-avatar>
                             <p class="text-weight-medium fs-14">
-                                {{props.row.coin.name}}
+                                {{ props.row.name }}
                             </p>
                         </div>
                     </q-td>
                     <q-td>
-                        <p class="text-white text-center">{{props.row.coin.symbol}}</p>
+                        <p class="text-white text-center">{{ props.row.fantoken ? '$' : '' }}{{ props.row.symbol }}</p>
                     </q-td>
                     <q-td>
                         <div class="flex justify-center">
-                            <q-icon
+                            <q-avatar
                                 v-for="(chain, i) in props.row.chains"
-                                :name="resolveIcon(chain, 20, 20)"
+								:key="i"
                                 size="20px"
                                 :class="i > 0 ? 'q-ml-8' : ''"
                             >
-                            </q-icon>
+								<img :src="chain.logos.default" />
+                            </q-avatar>
                         </div>
                     </q-td>
                     <q-td>
-                        <p :class="'text-right ' + (props.row.total > 0 ? '' : 'opacity-40')">
-                            {{balancedCurrency(props.row.total - props.row.bonded)}} $
+                        <p :class="'text-right ' + (props.row.available > 0 ? '' : 'opacity-40')">
+                            {{ props.row.available ? balancedCurrency(props.row.available) : '-' }}
                         </p>
                     </q-td>
                     <q-td>
                         <p :class="'text-right ' + (props.row.bonded > 0 ? '' : 'opacity-40')">
-                            {{balancedCurrency((props.row.total - props.row.bonded) * 100)}} {{props.row.coin.symbol}}
+                            {{ props.row.bonded ? balancedCurrency(props.row.bonded) : '-' }}
                         </p>
                     </q-td>
                     <q-td>
@@ -140,9 +141,11 @@
                         <div class="flex justify-start q-ml-46">
                             <div class="text-capitalize text-primary-light flex items-center">
                                 <p>
-                                    {{chain}}
+                                    {{ chain.name }}
                                 </p>
-                                <q-icon :name="resolveIcon(chain, 20, 20)" class="q-ml-10"></q-icon>
+								<q-avatar size="20px" class="q-ml-10">
+									<img :src="chain.logos.default" />
+								</q-avatar>
                             </div>
                         </div>
                     </q-td>
@@ -151,13 +154,13 @@
                     <q-td>
                     </q-td>
                     <q-td>
-                        <p :class="'text-right ' + (props.row.total > 0 ? '' : 'opacity-40')">
-                            {{balancedCurrency(props.row.total - props.row.bonded)}} $
+                        <p :class="'text-right ' + (chain.total > 0 ? '' : 'opacity-40')">
+                            {{ chain.available ? balancedCurrency(chain.available) : '-' }}
                         </p>
                     </q-td>
                     <q-td>
-                        <p :class="'text-right ' + (props.row.bonded > 0 ? '' : 'opacity-40')">
-                            {{balancedCurrency((props.row.total - props.row.bonded) * 100)}} {{props.row.coin.symbol}}
+                        <p :class="'text-right ' + (chain.bonded > 0 ? '' : 'opacity-40')">
+                            {{ chain.bonded ? balancedCurrency(chain.bonded) : '-' }}
                         </p>
                     </q-td>
                 </q-tr>

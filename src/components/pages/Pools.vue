@@ -1,20 +1,19 @@
 <script setup lang="ts">
-    import Title from '@/components/typography/Title.vue'
-    import PoolHeader from '@/components/pools/PoolHeader.vue'
-    import Card from '@/components/cards/Card.vue'
-    import {balancedCurrency} from "@/common/numbers"
-    import { newMyPool, newPool } from '@/common/mockups'
-    import { RouterLink } from "vue-router"
+	import Title from '@/components/typography/Title.vue'
+	import PoolHeader from '@/components/pools/PoolHeader.vue'
+	import Card from '@/components/cards/Card.vue'
+	import {balancedCurrency} from "@/common/numbers"
+	import { RouterLink } from "vue-router"
+	import usePools from '@/store/pools'
 
-    const myPools = [newMyPool()]
-    const pools = [newPool(), newPool(), newPool()]
+	const poolsStore = usePools()
 </script>
 
 <template>
     <Title class="q-mb-50">Your Pools</Title>
     <div class="row q-mb-72 q-col-gutter-xl">
         <div v-for="(userPool, index) in myPools" class="col-2">
-            <RouterLink :to="'/pools/' + userPool.pool.name" class="block">
+            <RouterLink :to="'/pools/' + userPool.pool.id" class="block">
                 <Card class="full-width cursor-pointer hover:bg-white-15">
                     <PoolHeader :pool="userPool.pool">
 
@@ -36,8 +35,8 @@
     </div>
     <Title class="q-mb-50">All Pools</Title>
     <div class="row q-col-gutter-xl">
-        <div v-for="(pool) in pools" class="col-2">
-            <RouterLink :to="'/pools/' + pool.name" class="block">
+        <div v-for="(pool) in poolsStore.pools" class="col-2">
+            <RouterLink :to="'/pools/' + pool.id" class="block">
                 <Card class="full-width cursor-pointer hover:bg-white-15">
                     <PoolHeader :pool="pool">
 
