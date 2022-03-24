@@ -6,6 +6,7 @@ $container-center: 508px;
 $primary-darker: #1B0B30;
 $primary-dark-700 : #261639;
 $primary-dark: #220D32;
+$primary-light: #6D547A;
 $dark-background: #1F0C32;
 $dark-light: #301C40;
 $dark-lighter: #322142;
@@ -13,6 +14,8 @@ $dark-lighter: #322142;
 $custom-sizes: ();
 
 @for $i from 0 through 50 {
+    $s: $i;
+    $custom-sizes: map.set($custom-sizes, $s, $s * 1px);
     $s: $i*2;
     $custom-sizes: map.set($custom-sizes, $s, $s * 1px);
     $s: $i*3;

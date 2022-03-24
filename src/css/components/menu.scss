@@ -31,3 +31,19 @@
         @include menu-item-active-hover();
     }
 }
+
+.q-menu {
+    .q-item {
+        opacity: 0.5 !important;
+        &:hover {
+            opacity: 1 !important;
+            .q-focus-helper {
+                &,
+                &::after,
+                &::before {
+                    background: transparent !important;
+                }
+            }
+        }
+    }
+}

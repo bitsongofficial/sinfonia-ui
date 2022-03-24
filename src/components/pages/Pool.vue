@@ -163,55 +163,67 @@
             <div class="col-2 !w-1/3" v-for="unbonding in unbondings">
                 <ExpandableCard transparency="5">
                     <p class="fs-12 opacity-30 q-mb-16 text-uppercase">{{unbonding.title}} unbonding</p>
-                    <div class="flex justify-between q-mb-20">
-                        <div>
-                            <p class="fs-36 q-mb-8">{{percentage(unbonding.apr)}}</p>
-                            <p class="text-primary fs-10">Total Bonus {{balancedCurrency(unbonding.total)}} {{userPool.pool.coin2.symbol}}</p>
+                    <div class="q-mb-20">
+                        <p class="fs-36 q-mb-8">{{percentage(unbonding.apr)}}</p>
+                        <div class="flex items-center">
+                            <p class="text-primary fs-14 q-mr-16 font-weight-medium">External Incentives Pool</p>
+                            <q-avatar
+                                class="q-mr-9"
+                                size="24px"
+                            >
+                                <img :src="userPool.pool.coin1.iconUrl" alt="">
+                            </q-avatar>
+                            <q-avatar
+                                class="q-mr-9"
+                                size="24px"
+                            >
+                                <img :src="userPool.pool.coin2.iconUrl" alt="">
+                            </q-avatar>
                         </div>
-                        <ImagePair
-                            :image1="userPool.pool.coin1.iconUrl"
-                            :image2="userPool.pool.coin2.iconUrl"
-                        ></ImagePair>
                     </div>
                     <p class="fs-12 opacity-40 font-weight-regular q-mb-20">
                         BitSong Launchpad is the platform where you can buy and. Incentives for 22 epochs.
                     </p>
-                    <div class="flex no-wrap items-center">
-                        <p class="fs-16 q-mr-9">{{unbonding.value}}</p>
-                        <p class="fs-12 q-mr-30 text-no-wrap">Epochs left</p>
-                        <Progress :value="unbonding.value" :max="unbonding.max"></Progress>
+                    <div class="flex no-wrap items-center font-weight-medium">
+                        <div class="q-mr-21">
+                            <p class="fs-12 text-uppercase opacity-50 q-mb-8">
+                                Start
+                            </p>
+                            <p class="fs-18 text-no-wrap">22 Feb</p>
+                        </div>
+                        <Progress :height="12" :value="unbonding.value" :max="unbonding.max"></Progress>
+                        <div class="q-ml-21">
+                            <p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">
+                                End
+                            </p>
+                            <p class="fs-18 text-no-wrap">22 Mar</p>
+                        </div>
                     </div>
                     <template #extra>
-                        <div class="flex justify-between q-mb-14">
-                            <div class="row items-center">
-                                <q-avatar
-                                    size="sm"
-                                    class="q-mr-22">
-                                    <img :src="userPool.pool.coin2.iconUrl" alt="">                   
-                                </q-avatar>
-                                <p class="text-weight-medium">
-                                    {{userPool.pool.coin2.symbol}}
-                                </p>
-                            </div>
-                            <div class="flex items-center">
-                                <p class="fs-10 text-primary q-mr-16">APR</p>
-                                <p class="fs-16">{{percentage(userPool.pool.APR)}}</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-between">
-                            <div class="row items-center">
-                                <q-avatar
-                                    size="sm"
-                                    class="q-mr-22">
-                                    <img :src="userPool.pool.coin1.iconUrl" alt="">                   
-                                </q-avatar>
-                                <p class="text-weight-medium">
-                                    {{userPool.pool.coin1.symbol}}
-                                </p>
-                            </div>
-                            <div class="flex items-center">
-                                <p class="fs-10 text-primary q-mr-16">APR</p>
-                                <p class="fs-16">{{percentage(userPool.pool.APR)}}</p>
+                        <div v-for="coin in [userPool.pool.coin1, userPool.pool.coin2]" class="rounded-20 border-primary-light q-pa-18 flex items-center q-mb-6">
+                            <q-avatar
+                                class="q-mr-18"
+                                size="25px"
+                            >
+                                <img :src="coin.iconUrl" alt="">
+                            </q-avatar>
+                            <div class="flex-1">
+                                <div class="flex no-wrap items-center q-mb-10">
+                                    <p class="fs-14 font-weight-medium q-mr-30">BTSG</p>
+                                    <Progress :height="6" :value="unbonding.value" :max="unbonding.max"></Progress>
+                                    <p class="fs-14 font-weight-medium q-ml-22 text-no-wrap">
+                                        18 epochs left
+                                    </p>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <p class="fs-10 text-primary text-uppercase font-weight-medium">
+                                        Incentive <span class="text-white">{{balancedCurrency(100000)}}</span> {{coin.symbol}}
+                                    </p>
+                                    <div class="flex">
+                                        <p class="q-mr-12 opacity-30">APR</p>
+                                        <p>{{percentage(81.9)}} %</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </template>

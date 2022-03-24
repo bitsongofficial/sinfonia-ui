@@ -120,6 +120,10 @@ $row-padding-x: 30px;
             }
         }
     }
+
+    &.table-no-background .q-table tbody::before {
+        display: none;
+    }
 }
 
 .hide-header {
@@ -133,4 +137,12 @@ $row-padding-x: 30px;
         padding-top: 12px;
         padding-bottom: 12px;
     }
+}
+
+.table-no-padding .q-table {
+    padding: 0;
+}
+
+.q-tr.q-tr--no-hover::after {
+    display: none;
 }
