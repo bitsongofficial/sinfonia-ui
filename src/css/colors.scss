@@ -131,6 +131,7 @@
 
 .main-page-background {
     @include background-gradient;
+    position: relative;
 }
 
 @for $i from 1 through 8
