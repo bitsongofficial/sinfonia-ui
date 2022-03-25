@@ -1,0 +1,32 @@
+@use "sass:color";
+
+$thumbSize: 8px;
+$padding: 11px;
+$scrollbarSize: $padding * 2 + $thumbSize;
+
+* {
+    scrollbar-color: transparent color.adjust(#FFFFFF, $alpha:  -0.95);
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+    width: $scrollbarSize;
+    height: $scrollbarSize;
+    background: rgba(0,0,0,0);
+    z-index: 12;
+}
+
+::-webkit-scrollbar-thumb {
+    border: $padding solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    background-color: color.adjust(#FFFFFF, $alpha:  -0.95);
+    border-radius: 30px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: color.adjust(#FFFFFF, $alpha:  -0.7);
+}
+
+::-webkit-scrollbar-corner {
+    background: rgba(0,0,0,0);
+}

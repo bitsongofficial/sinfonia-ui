@@ -11,7 +11,7 @@ export default defineConfig({
     }),
 
     quasar({
-      sassVariables: 'src/quasar-variables.scss'
+      sassVariables: 'src/quasar-variables.scss',
     })
   ],
   resolve: {
@@ -20,4 +20,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  define: {
+    'process.env': {},
+    'process.platform': 'win32'
+  }
 })

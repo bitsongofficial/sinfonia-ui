@@ -1,0 +1,14 @@
+.q-dialog__backdrop {
+    @include background-gradient;
+    opacity: 0.7;
+}
+
+.q-dialog__inner > div {
+    max-width: 508px;
+}
+
+.bigger-modal {
+    .q-dialog__inner > div {
+        max-width: 608px;
+    }
+}

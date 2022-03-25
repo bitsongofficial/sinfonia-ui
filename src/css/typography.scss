@@ -1,0 +1,51 @@
+@use "sass:map";
+
+@font-face {
+    font-family: Circular Std;
+    font-weight: normal;
+    font-style: normal;
+    src: local('Circular Std Book'), local('CircularStd-Book'), url('@/assets/fonts/CircularStd-Book.woff2') format('woff2');
+  }
+  
+@font-face {
+    font-family: Circular Std;
+    font-weight: 500;
+    font-style: normal;
+    src: local('Circular Std Medium'), local('CircularStd-Medium'), url('@/assets/fonts/CircularStd-Medium.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: Circular Std;
+    font-weight: bold;
+    font-style: normal;
+    src: local('Circular Std Bold'), local('CircularStd-Bold'), url('@/assets/fonts/CircularStd-Bold.woff2') format('woff2');
+}
+
+$font-sizes: ('13': 13, '15': 15);
+
+@for $i from 0 through 22 {
+    $s: $i * 2;
+    $font-sizes: map.set($font-sizes, $s, $s);
+    $s: $i * 3;
+    $font-sizes: map.set($font-sizes, $s, $s);
+}
+
+@each $k, $v in $font-sizes {
+    .fs-#{$k} {
+        font-size: $v * 1px;
+        line-height: $v * 1px;
+    }
+    .\!fs-#{$k} {
+        font-size: $v * 1px !important;
+        line-height: $v * 1px !important;
+    }
+}
+
+* {
+    font-family: "Circular Std", sans-serif;
+}
+
+a {
+    text-decoration: inherit;
+    color: inherit;
+}

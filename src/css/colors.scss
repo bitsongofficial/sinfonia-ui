@@ -1,8 +1,74 @@
+@use "sass:color";
+
+:root {
+    --text-color: #fff;
+}
+
+.border-primary {
+    border: 2px solid $primary;
+}
+
+.text-primary-darker {
+    color: $primary-darker !important;
+}
+.bg-primary-darker {
+    background: $primary-darker !important;
+}
+.border-primary-darker {
+    border: 2px solid $primary-darker;
+}
+
 .text-primary-dark {
-    color: #220D32 !important;
+    color: $primary-dark !important;
 }
 .bg-primary-dark {
-    background: #220D32 !important;
+    background: $primary-dark !important;
+}
+
+.text-primary-dark-700 {
+    color: $primary-dark-700 !important;
+}
+.bg-primary-dark-700 {
+    background: $primary-dark-700 !important;
+}
+
+.text-primary-light {
+    color: $primary-light !important;
+}
+.bg-primary-light {
+    background: $primary-light !important;
+}
+
+.border-primary-light {
+    border: 2px solid rgba(122, 110, 124, 0.15);
+}
+
+.text-dark-light {
+    color: $dark-light !important;
+}
+.bg-dark-light {
+    background: $dark-light !important;
+}
+
+.text-dark-lighter {
+    color: $dark-lighter !important;
+}
+.bg-dark-lighter {
+    background: $dark-lighter !important;
+}
+
+.text-gray {
+    color: $gray !important;
+}
+.bg-gray {
+    background: $gray !important;
+}
+
+.text-notification-background {
+    color: $notification-background;
+}
+.bg-notification-background {
+    background-color: $notification-background;
 }
 
 .bg-rounded-translucent {
@@ -10,4 +76,99 @@
     box-shadow: 0px 0px 20px #14142E;
     backdrop-filter: blur(60px);
     border-radius: 30px;
+}
+
+.bg-gradient {
+    background: linear-gradient(147.07deg, $primary-complementary 21.78%, $primary 79.22%);
+    border-radius: 30px;
+}
+
+.shadow-20 {
+    box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.2);
+}
+
+.shadow-20-alt {
+    box-shadow: 0px 0px 20px 20px rgba(34, 13, 51, 0.3);
+}
+
+.background-blend {
+    mix-blend-mode: multiply, normal;
+    background-blend-mode: multiply, normal;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #FFFFFF;
+}
+
+[class*="border-gradient-"] {
+    position: relative;
+    &::before {
+        content:"";
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        border-radius:50px;
+        padding: 2px;
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box, 
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+    }
+}
+
+.border-gradient-primary::before {
+    background: linear-gradient(to right, $primary-complementary, $primary);
+}
+.border-gradient-spinner::before {
+    background: linear-gradient(50deg, $primary-complementary 0%, $primary 71%, transparent 72%, transparent 100%);
+    background-position: 0;
+}
+
+.text-overlay-gradient {
+    background: linear-gradient(180deg, rgba(72, 60, 88, 0) 0%, #483B58 100%);
+}
+
+.main-page-background {
+    @include background-gradient;
+    position: relative;
+}
+
+@for $i from 1 through 8
+{
+    $name: $i*5;
+    $val: -(1 - $i/20);
+    .bg-white-#{$name} {
+        background-color: color.adjust(#FFFFFF, $alpha: $val);
+    }
+
+    .hover\:bg-white-#{$name}:hover {
+        background-color: color.adjust(#FFFFFF, $alpha: $val);
+    }
+}
+
+@for $i from 1 through 20
+{
+    .opacity-#{$i*5} {
+        opacity: #{$i/20};
+    }
+    
+    .hover\:opacity-#{$i*5}:hover {
+        opacity: #{$i/20};
+    }
+    
+    .group:hover .group-hover\:opacity-#{$i*5} {
+        opacity: #{$i/20};
+    }
+}
+
+@for $i from 1 through 10
+{
+    .blur-#{$i*10} {
+        backdrop-filter: blur(#{$i*10}px);
+    }
 }

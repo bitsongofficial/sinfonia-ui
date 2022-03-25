@@ -1,0 +1,21 @@
+.section-anchor {
+    &:hover {
+        opacity: 0.8;
+    }
+
+    &.active {
+        display: flex;
+        align-items: center;
+        opacity: 1;
+
+        &::before {
+            content: '';
+            display: block;
+            border-radius: 999999px;
+            background-color: $primary;
+            width: 6px;
+            height: 6px;
+            margin-right: 10px;
+        }
+    }
+}

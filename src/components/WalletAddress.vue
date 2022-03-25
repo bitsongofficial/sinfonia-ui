@@ -1,12 +1,20 @@
 <script setup lang="ts">
+    import { ref } from "vue";
+    import IconButton from "./buttons/IconButton.vue"
+    import LargeButton from "./buttons/LargeButton.vue"
+    import useAuth from "@/store/auth";
+
+    const authStore = useAuth()
 </script>
 <template>
-    <div class="row items-center bg-rounded-translucent q-px-lg q-py-sm no-wrap">
-        <q-icon name="svguse:icons.svg#arrow-right" size="sm" class="q-mr-lg rotate-180"></q-icon>
-        <div class="q-mr-md">
-            <p class="q-ml-sm text-uppercase q-mb-none text-caption">Address</p>
-            <p class="text-weight-bold text-subtitle1 q-mb-none">bitsong1...u085</p>
+    <div v-if="authStore.session" class="row items-center bg-rounded-translucent q-pl-24 q-pr-18 q-py-16-5 no-wrap w-fit">
+        <div class="q-mr-50">
+            <p class="text-uppercase text-caption fs-8 opacity-40 q-mb-3">Address</p>
+            <p class="text-weight-bold text-subtitle1 fs-12">bitsong1...u085</p>
         </div>
-        <q-icon name="svguse:icons.svg#copy" size="sm"></q-icon>
+        <IconButton icon="copy" width="20" height="20" class="opacity-40 fs-15"></IconButton>
+    </div>
+    <div v-else>
+        <LargeButton :padding-x="36" fit @click="authStore.signIn">Connect to Keplr</LargeButton>
     </div>
 </template>

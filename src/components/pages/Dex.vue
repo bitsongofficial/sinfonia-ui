@@ -1,66 +1,51 @@
 <script setup lang="ts">
-    const columns = [
-        {
-            name: 'index',
-            required: true,
-            label: '',
-            align: 'left',
-            field: 'index',
-        },
-        { 
-            name: 'token',
-            align: 'center',
-            label: 'Token',
-            field: 'name',
-            sortable: true
-        },
-        { 
-            name: 'icon',
-            align: 'center',
-            label: '',
-            field: 'symbol',
-            format: (val:any) => (`$${val}`),
-            sortable: false,
-        },
-        { name: 'price', label: 'Price', field: 'price', sortable: true, format: (val:any) => `${val.toFixed(2)} $`},
-        { name: 'marketcap', label: 'Market Cap', field: 'marketCap', format: (val:any) => `${val} $` },
-        { name: 'volume24H', label: 'Volume 24H', field: 'volumeLastDay', format: (val:any) => `${val} $` },
-        { name: 'lastDayGain', label: '24H', field: 'lastDayGain', format: (val:any) => `${val.toFixed(2)} %` },
-    ]
+	import { balancedCurrency as  balancedCurrency } from '@/common/numbers'
+	import useConfig from '@/store/config'
+	import { TableColumn } from '@/types/table'
+	import CryptoTable from "../CryptoTable.vue"
 
-    let i = 0
-    const newCoin = (name: string, symbol: string) =>
-    {
-        i++
-        return {
-            index: i,
-            name,
-            symbol,
-            coinIcon: "https://cdn.icon-icons.com/icons2/812/PNG/512/social_network_facebook_icon-icons.com_66156.png",
-            price: Math.random() * 1.5,
-            marketCap: Math.random() * 15000000000,
-            volumeLastDay: Math.random() * 60000000,
-            lastDayGain: Math.random() * 10,
-        }
-    }
+	const configStore = useConfig()
 
-    const rows = [
-        newCoin("Adam Clay", "CLAY"),
-        newCoin("Fonti", "FNTY"),
-        newCoin("Vibranium", "VBRN"),
-        newCoin("Mace", "MCX"),
-        newCoin("Adam Clay", "CLAY"),
-        newCoin("Fonti", "FNTY"),
-        newCoin("Vibranium", "VBRN"),
-        newCoin("Mace", "MCX"),
-        newCoin("Adam Clay", "CLAY"),
-    ]
+	const columns: TableColumn[] = [
+		{
+			name: 'index',
+			required: true,
+			label: '',
+			align: 'left',
+			field: 'index',
+		},
+		{ 
+			name: 'token',
+			align: 'left',
+			label: 'Token',
+			field: 'name',
+			sortable: true
+		},
+		{
+			name: 'symbol',
+			align: 'center',
+			label: 'Symbol',
+			field: 'symbol',
+			sortable: false,
+			format: (val: string) => `$${val}`,
+		},
+		{
+			name: 'price',
+			label: 'Price',
+			field: 'price',
+			sortable: true,
+			format: (val: string) => `${balancedCurrency(val)} $`
+		},
+		{
+			name: 'marketcap',
+			label: 'Market Cap',
+			field: 'marketCap',
+			sortable: true,
+			format: (val: string) => `${balancedCurrency(val)} $`
+		}
+	]
 </script>
 <template>
-    <h3 class="q-mb-xl">Dex</h3>
-    <q-table
-      row-key="index"
-      :rows="rows"
-      :columns="columns"
-    />
+	<h3 class="q-mb-xl fs-27">DEx</h3>
+	<CryptoTable :columns="columns" :rows="configStore.fantokens" />
 </template>

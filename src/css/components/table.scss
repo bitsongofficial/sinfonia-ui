@@ -1,4 +1,6 @@
-$table-padding: 30px;
+$table-padding: 20px;
+$row-padding-y: 17px;
+$row-padding-x: 30px;
 .q-table__container {
     color: white;
     background-color: transparent;
@@ -13,21 +15,27 @@ $table-padding: 30px;
 
         thead {
             color: $dark;
-            opacity: 0.5;
             margin-left: -100px;
 
             th {
-                padding-bottom: $table-padding;
+                padding-bottom: $table-padding * 2;
+                opacity: 0.5;
+
+                &.sorted {
+                    color: white;
+                    opacity: 1;
+                }
             }
         }
     
         tbody {
-            box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.15);
+            box-shadow: none;
             backdrop-filter: blur(60px);
             position: relative;
 
             &::before {
                 content: "";
+                box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.15);
                 background: rgba(255, 255, 255, 0.05);
                 position: absolute;
                 left: 0;
@@ -40,14 +48,42 @@ $table-padding: 30px;
             }
 
             tr {
-                td:first-child,
-                td:nth-child(3) {
-                    color: $dark;
-                    opacity: 0.5;
+                position: relative;
+
+                &:hover::after {
+                    content: '';
+                    position: absolute;
+                    z-index: 0;
+                    pointer-events: none;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: $accent;
+                    box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.15);
+                    backdrop-filter: blur(60px);                    
+                    border-radius: 60px;
                 }
     
                 td {
                     border-bottom: 0;
+                    padding-top: $row-padding-y;
+                    padding-bottom: $row-padding-y;
+                    position: relative;
+                    z-index: 1;
+
+                    &::before {
+                        background: none;
+                        content: '';
+                    }
+
+                    &:first-child {
+                        padding-left: $row-padding-x;
+                    }
+
+                    &:last-child {
+                        padding-right: $row-padding-x;
+                    }
                 }
             }
         }
@@ -56,4 +92,57 @@ $table-padding: 30px;
     .q-table__bottom {
         display: none;
     }
+
+    .transactions-table-head-row {
+        position: relative;
+    
+        .q-table__sort-icon {
+            font-size: 0 !important;
+            width: 10px !important;
+            height: 5px !important;
+            opacity: 0;
+            background: url('@/assets/images/icons/sortarrow.svg') no-repeat center;
+            background-size: contain;
+        }
+    
+        &.sorted,
+        &::hover {
+            .q-table__sort-icon {
+                opacity: 1;
+            }
+        }
+    }
+    &.bg-transparent {
+        tbody {
+            &::before {
+                background: none;
+                box-shadow: none;
+            }
+        }
+    }
+
+    &.table-no-background .q-table tbody::before {
+        display: none;
+    }
+}
+
+.hide-header {
+    thead {
+        display: none;
+    }
+}
+
+.small-rows {
+    .q-table__container .q-table tbody tr td {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+}
+
+.table-no-padding .q-table {
+    padding: 0;
+}
+
+.q-tr.q-tr--no-hover::after {
+    display: none;
 }

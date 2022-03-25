@@ -7,7 +7,15 @@
     padding: 0 30px;
 }
 
+.scroll-smooth {
+    scroll-behavior: smooth;
+}
+
 .min-width {
+    width: fit-content;
+}
+
+.w-fit {
     width: fit-content;
 }
 
@@ -15,6 +23,266 @@
     top: 0;
 }
 
+.left-0 {
+    left: 0;
+}
+
+.right-0 {
+    right: 0;
+}
+
+.bottom-0 {
+    bottom: 0;
+}
+
+.grow-1 {
+    flex-grow: 1;
+}
+
+.flex-0 {
+    flex: 0;
+}
+
+.\!flex-0 {
+    flex: 0 !important;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
 .min-h-fit {
     min-height: fit-content;
+}
+
+.min-h-window-height {
+    min-height: 100vh;
+}
+
+.rounded {
+    border-radius: 99999999px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.separator {
+    opacity: 0.3;
+    border: 1px solid #FFFFFF;
+}
+
+.separator-light {
+    opacity: 0.1;
+    border: 1px solid #85798D;
+}
+
+.vertical-separator {
+    opacity: 0.1;
+    border: 1px solid #FFFFFF;
+}
+
+.row.row-cols-3 {
+    .col {
+        width: 33.33%;
+    }
+}
+
+.w-1\/4 {
+    width: 25%;
+}
+
+.w-2\/4 {
+    width: 50%;
+}
+
+.w-3\/4 {
+    width: 75%;
+}
+
+.w-4\/4,
+.w-full {
+    width: 100%;
+}
+
+.w-1\/6 {
+    width: 17%;
+}
+
+.\!w-1\/3 {
+    width: 33.33% !important;
+}
+
+.w-5\/6 {
+    width: 83%;
+}
+
+.w-46 {
+    width: 46px;
+}
+
+.full-height--15 {
+    height: calc(100% - 15px);
+}
+
+.h-21 {
+    height: 21px;
+}
+
+.hv-1\/2 {
+    height: 50vh;
+}
+
+.hv-3\/5 {
+    height: 60vh;
+}
+
+.hv-7\/10 {
+    height: 70vh;
+}
+
+.hv-4\/5 {
+    height: 80vh;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.max-w-582 {
+    max-width: 582px;
+}
+
+.max-h-360 {
+    max-height: 360px;
+}
+
+.min-w-440 {
+    min-width: 440px;
+}
+
+.z-1 {
+    z-index: 1;
+}
+
+.-z-1 {
+    z-index: -1;
+}
+
+.sticky-bottom {
+    position: sticky;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.q-px-select-20 .q-field__control{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.bg-cover {
+    background-size: cover;
+}
+
+.\!bg-cover {
+    background-size: cover !important;
+}
+
+@for $border from 0 to 10 {
+    $val: $border * 5;
+    .rounded-#{$val} {
+        border-radius: #{$val}px;
+    }
+    .\!rounded-#{$val} {
+        border-radius: #{$val}px !important;
+    }
+}
+
+@each $k, $s in $custom-sizes {
+    .s-#{$k} {
+        width: $s;
+        height: $s;
+    }
+    .min-s-#{$k} {
+        min-width: $s;
+        min-height: $s;
+    }
+    .h-#{$k} {
+        height: $s;
+    }
+}
+
+@media screen and (min-height: 600px) {
+    .vertical-sm-absolute {
+        position: absolute;
+    }
+
+    .vertical-sm-window-height {
+        height: 100vh;
+    }
+
+    .vertical-sm-fixed {
+        position: fixed;
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .q-mt-vsm-40 {
+        margin-top: 40px;
+    }
+}
+
+@media screen and (max-width: $breakpoint-sm) {
+    .absolute-sm {
+        position: absolute;
+    }
+}
+
+@media screen and (min-width: $breakpoint-xs) {
+    .w-xs-1\/3 {
+        width: 1/3 * 100%;
+    }
+    .w-xs-2\/3 {
+        width: 2/3 * 100%;
+    }
+}
+
+@media screen and (min-width: $breakpoint-sm) {
+    .w-sm-1\/3 {
+        width: 33%;
+    }
+    .w-sm-2\/3 {
+        width: 66%;
+    }
+    .w-sm-1\/4 {
+        width: 1/4 * 100%;
+    }
+    .w-sm-3\/4 {
+        width: 3/4 * 100%;
+    }
+}
+
+@media screen and (min-width: $breakpoint-md) {
+    .w-md-1\/6 {
+        width: 17%;
+    }
+    .w-md-5\/6 {
+        width: 83%;
+    }
+    .\!w-md-1\/3 {
+        width: 33.33% !important;
+    }
+}
+
+@media screen and (min-width: $breakpoint-lg) {
+    .w-lg-1\/6 {
+        width: 17%;
+    }
+    .w-lg-5\/6 {
+        width: 83%;
+    }
+    .\!w-lg-1\/3 {
+        width: 33.33% !important;
+    }
 }
