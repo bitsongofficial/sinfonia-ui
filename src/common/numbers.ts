@@ -19,11 +19,11 @@ export const currency = (number: number | string): string => {
 }
 
 export const balancedCurrency = (number: number | string): string => {
-	const value = new BigNumber(number)
+	let value = new BigNumber(number)
 
 	if(value.abs().gt(1000))
 	{
-		number = Math.floor(value.toNumber())
+		value = new BigNumber(Math.floor(value.toNumber()))
 	}
 
 	return currency(value.toString())

@@ -68,6 +68,7 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 
 export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 	const poolsStore = usePools()
+	const bankStore = useBank()
 
 	return rawPools.map(pool => {
 		const poolAssets = [...pool.poolAssets]
@@ -108,8 +109,11 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 		}
 
 		const lockableDurationApr: LockableDurationWithApr[] = poolsStore.lockableDuration.map(duration => {
+			const lockedLonger = bankStore.lockedLongerByPoolIdAndDuration(pool.id, duration.rawDuration)
+
 			return {
 				...duration,
+				lockedLonger,
 				apr: calculateTotalApr(pool, duration, liquidity.toString())
 			}
 		})

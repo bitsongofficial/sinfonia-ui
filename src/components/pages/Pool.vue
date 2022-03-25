@@ -4,46 +4,31 @@
 	import StandardButton from '@/components/buttons/StandardButton.vue'
 	import CardWithHeader from '@/components/cards/CardWithHeader.vue'
 	import PercentageWithImage from '@/components/infographics/PercentageWithImage.vue'
-	import { balancedCurrency, percentage } from '@/common/numbers'
+	import { balancedCurrency, percentage, toDecimalGamm } from '@/common/numbers'
 	import InfoCard from '@/components/cards/InfoCard.vue'
 	import ExpandableCard from '@/components/cards/ExpandableCard.vue'
 	import Progress from '@/components/Progress.vue'
 	import LightTable from '@/components/LightTable.vue'
-	import { TableColumn } from '@/types/table'
+	import { TableColumn, LockableDurationWithApr } from '@/types'
 	import usePools from '@/store/pools'
 	import { useRoute } from 'vue-router'
 	import { computed } from 'vue'
 	import { BigNumber } from 'bignumber.js'
+	import { reduce } from 'lodash'
+	import { Coin } from '@cosmjs/proto-signing'
 
 	const poolsStore = usePools()
 	const route = useRoute();
 	const id = route.params['id'] as string;
 
 	const pool = computed(() => poolsStore.poolById(id))
+	const lpLiquidity = computed(() => {
+		if (pool.value) {
+			return new BigNumber(pool.value.userLiquidity).minus(pool.value.bonded).toString()
+		}
 
-	const unbondings = [
-		{
-			title: "one day",
-			apr: 106.6,
-			total: 100000,
-			value: 22,
-			max: 30,
-		},
-		{
-			title: "7 days",
-			apr: 118.4,
-			total: 200000,
-			value: 22,
-			max: 30,
-		},
-		{
-			title: "14 days",
-			apr: 148.6,
-			total: 400000,
-			value: 22,
-			max: 30,
-		},
-	]
+		return '0'
+	})
 
 	const columns: TableColumn[] = [
 		{
@@ -51,29 +36,25 @@
 			required: true,
 			label: 'unbonding duration',
 			align: 'left',
-			field: 'title',
+			field: (row: LockableDurationWithApr) => row.readableDuration,
 			sortable: false,
 		},
 		{ 
 			name: 'APR',
 			align: 'right',
 			label: 'APR',
-			field: 'apr',
+			field: (row: LockableDurationWithApr) => row.apr,
 			sortable: true,
-			format: (val:any) => `${percentage(val)} %`,
+			format: (val: string) => `${percentage(val)} %`,
 		},
 		{ 
 			name: 'total',
 			align: 'right',
 			label: 'amount',
-			field: 'total',
-			sortable: true,
-		},
-		{
-			name: 'value',
-			align: 'right',
-			label: 'value',
-			field: 'value',
+			field: (row: LockableDurationWithApr) => row.lockedLonger ? reduce<Coin, BigNumber>(row.lockedLonger.coins, (all, coin) => {
+				return all.plus(coin.amount)
+			}, new BigNumber('0')) : '0',
+			format: (val: string) => `${balancedCurrency(toDecimalGamm(val))} GAMM/${pool.value?.id ?? '0'}`,
 			sortable: true,
 		},
 		{
@@ -164,7 +145,7 @@
 						<p class="fs-12 opacity-40 q-mb-8">
 								Available LP Tokens
 						</p>
-						<p class="fs-24 q-mb-14">{{124}} $</p>
+						<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
 						<StandardButton>
 								Start Earning
 						</StandardButton>
@@ -242,7 +223,7 @@
             </div>
         </div>
 		<p class="fs-18 q-mb-30">My Bondings</p>
-		<LightTable :rows="unbondings" :columns="columns">
+		<LightTable :rows="pool.lockableDurationApr" :columns="columns">
 				<template v-slot:body-cell-unbond="props">
 						<q-td :props="props">
 								<span class="text-primary text-weight-medium cursor-pointer">

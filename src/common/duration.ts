@@ -1,4 +1,4 @@
-import { LockableDuration } from '@/types'
+import { LockableDuration, OsmosisLock } from '@/types'
 import { intervalToDuration } from 'date-fns'
 import { toMilliseconds } from 'duration-fns'
 

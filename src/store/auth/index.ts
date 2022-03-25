@@ -18,18 +18,20 @@ const useAuth = defineStore('auth', {
 	actions: {
 		async signIn() {
       try {
-				const keplrStore = useKeplr()
-				const bankStore = useBank()
-        this.loading = true
+				if (window.keplr) {
+					const keplrStore = useKeplr()
+					const bankStore = useBank()
+					this.loading = true
 
-				await keplrStore.init()
+					await keplrStore.init()
 
-				this.session = {
-					sessionType: SessionType.KEPLR,
-					addresses: keplrStore.accounts.map(el => el.address)
+					this.session = {
+						sessionType: SessionType.KEPLR,
+						addresses: keplrStore.accounts.map(el => el.address)
+					}
+
+					bankStore.loadBalances()
 				}
-
-				bankStore.loadBalances()
       } catch (error) {
         console.error(error)
         throw error
