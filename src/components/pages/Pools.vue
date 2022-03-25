@@ -12,7 +12,7 @@
 <template>
 	<template v-if="poolsStore.myPools.length > 0">
 		<Title class="q-mb-50">Your Pools</Title>
-		<div class="row q-mb-72 q-col-gutter-xl">
+		<div class="row q-mb-72 q-col-gutter-x-xl">
 			<div v-for="(userPool, index) in poolsStore.myPools" class="col-8 col-md-4 col-lg-2">
 				<RouterLink :to="'/pools/' + userPool.id" class="block">
 					<Card class="full-width cursor-pointer hover:bg-white-15">
@@ -34,7 +34,7 @@
 		</div>
 	</template>
 	<Title class="q-mb-50">All Pools</Title>
-	<div class="row q-col-gutter-xl">
+	<div class="row q-col-gutter-x-xl">
 		<div v-for="(pool) in poolsStore.pools" class="col-8 col-md-4 col-lg-2">
 			<RouterLink :to="'/pools/' + pool.id" class="block">
 				<Card class="full-width cursor-pointer hover:bg-white-15">

@@ -189,7 +189,7 @@
                         </q-btn-group>
                     </div>
                 </div>
-                <div class="row q-col-gutter-xl q-mb-44">
+                <div class="row q-col-gutter-x-xl q-mb-44">
                     <div class="col-6">
                         <img src="@/assets/images/expanded_chart_placeholder.png" alt="" class="full-width">
                     </div>
@@ -240,7 +240,7 @@
                 </div>
                 <div class="q-mb-52">
                     <p class="fs-16 opacity-30 q-mb-24">Tokenomics</p>
-                    <div class="row q-col-gutter-xl">
+                    <div class="row q-col-gutter-x-xl">
                         <div v-for="n in 4" class="col-2">
                             <InfoCard header="$CLAY CIRCULATING " class="q-py-34">
                                 {{balancedCurrency(21600000)}}
@@ -250,7 +250,7 @@
                 </div>
                 <div class="q-mb-52">
                     <p class="fs-16 opacity-30 q-mb-24">Pool Stats</p>
-                    <div class="row q-col-gutter-xl">
+                    <div class="row q-col-gutter-x-xl">
                         <div class="col-4">
                             <Card class="q-py-34">
                                 <div class="flex justify-between items-stretch">
