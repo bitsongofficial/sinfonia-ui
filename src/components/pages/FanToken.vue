@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { newCoin, newMyPool } from '@/common/mockups'
+    import { newCoin } from '@/common/mockups'
     import { balancedCurrency, percentage, smallNumber } from '@/common/numbers'
     import { onMounted, onUnmounted, ref } from 'vue'
     import OutlineButton from '../buttons/OutlineButton.vue'
@@ -18,6 +18,10 @@
     import LightTable from '../LightTable.vue'
     import { TableColumn } from '@/types/table'
     import ImagePair from '../ImagePair.vue'
+    import usePools from '@/store/pools'
+import { Pool } from '@/types'
+
+    const poolsStore = usePools()
 
     const coin = newCoin("$CLAY", "Adam Clay")
     const timeOptions = [
@@ -54,13 +58,7 @@
         spotify: 'https://open.spotify.com/artist/19jXtZ3WctjL00MMVqYrv8?si=Q_TJsXqORs6WSkQIV4F9DQ&nd=1',
         website: 'http://www.adamclay.com/',
     }
-    let pools = [
-        newMyPool(),
-        newMyPool(),
-        newMyPool(),
-        newMyPool(),
-    ]
-    pools = pools.map((c,i) => (Object.assign(c, {index:i+1})))
+
     const poolsColumns:TableColumn[] = [
         {
             name: 'index',
@@ -79,28 +77,28 @@
         {
             name: 'apr',
             label: 'APR',
-            field: row => row.pool.APR,
+            field: (row: Pool) => row.APR,
             sortable: true,
             format: (val:any) => `${percentage(val)} %`,
         },
         {
             name: 'liquidity',
             label: 'Liquidity',
-            field: row => row.pool.liquidity,
+            field: (row: Pool) => row.liquidity,
             sortable: true,
             format: (val:any) => `${balancedCurrency(val)} $`,
         },
         {
             name: 'my_liquidity',
             label: 'My Liquidity',
-            field: row => row.user.liquidity,
+            field: (row: Pool) => row.userLiquidity,
             sortable: true,
             format: (val:any) => `${balancedCurrency(val)} $`,
         },
         {
             name: 'my_bonding',
             label: 'My Bonding',
-            field: row => row.user.bonded,
+            field: (row: Pool) => row.bonded,
             sortable: true,
             format: (val:any) => `${balancedCurrency(val)} $`,
         },
@@ -409,17 +407,25 @@
             </template> -->
             <template v-slot:pools>
                 <LightTable
-                    :rows="pools"
+                    :rows="poolsStore.myPools"
                     :columns="poolsColumns"
                     no-background
                     class="q-px-0 q-py-0 table-no-padding"
                     >
+                    <template v-slot:body-cell-index="slotProps">
+                        <q-td :props="slotProps">
+                            <span class="opacity-40">
+                                {{ slotProps.rowIndex + 1 }}
+                            </span>
+                        </q-td>
+                    </template>
                     <template v-slot:body-cell-tokenPair="slotProps">
                         <q-td :props="slotProps">
                             <div class="flex no-wrap items-center">
                                 <ImagePair
-                                    :image1="slotProps.row.pool.coin1.iconUrl"
-                                    :image2="slotProps.row.pool.coin2.iconUrl"
+                                    v-if="slotProps.row.coin1 && slotProps.row.coin2"
+                                    :image1="slotProps.row.coin1.token.logos.default"
+                                    :image2="slotProps.row.coin2.token.logos.default"
                                     class="q-mr-30"
                                     :size="32"
                                     :smaller-size="26"
@@ -427,7 +433,7 @@
                                 >
                                 </ImagePair>
                                 <p class="fs-14 text-weight-medium">
-                                    {{slotProps.row.pool.coin1.symbol}} / {{slotProps.row.pool.coin2.symbol}}
+                                    {{slotProps.row.coin1.token.symbol}} / {{slotProps.row.coin2.token.symbol}}
                                 </p>
                             </div>
                         </q-td>

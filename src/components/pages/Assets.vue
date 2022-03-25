@@ -6,10 +6,10 @@
 	import TransferModal from '@/components/modals/TransferModal.vue'
 	import { TableColumn } from '@/types/table'
 	import { balancedCurrency } from '@/common/numbers'
-	import { ref } from 'vue'
+	import { computed, ref } from 'vue'
 	import { TokenBalance } from '@/types'
-    import { resolveIcon } from '@/common/resolvers'
-    import useBank from '@/store/bank'
+	import { resolveIcon } from '@/common/resolvers'
+	import useBank from '@/store/bank'
 	import usePrices from '@/store/prices'
 
 	const bankStore = useBank()
@@ -52,10 +52,20 @@
         { name: 'arrows', label: '', field: '', sortable: false },
 	]
 
-    if(bankStore.balances.find(b => (b.chains && b.chains?.length > 0)))
-    {
-        columns.push({ name: 'expandIcon', label: '', field: '', sortable: false })
-    }
+	const haveMultiChainBalances = computed(() => {
+		return bankStore.balances.find(b => (b.chains && b.chains?.length > 0)) !== undefined
+	})
+
+	const columnsWrapper = computed(() => {
+			const cols = [...columns]
+
+			if(haveMultiChainBalances.value) {
+				cols.push({ name: 'expandIcon', label: '', field: '', sortable: false })
+			}
+
+			return cols
+	})
+
 
 	const openTransfer = (from: TokenBalance) => {
 		transferFrom.value = from
@@ -89,7 +99,7 @@
 	</div>
 	<p class="q-mb-21 fs-21 text-weight-medium">Tokens</p>
 	<div>
-		<LightTable :columns="columns" :rows="bankStore.balances">
+		<LightTable :columns="columnsWrapper" :rows="bankStore.balances">
             <template v-slot:body="rowProps">
                 <q-tr :props="rowProps">
                     <q-td>
@@ -139,8 +149,8 @@
                             <q-icon :name="resolveIcon('swap', 21, 16)"></q-icon>
                         </div>
                     </q-td>
-                    <q-td v-if="rowProps.row.chains.length > 0">
-                        <div class="opacity-40 flex justify-end hover:opacity-100 cursor-pointer fs-12" @click="rowProps.expand = !rowProps.expand">
+                    <q-td v-if="haveMultiChainBalances">
+                        <div class="opacity-40 flex justify-end hover:opacity-100 cursor-pointer fs-12" @click="rowProps.expand = !rowProps.expand" v-if="rowProps.row.chains.length > 0">
                             <div :class="'w-fit ' + (rowProps.expand ? 'rotate-180' : '')">
                                 <q-icon :name="resolveIcon('keyboard-arrow-down', 10, 6)"></q-icon>
                             </div>
@@ -176,6 +186,8 @@
                             {{ chain.bonded ? balancedCurrency(chain.bonded) : '-' }}
                         </p>
                     </q-td>
+                    <q-td></q-td>
+                    <q-td v-if="haveMultiChainBalances"></q-td>
                 </q-tr>
             </template>
         </LightTable>

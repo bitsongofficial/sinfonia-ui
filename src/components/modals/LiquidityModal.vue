@@ -1,40 +1,43 @@
 <script setup lang="ts">
-    import { PoolUser, UserPoolView } from '@/types/pool';
-import { UserCoinInfo } from '@/types/user';
-    import { computed, ref } from 'vue'
-    import ModalWithClose from './ModalWithClose.vue'
-    import Amount from '../inputs/Amount.vue';
-import PercentageWithImage from '../infographics/PercentageWithImage.vue';
-import { balancedCurrency, percentage } from '@/common/numbers';
-import { resolveIcon } from '@/common/resolvers';
-import LargeButton from '../buttons/LargeButton.vue';
-import Progress from '../Progress.vue';
+	import { Pool } from '@/types';
+	import { UserCoinInfo } from '@/types/user';
+	import { computed, ref } from 'vue'
+	import ModalWithClose from './ModalWithClose.vue'
+	import Amount from '../inputs/Amount.vue'
+	import PercentageWithImage from '../infographics/PercentageWithImage.vue'
+	import { balancedCurrency, percentage } from '@/common/numbers'
+	import { resolveIcon } from '@/common/resolvers'
+	import LargeButton from '../buttons/LargeButton.vue'
+	import Progress from '../Progress.vue'
+	import { BigNumber } from 'bignumber.js';
 
-    const props = defineProps<{
-        pool: UserPoolView,
-    }>()
+	const props = defineProps<{
+		pool: Pool,
+	}>()
 
-    const add = ref(true)
-    const amountInternal = ref(0)
-    const single = ref(false)
-    const amount1 = computed({
-        get():any {
-            return (amountInternal.value).toFixed(0)
-        },
-        set(value: any) {
-            amountInternal.value = value
-        }
-    })
-    const amount2 = computed({
-        get():any {
-            return (props.pool.pool.liquidity - amountInternal.value).toFixed(0)
-        },
-        set(value: any) {
-            amountInternal.value = props.pool.pool.liquidity - value
-        }
-    })
-    const removeValues = [0.25, 0.5, 0.75, 1]
-    const removePercent = ref(removeValues[2])
+	const add = ref(true)
+	const amountInternal = ref('0')
+	const single = ref(false)
+
+	const amount1 = computed<string>({
+			get() {
+				return new BigNumber(amountInternal.value).toFixed(0)
+			},
+			set(value) {
+				amountInternal.value = value
+			}
+	})
+
+	const amount2 = computed<string>({
+		get() {
+			return new BigNumber(props.pool.liquidity).minus(amountInternal.value).toFixed(0)
+		},
+		set(value) {
+			amountInternal.value = new BigNumber(props.pool.liquidity).minus(value).toString()
+		}
+	})
+	const removeValues = [0.25, 0.5, 0.75, 1]
+	const removePercent = ref(removeValues[2])
 </script>
 
 <template>
@@ -44,31 +47,38 @@ import Progress from '../Progress.vue';
             <p :class="(add ? 'text-dark' : '') + ' cursor-pointer'" @click="add = false">Remove Liquidity</p>
         </div>
         <div v-if="add">
-            <div class="q-mb-21">
+            <div class="q-mb-21" v-if="pool.coin1">
                 <div class="flex items-center no-wrap q-mb-9">
                     <Amount v-model="amount1" class="q-mr-24 "></Amount>
                     <div class="flex items-center no-wrap">
                         <div class="text-weight-medium text-right q-mr-16">
-                            <p class="fs-12 text-dark q-mb-6">{{pool.pool.coin1.symbol}}</p>
-                            <p class="fs-21 text-no-wrap">{{percentage(pool.pool.coin1Percentage * 100)}} %</p>
+                            <p class="fs-12 text-dark q-mb-6">{{ pool.coin1.token.symbol }}</p>
+                            <p class="fs-21 text-no-wrap">{{percentage(pool.coin1.weightPercentage)}} %</p>
                         </div>
-                        <PercentageWithImage :value="pool.pool.coin1Percentage * 100" :image="pool.pool.coin1.iconUrl" negative></PercentageWithImage>
+                        <PercentageWithImage
+													:value="pool.coin1.weightPercentage * 100"
+													:image="pool.coin1.token.logos.default"
+													negative
+												/>
                     </div>
                 </div>
-                <p class="fs-12 text-dark q-ml-20">Available <span class="text-white">{{balancedCurrency(pool.user.liquidity - pool.user.bonded)}}</span> {{pool.pool.coin1.symbol}}</p>
+                <p class="fs-12 text-dark q-ml-20">Available <span class="text-white">10</span> BTSG</p>
             </div>
             <div v-if="!single" class="q-mb-21">
-                <div class="flex items-center no-wrap q-mb-9">
+                <div class="flex items-center no-wrap q-mb-9" v-if="pool.coin2">
                     <Amount v-model="amount2" class="q-mr-24 "></Amount>
                     <div class="flex items-center no-wrap">
                         <div class="text-weight-medium text-right q-mr-16">
-                            <p class="fs-12 text-dark q-mb-6">{{pool.pool.coin2.symbol}}</p>
-                            <p class="fs-21 text-no-wrap">{{percentage((1 - pool.pool.coin1Percentage) * 100)}} %</p>
+                            <p class="fs-12 text-dark q-mb-6">{{ pool.coin2.token.symbol }}</p>
+                            <p class="fs-21 text-no-wrap">{{percentage(pool.coin2.weightPercentage)}} %</p>
                         </div>
-                        <PercentageWithImage :value="(1 - pool.pool.coin1Percentage) * 100" :image="pool.pool.coin2.iconUrl"></PercentageWithImage>
+                        <PercentageWithImage
+													:value="pool.coin2.weightPercentage * 100"
+													:image="pool.coin2.token.logos.default"
+												/>
                     </div>
                 </div>
-                <p class="fs-12 text-dark q-ml-20">Available <span class="text-white">{{balancedCurrency(pool.user.liquidity - pool.user.bonded)}}</span> {{pool.pool.coin2.symbol}}</p>
+                <p class="fs-12 text-dark q-ml-20">Available <span class="text-white">20</span> 10</p>
             </div>
             <div v-else class="q-mb-46 relative-position group cursor-pointer">
                 <div class="absolute-full rounded-20 bg-dark opacity-20 group-hover:opacity-40">
