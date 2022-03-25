@@ -47,5 +47,5 @@
 </script>
 <template>
 	<h3 class="q-mb-xl fs-27">DEx</h3>
-	<CryptoTable :columns="columns" :rows="configStore.fantokens" />
+	<CryptoTable :columns="columns" :rows="configStore.fantokens" @row-click="(_, row, index) => {$router.push('/fantokens/prova')}" />
 </template>
