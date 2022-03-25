@@ -13,6 +13,7 @@
 	import usePools from '@/store/pools'
 	import { useRoute } from 'vue-router'
 	import { computed } from 'vue'
+	import { BigNumber } from 'bignumber.js'
 
 	const poolsStore = usePools()
 	const route = useRoute();
@@ -117,7 +118,7 @@
 							/>
 							<div>
 								<p class="fs-21 q-mb-14">{{ balancedCurrency(pool.coin1.token.amount) }}</p>
-								<p class="fs-14">{{ percentage(pool.coin1.weightPercentage * 100) }} %</p>
+								<p class="fs-14">{{ percentage(pool.coin1.weightPercentage) }} %</p>
 							</div>
 						</div>
 						<p class="fs-12 opacity-50">{{ pool.coin1.token.symbol }}</p>
@@ -128,7 +129,7 @@
 								</PercentageWithImage>
 								<div>
 									<p class="fs-21 q-mb-14">{{balancedCurrency(pool.coin2.token.amount)}}</p>
-									<p class="fs-14">{{percentage(pool.coin2.weightPercentage * 100)}} %</p>
+									<p class="fs-14">{{percentage(pool.coin2.weightPercentage)}} %</p>
 								</div>
 							</div>
 							<p class="fs-12 opacity-50">{{ pool.coin2.token.symbol }}</p>
@@ -170,11 +171,11 @@
 				</div>
 		</div>
 		<div class="row q-col-gutter-x-xl items-center q-mb-80">
-            <div class="col-2 !w-1/3" v-for="unbonding in unbondings">
+            <div class="col-2 !w-1/3" v-for="unbonding in pool.lockableDurationApr">
                 <ExpandableCard transparency="5">
-                    <p class="fs-12 opacity-30 q-mb-16 text-uppercase">{{unbonding.title}} unbonding</p>
+                    <p class="fs-12 opacity-30 q-mb-16 text-uppercase">{{ unbonding.readableDuration }}</p>
                     <div class="q-mb-20">
-                        <p class="fs-36 q-mb-8">{{percentage(unbonding.apr)}}</p>
+                        <p class="fs-36 q-mb-8">{{ percentage(unbonding.apr) }} %</p>
                         <div class="flex items-center">
                             <p class="text-primary fs-14 q-mr-16 text-weight-medium">External Incentives Pool</p>
                             <q-avatar
@@ -201,7 +202,7 @@
                             </p>
                             <p class="fs-18 text-no-wrap">22 Feb</p>
                         </div>
-                        <Progress :height="12" :value="unbonding.value" :max="unbonding.max"></Progress>
+                        <Progress :height="12" :value="5" :max="22"></Progress>
                         <div class="q-ml-21">
                             <p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">
                                 End
@@ -220,7 +221,7 @@
                             <div class="flex-1">
                                 <div class="flex no-wrap items-center q-mb-10">
                                     <p class="fs-14 text-weight-medium q-mr-30">{{ coin?.token.symbol }}</p>
-                                    <Progress :height="6" :value="unbonding.value" :max="unbonding.max"></Progress>
+                                    <Progress :height="6" :value="5" :max="22"></Progress>
                                     <p class="fs-14 text-weight-medium q-ml-22 text-no-wrap">
                                         18 epochs left
                                     </p>

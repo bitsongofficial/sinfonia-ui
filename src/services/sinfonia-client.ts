@@ -53,6 +53,77 @@ export default class SinfoniaClient {
     return []
   }
 
+  public lockableDurations = async () => {
+    try {
+      if (this.osmosisClient) {
+        const response = await this.osmosisClient.lockableDurations()
+
+        return response.data.lockable_durations
+      }
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+
+    return []
+  }
+
+  public epochProvisions = async () => {
+    try {
+      if (this.osmosisClient) {
+        const response = await this.osmosisClient.epochProvisions()
+
+        return response.data.epoch_provisions
+      }
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+
+    return '0'
+  }
+
+  public poolIncentivesDistrInfo = async () => {
+    try {
+      if (this.osmosisClient) {
+        const response = await this.osmosisClient.poolIncentivesDistrInfo()
+
+        return response.data.distr_info
+      }
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  public epochs = async () => {
+    try {
+      if (this.osmosisClient) {
+        const response = await this.osmosisClient.epochs()
+
+        return response.data.epochs
+      }
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+
+    return []
+  }
+
+  public mintParams = async () => {
+    try {
+      if (this.osmosisClient) {
+        const response = await this.osmosisClient.mintParams()
+
+        return response.data.params
+      }
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
   public incentivizedPools = async () => {
     try {
       if (this.osmosisClient && this.assetListsConfig) {

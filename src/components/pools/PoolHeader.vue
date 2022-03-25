@@ -26,14 +26,14 @@
             <div class="row justify-between no-wrap">
                 <div>
                     <p class="fs-10 opacity-40 text-weight-medium q-mb-8">
-                        Pool {{ props.pool.id }}
+                        Pool {{ pool.id }}
                     </p>
-                    <p class="fs-16 font-weight-bold w-fit">
-                        {{ props.pool.coin1.token.symbol }}
+                    <p class="fs-16 font-weight-bold w-fit" v-if="pool.coin1">
+                        {{ pool.coin1.token.symbol }}
                     </p>
                     <div class="separator q-my-4"></div>
-                    <p class="fs-16 font-weight-bold w-fit">
-                        {{ props.pool.coin2.token.symbol }}
+                    <p class="fs-16 font-weight-bold w-fit" v-if="pool.coin2">
+                        {{ pool.coin2.token.symbol }}
                     </p>
                 </div>
                 <div @click.native.prevent="show = true">
@@ -46,11 +46,11 @@
     <div class="row">
         <div class="col-4">
             <p class="fs-10 text-weight-medium opacity-40 q-pb-10">APR</p>
-            <p class="fs-16 text-weight-medium">{{percentage(props.pool.APR)}} %</p>
+            <p class="fs-16 text-weight-medium">{{percentage(pool.APR)}} %</p>
         </div>
         <div class="col-4">
             <p class="fs-10 text-weight-medium opacity-40 q-pb-10">Liquidity</p>
-            <p class="fs-16 text-weight-medium text-no-wrap">{{balancedCurrency(props.pool.liquidity)}} $</p>
+            <p class="fs-16 text-weight-medium text-no-wrap">{{balancedCurrency(pool.liquidity)}} $</p>
         </div>
     </div>
 </template>

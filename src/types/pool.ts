@@ -1,5 +1,6 @@
 import { Coin } from '@/types/coin'
 import { BaseToken } from './config'
+import { LockableDurationWithApr } from './duration'
 import { OsmosisPool, PoolParams } from './osmosis'
 
 
@@ -30,6 +31,7 @@ export interface PoolAsset {
 export interface Pool extends OsmosisPool {
 	coin1?: PoolAsset
 	coin2?: PoolAsset
+	lockableDurationApr: LockableDurationWithApr[]
 	APR: string
 	liquidity: string
 	userLiquidity: string

@@ -7,6 +7,8 @@ import {
 	Gauge,
 	IncentivizedPool,
   OsmosisLock,
+  MintParams,
+  DistrInfo,
 } from '@/types';
 import { Coin } from '@cosmjs/proto-signing';
 import ChainClient from './chain-client';
@@ -27,6 +29,10 @@ export default class OsmosisClient extends ChainClient {
 
   public epochs = () => this.instance.get<ChainData<'epochs', Epoch[]>>(
     'osmosis/epochs/v1beta1/epochs',
+  )
+
+  public poolIncentivesDistrInfo = () => this.instance.get<ChainData<'distr_info', DistrInfo>>(
+    'osmosis/pool-incentives/v1beta1/distr_info',
   )
 
   public accountLockedCoins = (address: string) => this.instance.get<ChainData<'coins', Coin[]>>(
@@ -51,5 +57,9 @@ export default class OsmosisClient extends ChainClient {
 
 	public incentivizedPools = () => this.instance.get<ChainData<'incentivized_pools', IncentivizedPool[]>>(
     'osmosis/pool-incentives/v1beta1/incentivized_pools',
+  )
+
+  public mintParams = () => this.instance.get<ChainData<'params', MintParams>>(
+    '/osmosis/mint/v1beta1/params',
   )
 }

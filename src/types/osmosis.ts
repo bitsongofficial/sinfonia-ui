@@ -62,3 +62,29 @@ export interface Gauge {
 	num_epochs_paid_over: string
 	start_time: string
 }
+
+export interface DistributionProportions {
+	staking: string
+	pool_incentives: string
+	developer_rewards: string
+	community_pool: string
+}
+
+export interface MintParams {
+	mint_denom: string
+	genesis_epoch_provisions: string
+	epoch_identifier: string
+	reduction_period_in_epochs: string
+	reduction_factor: string
+	distribution_proportions: DistributionProportions
+}
+
+export interface DistrInfoGauge {
+	gauge_id: string
+	weight: string
+}
+
+export interface DistrInfo {
+	total_weight: string
+	records: DistrInfoGauge[]
+}
