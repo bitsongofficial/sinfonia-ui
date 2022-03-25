@@ -64,6 +64,8 @@
         coin1Wrapper.value = coin2Wrapper.value
         coin2Wrapper.value = tmp.value
     }
+
+    const show = ref(false)
 </script>
 
 <template>
