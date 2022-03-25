@@ -13,7 +13,7 @@
 	import { TableColumn, LockableDurationWithApr } from '@/types'
 	import usePools from '@/store/pools'
 	import { useRoute } from 'vue-router'
-	import { computed, ref } from 'vue'
+	import { computed, onMounted, onUnmounted, ref } from 'vue'
 	import { BigNumber } from 'bignumber.js'
 	import { reduce } from 'lodash'
 	import { Coin } from '@cosmjs/proto-signing'
@@ -72,13 +72,44 @@
 		},
 	]
 
-	const beginUnlocking = (id: string) => {
-		transactionManagerStore.beginUnlocking(id)
+    const beginUnlocking = (id: string) => {
+      transactionManagerStore.beginUnlocking(id)
+    }
+
+    const compositionGraphStyle = ref({width: "0"})
+    const heightRef = ref<HTMLElement | null>(null)
+
+    const setSize = () =>
+    {
+        if(heightRef.value)
+        {
+            compositionGraphStyle.value.width = heightRef.value.clientHeight - 5 + "px"
+			return true
+        }
+		return false
+    }
+	const untilSetSize = () =>
+	{
+		const res = setSize()
+		if(!res)
+		{
+			setTimeout(untilSetSize, 200)
+		}
 	}
+
+	onMounted(() => {
+		window.addEventListener("resize", setSize)
+		untilSetSize()
+	})
+
+	onUnmounted(() =>
+	{
+		window.removeEventListener("resize", setSize);
+	})
 </script>
 
 <template>
-	<div class="text-white font-weight-medium" v-if="pool">
+	<div class="text-white text-weight-medium" v-if="pool">
 		<div class="q-mb-90 flex justify-between items-center">
 			<div class="flex">
 				<ImagePair
@@ -94,40 +125,60 @@
 				<StandardButton>Add/Remove Liquidity</StandardButton>
 			</div>
 		</div>
-		<div class="row q-col-gutter-xl q-mb-72">
-			<div class="col-2">
-				<img src="@/assets/images/round_chart_placeholder.png" alt="">
+		<div class="row q-col-gutter-x-xl q-col-gutter-y-lg q-mb-72">
+			<div class="col-8 col-md-4 col-xl-2 flex justify-center">
+				<div :style="compositionGraphStyle">
+					<PercentageWithImage class="full-width full-height" imageSize="48px" :thickness="0.35" :icon="{name: 'bitsong', width: 48, height: 47}" :value="50" full>
+					</PercentageWithImage>
+				</div>
 			</div>
-			<div class="col-2">
-				<CardWithHeader header="Pool composition">
-					<div class="flex justify-between q-pt-15 q-mb-40" v-if="pool.coin1">
-						<div class="flex">
-							<PercentageWithImage
-								class="q-mr-22"
-								:image="pool.coin1.token.logos.default ?? ''"
-								:value="pool.coin1.weightPercentage * 100"
-							/>
-							<div>
-								<p class="fs-21 q-mb-14">{{ balancedCurrency(pool.coin1.token.amount) }}</p>
-								<p class="fs-14">{{ percentage(pool.coin1.weightPercentage) }} %</p>
-							</div>
-						</div>
-						<p class="fs-12 opacity-50">{{ pool.coin1.token.symbol }}</p>
-					</div>
-					<div class="flex justify-between" v-if="pool.coin2">
-							<div class="flex">
-								<PercentageWithImage class="q-mr-22" negative :image="pool.coin2.token.logos.default ?? ''" :value="pool.coin2.weightPercentage * 100">
-								</PercentageWithImage>
-								<div>
-									<p class="fs-21 q-mb-14">{{balancedCurrency(pool.coin2.token.amount)}}</p>
-									<p class="fs-14">{{percentage(pool.coin2.weightPercentage)}} %</p>
-								</div>
-							</div>
-							<p class="fs-12 opacity-50">{{ pool.coin2.token.symbol }}</p>
-					</div>
-				</CardWithHeader>
+			<div class="col-8 col-md-4 col-xl-2">
+        <div ref="heightRef">
+          <CardWithHeader header="Pool composition">
+              <div class="flex justify-between q-pt-15 q-mb-40" v-if="pool.coin1">
+                <div class="flex">
+                  <PercentageWithImage
+                    class="q-mr-22"
+                    :image="pool.coin1.token.logos.default ?? ''"
+                    :value="pool.coin1.weightPercentage * 100"
+                  />
+                  <div>
+                    <p class="fs-21 q-mb-14">{{ balancedCurrency(pool.coin1.token.amount) }}</p>
+                    <p class="fs-14">{{ percentage(pool.coin1.weightPercentage) }} %</p>
+                  </div>
+                </div>
+                <p class="fs-12 opacity-50">{{ pool.coin1.token.symbol }}</p>
+              </div>
+              <div class="flex justify-between" v-if="pool.coin2">
+                <div class="flex">
+                  <PercentageWithImage
+                    class="q-mr-22"
+                    :image="pool.coin1.token.logos.default ?? ''"
+                    :value="pool.coin1.weightPercentage * 100"
+                  />
+                  <div>
+                  <p class="fs-21 q-mb-14">{{balancedCurrency(pool.coin2.token.amount)}}</p>
+                  <p class="fs-14">{{percentage(pool.coin2.weightPercentage)}} %</p>
+                  </div>
+                </div>
+                <p class="fs-12 opacity-50">{{ pool.coin1.token.symbol }}</p>
+              </div>
+              <div class="flex justify-between" v-if="pool.coin2">
+                  <div class="flex">
+                    <PercentageWithImage class="q-mr-22" negative :image="pool.coin2.token.logos.default ?? ''" :value="pool.coin2.weightPercentage * 100">
+                    </PercentageWithImage>
+                    <div>
+                      <p class="fs-21 q-mb-14">{{balancedCurrency(pool.coin2.token.amount)}}</p>
+                      <p class="fs-14">{{percentage(pool.coin2.weightPercentage * 100)}} %</p>
+                    </div>
+                  </div>
+                  <p class="fs-12 opacity-50">{{ pool.coin2.token.symbol }}</p>
+              </div>
+            </CardWithHeader>
+          </div>
+				</div>
 			</div>
-			<div class="col-2">
+			<div class="col-8 col-md-4 col-xl-2">
 				<InfoCard header="Pool liquidity" class="q-mb-27">
 					{{ balancedCurrency(pool.liquidity) }} $
 				</InfoCard>
@@ -135,7 +186,7 @@
 					{{ balancedCurrency(pool.bonded) }} $
 				</InfoCard>
 			</div>
-			<div class="col-2">
+			<div class="col-8 col-md-4 col-xl-2">
 					<InfoCard header="My liquidity" class="q-mb-27">
 							{{ balancedCurrency(pool.userLiquidity) }} $
 					</InfoCard>
@@ -161,8 +212,8 @@
 					</StandardButton>
 				</div>
 		</div>
-		<div class="row q-col-gutter-x-xl items-center q-mb-80">
-			<div class="col-2 !w-1/3" v-for="unbonding in pool.lockableDurationApr">
+		<div class="row q-col-gutter-xl items-center q-mb-80">
+			<div class="col-8 !w-md-1/3" v-for="unbonding in pool.lockableDurationApr">
 					<ExpandableCard transparency="5">
 							<p class="fs-12 opacity-30 q-mb-16 text-uppercase">{{ unbonding.readableDuration }} unbonding</p>
 							<div class="q-mb-20">

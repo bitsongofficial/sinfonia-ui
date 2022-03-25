@@ -10,6 +10,7 @@
     }>()
     const emit = defineEmits<{
         (e:'update:modelValue', value:any): void,
+        (e:'click'): void,
     }>()
     const model = computed({
         get():any {
@@ -22,7 +23,7 @@
 </script>
 
 <template>
-    <Modal v-model="model">
+    <Modal v-model="model" @click="$emit('click')">
         <div class="q-pt-8 q-pb-44 flex justify-between text-weight-medium items-center">
             <p class="fs-24 q-mr-120">{{title}}</p>
             <div class="flex opacity-40 hover:opacity-100 cursor-pointer" @click="model = false">

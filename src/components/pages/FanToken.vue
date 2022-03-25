@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { newCoin, newMyPool } from '@/common/mockups'
     import { balancedCurrency, percentage, smallNumber } from '@/common/numbers'
-    import { ref } from 'vue'
+    import { onMounted, onUnmounted, ref } from 'vue'
     import OutlineButton from '../buttons/OutlineButton.vue'
     import StandardButton from '../buttons/StandardButton.vue'
     import StandardSelect from '../inputs/StandardSelect.vue'
@@ -27,10 +27,11 @@
     ]
     const selected = ref(timeOptions[0])
     const tabs = [
-        {name: "info", tooltip: "Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.", icon:{name:"info", width: 15, height:15}},
-        {name: "whitepaper", label:"Whitepaper"},
+        {tooltip: "Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.", icon:{name:"info", width: 15, height:15}},
+        {label:"Whitepaper", url:"https://bitsong.io/fantokens/adam-clay"},
         {name: "pools", label:"Pools"},
-        {name: "analytics", label:"Analytics"},
+        {name:"analytics", label:"Analytics"},
+        {label:"Airdrop", url:"https://bitsong.io/airdrop/"},
         {name: "social", label:"Social"},
     ]
     const stats = [
@@ -47,9 +48,11 @@
     const email = ref("")
     const newsletter = ref(false)
     const socials = {
-        facebook: 'www.facebook.com',
-        instagram: 'www.instagram.com',
-        twitter: 'www.twitter.com',
+        facebook: 'https://www.facebook.com/adamclaymusic',
+        instagram: 'https://www.instagram.com/adamclayreal/?hl=en',
+        twitter: 'https://twitter.com/adamclaymusic',
+        spotify: 'https://open.spotify.com/artist/19jXtZ3WctjL00MMVqYrv8?si=Q_TJsXqORs6WSkQIV4F9DQ&nd=1',
+        website: 'http://www.adamclay.com/',
     }
     let pools = [
         newMyPool(),
@@ -104,6 +107,37 @@
     ]
     const image = "https://i.scdn.co/image/ab6761610000e5eb608e188abbae6409698b8f5a"
     const topImageStyle = 'background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(' + image + ');'
+    
+    const compositionGraphStyle = ref({width: "0"})
+    const heightRef = ref<HTMLElement | null>(null)
+
+    const setSize = () =>
+    {
+        if(heightRef.value)
+        {
+            compositionGraphStyle.value.width = heightRef.value.offsetHeight + "px"
+			return true
+        }
+		return false
+    }
+	const untilSetSize = () =>
+	{
+		const res = setSize()
+		if(!res)
+		{
+			setTimeout(untilSetSize, 200)
+		}
+	}
+
+	onMounted(() => {
+		window.addEventListener("resize", setSize)
+		untilSetSize()
+	})
+
+	onUnmounted(() =>
+	{
+		window.removeEventListener("resize", setSize);
+	})
 </script>
 
 <template>
@@ -187,10 +221,10 @@
                     </div>
                 </div>
                 <div class="row q-col-gutter-xl q-mb-44">
-                    <div class="col-6">
+                    <div class="col-8 col-md-4 col-lg-6">
                         <img src="@/assets/images/expanded_chart_placeholder.png" alt="" class="full-width">
                     </div>
-                    <div class="col-2">
+                    <div class="col-8 col-md-4 col-lg-2">
                         <div class="flex justify-between q-mb-24">
                             <div>
                                 <p class="fs-10 q-mb-12 text-uppercase opacity-60">min</p>
@@ -238,7 +272,7 @@
                 <div class="q-mb-52">
                     <p class="fs-16 opacity-30 q-mb-24">Tokenomics</p>
                     <div class="row q-col-gutter-xl">
-                        <div v-for="n in 4" class="col-2">
+                        <div v-for="n in 4" class="col-8 col-md-4 col-lg-2">
                             <InfoCard header="$CLAY CIRCULATING " class="q-py-34">
                                 {{balancedCurrency(21600000)}}
                             </InfoCard>
@@ -248,7 +282,7 @@
                 <div class="q-mb-52">
                     <p class="fs-16 opacity-30 q-mb-24">Pool Stats</p>
                     <div class="row q-col-gutter-xl">
-                        <div class="col-4">
+                        <div class="col-8 col-lg-4">
                             <Card class="q-py-34">
                                 <div class="flex justify-between items-stretch">
                                     <div class="column justify-between">
@@ -263,7 +297,7 @@
                                 </div>
                             </Card>
                         </div>
-                        <div v-for="n in 2" class="col-2">
+                        <div v-for="n in 2" class="col-8 col-md-4 col-lg-2">
                             <InfoCard header="$CLAY CIRCULATING " class="q-py-34">
                                 {{balancedCurrency(21600000)}}
                             </InfoCard>
@@ -271,40 +305,49 @@
                     </div>
                 </div>
                 <div class="row q-col-gutter-xl">
-                    <div class="col-4">
+                    <div class="col-8 col-lg-4">
                         <p class="fs-16 opacity-30 q-mb-24">Bonding</p>
                         <div class="row q-col-gutter-xl">
-                            <div class="col-4">
-                                <CardWithHeader header="bonded tokens" class="q-py-34">
-                                    <div class="flex justify-between items-center text-center q-mb-20">
-                                        <p class="fs-18">
-                                            {{balancedCurrency(coin.marketCap)}}
-                                        </p>
-                                        <p class="fs-10 opacity-50">
-                                            {{coin.symbol}}
-                                        </p>
-                                    </div>
-                                    <div class="flex justify-between items-center text-center q-mb-26">
-                                        <p class="fs-18">
-                                            {{balancedCurrency(coin.marketCap)}} $
-                                        </p>
-                                        <p class="fs-10 opacity-50">
-                                            {{coin.symbol}}
-                                        </p>
-                                    </div>
-                                    <div class="flex">
-                                        <PercentageWithImage :value="50" :image="coin.iconUrl"></PercentageWithImage>
-                                    </div>
-                                </CardWithHeader>
+                            <div class="col-8 col-lg-4">
+                                <div ref="heightRef">
+                                    <CardWithHeader header="bonded tokens" class="q-py-34">
+                                        <div class="flex justify-between items-center text-center q-mb-20">
+                                            <p class="fs-18">
+                                                {{balancedCurrency(coin.marketCap)}}
+                                            </p>
+                                            <p class="fs-10 opacity-50">
+                                                {{coin.symbol}}
+                                            </p>
+                                        </div>
+                                        <div class="flex justify-between items-center text-center q-mb-26">
+                                            <p class="fs-18">
+                                                {{balancedCurrency(coin.marketCap)}} $
+                                            </p>
+                                            <p class="fs-10 opacity-50">
+                                                {{coin.symbol}}
+                                            </p>
+                                        </div>
+                                        <div class="flex">
+                                            <PercentageWithImage :value="50" :image="coin.iconUrl" class="q-mr-20"></PercentageWithImage>
+                                            <div class="text-weight-medium">
+                                                <p class="fs-12 text-uppercase q-mb-10 opacity-50">% bonded</p>
+                                                <p class="fs-18">50%</p>
+                                            </div>
+                                        </div>
+                                    </CardWithHeader>
+                                </div>
                             </div>
-                            <div class="col-4">
-                                <img src="@/assets/images/round_chart_placeholder.png" alt="">
+                            <div class="col-8 col-lg-4 flex justify-center items-center">
+                                <div :style="compositionGraphStyle">
+                                    <PercentageWithImage alt-style full negative class="full-width full-height--15" imageSize="48px" :thickness="0.35" :image="coin.iconUrl" :value="50">
+                                    </PercentageWithImage>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-8 col-lg-4">
                         <p class="fs-16 opacity-30 q-mb-24">Community</p>
-                        <Card class="q-py-34 q-mb-22">
+                        <Card class="q-mb-22" :padding="20">
                             <div class="flex justify-between items-stretch">
                                 <div class="column justify-between">
                                     <p class="fs-12 opacity-50 text-uppercase">liquidity</p>
@@ -317,14 +360,14 @@
                                 </div>
                             </div>
                         </Card>
-                        <div class="row q-col-gutter-xl">
-                            <div class="col-4">
-                                <InfoCard header="$CLAY CIRCULATING " class="q-py-34">
+                        <div class="row q-col-gutter-lg">
+                            <div class="col-8 col-md-4">
+                                <InfoCard header="$CLAY CIRCULATING " :padding="20">
                                     {{balancedCurrency(21600000)}}
                                 </InfoCard>                                
                             </div>
-                            <div class="col-4">
-                                <InfoCard header="$CLAY CIRCULATING " class="q-py-34">
+                            <div class="col-8 col-md-4">
+                                <InfoCard header="$CLAY CIRCULATING " :padding="20">
                                     {{balancedCurrency(21600000)}}
                                 </InfoCard>                                
                             </div>
@@ -332,7 +375,7 @@
                     </div>
                 </div>
             </template>
-            <template v-slot:whitepaper>
+            <!-- <template v-slot:whitepaper>
                 <Sections :sections="sections">
                     <template v-slot:bio>
                         <div class="q-mb-60">
@@ -363,7 +406,7 @@
                         </div>
                     </template>
                 </Sections>
-            </template>
+            </template> -->
             <template v-slot:pools>
                 <LightTable
                     :rows="pools"

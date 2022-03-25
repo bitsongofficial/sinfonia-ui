@@ -12,6 +12,10 @@ $dark-light: #301C40;
 $dark-lighter: #322142;
 $notification-background: rgba(122, 110, 124, 0.15);
 
+@mixin background-gradient() {
+    background: linear-gradient(304.1deg, rgba(17, 8, 44, 0.5) 27.13%, rgba(21, 10, 52, 0) 64.84%), #220D32;
+}
+
 $custom-sizes: ();
 
 @for $i from 0 through 50 {

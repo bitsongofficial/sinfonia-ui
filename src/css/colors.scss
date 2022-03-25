@@ -4,6 +4,10 @@
     --text-color: #fff;
 }
 
+.border-primary {
+    border: 2px solid $primary;
+}
+
 .text-primary-darker {
     color: $primary-darker !important;
 }
@@ -127,6 +131,11 @@
 
 .text-overlay-gradient {
     background: linear-gradient(180deg, rgba(72, 60, 88, 0) 0%, #483B58 100%);
+}
+
+.main-page-background {
+    @include background-gradient;
+    position: relative;
 }
 
 @for $i from 1 through 8
