@@ -11,7 +11,7 @@
             Swap
         </MenuItem>
         <MenuItem :icon="{name: 'stack', width:17, height:17}" class="q-mb-lg" url="/pools">
-            Pool
+            Pools
         </MenuItem>
         <MenuItem :icon="{name: 'suitcase', width:18, height:16}" class="q-mb-lg" url="/assets">
             Assets

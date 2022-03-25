@@ -9,7 +9,7 @@
 
 <template>
     <Card :padding="padding">
-        <p class="fs-10 opacity-50 q-mb-30 text-uppercase">
+        <p class="fs-13 opacity-50 q-mb-30 text-uppercase">
             {{header}}
         </p>
         <div>

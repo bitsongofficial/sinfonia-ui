@@ -83,7 +83,7 @@
 			</InfoCard>
 		</div>
 	</div>
-	<p class="q-mb-21 fs-18 text-weight-medium">Tokens</p>
+	<p class="q-mb-21 fs-21 text-weight-medium">Tokens</p>
 	<div>
 		<LightTable :columns="columns" :rows="bankStore.balances">
             <template v-slot:body="props">

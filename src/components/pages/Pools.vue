@@ -31,7 +31,7 @@
 			</RouterLink>
 		</div>
 	</div>
-	<Title class="q-mb-50">All Pools</Title>
+	<Title class="q-mb-50" :font-size="18">All Pools</Title>
 	<div class="row q-col-gutter-xl">
 		<div v-for="(pool) in poolsStore.pools" class="col-2">
 			<RouterLink :to="'/pools/' + pool.id" class="block">

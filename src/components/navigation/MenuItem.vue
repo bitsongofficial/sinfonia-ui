@@ -16,13 +16,18 @@
         <RouterLink v-if="!isLink" :to="url" class="relative-position row items-center">
             <IconButton :icon="icon.name" :width="width" :height="height" class="fs-20 min-s-50"></IconButton>
             <div class="absolute text-white">
-                <slot></slot>
+                <div class="fs-16">
+                    <slot></slot>
+                </div>
             </div>
         </RouterLink>
         <a v-else :href="url" target="_BLANK" class="relative-position row items-center">
             <IconButton :icon="icon.name" :width="width" :height="height" class="fs-20 min-s-50"></IconButton>
             <div class="absolute text-white">
-                <slot></slot>
+                <div class="fs-16">
+                    <slot></slot>
+
+                </div>
             </div>
         </a>
     </div>
