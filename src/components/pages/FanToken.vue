@@ -48,9 +48,11 @@
     const email = ref("")
     const newsletter = ref(false)
     const socials = {
-        facebook: 'www.facebook.com',
-        instagram: 'www.instagram.com',
-        twitter: 'www.twitter.com',
+        facebook: 'https://www.facebook.com/adamclaymusic',
+        instagram: 'https://www.instagram.com/adamclayreal/?hl=en',
+        twitter: 'https://twitter.com/adamclaymusic',
+        spotify: 'https://open.spotify.com/artist/19jXtZ3WctjL00MMVqYrv8?si=Q_TJsXqORs6WSkQIV4F9DQ&nd=1',
+        website: 'http://www.adamclay.com/',
     }
     let pools = [
         newMyPool(),
