@@ -43,9 +43,10 @@ $space3: 3;
 }
 
 $breakpoint-xs: 599px;
-$breakpoint-sm: 1023px;
-$breakpoint-md: 1439px;
-$breakpoint-lg: 1919px;
+$breakpoint-sm: 899px;
+$breakpoint-md: 1239px;
+$breakpoint-lg: 1519px;
+$breakpoint-xl: 1919px;
 
 $sizes: ('xs': 0, 'sm': ($breakpoint-xs + 1), 'md': ($breakpoint-sm + 1), 'lg': ($breakpoint-md + 1), 'xl': ($breakpoint-lg + 1));
 

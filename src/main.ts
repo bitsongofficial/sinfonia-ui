@@ -1,8 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { Quasar, Notify } from 'quasar'
+import { Quasar, Notify, Dialog } from 'quasar'
 import { createPersistedStatePlugin } from 'pinia-plugin-persistedstate-2'
-import { Quasar, Dialog } from 'quasar'
 import {createRouter, createWebHashHistory} from 'vue-router'
 
 // Import Quasar css
