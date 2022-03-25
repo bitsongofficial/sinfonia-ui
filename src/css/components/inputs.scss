@@ -141,14 +141,15 @@
     border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
-:not(.q-field--with-bottom) {
+label:not(.q-field--with-bottom) {
     .q-field__bottom {
         display: none;
     }
 }
 
-.address-select-tile {
+.title-with-error {
     .q-icon {
+        pointer-events: none;
         visibility: hidden;
     }
 }
@@ -164,12 +165,13 @@
         display: none;
     }
 
-    .address-select-tile {
+    .title-with-error {
         color: $primary;
         p {
             opacity: 1;
         }
         .q-icon {
+            pointer-events: all;
             visibility: visible;
         }
     }

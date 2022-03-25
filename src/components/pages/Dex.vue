@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { balancedCurrency as currency, toFiatValue, percentage, balancedCurrency } from '@/common/numbers'
+	import { balancedCurrency as  balancedCurrency } from '@/common/numbers'
 	import useConfig from '@/store/config'
 	import { TableColumn } from '@/types/table'
 	import CryptoTable from "../CryptoTable.vue"

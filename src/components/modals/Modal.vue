@@ -7,6 +7,7 @@
     }>()
     const emit = defineEmits<{
         (e:'update:modelValue', value:any): void,
+        (e:'click'): void,
     }>()
     const model = computed({
         get():any {
@@ -20,7 +21,7 @@
 
 <template>
     <q-dialog v-model="model">
-        <div class="text-white !rounded-20 bg-dark-lighter shadow-20-alt blur-60 q-px-34 q-py-30">
+        <div class="text-white !rounded-20 bg-dark-lighter shadow-20-alt blur-60 q-px-34 q-py-30" @click="$emit('click')">
             <slot></slot>
         </div>
     </q-dialog>
