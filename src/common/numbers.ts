@@ -2,7 +2,7 @@ import { Token, OsmosisPoolAsset } from '@/types'
 import { coin } from '@cosmjs/proto-signing'
 import { BigNumber } from 'bignumber.js'
 
-export const currency = (number: number | string): string => {
+export const currency = (number: number | string, fraction = 2): string => {
 	const amount = new BigNumber(number)
 
 	if (amount.isEqualTo(0)) {
@@ -11,7 +11,7 @@ export const currency = (number: number | string): string => {
 
 	if (amount.gt(0.01)) {
 		return new Intl.NumberFormat('en-US', {
-			maximumFractionDigits: 2
+			maximumFractionDigits: fraction
 		}).format(amount.toNumber())
 	}
 
@@ -29,6 +29,19 @@ export const balancedCurrency = (number: number | string): string => {
 	return currency(value.toString())
 }
 
+export const balancedGamm = (number: number | string): string => {
+	let value = new BigNumber(number)
+
+	if(value.abs().gt(1000))
+	{
+		value = new BigNumber(Math.floor(value.toNumber()))
+	}
+
+	return new Intl.NumberFormat('en-US', {
+		maximumFractionDigits: 5
+	}).format(value.toNumber())
+}
+
 export const smallNumber = (number: number | string): string => {
 	return new BigNumber(number).toFixed(2)
 }
@@ -43,6 +56,10 @@ export const toFiatValue = (value: string | number, fiat: string | number) => {
 
 export const toDecimalGamm = (value: string) => {
 	return new BigNumber(value).multipliedBy(1e-18).toString() 
+}
+
+export const fromDecimalGamm = (value: string) => {
+	return new BigNumber(value).div(1e-18).toString() 
 }
 
 export const toViewDenom = (value: string | number, chainToViewConversionFactor: string | number) => {

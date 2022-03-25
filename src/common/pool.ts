@@ -1,5 +1,5 @@
 import { CoinLookup, CoinToken, Gauge, GaugeToken, LockableDuration, LockableDurationWithApr, OsmosisPool, OsmosisPoolAsset, Pool, PoolAsset } from '@/types'
-import { toViewDenom } from './numbers'
+import { toDecimalGamm, toViewDenom } from './numbers'
 import { BigNumber } from 'bignumber.js'
 import { toMilliseconds } from 'duration-fns'
 import useBank from '@/store/bank'
@@ -9,6 +9,7 @@ import usePrices from '@/store/prices'
 import { mapLockableDuration } from './duration'
 import { max } from 'lodash'
 import { add, parseISO } from 'date-fns'
+import { Coin } from '@cosmjs/proto-signing'
 
 export const gammToPoolAmount = (currentAmount: BigNumber, totalPoolGamm: BigNumber, totalTokenGamm: BigNumber, coinLookup: CoinLookup) => {
 	const shareRation = currentAmount.div(totalPoolGamm)
@@ -37,6 +38,7 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 
 		const bondedBalances = bankStore.lockedCoinsBalance.filter(coin => coin.denom === `gamm/pool/${pool.id}`)
 		const availableBalances = bankStore.osmosisBalance.filter(coin => coin.denom === `gamm/pool/${pool.id}`)
+		console.log(availableBalances)
 
 		for (const bondedBalance of bondedBalances) {
 			bondedAmount = bondedAmount.plus(bondedBalance.amount)
@@ -109,6 +111,15 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 			}
 		}
 
+		let availableLPTokens = new BigNumber('0')
+		const availableBalances: Coin[] = bankStore.osmosisBalance.filter(
+			coin => coin.denom === `gamm/pool/${pool.id}`
+		)
+
+		for (const availableBalance of availableBalances) {
+			availableLPTokens = availableLPTokens.plus(availableBalance.amount)
+		}
+
 		const lockableDurationApr: LockableDurationWithApr[] = poolsStore.lockableDuration.map(duration => {
 			const lockedLonger = bankStore.lockedLongerByPoolIdAndDuration(pool.id, duration.rawDuration)
 			const extraGauge = poolsStore.extraGaugeByPoolIdAndDuration(pool.id, duration.rawDuration)
@@ -134,7 +145,9 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 			APR: new BigNumber(maxIncentivizedApr ?? '0').toString(),
 			liquidity: liquidity.toString(),
 			userLiquidity: userLiquidity.toString(),
-			bonded: bonded.toString()
+			bonded: bonded.toString(),
+			availableLPTokens: toDecimalGamm(availableLPTokens.toString()),
+			availableLPBalances: availableBalances
 		})
 	})
 }
@@ -155,8 +168,6 @@ export const gaugeToGaugeToken = (gauge: Gauge): GaugeToken => {
 				amount = toViewDenom(amount, coinLookup.chainToViewConversionFactor)
 			}
 		}
-
-
 
 		return ({
 			...coin,

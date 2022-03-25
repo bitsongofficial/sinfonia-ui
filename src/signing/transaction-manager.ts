@@ -1,8 +1,9 @@
 import { SignerMessage, Token } from '@/types'
 import { Coin, coins, OfflineDirectSigner, OfflineSigner } from '@cosmjs/proto-signing'
 import { BigNumber } from 'bignumber.js'
-import { SendIbcTokens } from './messages'
+import { SendIbcTokens, LockTokens } from './messages'
 import { assertIsDeliverTxSuccess, SigningStargateClient } from '@cosmjs/stargate'
+import { osmosisRegistry } from './registry'
 
 export class TransactionManager {
 	signer: OfflineSigner | OfflineDirectSigner
@@ -75,6 +76,16 @@ export class TransactionManager {
 		return this.createSignBroadcast('SendIbcTokens', [message], senderAddress, memo ?? '')
 	}
 
+	public lockTokens(senderAddress: string, duration: number, coins: Coin[], memo?: string) {
+		const message = LockTokens(
+			senderAddress,
+			duration,
+			coins
+		)
+
+		return this.createSignBroadcast('LockTokens', [message], senderAddress, memo ?? '')
+	}
+
 	public createSignBroadcast = async (messageType: string, messages: SignerMessage<any>[], senderAddress: string, memo: string) => {
 		const feeData = this.getFees(messageType)
 
@@ -94,7 +105,10 @@ export class TransactionManager {
 
 		const client = await SigningStargateClient.connectWithSigner(
 			this.network.rpcURL,
-			this.signer
+			this.signer,
+			{
+				registry: osmosisRegistry()
+			}
 		)
 
 		const txResult = await client.signAndBroadcast(

@@ -9,10 +9,11 @@
 	import ExpandableCard from '@/components/cards/ExpandableCard.vue'
 	import Progress from '@/components/Progress.vue'
 	import LightTable from '@/components/LightTable.vue'
+	import BondModal from '@/components/modals/BondModal.vue'
 	import { TableColumn, LockableDurationWithApr } from '@/types'
 	import usePools from '@/store/pools'
 	import { useRoute } from 'vue-router'
-	import { computed } from 'vue'
+	import { computed, ref } from 'vue'
 	import { BigNumber } from 'bignumber.js'
 	import { reduce } from 'lodash'
 	import { Coin } from '@cosmjs/proto-signing'
@@ -21,6 +22,7 @@
 	const poolsStore = usePools()
 	const route = useRoute();
 	const id = route.params['id'] as string;
+	const openBondModal = ref(false)
 
 	const pool = computed(() => poolsStore.poolById(id))
 	const lpLiquidity = computed(() => {
@@ -38,6 +40,7 @@
 			label: 'unbonding duration',
 			align: 'left',
 			field: (row: LockableDurationWithApr) => row.readableDuration,
+			format: (duration: string) => `${duration} unbonding`,
 			sortable: false,
 		},
 		{ 
@@ -137,100 +140,102 @@
 		</div>
 		<div class="row q-mb-42">
 				<div class="col-3">
-						<h3 class="fs-21 q-mb-20">Liquidity Mining</h3>
-						<p class="fs-16 opacity-40">
-								BitSong Launchpad is the platform where you can buy and mint your favorite Artist Fantoken.
-						</p>
+					<h3 class="fs-21 q-mb-20">Liquidity Mining</h3>
+					<p class="fs-16 opacity-40">
+						BitSong Launchpad is the platform where you can buy and mint your favorite Artist Fantoken.
+					</p>
 				</div>
 				<div class="col-5 column items-end">
-						<p class="fs-12 opacity-40 q-mb-8">
-								Available LP Tokens
-						</p>
-						<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
-						<StandardButton>
-								Start Earning
-						</StandardButton>
+					<p class="fs-12 opacity-40 q-mb-8">
+						Available LP Tokens
+					</p>
+					<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
+					<StandardButton @click="openBondModal = true">
+						Start Earning
+					</StandardButton>
 				</div>
 		</div>
 		<div class="row q-col-gutter-x-xl items-center q-mb-80">
-            <div class="col-2 !w-1/3" v-for="unbonding in pool.lockableDurationApr">
-                <ExpandableCard transparency="5">
-                    <p class="fs-12 opacity-30 q-mb-16 text-uppercase">{{ unbonding.readableDuration }}</p>
-                    <div class="q-mb-20">
-                        <p class="fs-36 q-mb-8">{{ percentage(unbonding.apr) }} %</p>
-                        <div class="flex items-center">
-                            <p class="text-primary fs-14 q-mr-16 text-weight-medium">External Incentives Pool</p>
-							<template v-for="gauge in unbonding.extraGagues">
-								<q-avatar
-									class="q-mr-9"
-									size="24px"
-									v-for="(coin, index) in gauge.coins" :key="index"
-								>
-									<img :src="coin.token?.logos.default">
-								</q-avatar>
-							</template>
-                        </div>
-                    </div>
-                    <p class="fs-12 opacity-40 font-weight-regular q-mb-20">
-                        BitSong Launchpad is the platform where you can buy and. Incentives for 22 epochs.
-                    </p>
-                    <div class="flex no-wrap items-center text-weight-medium">
-                        <div class="q-mr-21">
-                            <p class="fs-12 text-uppercase opacity-50 q-mb-8">
-                                Start
-                            </p>
-                            <p class="fs-18 text-no-wrap">{{ formatEpochDate(unbonding.extraGagues[0].start_time) }}</p>
-                        </div>
-						<Progress :height="6" :value="unbonding.extraGagues[0].filledEpochs" :max="unbonding.extraGagues[0].numEpochsPaidOver"></Progress>
-                        <div class="q-ml-21">
-                            <p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">
-                                End
-                            </p>
-                            <p class="fs-18 text-no-wrap">{{ formatEpochDate(unbonding.extraGagues[0].endTime) }}</p>
-                        </div>
-                    </div>
-                    <template #extra>
-                        <div v-for="gauge in unbonding.extraGagues" :key="gauge.id">
-                            <div v-for="(coin, index) in gauge.coins" :key="index" class="rounded-20 border-primary-light q-pa-18 flex items-center q-mb-6">
-								<q-avatar
-									class="q-mr-18"
-									size="25px"
-								>
-									<img :src="coin.token?.logos.default" alt="">
-								</q-avatar>
-								<div class="flex-1">
-									<div class="flex no-wrap items-center q-mb-10">
-										<p class="fs-14 text-weight-medium q-mr-30">{{ coin.token?.symbol }}</p>
-										<Progress :height="6" :value="gauge.filledEpochs" :max="gauge.numEpochsPaidOver"></Progress>
-										<p class="fs-14 text-weight-medium q-ml-22 text-no-wrap">
-											{{ gauge.leftEpochs }} epochs left
-										</p>
+			<div class="col-2 !w-1/3" v-for="unbonding in pool.lockableDurationApr">
+					<ExpandableCard transparency="5">
+							<p class="fs-12 opacity-30 q-mb-16 text-uppercase">{{ unbonding.readableDuration }} unbonding</p>
+							<div class="q-mb-20">
+									<p class="fs-36 q-mb-8">{{ percentage(unbonding.apr) }} %</p>
+									<div class="flex items-center">
+											<p class="text-primary fs-14 q-mr-16 text-weight-medium">External Incentives Pool</p>
+											<template v-for="gauge in unbonding.extraGagues">
+												<q-avatar
+													class="q-mr-9"
+													size="24px"
+													v-for="(coin, index) in gauge.coins" :key="index"
+												>
+													<img :src="coin.token?.logos.default">
+												</q-avatar>
+											</template>
 									</div>
-									<div class="flex justify-between items-center">
-										<p class="fs-10 text-primary text-uppercase text-weight-medium">
-											Incentive <span class="text-white">{{balancedCurrency(coin.amount)}}</span> {{ coin.token?.symbol }}
-										</p>
-										<!-- <div class="flex">
-											<p class="q-mr-12 opacity-30">APR</p>
-											<p>{{percentage(81.9)}} %</p>
-										</div> -->
-									</div>
-								</div>
 							</div>
-                        </div>
-                    </template>
-                </ExpandableCard>
-            </div>
-        </div>
+							<p class="fs-12 opacity-40 font-weight-regular q-mb-20">
+									BitSong Launchpad is the platform where you can buy and. Incentives for 22 epochs.
+							</p>
+							<div class="flex no-wrap items-center text-weight-medium">
+									<div class="q-mr-21">
+											<p class="fs-12 text-uppercase opacity-50 q-mb-8">
+													Start
+											</p>
+											<p class="fs-18 text-no-wrap">{{ formatEpochDate(unbonding.extraGagues[0].start_time) }}</p>
+									</div>
+									<Progress :height="6" :value="unbonding.extraGagues[0].filledEpochs" :max="unbonding.extraGagues[0].numEpochsPaidOver"></Progress>
+									<div class="q-ml-21">
+											<p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">
+													End
+											</p>
+											<p class="fs-18 text-no-wrap">{{ formatEpochDate(unbonding.extraGagues[0].endTime) }}</p>
+									</div>
+							</div>
+							<template #extra>
+									<div v-for="gauge in unbonding.extraGagues" :key="gauge.id">
+											<div v-for="(coin, index) in gauge.coins" :key="index" class="rounded-20 border-primary-light q-pa-18 flex items-center q-mb-6">
+											<q-avatar
+												class="q-mr-18"
+												size="25px"
+											>
+												<img :src="coin.token?.logos.default" alt="">
+											</q-avatar>
+											<div class="flex-1">
+												<div class="flex no-wrap items-center q-mb-10">
+													<p class="fs-14 text-weight-medium q-mr-30">{{ coin.token?.symbol }}</p>
+													<Progress :height="6" :value="gauge.filledEpochs" :max="gauge.numEpochsPaidOver"></Progress>
+													<p class="fs-14 text-weight-medium q-ml-22 text-no-wrap">
+														{{ gauge.leftEpochs }} epochs left
+													</p>
+												</div>
+												<div class="flex justify-between items-center">
+													<p class="fs-10 text-primary text-uppercase text-weight-medium">
+														Incentive <span class="text-white">{{balancedCurrency(coin.amount)}}</span> {{ coin.token?.symbol }}
+													</p>
+													<!-- <div class="flex">
+														<p class="q-mr-12 opacity-30">APR</p>
+														<p>{{percentage(81.9)}} %</p>
+													</div> -->
+												</div>
+											</div>
+										</div>
+									</div>
+							</template>
+					</ExpandableCard>
+			</div>
+		</div>
 		<p class="fs-18 q-mb-30">My Bondings</p>
 		<LightTable :rows="pool.lockableDurationApr" :columns="columns">
-				<template v-slot:body-cell-unbond="props">
-						<q-td :props="props">
-								<span class="text-primary text-weight-medium cursor-pointer">
-										Unbond all
-								</span>
-						</q-td>
-				</template>
+			<template v-slot:body-cell-unbond="props">
+					<q-td :props="props">
+						<span class="text-primary text-weight-medium cursor-pointer">
+							Unbond all
+						</span>
+					</q-td>
+			</template>
 		</LightTable>
+
+		<BondModal v-model="openBondModal" :pool="pool" />
 	</div>
 </template>

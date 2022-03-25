@@ -2,6 +2,7 @@ import { MsgTransfer } from 'cosmjs-types/ibc/applications/transfer/v1/tx'
 import { Height } from 'cosmjs-types/ibc/core/client/v1/client'
 import { SignerMessage } from '@/types'
 import { Coin } from '@cosmjs/proto-signing'
+import { osmosis } from './proto'
 import Long from 'long'
 
 export type messageTimestamp = string | number | Long.Long | undefined
@@ -27,5 +28,34 @@ export const SendIbcTokens = (
 			token: transferAmount,
 			timeoutTimestamp: timeoutTimestampNanoseconds,
 		})
+	}
+}
+
+export const LockTokens = (
+	senderAddress: string, // Owner
+	duration: number, // Duration's unit is expected to be the second.
+	coins: Coin[]
+): SignerMessage<any> => {
+	const msgDuration = (duration * 1_000_000_000).toString()
+
+	console.log(osmosis.lockup.MsgLockTokens.encode({
+		owner: senderAddress,
+		duration: {
+			seconds: Long.fromNumber(Math.floor(parseInt(msgDuration) / 1_000_000_000)),
+			nanos: parseInt(msgDuration) % 1_000_000_000,
+		},
+		coins,
+	}).finish())
+
+	return {
+		typeUrl: '/osmosis.lockup.MsgLockTokens',
+		value: {
+			owner: senderAddress,
+			duration: {
+				seconds: Long.fromNumber(Math.floor(parseInt(msgDuration) / 1_000_000_000)),
+				nanos: parseInt(msgDuration) % 1_000_000_000,
+			},
+			coins,
+		},
 	}
 }

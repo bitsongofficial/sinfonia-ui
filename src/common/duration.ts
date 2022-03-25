@@ -10,6 +10,6 @@ export const mapLockableDuration = (durationStr: string): LockableDuration => {
 		rawDuration: durationStr,
 		duration,
 		milliseconds: toMilliseconds({ seconds: duration }),
-		readableDuration: `${days} ${days <= 1 ? 'day' : 'days'} unbonding`
+		readableDuration: `${days} ${days <= 1 ? 'day' : 'days'}`
 	}
 }
