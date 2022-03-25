@@ -7,6 +7,10 @@
     padding: 0 30px;
 }
 
+.reserve-scrollbar {
+    scrollbar-gutter: stable;
+}
+
 .scroll-smooth {
     scroll-behavior: smooth;
 }

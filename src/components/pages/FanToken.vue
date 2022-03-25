@@ -19,7 +19,7 @@
     import { TableColumn } from '@/types/table'
     import ImagePair from '../ImagePair.vue'
     import usePools from '@/store/pools'
-import { Pool } from '@/types'
+    import { Pool } from '@/types'
 
     const poolsStore = usePools()
 

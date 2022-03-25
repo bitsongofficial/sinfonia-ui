@@ -133,8 +133,8 @@
 			</div>
 			<div class="col-8 col-md-4 col-xl-2">
         <div ref="heightRef">
-          <CardWithHeader header="Pool composition">
-              <div class="flex justify-between q-pt-15 q-mb-40" v-if="pool.coin1">
+          <CardWithHeader header="Pool composition" :padding="0" class="q-px-30 q-py-20">
+              <div class="flex justify-between q-pt-24 q-mb-48" v-if="pool.coin1">
                 <div class="flex">
                   <PercentageWithImage
                     class="q-mr-22"

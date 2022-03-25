@@ -1,9 +1,5 @@
 @use "sass:color";
 
-$thumbSize: 8px;
-$padding: 11px;
-$scrollbarSize: $padding * 2 + $thumbSize;
-
 * {
     scrollbar-color: transparent color.adjust(#FFFFFF, $alpha:  -0.95);
     scrollbar-width: thin;
