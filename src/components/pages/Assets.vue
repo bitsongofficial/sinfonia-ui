@@ -66,22 +66,22 @@
 <template>
     <Title class="q-mb-36">Assets</Title>
     <div class="row text-weight-medium q-col-gutter-lg q-mb-75">
-        <div class="col-2">
+        <div class="col-8 col-md-4 col-lg-2">
 			<InfoCard header="Total assets">
 				{{ balancedCurrency(bankStore.total) }} $
 			</InfoCard>
 		</div>
-		<div class="col-2">
+		<div class="col-8 col-md-4 col-lg-2">
 			<InfoCard header="Available assets">
 				{{ balancedCurrency(bankStore.available) }} $
 			</InfoCard>
 		</div>
-		<div class="col-2">
+		<div class="col-8 col-md-4 col-lg-2">
 			<InfoCard header="Bonded assets">
 				{{ balancedCurrency(bankStore.bonded) }} $
 			</InfoCard>
 		</div>
-		<div class="col-2">
+		<div class="col-8 col-md-4 col-lg-2">
 			<InfoCard header="BTSG price">
 				{{ balancedCurrency(pricesStore.btsgPrice) }} $
 			</InfoCard>
@@ -98,7 +98,7 @@
                         </span>
                     </q-td>
                     <q-td>
-                        <div class="row items-center">
+                        <div class="row items-center no-wrap">
                             <q-avatar
                                 size="sm"
                                 class="q-mr-22">

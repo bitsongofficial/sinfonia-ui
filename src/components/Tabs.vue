@@ -6,7 +6,7 @@
     const props = defineProps<
     {
         options: {
-            name: string,
+            name?: string,
             label?: string,
             tooltip?: string,
             icon?: {name: string, width: number, height: number},
