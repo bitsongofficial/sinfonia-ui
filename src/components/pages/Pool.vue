@@ -88,7 +88,6 @@
 
     const setSize = () =>
     {
-		console.log(heightRef.value)
         if(heightRef.value)
         {
             compositionGraphStyle.value.width = heightRef.value.clientHeight - 5 + "px"
