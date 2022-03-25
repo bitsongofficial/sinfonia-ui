@@ -10,7 +10,7 @@
 </script>
 <template>
     <q-table
-        row-key="index"
+        row-key="name"
         :rows="rows"
         :columns="columns"
         :class="(noBackground ? 'table-no-background' : '')"

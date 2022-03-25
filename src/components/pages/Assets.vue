@@ -50,8 +50,12 @@
         { name: 'available', label: 'Available', field: 'total', sortable: true },
         { name: 'quantity', label: 'QTY', field: 'bonded', sortable: true },
         { name: 'arrows', label: '', field: '', sortable: false },
-        { name: 'expandIcon', label: '', field: '', sortable: false },
 	]
+
+    if(bankStore.balances.find(b => (b.chains && b.chains?.length > 0)))
+    {
+        columns.push({ name: 'expandIcon', label: '', field: '', sortable: false })
+    }
 
 	const openTransfer = (from: TokenBalance) => {
 		transferFrom.value = from
@@ -86,11 +90,11 @@
 	<p class="q-mb-21 fs-21 text-weight-medium">Tokens</p>
 	<div>
 		<LightTable :columns="columns" :rows="bankStore.balances">
-            <template v-slot:body="props">
-                <q-tr :props="props">
+            <template v-slot:body="rowProps">
+                <q-tr :props="rowProps">
                     <q-td>
                         <span class="opacity-40">
-                            {{ props.rowIndex + 1 }}
+                            {{ rowProps.rowIndex + 1 }}
                         </span>
                     </q-td>
                     <q-td>
@@ -98,20 +102,20 @@
                             <q-avatar
                                 size="sm"
                                 class="q-mr-22">
-                                <img :src="props.row.logos.default" :alt="props.row.name">                
+                                <img :src="rowProps.row.logos.default" :alt="rowProps.row.name">                
                             </q-avatar>
                             <p class="text-weight-medium fs-14">
-                                {{ props.row.name }}
+                                {{ rowProps.row.name }}
                             </p>
                         </div>
                     </q-td>
                     <q-td>
-                        <p class="text-white text-center">{{ props.row.fantoken ? '$' : '' }}{{ props.row.symbol }}</p>
+                        <p class="text-white text-center">{{ rowProps.row.fantoken ? '$' : '' }}{{ rowProps.row.symbol }}</p>
                     </q-td>
                     <q-td>
                         <div class="flex justify-center">
                             <q-avatar
-                                v-for="(chain, i) in props.row.chains"
+                                v-for="(chain, i) in rowProps.row.chains"
 								                :key="i"
                                 size="20px"
                                 :class="i > 0 ? 'q-ml-8' : ''"
@@ -121,29 +125,29 @@
                         </div>
                     </q-td>
                     <q-td>
-                        <p :class="'text-right ' + (props.row.available > 0 ? '' : 'opacity-40')">
-                            {{ props.row.available ? balancedCurrency(props.row.available) : '-' }}
+                        <p :class="'text-right ' + (rowProps.row.available > 0 ? '' : 'opacity-40')">
+                            {{ rowProps.row.available ? balancedCurrency(rowProps.row.available) : '-' }}
                         </p>
                     </q-td>
                     <q-td>
-                        <p :class="'text-right ' + (props.row.bonded > 0 ? '' : 'opacity-40')">
-                            {{ props.row.bonded ? balancedCurrency(props.row.bonded) : '-' }}
+                        <p :class="'text-right ' + (rowProps.row.bonded > 0 ? '' : 'opacity-40')">
+                            {{ rowProps.row.bonded ? balancedCurrency(rowProps.row.bonded) : '-' }}
                         </p>
                     </q-td>
                     <q-td>
-                        <div class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right" @click="openTransfer(props.row)">
+                        <div class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right" @click="openTransfer(rowProps.row)">
                             <q-icon :name="resolveIcon('swap', 21, 16)"></q-icon>
                         </div>
                     </q-td>
-                    <q-td>
-                        <div class="opacity-40 flex justify-end hover:opacity-100 cursor-pointer fs-12" @click="props.expand = !props.expand">
-                            <div :class="'w-fit ' + (props.expand ? 'rotate-180' : '')">
+                    <q-td v-if="rowProps.row.chains.length > 0">
+                        <div class="opacity-40 flex justify-end hover:opacity-100 cursor-pointer fs-12" @click="rowProps.expand = !rowProps.expand">
+                            <div :class="'w-fit ' + (rowProps.expand ? 'rotate-180' : '')">
                                 <q-icon :name="resolveIcon('keyboard-arrow-down', 10, 6)"></q-icon>
                             </div>
                         </div>
                     </q-td>
                 </q-tr>
-                <q-tr v-for="chain in props.row.chains" v-show="props.expand" :props="props" no-hover>
+                <q-tr v-for="chain in rowProps.row.chains" v-show="rowProps.expand" :props="rowProps" no-hover>
                     <q-td>
                     </q-td>
                     <q-td>
