@@ -129,6 +129,10 @@
     background: linear-gradient(180deg, rgba(72, 60, 88, 0) 0%, #483B58 100%);
 }
 
+.main-page-background {
+    @include background-gradient;
+}
+
 @for $i from 1 through 8
 {
     $name: $i*5;
