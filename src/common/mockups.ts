@@ -25,28 +25,6 @@ export const newUserCoin = (symbol: string, name="") =>
     }
 }
 
-export const newPool = ():Pool =>
-{
-    return {
-        name: "Pool 2",
-        coin1: newCoin("$CLAY"),
-        coin2: newCoin("BTSG"),
-        APR: Math.random() * 110,
-        liquidity: Math.random() * 20000000,
-        swapFee: Math.random() / 2,
-        coin1Percentage: Math.random(),
-    }
-}
-
-export const newMyPool = (): UserPoolView =>
-{
-    const total = Math.random()*3000
-    return {
-        pool: newPool(),
-        user: {liquidity: total, bonded: Math.min(total, Math.random()*1500)}
-    }
-}
-
 export const newUser = ():User =>
 {
     const total = Math.random() * 30000

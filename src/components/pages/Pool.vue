@@ -153,6 +153,7 @@
                 <div class="flex">
                   <PercentageWithImage
                     class="q-mr-22"
+										v-if="pool.coin1"
                     :image="pool.coin1.token.logos.default ?? ''"
                     :value="pool.coin1.weightPercentage * 100"
                   />
@@ -161,7 +162,7 @@
                   <p class="fs-14">{{percentage(pool.coin2.weightPercentage)}} %</p>
                   </div>
                 </div>
-                <p class="fs-12 opacity-50">{{ pool.coin1.token.symbol }}</p>
+                <p class="fs-12 opacity-50" v-if="pool.coin1">{{ pool.coin1.token.symbol }}</p>
               </div>
               <div class="flex justify-between" v-if="pool.coin2">
                   <div class="flex">
@@ -174,8 +175,7 @@
                   </div>
                   <p class="fs-12 opacity-50">{{ pool.coin2.token.symbol }}</p>
               </div>
-            </CardWithHeader>
-          </div>
+					</CardWithHeader>
 				</div>
 			</div>
 			<div class="col-8 col-md-4 col-xl-2">
