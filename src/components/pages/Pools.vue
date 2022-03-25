@@ -33,7 +33,7 @@
 			</div>
 		</div>
 	</template>
-	<Title class="q-mb-50">All Pools</Title>
+	<Title class="q-mb-50" :font-size="18">All Pools</Title>
 	<div class="row q-col-gutter-x-xl">
 		<div v-for="(pool) in poolsStore.pools" class="col-8 col-md-4 col-lg-2">
 			<RouterLink :to="'/pools/' + pool.id" class="block">
