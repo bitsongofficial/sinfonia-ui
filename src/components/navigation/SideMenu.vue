@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import MenuItem from '@/components/navigation/MenuItem.vue';
+    import { resolveIcon } from '@/common/resolvers'
+    import MenuItem from '@/components/navigation/MenuItem.vue'
 </script>
 <template>
     <div class="column min-width justify-around items-center bg-rounded-translucent q-px-20 q-py-28">
@@ -16,7 +17,12 @@
             Assets
         </MenuItem>
         <MenuItem is-link :icon="{name: 'swap', width:21, height:16}" url="https://www.mintscan.io/bitsong/txs">
-            History
+            <div class="flex no-wrap items-center">
+                <p class="q-mr-8">
+                    Transactions
+                </p>
+                <q-icon :name="resolveIcon('external', 10, 10)" class="fs-10"></q-icon>
+            </div>
         </MenuItem>
     </div>
 </template>

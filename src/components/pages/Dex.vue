@@ -46,6 +46,6 @@
 	]
 </script>
 <template>
-	<h3 class="q-mb-xl fs-27">Dex</h3>
+	<h3 class="q-mb-xl fs-27">DEx</h3>
 	<CryptoTable :columns="columns" :rows="configStore.fantokens" />
 </template>

@@ -2,7 +2,6 @@
     .absolute {
         display: block;
     }
-    opacity: 1;
 }
 
 .menu-item {
@@ -20,6 +19,7 @@
 
     .router-link-active {
         @include menu-item-active-hover();
+        opacity: 1;
 
         button.q-btn.q-btn-item.text-white {
             color: $primary !important;
