@@ -20,4 +20,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  define: {
+    'process.env': {},
+    'process.platform': 'win32'
+  }
 })
