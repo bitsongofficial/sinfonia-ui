@@ -1,36 +1,43 @@
 import { compact } from 'lodash';
 import { sinfoniaClient } from '@/services'
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { DistrInfo, Epoch, IncentivizedPool, MintParams, OsmosisPool, Pool } from '@/types'
+import { DistrInfo, Epoch, Gauge, IncentivizedPool, MintParams, OsmosisPool, Pool } from '@/types'
 import { mapPools, mapLockableDuration } from '@/common'
 import useBank from '@/store/bank'
+import useConfig from '@/store/config';
 
 export interface PoolsState {
   loading: boolean
+  loadingGauges: boolean
   rawPools: OsmosisPool[]
   incentivizedPools: IncentivizedPool[]
   mintParams?: MintParams
   distrInfo?: DistrInfo
   epochs: Epoch[]
   rawLockableDurations: string[]
+  extraGauges: Gauge[]
   epochProvisions: string
 }
 
 const usePools = defineStore('pools', {
   state: (): PoolsState => ({
     loading: false,
+    loadingGauges: false,
     rawPools: [],
     incentivizedPools: [],
     mintParams: undefined,
     distrInfo: undefined,
     epochs: [],
     rawLockableDurations: [],
+    extraGauges: [],
     epochProvisions: '0'
   }),
   actions: {
     async init() {
       try {
         this.loading = true
+
+        this.loadGauges()
 
         const [
           rawPools,
@@ -64,6 +71,21 @@ const usePools = defineStore('pools', {
         this.loading = false;
       }
     },
+    async loadGauges() {
+      const configStore = useConfig()
+
+      try {
+        this.loadingGauges = true
+
+        const ids = configStore.extraGaugeIds
+        this.extraGauges = await sinfoniaClient.extraGaugesDetails(ids)
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+        this.loadingGauges = false
+      }
+    }
   },
 	getters: {
 		pools({ rawPools }): Pool[] {
@@ -99,6 +121,14 @@ const usePools = defineStore('pools', {
     epochByIdentifier() {
       return (identifier: string) => this.epochs.find(
         epoch => epoch.identifier === identifier
+      )
+    },
+    extraGaugeByPoolIdAndDuration({ extraGauges }) {
+      return (id: string, duration: string) => extraGauges.filter(
+        gauge =>
+          gauge.distribute_to.denom === `gamm/pool/${id}`
+          &&
+          gauge.distribute_to.duration === duration
       )
     },
 	},

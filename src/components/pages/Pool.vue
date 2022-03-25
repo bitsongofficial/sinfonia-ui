@@ -16,6 +16,7 @@
 	import { BigNumber } from 'bignumber.js'
 	import { reduce } from 'lodash'
 	import { Coin } from '@cosmjs/proto-signing'
+	import { formatEpochDate } from '@/common'
 
 	const poolsStore = usePools()
 	const route = useRoute();
@@ -159,18 +160,15 @@
                         <p class="fs-36 q-mb-8">{{ percentage(unbonding.apr) }} %</p>
                         <div class="flex items-center">
                             <p class="text-primary fs-14 q-mr-16 text-weight-medium">External Incentives Pool</p>
-                            <q-avatar
-                                class="q-mr-9"
-                                size="24px"
-                            >
-                                <img :src="pool.coin1?.token.logos.default" alt="">
-                            </q-avatar>
-                            <q-avatar
-                                class="q-mr-9"
-                                size="24px"
-                            >
-                                <img :src="pool.coin2?.token.logos.default" alt="">
-                            </q-avatar>
+							<template v-for="gauge in unbonding.extraGagues">
+								<q-avatar
+									class="q-mr-9"
+									size="24px"
+									v-for="(coin, index) in gauge.coins" :key="index"
+								>
+									<img :src="coin.token?.logos.default">
+								</q-avatar>
+							</template>
                         </div>
                     </div>
                     <p class="fs-12 opacity-40 font-weight-regular q-mb-20">
@@ -181,42 +179,44 @@
                             <p class="fs-12 text-uppercase opacity-50 q-mb-8">
                                 Start
                             </p>
-                            <p class="fs-18 text-no-wrap">22 Feb</p>
+                            <p class="fs-18 text-no-wrap">{{ formatEpochDate(unbonding.extraGagues[0].start_time) }}</p>
                         </div>
-                        <Progress :height="12" :value="5" :max="22"></Progress>
+						<Progress :height="6" :value="unbonding.extraGagues[0].filledEpochs" :max="unbonding.extraGagues[0].numEpochsPaidOver"></Progress>
                         <div class="q-ml-21">
                             <p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">
                                 End
                             </p>
-                            <p class="fs-18 text-no-wrap">22 Mar</p>
+                            <p class="fs-18 text-no-wrap">{{ formatEpochDate(unbonding.extraGagues[0].endTime) }}</p>
                         </div>
                     </div>
                     <template #extra>
-                        <div v-for="coin in [pool.coin1, pool.coin2]" class="rounded-20 border-primary-light q-pa-18 flex items-center q-mb-6">
-                            <q-avatar
-                                class="q-mr-18"
-                                size="25px"
-                            >
-                                <img :src="coin?.token.logos.default" alt="">
-                            </q-avatar>
-                            <div class="flex-1">
-                                <div class="flex no-wrap items-center q-mb-10">
-                                    <p class="fs-14 text-weight-medium q-mr-30">{{ coin?.token.symbol }}</p>
-                                    <Progress :height="6" :value="5" :max="22"></Progress>
-                                    <p class="fs-14 text-weight-medium q-ml-22 text-no-wrap">
-                                        18 epochs left
-                                    </p>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <p class="fs-10 text-primary text-uppercase text-weight-medium">
-                                        Incentive <span class="text-white">{{balancedCurrency(100000)}}</span> {{ coin?.token.symbol }}
-                                    </p>
-                                    <div class="flex">
-                                        <p class="q-mr-12 opacity-30">APR</p>
-                                        <p>{{percentage(81.9)}} %</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div v-for="gauge in unbonding.extraGagues" :key="gauge.id">
+                            <div v-for="(coin, index) in gauge.coins" :key="index" class="rounded-20 border-primary-light q-pa-18 flex items-center q-mb-6">
+								<q-avatar
+									class="q-mr-18"
+									size="25px"
+								>
+									<img :src="coin.token?.logos.default" alt="">
+								</q-avatar>
+								<div class="flex-1">
+									<div class="flex no-wrap items-center q-mb-10">
+										<p class="fs-14 text-weight-medium q-mr-30">{{ coin.token?.symbol }}</p>
+										<Progress :height="6" :value="gauge.filledEpochs" :max="gauge.numEpochsPaidOver"></Progress>
+										<p class="fs-14 text-weight-medium q-ml-22 text-no-wrap">
+											{{ gauge.leftEpochs }} epochs left
+										</p>
+									</div>
+									<div class="flex justify-between items-center">
+										<p class="fs-10 text-primary text-uppercase text-weight-medium">
+											Incentive <span class="text-white">{{balancedCurrency(coin.amount)}}</span> {{ coin.token?.symbol }}
+										</p>
+										<!-- <div class="flex">
+											<p class="q-mr-12 opacity-30">APR</p>
+											<p>{{percentage(81.9)}} %</p>
+										</div> -->
+									</div>
+								</div>
+							</div>
                         </div>
                     </template>
                 </ExpandableCard>

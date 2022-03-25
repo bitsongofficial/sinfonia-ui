@@ -1,4 +1,4 @@
-import { CoinLookup, LockableDuration, LockableDurationWithApr, OsmosisPool, OsmosisPoolAsset, Pool, PoolAsset } from '@/types'
+import { CoinLookup, CoinToken, Gauge, GaugeToken, LockableDuration, LockableDurationWithApr, OsmosisPool, OsmosisPoolAsset, Pool, PoolAsset } from '@/types'
 import { toViewDenom } from './numbers'
 import { BigNumber } from 'bignumber.js'
 import { toMilliseconds } from 'duration-fns'
@@ -8,6 +8,7 @@ import usePools from '@/store/pools'
 import usePrices from '@/store/prices'
 import { mapLockableDuration } from './duration'
 import { max } from 'lodash'
+import { add, parseISO } from 'date-fns'
 
 export const gammToPoolAmount = (currentAmount: BigNumber, totalPoolGamm: BigNumber, totalTokenGamm: BigNumber, coinLookup: CoinLookup) => {
 	const shareRation = currentAmount.div(totalPoolGamm)
@@ -110,10 +111,13 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 
 		const lockableDurationApr: LockableDurationWithApr[] = poolsStore.lockableDuration.map(duration => {
 			const lockedLonger = bankStore.lockedLongerByPoolIdAndDuration(pool.id, duration.rawDuration)
+			const extraGauge = poolsStore.extraGaugeByPoolIdAndDuration(pool.id, duration.rawDuration)
+			const extraGagues = extraGauge.map(gauge => gaugeToGaugeToken(gauge))
 
 			return {
 				...duration,
 				lockedLonger,
+				extraGagues,
 				apr: calculateTotalApr(pool, duration, liquidity.toString())
 			}
 		})
@@ -133,6 +137,47 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 			bonded: bonded.toString()
 		})
 	})
+}
+
+export const gaugeToGaugeToken = (gauge: Gauge): GaugeToken => {
+	const configStore = useConfig()
+
+	const coins: CoinToken[] = gauge.coins.map(coin => {
+		const token = configStore.findTokenByIBCDenom(coin.denom)
+		let amount = coin.amount
+
+		if (token) {
+			const coinLookup = token.coinLookup.find(
+				(lookup) => lookup.viewDenom === token.symbol
+			)
+
+			if (coinLookup) {
+				amount = toViewDenom(amount, coinLookup.chainToViewConversionFactor)
+			}
+		}
+
+
+
+		return ({
+			...coin,
+			amount,
+			token
+		})
+	})
+
+	const numEpochsPaidOver = parseInt(gauge.num_epochs_paid_over)
+	const filledEpochs = parseInt(gauge.filled_epochs)
+	const leftEpochs = numEpochsPaidOver - filledEpochs
+	const endTime = add(parseISO(gauge.start_time), { days: numEpochsPaidOver }).toISOString()
+
+	return {
+		...gauge,
+		numEpochsPaidOver,
+		filledEpochs,
+		leftEpochs,
+		coins,
+		endTime
+	}
 }
 
 export const calculateTotalApr = (pool: OsmosisPool, duration: LockableDuration, liquidityPool: string) => {

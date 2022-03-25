@@ -1,4 +1,5 @@
 import { Coin } from '@cosmjs/proto-signing'
+import { Token } from './config';
 
 export interface PoolParams {
 	swapFee: string
@@ -61,6 +62,18 @@ export interface Gauge {
 	is_perpetual: boolean
 	num_epochs_paid_over: string
 	start_time: string
+}
+
+export interface CoinToken extends Coin {
+	token?: Token
+}
+
+export interface GaugeToken extends Gauge {
+	coins: CoinToken[]
+	numEpochsPaidOver: number
+	filledEpochs: number
+	leftEpochs: number
+	endTime: string
 }
 
 export interface DistributionProportions {
