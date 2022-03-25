@@ -8,6 +8,8 @@
   const { bootstrap } = useBootstrap()
 
   bootstrap()
+
+  
 </script>
 
 <template>
