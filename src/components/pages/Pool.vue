@@ -22,8 +22,8 @@
 
 	const transactionManagerStore = useTransactionManager()
 	const poolsStore = usePools()
-	const route = useRoute();
-	const id = route.params['id'] as string;
+	const route = useRoute()
+	const id = route.params['id'] as string
 	const openBondModal = ref(false)
 
 	const pool = computed(() => poolsStore.poolById(id))
@@ -72,27 +72,27 @@
 		},
 	]
 
-    const beginUnlocking = (id: string) => {
-      transactionManagerStore.beginUnlocking(id)
-    }
+	const beginUnlocking = (id: string) => {
+		transactionManagerStore.beginUnlocking(id)
+	}
 
-    const compositionGraphStyle = ref({width: "0"})
-    const heightRef = ref<HTMLElement | null>(null)
+	const compositionGraphStyle = ref({width: "0"})
+	const heightRef = ref<HTMLElement | null>(null)
 
-    const setSize = () =>
-    {
-        if(heightRef.value)
-        {
-            compositionGraphStyle.value.width = heightRef.value.clientHeight - 5 + "px"
+	const setSize = () => {
+		if(heightRef.value) {
+			compositionGraphStyle.value.width = heightRef.value.clientHeight - 5 + 'px'
+
 			return true
-        }
+		}
+
 		return false
-    }
-	const untilSetSize = () =>
-	{
+	}
+
+	const untilSetSize = () => {
 		const res = setSize()
-		if(!res)
-		{
+
+		if(!res) {
 			setTimeout(untilSetSize, 200)
 		}
 	}
@@ -102,8 +102,7 @@
 		untilSetSize()
 	})
 
-	onUnmounted(() =>
-	{
+	onUnmounted(() => {
 		window.removeEventListener("resize", setSize);
 	})
 </script>
@@ -153,27 +152,17 @@
                 <div class="flex">
                   <PercentageWithImage
                     class="q-mr-22"
-										v-if="pool.coin1"
-                    :image="pool.coin1.token.logos.default ?? ''"
-                    :value="pool.coin1.weightPercentage * 100"
+										v-if="pool.coin2"
+										negative
+                    :image="pool.coin2.token.logos.default ?? ''"
+                    :value="pool.coin2.weightPercentage * 100"
                   />
                   <div>
                   <p class="fs-21 q-mb-14">{{balancedCurrency(pool.coin2.token.amount)}}</p>
                   <p class="fs-14">{{percentage(pool.coin2.weightPercentage)}} %</p>
                   </div>
                 </div>
-                <p class="fs-12 opacity-50" v-if="pool.coin1">{{ pool.coin1.token.symbol }}</p>
-              </div>
-              <div class="flex justify-between" v-if="pool.coin2">
-                  <div class="flex">
-                    <PercentageWithImage class="q-mr-22" negative :image="pool.coin2.token.logos.default ?? ''" :value="pool.coin2.weightPercentage * 100">
-                    </PercentageWithImage>
-                    <div>
-                      <p class="fs-21 q-mb-14">{{balancedCurrency(pool.coin2.token.amount)}}</p>
-                      <p class="fs-14">{{percentage(pool.coin2.weightPercentage * 100)}} %</p>
-                    </div>
-                  </div>
-                  <p class="fs-12 opacity-50">{{ pool.coin2.token.symbol }}</p>
+                <p class="fs-12 opacity-50" v-if="pool.coin2">{{ pool.coin2.token.symbol }}</p>
               </div>
 					</CardWithHeader>
 				</div>
