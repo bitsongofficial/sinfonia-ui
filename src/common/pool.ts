@@ -1,8 +1,15 @@
-import { CoinLookup, OsmosisPool, OsmosisPoolAsset, Pool, PoolAsset } from '@/types'
-import { toViewDenom } from './numbers'
+import { CoinLookup, CoinToken, Gauge, GaugeToken, LockableDuration, LockableDurationWithApr, OsmosisPool, OsmosisPoolAsset, Pool, PoolAsset } from '@/types'
+import { toDecimalGamm, toViewDenom } from './numbers'
+import { BigNumber } from 'bignumber.js'
+import { toMilliseconds } from 'duration-fns'
 import useBank from '@/store/bank'
 import useConfig from '@/store/config'
-import { BigNumber } from 'bignumber.js'
+import usePools from '@/store/pools'
+import usePrices from '@/store/prices'
+import { mapLockableDuration } from './duration'
+import { max } from 'lodash'
+import { add, parseISO } from 'date-fns'
+import { Coin } from '@cosmjs/proto-signing'
 
 export const gammToPoolAmount = (currentAmount: BigNumber, totalPoolGamm: BigNumber, totalTokenGamm: BigNumber, coinLookup: CoinLookup) => {
 	const shareRation = currentAmount.div(totalPoolGamm)
@@ -31,6 +38,7 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 
 		const bondedBalances = bankStore.lockedCoinsBalance.filter(coin => coin.denom === `gamm/pool/${pool.id}`)
 		const availableBalances = bankStore.osmosisBalance.filter(coin => coin.denom === `gamm/pool/${pool.id}`)
+		console.log(availableBalances)
 
 		for (const bondedBalance of bondedBalances) {
 			bondedAmount = bondedAmount.plus(bondedBalance.amount)
@@ -62,6 +70,9 @@ export const tokenToPoolAsset = (pool: OsmosisPool, rawCoin: OsmosisPoolAsset): 
 }
 
 export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
+	const poolsStore = usePools()
+	const bankStore = useBank()
+
 	return rawPools.map(pool => {
 		const poolAssets = [...pool.poolAssets]
 		let rawCoin1 = poolAssets.shift()
@@ -100,14 +111,158 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 			}
 		}
 
+		let availableLPTokens = new BigNumber('0')
+		const availableBalances: Coin[] = bankStore.osmosisBalance.filter(
+			coin => coin.denom === `gamm/pool/${pool.id}`
+		)
+
+		for (const availableBalance of availableBalances) {
+			availableLPTokens = availableLPTokens.plus(availableBalance.amount)
+		}
+
+		const lockableDurationApr: LockableDurationWithApr[] = poolsStore.lockableDuration.map(duration => {
+			const lockedLonger = bankStore.lockedLongerByPoolIdAndDuration(pool.id, duration.rawDuration)
+			const extraGauge = poolsStore.extraGaugeByPoolIdAndDuration(pool.id, duration.rawDuration)
+			const extraGagues = extraGauge.map(gauge => gaugeToGaugeToken(gauge))
+
+			return {
+				...duration,
+				lockedLonger,
+				extraGagues,
+				apr: calculateTotalApr(pool, duration, liquidity.toString())
+			}
+		})
+
+		const maxIncentivizedApr = max(lockableDurationApr.map(
+			duration => new BigNumber(duration.apr).toNumber()
+		))
+
 		return ({
 			...pool,
 			coin1,
 			coin2,
-			APR: '0',
+			lockableDurationApr,
+			APR: new BigNumber(maxIncentivizedApr ?? '0').toString(),
 			liquidity: liquidity.toString(),
 			userLiquidity: userLiquidity.toString(),
-			bonded: bonded.toString()
+			bonded: bonded.toString(),
+			availableLPTokens: toDecimalGamm(availableLPTokens.toString()),
+			availableLPBalances: availableBalances
 		})
 	})
+}
+
+export const gaugeToGaugeToken = (gauge: Gauge): GaugeToken => {
+	const configStore = useConfig()
+
+	const coins: CoinToken[] = gauge.coins.map(coin => {
+		const token = configStore.findTokenByIBCDenom(coin.denom)
+		let amount = coin.amount
+
+		if (token) {
+			const coinLookup = token.coinLookup.find(
+				(lookup) => lookup.viewDenom === token.symbol
+			)
+
+			if (coinLookup) {
+				amount = toViewDenom(amount, coinLookup.chainToViewConversionFactor)
+			}
+		}
+
+		return ({
+			...coin,
+			amount,
+			token
+		})
+	})
+
+	const numEpochsPaidOver = parseInt(gauge.num_epochs_paid_over)
+	const filledEpochs = parseInt(gauge.filled_epochs)
+	const leftEpochs = numEpochsPaidOver - filledEpochs
+	const endTime = add(parseISO(gauge.start_time), { days: numEpochsPaidOver }).toISOString()
+
+	return {
+		...gauge,
+		numEpochsPaidOver,
+		filledEpochs,
+		leftEpochs,
+		coins,
+		endTime
+	}
+}
+
+export const calculateTotalApr = (pool: OsmosisPool, duration: LockableDuration, liquidityPool: string) => {
+	const poolsStore = usePools()
+
+	let apr = new BigNumber(getPoolApr(pool, duration, liquidityPool))
+
+	for (const lockableDuration of poolsStore.lockableDuration) {
+		if (lockableDuration.milliseconds >= duration.milliseconds) {
+			break;
+		}
+
+		apr = apr.plus(getPoolApr(pool, lockableDuration, liquidityPool));
+	}
+
+	return apr.toString()
+}
+
+/*
+	Liquidity Pool is a Fiat value in USD
+*/
+export const getPoolApr = (pool: OsmosisPool, duration: LockableDuration, liquidityPool: string): string => {
+	const poolsStore = usePools()
+	const configStore = useConfig()
+	const pricesStore = usePrices()
+	const incentivizedPool = poolsStore.incentivizedPoolById(pool.id)
+	const lockDuration = poolsStore.lockableDuration.find(el => el.rawDuration === duration.rawDuration)
+	const gaugeId = poolsStore.incentivizedPoolByIdAndDuration(pool.id, duration.rawDuration)
+	const mintParams = poolsStore.mintParams
+	const distrInfo = poolsStore.distrInfo
+	const osmosisToken = configStore.osmosisToken
+
+	if (incentivizedPool && lockDuration && gaugeId && mintParams) {
+		const mintDenom = mintParams.mint_denom
+		const epochIdentifier = mintParams.epoch_identifier
+
+		if (mintDenom && epochIdentifier && osmosisToken) {
+			const epoch = poolsStore.epochByIdentifier(epochIdentifier)
+
+			if (epoch && epoch.duration && distrInfo) {
+				const totalWeight = new BigNumber(distrInfo.total_weight);
+				const poolTVL = new BigNumber(liquidityPool)
+				const potWeightRecord = distrInfo.records.find(
+					record => record.gauge_id === gaugeId.gauge_id
+				)
+
+				const osmosisPrice = pricesStore.getPriceById(osmosisToken.coinGeckoId)
+				
+				if (osmosisPrice && potWeightRecord) {
+					const potWeight = new BigNumber(potWeightRecord.weight)
+					const coinLookup = osmosisToken.coinLookup.find(
+						(coin) => coin.viewDenom === osmosisToken.symbol
+					)
+
+					if (totalWeight.gt(0) && potWeight.gt(0) && poolTVL.gt(0) && poolsStore.epochProvisions && coinLookup) {
+						const epochProvision = new BigNumber(toViewDenom(poolsStore.epochProvisions, coinLookup.chainToViewConversionFactor))
+						const epochDuration = mapLockableDuration(epoch.duration)
+						const numEpochPerYear = toMilliseconds({ years: 1 }) / epochDuration.milliseconds
+						const yearProvision = epochProvision.multipliedBy(numEpochPerYear)
+
+						const yearProvisionToPots = yearProvision.multipliedBy(
+							mintParams.distribution_proportions.pool_incentives
+						)
+
+						const yearProvisionToPot = yearProvisionToPots.multipliedBy(potWeight.div(totalWeight))
+
+						const yearProvisionToPotPrice = new BigNumber(osmosisPrice).multipliedBy(yearProvisionToPot)
+
+						return yearProvisionToPotPrice.div(poolTVL).toString()
+					}
+				}
+			}
+		}
+	}
+
+	return '0'
 }

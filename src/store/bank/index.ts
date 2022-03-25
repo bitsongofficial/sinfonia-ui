@@ -203,6 +203,13 @@ const useBank = defineStore('bank', {
     },
     allBalances({ bitsongBalance, osmosisBalance, otherBalance }) {
       return [...bitsongBalance, ...osmosisBalance, ...otherBalance]
+    },
+    lockedLongerByPoolIdAndDuration({ lockedLongerDuration }) {
+      return (poolID: string, duration: string): OsmosisLock | undefined => lockedLongerDuration.find(
+        lockedLonger => lockedLonger.coins.filter(
+          coin => coin.denom === `gamm/pool/${poolID}`
+        ).length > 0 && lockedLonger.duration === duration
+      )
     }
   },
   persistedState: {

@@ -1,5 +1,5 @@
 import { sinfoniaClient } from '@/services'
-import { AssetListConfig, Token, TokenBalance } from '@/types'
+import { AssetListConfig, ExtraGauge, ExtraGaugeList, Token, TokenBalance } from '@/types'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { BigNumber } from 'bignumber.js'
 import { compact, reduce } from 'lodash'
@@ -10,19 +10,27 @@ import usePrices from '@/store/prices'
 export interface ConfigState {
   loading: boolean
   assetsConfig?: AssetListConfig
+  extraGauges?: ExtraGaugeList
 }
 
 const useConfig = defineStore('config', {
   state: (): ConfigState => ({
     loading: false,
-    assetsConfig: undefined
+    assetsConfig: undefined,
+    extraGauges: undefined
   }),
   actions: {
     async init() {
       try {
         this.loading = true
 
-        this.assetsConfig = await sinfoniaClient.assetLists()
+        const [assetsConfig, extraGauges] = await Promise.all([
+          await sinfoniaClient.assetLists(),
+          await sinfoniaClient.extraGauges()
+        ])
+
+        this.assetsConfig = assetsConfig
+        this.extraGauges = extraGauges
       } catch (error) {
         console.error(error)
         throw error
@@ -123,6 +131,23 @@ const useConfig = defineStore('config', {
 
         return token.ibc.osmosis.destDenom === denom
       })
+    },
+    extraGaugeIds({ extraGauges, assetsConfig }) {
+      let gaugeIds: ExtraGauge[] = []
+
+      if (extraGauges && assetsConfig) {
+        for (const poolID in extraGauges) {
+          const pool = assetsConfig.pools.find(el => el.id === poolID)
+
+          if (pool) {
+            const gauges = extraGauges[poolID]
+
+            gaugeIds = [...gaugeIds, ...gauges]
+          }
+        }
+      }
+
+      return gaugeIds.map(gauge => gauge.gaugeId)
     }
   },
   persistedState: {

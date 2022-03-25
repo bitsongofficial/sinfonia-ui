@@ -1,6 +1,7 @@
-import { Coin } from '@/types/coin'
+import { Coin } from '@cosmjs/proto-signing'
 import { BaseToken } from './config'
-import { OsmosisPool, PoolParams } from './osmosis'
+import { LockableDurationWithApr } from './duration'
+import { OsmosisPool } from './osmosis'
 
 
 export interface PoolUser {
@@ -30,8 +31,11 @@ export interface PoolAsset {
 export interface Pool extends OsmosisPool {
 	coin1?: PoolAsset
 	coin2?: PoolAsset
+	lockableDurationApr: LockableDurationWithApr[]
 	APR: string
 	liquidity: string
 	userLiquidity: string
 	bonded: string
+	availableLPTokens: string
+	availableLPBalances: Coin[]
 }

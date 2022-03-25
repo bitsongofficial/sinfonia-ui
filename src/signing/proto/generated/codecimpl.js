@@ -1,12 +1,10 @@
-'use strict';
-Object.defineProperty(exports, '__esModule', { value: true });
-exports.google = exports.osmosis = exports.cosmos = void 0;
-var $protobuf = require('protobufjs/minimal');
-const $Reader = $protobuf.Reader,
-	$Writer = $protobuf.Writer,
-	$util = $protobuf.util;
+import * as protobuf from 'protobufjs/minimal'
+
+const $Reader = protobuf.Reader,
+	$Writer = protobuf.Writer,
+	$util = protobuf.util;
 const $root = {};
-exports.cosmos = $root.cosmos = (() => {
+export const cosmos = (() => {
 	const cosmos = {};
 	cosmos.base = (function() {
 		const base = {};
@@ -30,7 +28,7 @@ exports.cosmos = $root.cosmos = (() => {
 				Coin.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.base.v1beta1.Coin();
+						m = new cosmos.base.v1beta1.Coin();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -48,8 +46,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				Coin.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.base.v1beta1.Coin) return d;
-					var m = new $root.cosmos.base.v1beta1.Coin();
+					if (d instanceof cosmos.base.v1beta1.Coin) return d;
+					var m = new cosmos.base.v1beta1.Coin();
 					if (d.denom != null) {
 						m.denom = String(d.denom);
 					}
@@ -74,7 +72,7 @@ exports.cosmos = $root.cosmos = (() => {
 					return d;
 				};
 				Coin.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return Coin;
 			})();
@@ -96,7 +94,7 @@ exports.cosmos = $root.cosmos = (() => {
 				DecCoin.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.base.v1beta1.DecCoin();
+						m = new cosmos.base.v1beta1.DecCoin();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -114,8 +112,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				DecCoin.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.base.v1beta1.DecCoin) return d;
-					var m = new $root.cosmos.base.v1beta1.DecCoin();
+					if (d instanceof cosmos.base.v1beta1.DecCoin) return d;
+					var m = new cosmos.base.v1beta1.DecCoin();
 					if (d.denom != null) {
 						m.denom = String(d.denom);
 					}
@@ -140,7 +138,7 @@ exports.cosmos = $root.cosmos = (() => {
 					return d;
 				};
 				DecCoin.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return DecCoin;
 			})();
@@ -160,7 +158,7 @@ exports.cosmos = $root.cosmos = (() => {
 				IntProto.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.base.v1beta1.IntProto();
+						m = new cosmos.base.v1beta1.IntProto();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -175,8 +173,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				IntProto.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.base.v1beta1.IntProto) return d;
-					var m = new $root.cosmos.base.v1beta1.IntProto();
+					if (d instanceof cosmos.base.v1beta1.IntProto) return d;
+					var m = new cosmos.base.v1beta1.IntProto();
 					if (d.int != null) {
 						m.int = String(d.int);
 					}
@@ -194,7 +192,7 @@ exports.cosmos = $root.cosmos = (() => {
 					return d;
 				};
 				IntProto.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return IntProto;
 			})();
@@ -214,7 +212,7 @@ exports.cosmos = $root.cosmos = (() => {
 				DecProto.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.base.v1beta1.DecProto();
+						m = new cosmos.base.v1beta1.DecProto();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -229,8 +227,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				DecProto.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.base.v1beta1.DecProto) return d;
-					var m = new $root.cosmos.base.v1beta1.DecProto();
+					if (d instanceof cosmos.base.v1beta1.DecProto) return d;
+					var m = new cosmos.base.v1beta1.DecProto();
 					if (d.dec != null) {
 						m.dec = String(d.dec);
 					}
@@ -248,7 +246,7 @@ exports.cosmos = $root.cosmos = (() => {
 					return d;
 				};
 				DecProto.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return DecProto;
 			})();
@@ -274,7 +272,7 @@ exports.cosmos = $root.cosmos = (() => {
 					if (!w) w = $Writer.create();
 					if (m.sendEnabled != null && m.sendEnabled.length) {
 						for (var i = 0; i < m.sendEnabled.length; ++i)
-							$root.cosmos.bank.v1beta1.SendEnabled.encode(m.sendEnabled[i], w.uint32(10).fork()).ldelim();
+							cosmos.bank.v1beta1.SendEnabled.encode(m.sendEnabled[i], w.uint32(10).fork()).ldelim();
 					}
 					if (m.defaultSendEnabled != null && Object.hasOwnProperty.call(m, 'defaultSendEnabled'))
 						w.uint32(16).bool(m.defaultSendEnabled);
@@ -283,13 +281,13 @@ exports.cosmos = $root.cosmos = (() => {
 				Params.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.bank.v1beta1.Params();
+						m = new cosmos.bank.v1beta1.Params();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
 							case 1:
 								if (!(m.sendEnabled && m.sendEnabled.length)) m.sendEnabled = [];
-								m.sendEnabled.push($root.cosmos.bank.v1beta1.SendEnabled.decode(r, r.uint32()));
+								m.sendEnabled.push(cosmos.bank.v1beta1.SendEnabled.decode(r, r.uint32()));
 								break;
 							case 2:
 								m.defaultSendEnabled = r.bool();
@@ -302,8 +300,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				Params.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.bank.v1beta1.Params) return d;
-					var m = new $root.cosmos.bank.v1beta1.Params();
+					if (d instanceof cosmos.bank.v1beta1.Params) return d;
+					var m = new cosmos.bank.v1beta1.Params();
 					if (d.sendEnabled) {
 						if (!Array.isArray(d.sendEnabled))
 							throw TypeError('.cosmos.bank.v1beta1.Params.sendEnabled: array expected');
@@ -311,7 +309,7 @@ exports.cosmos = $root.cosmos = (() => {
 						for (var i = 0; i < d.sendEnabled.length; ++i) {
 							if (typeof d.sendEnabled[i] !== 'object')
 								throw TypeError('.cosmos.bank.v1beta1.Params.sendEnabled: object expected');
-							m.sendEnabled[i] = $root.cosmos.bank.v1beta1.SendEnabled.fromObject(d.sendEnabled[i]);
+							m.sendEnabled[i] = cosmos.bank.v1beta1.SendEnabled.fromObject(d.sendEnabled[i]);
 						}
 					}
 					if (d.defaultSendEnabled != null) {
@@ -331,7 +329,7 @@ exports.cosmos = $root.cosmos = (() => {
 					if (m.sendEnabled && m.sendEnabled.length) {
 						d.sendEnabled = [];
 						for (var j = 0; j < m.sendEnabled.length; ++j) {
-							d.sendEnabled[j] = $root.cosmos.bank.v1beta1.SendEnabled.toObject(m.sendEnabled[j], o);
+							d.sendEnabled[j] = cosmos.bank.v1beta1.SendEnabled.toObject(m.sendEnabled[j], o);
 						}
 					}
 					if (m.defaultSendEnabled != null && m.hasOwnProperty('defaultSendEnabled')) {
@@ -340,7 +338,7 @@ exports.cosmos = $root.cosmos = (() => {
 					return d;
 				};
 				Params.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return Params;
 			})();
@@ -362,7 +360,7 @@ exports.cosmos = $root.cosmos = (() => {
 				SendEnabled.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.bank.v1beta1.SendEnabled();
+						m = new cosmos.bank.v1beta1.SendEnabled();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -380,8 +378,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				SendEnabled.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.bank.v1beta1.SendEnabled) return d;
-					var m = new $root.cosmos.bank.v1beta1.SendEnabled();
+					if (d instanceof cosmos.bank.v1beta1.SendEnabled) return d;
+					var m = new cosmos.bank.v1beta1.SendEnabled();
 					if (d.denom != null) {
 						m.denom = String(d.denom);
 					}
@@ -406,7 +404,7 @@ exports.cosmos = $root.cosmos = (() => {
 					return d;
 				};
 				SendEnabled.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return SendEnabled;
 			})();
@@ -425,14 +423,14 @@ exports.cosmos = $root.cosmos = (() => {
 					if (m.address != null && Object.hasOwnProperty.call(m, 'address')) w.uint32(10).string(m.address);
 					if (m.coins != null && m.coins.length) {
 						for (var i = 0; i < m.coins.length; ++i)
-							$root.cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(18).fork()).ldelim();
+							cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(18).fork()).ldelim();
 					}
 					return w;
 				};
 				Input.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.bank.v1beta1.Input();
+						m = new cosmos.bank.v1beta1.Input();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -441,7 +439,7 @@ exports.cosmos = $root.cosmos = (() => {
 								break;
 							case 2:
 								if (!(m.coins && m.coins.length)) m.coins = [];
-								m.coins.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+								m.coins.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 								break;
 							default:
 								r.skipType(t & 7);
@@ -451,8 +449,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				Input.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.bank.v1beta1.Input) return d;
-					var m = new $root.cosmos.bank.v1beta1.Input();
+					if (d instanceof cosmos.bank.v1beta1.Input) return d;
+					var m = new cosmos.bank.v1beta1.Input();
 					if (d.address != null) {
 						m.address = String(d.address);
 					}
@@ -461,7 +459,7 @@ exports.cosmos = $root.cosmos = (() => {
 						m.coins = [];
 						for (var i = 0; i < d.coins.length; ++i) {
 							if (typeof d.coins[i] !== 'object') throw TypeError('.cosmos.bank.v1beta1.Input.coins: object expected');
-							m.coins[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
+							m.coins[i] = cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
 						}
 					}
 					return m;
@@ -481,13 +479,13 @@ exports.cosmos = $root.cosmos = (() => {
 					if (m.coins && m.coins.length) {
 						d.coins = [];
 						for (var j = 0; j < m.coins.length; ++j) {
-							d.coins[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
+							d.coins[j] = cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
 						}
 					}
 					return d;
 				};
 				Input.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return Input;
 			})();
@@ -506,14 +504,14 @@ exports.cosmos = $root.cosmos = (() => {
 					if (m.address != null && Object.hasOwnProperty.call(m, 'address')) w.uint32(10).string(m.address);
 					if (m.coins != null && m.coins.length) {
 						for (var i = 0; i < m.coins.length; ++i)
-							$root.cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(18).fork()).ldelim();
+							cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(18).fork()).ldelim();
 					}
 					return w;
 				};
 				Output.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.bank.v1beta1.Output();
+						m = new cosmos.bank.v1beta1.Output();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -522,7 +520,7 @@ exports.cosmos = $root.cosmos = (() => {
 								break;
 							case 2:
 								if (!(m.coins && m.coins.length)) m.coins = [];
-								m.coins.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+								m.coins.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 								break;
 							default:
 								r.skipType(t & 7);
@@ -532,8 +530,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				Output.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.bank.v1beta1.Output) return d;
-					var m = new $root.cosmos.bank.v1beta1.Output();
+					if (d instanceof cosmos.bank.v1beta1.Output) return d;
+					var m = new cosmos.bank.v1beta1.Output();
 					if (d.address != null) {
 						m.address = String(d.address);
 					}
@@ -542,7 +540,7 @@ exports.cosmos = $root.cosmos = (() => {
 						m.coins = [];
 						for (var i = 0; i < d.coins.length; ++i) {
 							if (typeof d.coins[i] !== 'object') throw TypeError('.cosmos.bank.v1beta1.Output.coins: object expected');
-							m.coins[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
+							m.coins[i] = cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
 						}
 					}
 					return m;
@@ -562,13 +560,13 @@ exports.cosmos = $root.cosmos = (() => {
 					if (m.coins && m.coins.length) {
 						d.coins = [];
 						for (var j = 0; j < m.coins.length; ++j) {
-							d.coins[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
+							d.coins[j] = cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
 						}
 					}
 					return d;
 				};
 				Output.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return Output;
 			})();
@@ -585,20 +583,20 @@ exports.cosmos = $root.cosmos = (() => {
 					if (!w) w = $Writer.create();
 					if (m.total != null && m.total.length) {
 						for (var i = 0; i < m.total.length; ++i)
-							$root.cosmos.base.v1beta1.Coin.encode(m.total[i], w.uint32(10).fork()).ldelim();
+							cosmos.base.v1beta1.Coin.encode(m.total[i], w.uint32(10).fork()).ldelim();
 					}
 					return w;
 				};
 				Supply.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.bank.v1beta1.Supply();
+						m = new cosmos.bank.v1beta1.Supply();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
 							case 1:
 								if (!(m.total && m.total.length)) m.total = [];
-								m.total.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+								m.total.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 								break;
 							default:
 								r.skipType(t & 7);
@@ -608,14 +606,14 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				Supply.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.bank.v1beta1.Supply) return d;
-					var m = new $root.cosmos.bank.v1beta1.Supply();
+					if (d instanceof cosmos.bank.v1beta1.Supply) return d;
+					var m = new cosmos.bank.v1beta1.Supply();
 					if (d.total) {
 						if (!Array.isArray(d.total)) throw TypeError('.cosmos.bank.v1beta1.Supply.total: array expected');
 						m.total = [];
 						for (var i = 0; i < d.total.length; ++i) {
 							if (typeof d.total[i] !== 'object') throw TypeError('.cosmos.bank.v1beta1.Supply.total: object expected');
-							m.total[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.total[i]);
+							m.total[i] = cosmos.base.v1beta1.Coin.fromObject(d.total[i]);
 						}
 					}
 					return m;
@@ -629,13 +627,13 @@ exports.cosmos = $root.cosmos = (() => {
 					if (m.total && m.total.length) {
 						d.total = [];
 						for (var j = 0; j < m.total.length; ++j) {
-							d.total[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.total[j], o);
+							d.total[j] = cosmos.base.v1beta1.Coin.toObject(m.total[j], o);
 						}
 					}
 					return d;
 				};
 				Supply.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return Supply;
 			})();
@@ -662,7 +660,7 @@ exports.cosmos = $root.cosmos = (() => {
 				DenomUnit.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.bank.v1beta1.DenomUnit();
+						m = new cosmos.bank.v1beta1.DenomUnit();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -684,8 +682,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				DenomUnit.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.bank.v1beta1.DenomUnit) return d;
-					var m = new $root.cosmos.bank.v1beta1.DenomUnit();
+					if (d instanceof cosmos.bank.v1beta1.DenomUnit) return d;
+					var m = new cosmos.bank.v1beta1.DenomUnit();
 					if (d.denom != null) {
 						m.denom = String(d.denom);
 					}
@@ -726,7 +724,7 @@ exports.cosmos = $root.cosmos = (() => {
 					return d;
 				};
 				DenomUnit.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return DenomUnit;
 			})();
@@ -749,7 +747,7 @@ exports.cosmos = $root.cosmos = (() => {
 					if (m.description != null && Object.hasOwnProperty.call(m, 'description')) w.uint32(10).string(m.description);
 					if (m.denomUnits != null && m.denomUnits.length) {
 						for (var i = 0; i < m.denomUnits.length; ++i)
-							$root.cosmos.bank.v1beta1.DenomUnit.encode(m.denomUnits[i], w.uint32(18).fork()).ldelim();
+							cosmos.bank.v1beta1.DenomUnit.encode(m.denomUnits[i], w.uint32(18).fork()).ldelim();
 					}
 					if (m.base != null && Object.hasOwnProperty.call(m, 'base')) w.uint32(26).string(m.base);
 					if (m.display != null && Object.hasOwnProperty.call(m, 'display')) w.uint32(34).string(m.display);
@@ -760,7 +758,7 @@ exports.cosmos = $root.cosmos = (() => {
 				Metadata.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.cosmos.bank.v1beta1.Metadata();
+						m = new cosmos.bank.v1beta1.Metadata();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -769,7 +767,7 @@ exports.cosmos = $root.cosmos = (() => {
 								break;
 							case 2:
 								if (!(m.denomUnits && m.denomUnits.length)) m.denomUnits = [];
-								m.denomUnits.push($root.cosmos.bank.v1beta1.DenomUnit.decode(r, r.uint32()));
+								m.denomUnits.push(cosmos.bank.v1beta1.DenomUnit.decode(r, r.uint32()));
 								break;
 							case 3:
 								m.base = r.string();
@@ -791,8 +789,8 @@ exports.cosmos = $root.cosmos = (() => {
 					return m;
 				};
 				Metadata.fromObject = function fromObject(d) {
-					if (d instanceof $root.cosmos.bank.v1beta1.Metadata) return d;
-					var m = new $root.cosmos.bank.v1beta1.Metadata();
+					if (d instanceof cosmos.bank.v1beta1.Metadata) return d;
+					var m = new cosmos.bank.v1beta1.Metadata();
 					if (d.description != null) {
 						m.description = String(d.description);
 					}
@@ -803,7 +801,7 @@ exports.cosmos = $root.cosmos = (() => {
 						for (var i = 0; i < d.denomUnits.length; ++i) {
 							if (typeof d.denomUnits[i] !== 'object')
 								throw TypeError('.cosmos.bank.v1beta1.Metadata.denomUnits: object expected');
-							m.denomUnits[i] = $root.cosmos.bank.v1beta1.DenomUnit.fromObject(d.denomUnits[i]);
+							m.denomUnits[i] = cosmos.bank.v1beta1.DenomUnit.fromObject(d.denomUnits[i]);
 						}
 					}
 					if (d.base != null) {
@@ -839,7 +837,7 @@ exports.cosmos = $root.cosmos = (() => {
 					if (m.denomUnits && m.denomUnits.length) {
 						d.denomUnits = [];
 						for (var j = 0; j < m.denomUnits.length; ++j) {
-							d.denomUnits[j] = $root.cosmos.bank.v1beta1.DenomUnit.toObject(m.denomUnits[j], o);
+							d.denomUnits[j] = cosmos.bank.v1beta1.DenomUnit.toObject(m.denomUnits[j], o);
 						}
 					}
 					if (m.base != null && m.hasOwnProperty('base')) {
@@ -857,7 +855,7 @@ exports.cosmos = $root.cosmos = (() => {
 					return d;
 				};
 				Metadata.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return Metadata;
 			})();
@@ -867,7 +865,7 @@ exports.cosmos = $root.cosmos = (() => {
 	})();
 	return cosmos;
 })();
-exports.osmosis = $root.osmosis = (() => {
+export const osmosis = (() => {
 	const osmosis = {};
 	osmosis.gamm = (function() {
 		const gamm = {};
@@ -885,19 +883,19 @@ exports.osmosis = $root.osmosis = (() => {
 				PoolAsset.encode = function encode(m, w) {
 					if (!w) w = $Writer.create();
 					if (m.token != null && Object.hasOwnProperty.call(m, 'token'))
-						$root.cosmos.base.v1beta1.Coin.encode(m.token, w.uint32(10).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.token, w.uint32(10).fork()).ldelim();
 					if (m.weight != null && Object.hasOwnProperty.call(m, 'weight')) w.uint32(18).string(m.weight);
 					return w;
 				};
 				PoolAsset.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.PoolAsset();
+						m = new osmosis.gamm.v1beta1.PoolAsset();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
 							case 1:
-								m.token = $root.cosmos.base.v1beta1.Coin.decode(r, r.uint32());
+								m.token = cosmos.base.v1beta1.Coin.decode(r, r.uint32());
 								break;
 							case 2:
 								m.weight = r.string();
@@ -910,11 +908,11 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				PoolAsset.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.PoolAsset) return d;
-					var m = new $root.osmosis.gamm.v1beta1.PoolAsset();
+					if (d instanceof osmosis.gamm.v1beta1.PoolAsset) return d;
+					var m = new osmosis.gamm.v1beta1.PoolAsset();
 					if (d.token != null) {
 						if (typeof d.token !== 'object') throw TypeError('.osmosis.gamm.v1beta1.PoolAsset.token: object expected');
-						m.token = $root.cosmos.base.v1beta1.Coin.fromObject(d.token);
+						m.token = cosmos.base.v1beta1.Coin.fromObject(d.token);
 					}
 					if (d.weight != null) {
 						m.weight = String(d.weight);
@@ -929,7 +927,7 @@ exports.osmosis = $root.osmosis = (() => {
 						d.weight = '';
 					}
 					if (m.token != null && m.hasOwnProperty('token')) {
-						d.token = $root.cosmos.base.v1beta1.Coin.toObject(m.token, o);
+						d.token = cosmos.base.v1beta1.Coin.toObject(m.token, o);
 					}
 					if (m.weight != null && m.hasOwnProperty('weight')) {
 						d.weight = m.weight;
@@ -937,15 +935,15 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				PoolAsset.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return PoolAsset;
 			})();
 			v1beta1.Msg = (function() {
 				function Msg(rpcImpl, requestDelimited, responseDelimited) {
-					$protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
+					protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
 				}
-				(Msg.prototype = Object.create($protobuf.rpc.Service.prototype)).constructor = Msg;
+				(Msg.prototype = Object.create(protobuf.rpc.Service.prototype)).constructor = Msg;
 				Msg.create = function create(rpcImpl, requestDelimited, responseDelimited) {
 					return new this(rpcImpl, requestDelimited, responseDelimited);
 				};
@@ -953,8 +951,8 @@ exports.osmosis = $root.osmosis = (() => {
 					(Msg.prototype.joinPool = function joinPool(request, callback) {
 						return this.rpcCall(
 							joinPool,
-							$root.osmosis.gamm.v1beta1.MsgJoinPool,
-							$root.osmosis.gamm.v1beta1.MsgJoinPoolResponse,
+							osmosis.gamm.v1beta1.MsgJoinPool,
+							osmosis.gamm.v1beta1.MsgJoinPoolResponse,
 							request,
 							callback
 						);
@@ -966,8 +964,8 @@ exports.osmosis = $root.osmosis = (() => {
 					(Msg.prototype.exitPool = function exitPool(request, callback) {
 						return this.rpcCall(
 							exitPool,
-							$root.osmosis.gamm.v1beta1.MsgExitPool,
-							$root.osmosis.gamm.v1beta1.MsgExitPoolResponse,
+							osmosis.gamm.v1beta1.MsgExitPool,
+							osmosis.gamm.v1beta1.MsgExitPoolResponse,
 							request,
 							callback
 						);
@@ -979,8 +977,8 @@ exports.osmosis = $root.osmosis = (() => {
 					(Msg.prototype.swapExactAmountIn = function swapExactAmountIn(request, callback) {
 						return this.rpcCall(
 							swapExactAmountIn,
-							$root.osmosis.gamm.v1beta1.MsgSwapExactAmountIn,
-							$root.osmosis.gamm.v1beta1.MsgSwapExactAmountInResponse,
+							osmosis.gamm.v1beta1.MsgSwapExactAmountIn,
+							osmosis.gamm.v1beta1.MsgSwapExactAmountInResponse,
 							request,
 							callback
 						);
@@ -992,8 +990,8 @@ exports.osmosis = $root.osmosis = (() => {
 					(Msg.prototype.swapExactAmountOut = function swapExactAmountOut(request, callback) {
 						return this.rpcCall(
 							swapExactAmountOut,
-							$root.osmosis.gamm.v1beta1.MsgSwapExactAmountOut,
-							$root.osmosis.gamm.v1beta1.MsgSwapExactAmountOutResponse,
+							osmosis.gamm.v1beta1.MsgSwapExactAmountOut,
+							osmosis.gamm.v1beta1.MsgSwapExactAmountOutResponse,
 							request,
 							callback
 						);
@@ -1005,8 +1003,8 @@ exports.osmosis = $root.osmosis = (() => {
 					(Msg.prototype.joinSwapExternAmountIn = function joinSwapExternAmountIn(request, callback) {
 						return this.rpcCall(
 							joinSwapExternAmountIn,
-							$root.osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn,
-							$root.osmosis.gamm.v1beta1.MsgJoinSwapExternAmountInResponse,
+							osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn,
+							osmosis.gamm.v1beta1.MsgJoinSwapExternAmountInResponse,
 							request,
 							callback
 						);
@@ -1018,8 +1016,8 @@ exports.osmosis = $root.osmosis = (() => {
 					(Msg.prototype.joinSwapShareAmountOut = function joinSwapShareAmountOut(request, callback) {
 						return this.rpcCall(
 							joinSwapShareAmountOut,
-							$root.osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOut,
-							$root.osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOutResponse,
+							osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOut,
+							osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOutResponse,
 							request,
 							callback
 						);
@@ -1031,8 +1029,8 @@ exports.osmosis = $root.osmosis = (() => {
 					(Msg.prototype.exitSwapExternAmountOut = function exitSwapExternAmountOut(request, callback) {
 						return this.rpcCall(
 							exitSwapExternAmountOut,
-							$root.osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut,
-							$root.osmosis.gamm.v1beta1.MsgExitSwapExternAmountOutResponse,
+							osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut,
+							osmosis.gamm.v1beta1.MsgExitSwapExternAmountOutResponse,
 							request,
 							callback
 						);
@@ -1044,8 +1042,8 @@ exports.osmosis = $root.osmosis = (() => {
 					(Msg.prototype.exitSwapShareAmountIn = function exitSwapShareAmountIn(request, callback) {
 						return this.rpcCall(
 							exitSwapShareAmountIn,
-							$root.osmosis.gamm.v1beta1.MsgExitSwapShareAmountIn,
-							$root.osmosis.gamm.v1beta1.MsgExitSwapShareAmountInResponse,
+							osmosis.gamm.v1beta1.MsgExitSwapShareAmountIn,
+							osmosis.gamm.v1beta1.MsgExitSwapShareAmountInResponse,
 							request,
 							callback
 						);
@@ -1071,10 +1069,10 @@ exports.osmosis = $root.osmosis = (() => {
 					if (!w) w = $Writer.create();
 					if (m.sender != null && Object.hasOwnProperty.call(m, 'sender')) w.uint32(10).string(m.sender);
 					if (m.poolParams != null && Object.hasOwnProperty.call(m, 'poolParams'))
-						$root.osmosis.gamm.v1beta1.PoolParams.encode(m.poolParams, w.uint32(18).fork()).ldelim();
+						osmosis.gamm.v1beta1.PoolParams.encode(m.poolParams, w.uint32(18).fork()).ldelim();
 					if (m.poolAssets != null && m.poolAssets.length) {
 						for (var i = 0; i < m.poolAssets.length; ++i)
-							$root.osmosis.gamm.v1beta1.PoolAsset.encode(m.poolAssets[i], w.uint32(26).fork()).ldelim();
+							osmosis.gamm.v1beta1.PoolAsset.encode(m.poolAssets[i], w.uint32(26).fork()).ldelim();
 					}
 					if (m.futurePoolGovernor != null && Object.hasOwnProperty.call(m, 'futurePoolGovernor'))
 						w.uint32(34).string(m.futurePoolGovernor);
@@ -1083,7 +1081,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgCreateBalancerPool.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgCreateBalancerPool();
+						m = new osmosis.gamm.v1beta1.MsgCreateBalancerPool();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1091,11 +1089,11 @@ exports.osmosis = $root.osmosis = (() => {
 								m.sender = r.string();
 								break;
 							case 2:
-								m.poolParams = $root.osmosis.gamm.v1beta1.PoolParams.decode(r, r.uint32());
+								m.poolParams = osmosis.gamm.v1beta1.PoolParams.decode(r, r.uint32());
 								break;
 							case 3:
 								if (!(m.poolAssets && m.poolAssets.length)) m.poolAssets = [];
-								m.poolAssets.push($root.osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
+								m.poolAssets.push(osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
 								break;
 							case 4:
 								m.futurePoolGovernor = r.string();
@@ -1108,15 +1106,15 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgCreateBalancerPool.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgCreateBalancerPool) return d;
-					var m = new $root.osmosis.gamm.v1beta1.MsgCreateBalancerPool();
+					if (d instanceof osmosis.gamm.v1beta1.MsgCreateBalancerPool) return d;
+					var m = new osmosis.gamm.v1beta1.MsgCreateBalancerPool();
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
 					if (d.poolParams != null) {
 						if (typeof d.poolParams !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.MsgCreateBalancerPool.poolParams: object expected');
-						m.poolParams = $root.osmosis.gamm.v1beta1.PoolParams.fromObject(d.poolParams);
+						m.poolParams = osmosis.gamm.v1beta1.PoolParams.fromObject(d.poolParams);
 					}
 					if (d.poolAssets) {
 						if (!Array.isArray(d.poolAssets))
@@ -1125,7 +1123,7 @@ exports.osmosis = $root.osmosis = (() => {
 						for (var i = 0; i < d.poolAssets.length; ++i) {
 							if (typeof d.poolAssets[i] !== 'object')
 								throw TypeError('.osmosis.gamm.v1beta1.MsgCreateBalancerPool.poolAssets: object expected');
-							m.poolAssets[i] = $root.osmosis.gamm.v1beta1.PoolAsset.fromObject(d.poolAssets[i]);
+							m.poolAssets[i] = osmosis.gamm.v1beta1.PoolAsset.fromObject(d.poolAssets[i]);
 						}
 					}
 					if (d.futurePoolGovernor != null) {
@@ -1148,12 +1146,12 @@ exports.osmosis = $root.osmosis = (() => {
 						d.sender = m.sender;
 					}
 					if (m.poolParams != null && m.hasOwnProperty('poolParams')) {
-						d.poolParams = $root.osmosis.gamm.v1beta1.PoolParams.toObject(m.poolParams, o);
+						d.poolParams = osmosis.gamm.v1beta1.PoolParams.toObject(m.poolParams, o);
 					}
 					if (m.poolAssets && m.poolAssets.length) {
 						d.poolAssets = [];
 						for (var j = 0; j < m.poolAssets.length; ++j) {
-							d.poolAssets[j] = $root.osmosis.gamm.v1beta1.PoolAsset.toObject(m.poolAssets[j], o);
+							d.poolAssets[j] = osmosis.gamm.v1beta1.PoolAsset.toObject(m.poolAssets[j], o);
 						}
 					}
 					if (m.futurePoolGovernor != null && m.hasOwnProperty('futurePoolGovernor')) {
@@ -1162,7 +1160,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				MsgCreateBalancerPool.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgCreateBalancerPool;
 			})();
@@ -1180,7 +1178,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgCreateBalancerPoolResponse.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgCreateBalancerPoolResponse();
+						m = new osmosis.gamm.v1beta1.MsgCreateBalancerPoolResponse();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1192,14 +1190,14 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgCreateBalancerPoolResponse.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgCreateBalancerPoolResponse) return d;
-					return new $root.osmosis.gamm.v1beta1.MsgCreateBalancerPoolResponse();
+					if (d instanceof osmosis.gamm.v1beta1.MsgCreateBalancerPoolResponse) return d;
+					return new osmosis.gamm.v1beta1.MsgCreateBalancerPoolResponse();
 				};
 				MsgCreateBalancerPoolResponse.toObject = function toObject() {
 					return {};
 				};
 				MsgCreateBalancerPoolResponse.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgCreateBalancerPoolResponse;
 			})();
@@ -1223,14 +1221,14 @@ exports.osmosis = $root.osmosis = (() => {
 						w.uint32(26).string(m.shareOutAmount);
 					if (m.tokenInMaxs != null && m.tokenInMaxs.length) {
 						for (var i = 0; i < m.tokenInMaxs.length; ++i)
-							$root.cosmos.base.v1beta1.Coin.encode(m.tokenInMaxs[i], w.uint32(34).fork()).ldelim();
+							cosmos.base.v1beta1.Coin.encode(m.tokenInMaxs[i], w.uint32(34).fork()).ldelim();
 					}
 					return w;
 				};
 				MsgJoinPool.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgJoinPool();
+						m = new osmosis.gamm.v1beta1.MsgJoinPool();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1245,7 +1243,7 @@ exports.osmosis = $root.osmosis = (() => {
 								break;
 							case 4:
 								if (!(m.tokenInMaxs && m.tokenInMaxs.length)) m.tokenInMaxs = [];
-								m.tokenInMaxs.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+								m.tokenInMaxs.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 								break;
 							default:
 								r.skipType(t & 7);
@@ -1255,8 +1253,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgJoinPool.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgJoinPool) return d;
-					var m = new $root.osmosis.gamm.v1beta1.MsgJoinPool();
+					if (d instanceof osmosis.gamm.v1beta1.MsgJoinPool) return d;
+					var m = new osmosis.gamm.v1beta1.MsgJoinPool();
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
@@ -1277,7 +1275,7 @@ exports.osmosis = $root.osmosis = (() => {
 						for (var i = 0; i < d.tokenInMaxs.length; ++i) {
 							if (typeof d.tokenInMaxs[i] !== 'object')
 								throw TypeError('.osmosis.gamm.v1beta1.MsgJoinPool.tokenInMaxs: object expected');
-							m.tokenInMaxs[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.tokenInMaxs[i]);
+							m.tokenInMaxs[i] = cosmos.base.v1beta1.Coin.fromObject(d.tokenInMaxs[i]);
 						}
 					}
 					return m;
@@ -1315,13 +1313,13 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.tokenInMaxs && m.tokenInMaxs.length) {
 						d.tokenInMaxs = [];
 						for (var j = 0; j < m.tokenInMaxs.length; ++j) {
-							d.tokenInMaxs[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.tokenInMaxs[j], o);
+							d.tokenInMaxs[j] = cosmos.base.v1beta1.Coin.toObject(m.tokenInMaxs[j], o);
 						}
 					}
 					return d;
 				};
 				MsgJoinPool.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgJoinPool;
 			})();
@@ -1339,7 +1337,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgJoinPoolResponse.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgJoinPoolResponse();
+						m = new osmosis.gamm.v1beta1.MsgJoinPoolResponse();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1351,14 +1349,14 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgJoinPoolResponse.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgJoinPoolResponse) return d;
-					return new $root.osmosis.gamm.v1beta1.MsgJoinPoolResponse();
+					if (d instanceof osmosis.gamm.v1beta1.MsgJoinPoolResponse) return d;
+					return new osmosis.gamm.v1beta1.MsgJoinPoolResponse();
 				};
 				MsgJoinPoolResponse.toObject = function toObject() {
 					return {};
 				};
 				MsgJoinPoolResponse.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgJoinPoolResponse;
 			})();
@@ -1382,14 +1380,14 @@ exports.osmosis = $root.osmosis = (() => {
 						w.uint32(26).string(m.shareInAmount);
 					if (m.tokenOutMins != null && m.tokenOutMins.length) {
 						for (var i = 0; i < m.tokenOutMins.length; ++i)
-							$root.cosmos.base.v1beta1.Coin.encode(m.tokenOutMins[i], w.uint32(34).fork()).ldelim();
+							cosmos.base.v1beta1.Coin.encode(m.tokenOutMins[i], w.uint32(34).fork()).ldelim();
 					}
 					return w;
 				};
 				MsgExitPool.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgExitPool();
+						m = new osmosis.gamm.v1beta1.MsgExitPool();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1404,7 +1402,7 @@ exports.osmosis = $root.osmosis = (() => {
 								break;
 							case 4:
 								if (!(m.tokenOutMins && m.tokenOutMins.length)) m.tokenOutMins = [];
-								m.tokenOutMins.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+								m.tokenOutMins.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 								break;
 							default:
 								r.skipType(t & 7);
@@ -1414,8 +1412,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgExitPool.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgExitPool) return d;
-					var m = new $root.osmosis.gamm.v1beta1.MsgExitPool();
+					if (d instanceof osmosis.gamm.v1beta1.MsgExitPool) return d;
+					var m = new osmosis.gamm.v1beta1.MsgExitPool();
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
@@ -1436,7 +1434,7 @@ exports.osmosis = $root.osmosis = (() => {
 						for (var i = 0; i < d.tokenOutMins.length; ++i) {
 							if (typeof d.tokenOutMins[i] !== 'object')
 								throw TypeError('.osmosis.gamm.v1beta1.MsgExitPool.tokenOutMins: object expected');
-							m.tokenOutMins[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.tokenOutMins[i]);
+							m.tokenOutMins[i] = cosmos.base.v1beta1.Coin.fromObject(d.tokenOutMins[i]);
 						}
 					}
 					return m;
@@ -1474,13 +1472,13 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.tokenOutMins && m.tokenOutMins.length) {
 						d.tokenOutMins = [];
 						for (var j = 0; j < m.tokenOutMins.length; ++j) {
-							d.tokenOutMins[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.tokenOutMins[j], o);
+							d.tokenOutMins[j] = cosmos.base.v1beta1.Coin.toObject(m.tokenOutMins[j], o);
 						}
 					}
 					return d;
 				};
 				MsgExitPool.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgExitPool;
 			})();
@@ -1498,7 +1496,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgExitPoolResponse.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgExitPoolResponse();
+						m = new osmosis.gamm.v1beta1.MsgExitPoolResponse();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1510,14 +1508,14 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgExitPoolResponse.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgExitPoolResponse) return d;
-					return new $root.osmosis.gamm.v1beta1.MsgExitPoolResponse();
+					if (d instanceof osmosis.gamm.v1beta1.MsgExitPoolResponse) return d;
+					return new osmosis.gamm.v1beta1.MsgExitPoolResponse();
 				};
 				MsgExitPoolResponse.toObject = function toObject() {
 					return {};
 				};
 				MsgExitPoolResponse.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgExitPoolResponse;
 			})();
@@ -1540,7 +1538,7 @@ exports.osmosis = $root.osmosis = (() => {
 				SwapAmountInRoute.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.SwapAmountInRoute();
+						m = new osmosis.gamm.v1beta1.SwapAmountInRoute();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1558,8 +1556,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				SwapAmountInRoute.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.SwapAmountInRoute) return d;
-					var m = new $root.osmosis.gamm.v1beta1.SwapAmountInRoute();
+					if (d instanceof osmosis.gamm.v1beta1.SwapAmountInRoute) return d;
+					var m = new osmosis.gamm.v1beta1.SwapAmountInRoute();
 					if (d.poolId != null) {
 						if ($util.Long) (m.poolId = $util.Long.fromValue(d.poolId)).unsigned = true;
 						else if (typeof d.poolId === 'string') m.poolId = parseInt(d.poolId, 10);
@@ -1598,7 +1596,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				SwapAmountInRoute.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return SwapAmountInRoute;
 			})();
@@ -1619,10 +1617,10 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.sender != null && Object.hasOwnProperty.call(m, 'sender')) w.uint32(10).string(m.sender);
 					if (m.routes != null && m.routes.length) {
 						for (var i = 0; i < m.routes.length; ++i)
-							$root.osmosis.gamm.v1beta1.SwapAmountInRoute.encode(m.routes[i], w.uint32(18).fork()).ldelim();
+							osmosis.gamm.v1beta1.SwapAmountInRoute.encode(m.routes[i], w.uint32(18).fork()).ldelim();
 					}
 					if (m.tokenIn != null && Object.hasOwnProperty.call(m, 'tokenIn'))
-						$root.cosmos.base.v1beta1.Coin.encode(m.tokenIn, w.uint32(26).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.tokenIn, w.uint32(26).fork()).ldelim();
 					if (m.tokenOutMinAmount != null && Object.hasOwnProperty.call(m, 'tokenOutMinAmount'))
 						w.uint32(34).string(m.tokenOutMinAmount);
 					return w;
@@ -1630,7 +1628,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgSwapExactAmountIn.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgSwapExactAmountIn();
+						m = new osmosis.gamm.v1beta1.MsgSwapExactAmountIn();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1639,10 +1637,10 @@ exports.osmosis = $root.osmosis = (() => {
 								break;
 							case 2:
 								if (!(m.routes && m.routes.length)) m.routes = [];
-								m.routes.push($root.osmosis.gamm.v1beta1.SwapAmountInRoute.decode(r, r.uint32()));
+								m.routes.push(osmosis.gamm.v1beta1.SwapAmountInRoute.decode(r, r.uint32()));
 								break;
 							case 3:
-								m.tokenIn = $root.cosmos.base.v1beta1.Coin.decode(r, r.uint32());
+								m.tokenIn = cosmos.base.v1beta1.Coin.decode(r, r.uint32());
 								break;
 							case 4:
 								m.tokenOutMinAmount = r.string();
@@ -1655,8 +1653,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgSwapExactAmountIn.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgSwapExactAmountIn) return d;
-					var m = new $root.osmosis.gamm.v1beta1.MsgSwapExactAmountIn();
+					if (d instanceof osmosis.gamm.v1beta1.MsgSwapExactAmountIn) return d;
+					var m = new osmosis.gamm.v1beta1.MsgSwapExactAmountIn();
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
@@ -1667,13 +1665,13 @@ exports.osmosis = $root.osmosis = (() => {
 						for (var i = 0; i < d.routes.length; ++i) {
 							if (typeof d.routes[i] !== 'object')
 								throw TypeError('.osmosis.gamm.v1beta1.MsgSwapExactAmountIn.routes: object expected');
-							m.routes[i] = $root.osmosis.gamm.v1beta1.SwapAmountInRoute.fromObject(d.routes[i]);
+							m.routes[i] = osmosis.gamm.v1beta1.SwapAmountInRoute.fromObject(d.routes[i]);
 						}
 					}
 					if (d.tokenIn != null) {
 						if (typeof d.tokenIn !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.MsgSwapExactAmountIn.tokenIn: object expected');
-						m.tokenIn = $root.cosmos.base.v1beta1.Coin.fromObject(d.tokenIn);
+						m.tokenIn = cosmos.base.v1beta1.Coin.fromObject(d.tokenIn);
 					}
 					if (d.tokenOutMinAmount != null) {
 						m.tokenOutMinAmount = String(d.tokenOutMinAmount);
@@ -1697,11 +1695,11 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.routes && m.routes.length) {
 						d.routes = [];
 						for (var j = 0; j < m.routes.length; ++j) {
-							d.routes[j] = $root.osmosis.gamm.v1beta1.SwapAmountInRoute.toObject(m.routes[j], o);
+							d.routes[j] = osmosis.gamm.v1beta1.SwapAmountInRoute.toObject(m.routes[j], o);
 						}
 					}
 					if (m.tokenIn != null && m.hasOwnProperty('tokenIn')) {
-						d.tokenIn = $root.cosmos.base.v1beta1.Coin.toObject(m.tokenIn, o);
+						d.tokenIn = cosmos.base.v1beta1.Coin.toObject(m.tokenIn, o);
 					}
 					if (m.tokenOutMinAmount != null && m.hasOwnProperty('tokenOutMinAmount')) {
 						d.tokenOutMinAmount = m.tokenOutMinAmount;
@@ -1709,7 +1707,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				MsgSwapExactAmountIn.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgSwapExactAmountIn;
 			})();
@@ -1727,7 +1725,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgSwapExactAmountInResponse.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgSwapExactAmountInResponse();
+						m = new osmosis.gamm.v1beta1.MsgSwapExactAmountInResponse();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1739,14 +1737,14 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgSwapExactAmountInResponse.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgSwapExactAmountInResponse) return d;
-					return new $root.osmosis.gamm.v1beta1.MsgSwapExactAmountInResponse();
+					if (d instanceof osmosis.gamm.v1beta1.MsgSwapExactAmountInResponse) return d;
+					return new osmosis.gamm.v1beta1.MsgSwapExactAmountInResponse();
 				};
 				MsgSwapExactAmountInResponse.toObject = function toObject() {
 					return {};
 				};
 				MsgSwapExactAmountInResponse.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgSwapExactAmountInResponse;
 			})();
@@ -1769,7 +1767,7 @@ exports.osmosis = $root.osmosis = (() => {
 				SwapAmountOutRoute.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.SwapAmountOutRoute();
+						m = new osmosis.gamm.v1beta1.SwapAmountOutRoute();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1787,8 +1785,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				SwapAmountOutRoute.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.SwapAmountOutRoute) return d;
-					var m = new $root.osmosis.gamm.v1beta1.SwapAmountOutRoute();
+					if (d instanceof osmosis.gamm.v1beta1.SwapAmountOutRoute) return d;
+					var m = new osmosis.gamm.v1beta1.SwapAmountOutRoute();
 					if (d.poolId != null) {
 						if ($util.Long) (m.poolId = $util.Long.fromValue(d.poolId)).unsigned = true;
 						else if (typeof d.poolId === 'string') m.poolId = parseInt(d.poolId, 10);
@@ -1827,7 +1825,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				SwapAmountOutRoute.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return SwapAmountOutRoute;
 			})();
@@ -1848,18 +1846,18 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.sender != null && Object.hasOwnProperty.call(m, 'sender')) w.uint32(10).string(m.sender);
 					if (m.routes != null && m.routes.length) {
 						for (var i = 0; i < m.routes.length; ++i)
-							$root.osmosis.gamm.v1beta1.SwapAmountOutRoute.encode(m.routes[i], w.uint32(18).fork()).ldelim();
+							osmosis.gamm.v1beta1.SwapAmountOutRoute.encode(m.routes[i], w.uint32(18).fork()).ldelim();
 					}
 					if (m.tokenInMaxAmount != null && Object.hasOwnProperty.call(m, 'tokenInMaxAmount'))
 						w.uint32(26).string(m.tokenInMaxAmount);
 					if (m.tokenOut != null && Object.hasOwnProperty.call(m, 'tokenOut'))
-						$root.cosmos.base.v1beta1.Coin.encode(m.tokenOut, w.uint32(34).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.tokenOut, w.uint32(34).fork()).ldelim();
 					return w;
 				};
 				MsgSwapExactAmountOut.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgSwapExactAmountOut();
+						m = new osmosis.gamm.v1beta1.MsgSwapExactAmountOut();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1868,13 +1866,13 @@ exports.osmosis = $root.osmosis = (() => {
 								break;
 							case 2:
 								if (!(m.routes && m.routes.length)) m.routes = [];
-								m.routes.push($root.osmosis.gamm.v1beta1.SwapAmountOutRoute.decode(r, r.uint32()));
+								m.routes.push(osmosis.gamm.v1beta1.SwapAmountOutRoute.decode(r, r.uint32()));
 								break;
 							case 3:
 								m.tokenInMaxAmount = r.string();
 								break;
 							case 4:
-								m.tokenOut = $root.cosmos.base.v1beta1.Coin.decode(r, r.uint32());
+								m.tokenOut = cosmos.base.v1beta1.Coin.decode(r, r.uint32());
 								break;
 							default:
 								r.skipType(t & 7);
@@ -1884,8 +1882,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgSwapExactAmountOut.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgSwapExactAmountOut) return d;
-					var m = new $root.osmosis.gamm.v1beta1.MsgSwapExactAmountOut();
+					if (d instanceof osmosis.gamm.v1beta1.MsgSwapExactAmountOut) return d;
+					var m = new osmosis.gamm.v1beta1.MsgSwapExactAmountOut();
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
@@ -1896,7 +1894,7 @@ exports.osmosis = $root.osmosis = (() => {
 						for (var i = 0; i < d.routes.length; ++i) {
 							if (typeof d.routes[i] !== 'object')
 								throw TypeError('.osmosis.gamm.v1beta1.MsgSwapExactAmountOut.routes: object expected');
-							m.routes[i] = $root.osmosis.gamm.v1beta1.SwapAmountOutRoute.fromObject(d.routes[i]);
+							m.routes[i] = osmosis.gamm.v1beta1.SwapAmountOutRoute.fromObject(d.routes[i]);
 						}
 					}
 					if (d.tokenInMaxAmount != null) {
@@ -1905,7 +1903,7 @@ exports.osmosis = $root.osmosis = (() => {
 					if (d.tokenOut != null) {
 						if (typeof d.tokenOut !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.MsgSwapExactAmountOut.tokenOut: object expected');
-						m.tokenOut = $root.cosmos.base.v1beta1.Coin.fromObject(d.tokenOut);
+						m.tokenOut = cosmos.base.v1beta1.Coin.fromObject(d.tokenOut);
 					}
 					return m;
 				};
@@ -1926,19 +1924,19 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.routes && m.routes.length) {
 						d.routes = [];
 						for (var j = 0; j < m.routes.length; ++j) {
-							d.routes[j] = $root.osmosis.gamm.v1beta1.SwapAmountOutRoute.toObject(m.routes[j], o);
+							d.routes[j] = osmosis.gamm.v1beta1.SwapAmountOutRoute.toObject(m.routes[j], o);
 						}
 					}
 					if (m.tokenInMaxAmount != null && m.hasOwnProperty('tokenInMaxAmount')) {
 						d.tokenInMaxAmount = m.tokenInMaxAmount;
 					}
 					if (m.tokenOut != null && m.hasOwnProperty('tokenOut')) {
-						d.tokenOut = $root.cosmos.base.v1beta1.Coin.toObject(m.tokenOut, o);
+						d.tokenOut = cosmos.base.v1beta1.Coin.toObject(m.tokenOut, o);
 					}
 					return d;
 				};
 				MsgSwapExactAmountOut.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgSwapExactAmountOut;
 			})();
@@ -1956,7 +1954,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgSwapExactAmountOutResponse.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgSwapExactAmountOutResponse();
+						m = new osmosis.gamm.v1beta1.MsgSwapExactAmountOutResponse();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -1968,14 +1966,14 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgSwapExactAmountOutResponse.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgSwapExactAmountOutResponse) return d;
-					return new $root.osmosis.gamm.v1beta1.MsgSwapExactAmountOutResponse();
+					if (d instanceof osmosis.gamm.v1beta1.MsgSwapExactAmountOutResponse) return d;
+					return new osmosis.gamm.v1beta1.MsgSwapExactAmountOutResponse();
 				};
 				MsgSwapExactAmountOutResponse.toObject = function toObject() {
 					return {};
 				};
 				MsgSwapExactAmountOutResponse.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgSwapExactAmountOutResponse;
 			})();
@@ -1995,7 +1993,7 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.sender != null && Object.hasOwnProperty.call(m, 'sender')) w.uint32(10).string(m.sender);
 					if (m.poolId != null && Object.hasOwnProperty.call(m, 'poolId')) w.uint32(16).uint64(m.poolId);
 					if (m.tokenIn != null && Object.hasOwnProperty.call(m, 'tokenIn'))
-						$root.cosmos.base.v1beta1.Coin.encode(m.tokenIn, w.uint32(26).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.tokenIn, w.uint32(26).fork()).ldelim();
 					if (m.shareOutMinAmount != null && Object.hasOwnProperty.call(m, 'shareOutMinAmount'))
 						w.uint32(34).string(m.shareOutMinAmount);
 					return w;
@@ -2003,7 +2001,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgJoinSwapExternAmountIn.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn();
+						m = new osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2014,7 +2012,7 @@ exports.osmosis = $root.osmosis = (() => {
 								m.poolId = r.uint64();
 								break;
 							case 3:
-								m.tokenIn = $root.cosmos.base.v1beta1.Coin.decode(r, r.uint32());
+								m.tokenIn = cosmos.base.v1beta1.Coin.decode(r, r.uint32());
 								break;
 							case 4:
 								m.shareOutMinAmount = r.string();
@@ -2027,8 +2025,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgJoinSwapExternAmountIn.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn) return d;
-					var m = new $root.osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn();
+					if (d instanceof osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn) return d;
+					var m = new osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn();
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
@@ -2042,7 +2040,7 @@ exports.osmosis = $root.osmosis = (() => {
 					if (d.tokenIn != null) {
 						if (typeof d.tokenIn !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn.tokenIn: object expected');
-						m.tokenIn = $root.cosmos.base.v1beta1.Coin.fromObject(d.tokenIn);
+						m.tokenIn = cosmos.base.v1beta1.Coin.fromObject(d.tokenIn);
 					}
 					if (d.shareOutMinAmount != null) {
 						m.shareOutMinAmount = String(d.shareOutMinAmount);
@@ -2075,7 +2073,7 @@ exports.osmosis = $root.osmosis = (() => {
 									: m.poolId;
 					}
 					if (m.tokenIn != null && m.hasOwnProperty('tokenIn')) {
-						d.tokenIn = $root.cosmos.base.v1beta1.Coin.toObject(m.tokenIn, o);
+						d.tokenIn = cosmos.base.v1beta1.Coin.toObject(m.tokenIn, o);
 					}
 					if (m.shareOutMinAmount != null && m.hasOwnProperty('shareOutMinAmount')) {
 						d.shareOutMinAmount = m.shareOutMinAmount;
@@ -2083,7 +2081,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				MsgJoinSwapExternAmountIn.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgJoinSwapExternAmountIn;
 			})();
@@ -2101,7 +2099,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgJoinSwapExternAmountInResponse.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgJoinSwapExternAmountInResponse();
+						m = new osmosis.gamm.v1beta1.MsgJoinSwapExternAmountInResponse();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2113,14 +2111,14 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgJoinSwapExternAmountInResponse.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgJoinSwapExternAmountInResponse) return d;
-					return new $root.osmosis.gamm.v1beta1.MsgJoinSwapExternAmountInResponse();
+					if (d instanceof osmosis.gamm.v1beta1.MsgJoinSwapExternAmountInResponse) return d;
+					return new osmosis.gamm.v1beta1.MsgJoinSwapExternAmountInResponse();
 				};
 				MsgJoinSwapExternAmountInResponse.toObject = function toObject() {
 					return {};
 				};
 				MsgJoinSwapExternAmountInResponse.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgJoinSwapExternAmountInResponse;
 			})();
@@ -2151,7 +2149,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgJoinSwapShareAmountOut.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOut();
+						m = new osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOut();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2178,8 +2176,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgJoinSwapShareAmountOut.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOut) return d;
-					var m = new $root.osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOut();
+					if (d instanceof osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOut) return d;
+					var m = new osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOut();
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
@@ -2239,7 +2237,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				MsgJoinSwapShareAmountOut.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgJoinSwapShareAmountOut;
 			})();
@@ -2257,7 +2255,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgJoinSwapShareAmountOutResponse.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOutResponse();
+						m = new osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOutResponse();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2269,14 +2267,14 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgJoinSwapShareAmountOutResponse.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOutResponse) return d;
-					return new $root.osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOutResponse();
+					if (d instanceof osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOutResponse) return d;
+					return new osmosis.gamm.v1beta1.MsgJoinSwapShareAmountOutResponse();
 				};
 				MsgJoinSwapShareAmountOutResponse.toObject = function toObject() {
 					return {};
 				};
 				MsgJoinSwapShareAmountOutResponse.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgJoinSwapShareAmountOutResponse;
 			})();
@@ -2307,7 +2305,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgExitSwapShareAmountIn.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgExitSwapShareAmountIn();
+						m = new osmosis.gamm.v1beta1.MsgExitSwapShareAmountIn();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2334,8 +2332,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgExitSwapShareAmountIn.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgExitSwapShareAmountIn) return d;
-					var m = new $root.osmosis.gamm.v1beta1.MsgExitSwapShareAmountIn();
+					if (d instanceof osmosis.gamm.v1beta1.MsgExitSwapShareAmountIn) return d;
+					var m = new osmosis.gamm.v1beta1.MsgExitSwapShareAmountIn();
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
@@ -2395,7 +2393,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				MsgExitSwapShareAmountIn.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgExitSwapShareAmountIn;
 			})();
@@ -2413,7 +2411,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgExitSwapShareAmountInResponse.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgExitSwapShareAmountInResponse();
+						m = new osmosis.gamm.v1beta1.MsgExitSwapShareAmountInResponse();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2425,14 +2423,14 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgExitSwapShareAmountInResponse.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgExitSwapShareAmountInResponse) return d;
-					return new $root.osmosis.gamm.v1beta1.MsgExitSwapShareAmountInResponse();
+					if (d instanceof osmosis.gamm.v1beta1.MsgExitSwapShareAmountInResponse) return d;
+					return new osmosis.gamm.v1beta1.MsgExitSwapShareAmountInResponse();
 				};
 				MsgExitSwapShareAmountInResponse.toObject = function toObject() {
 					return {};
 				};
 				MsgExitSwapShareAmountInResponse.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgExitSwapShareAmountInResponse;
 			})();
@@ -2452,7 +2450,7 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.sender != null && Object.hasOwnProperty.call(m, 'sender')) w.uint32(10).string(m.sender);
 					if (m.poolId != null && Object.hasOwnProperty.call(m, 'poolId')) w.uint32(16).uint64(m.poolId);
 					if (m.tokenOut != null && Object.hasOwnProperty.call(m, 'tokenOut'))
-						$root.cosmos.base.v1beta1.Coin.encode(m.tokenOut, w.uint32(26).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.tokenOut, w.uint32(26).fork()).ldelim();
 					if (m.shareInMaxAmount != null && Object.hasOwnProperty.call(m, 'shareInMaxAmount'))
 						w.uint32(34).string(m.shareInMaxAmount);
 					return w;
@@ -2460,7 +2458,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgExitSwapExternAmountOut.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut();
+						m = new osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2471,7 +2469,7 @@ exports.osmosis = $root.osmosis = (() => {
 								m.poolId = r.uint64();
 								break;
 							case 3:
-								m.tokenOut = $root.cosmos.base.v1beta1.Coin.decode(r, r.uint32());
+								m.tokenOut = cosmos.base.v1beta1.Coin.decode(r, r.uint32());
 								break;
 							case 4:
 								m.shareInMaxAmount = r.string();
@@ -2484,8 +2482,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgExitSwapExternAmountOut.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut) return d;
-					var m = new $root.osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut();
+					if (d instanceof osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut) return d;
+					var m = new osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut();
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
@@ -2499,7 +2497,7 @@ exports.osmosis = $root.osmosis = (() => {
 					if (d.tokenOut != null) {
 						if (typeof d.tokenOut !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.MsgExitSwapExternAmountOut.tokenOut: object expected');
-						m.tokenOut = $root.cosmos.base.v1beta1.Coin.fromObject(d.tokenOut);
+						m.tokenOut = cosmos.base.v1beta1.Coin.fromObject(d.tokenOut);
 					}
 					if (d.shareInMaxAmount != null) {
 						m.shareInMaxAmount = String(d.shareInMaxAmount);
@@ -2532,7 +2530,7 @@ exports.osmosis = $root.osmosis = (() => {
 									: m.poolId;
 					}
 					if (m.tokenOut != null && m.hasOwnProperty('tokenOut')) {
-						d.tokenOut = $root.cosmos.base.v1beta1.Coin.toObject(m.tokenOut, o);
+						d.tokenOut = cosmos.base.v1beta1.Coin.toObject(m.tokenOut, o);
 					}
 					if (m.shareInMaxAmount != null && m.hasOwnProperty('shareInMaxAmount')) {
 						d.shareInMaxAmount = m.shareInMaxAmount;
@@ -2540,7 +2538,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				MsgExitSwapExternAmountOut.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgExitSwapExternAmountOut;
 			})();
@@ -2558,7 +2556,7 @@ exports.osmosis = $root.osmosis = (() => {
 				MsgExitSwapExternAmountOutResponse.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.MsgExitSwapExternAmountOutResponse();
+						m = new osmosis.gamm.v1beta1.MsgExitSwapExternAmountOutResponse();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2570,14 +2568,14 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				MsgExitSwapExternAmountOutResponse.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.MsgExitSwapExternAmountOutResponse) return d;
-					return new $root.osmosis.gamm.v1beta1.MsgExitSwapExternAmountOutResponse();
+					if (d instanceof osmosis.gamm.v1beta1.MsgExitSwapExternAmountOutResponse) return d;
+					return new osmosis.gamm.v1beta1.MsgExitSwapExternAmountOutResponse();
 				};
 				MsgExitSwapExternAmountOutResponse.toObject = function toObject() {
 					return {};
 				};
 				MsgExitSwapExternAmountOutResponse.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return MsgExitSwapExternAmountOutResponse;
 			})();
@@ -2597,39 +2595,39 @@ exports.osmosis = $root.osmosis = (() => {
 				SmoothWeightChangeParams.encode = function encode(m, w) {
 					if (!w) w = $Writer.create();
 					if (m.startTime != null && Object.hasOwnProperty.call(m, 'startTime'))
-						$root.google.protobuf.Timestamp.encode(m.startTime, w.uint32(10).fork()).ldelim();
+						google.protobuf.Timestamp.encode(m.startTime, w.uint32(10).fork()).ldelim();
 					if (m.duration != null && Object.hasOwnProperty.call(m, 'duration'))
-						$root.google.protobuf.Duration.encode(m.duration, w.uint32(18).fork()).ldelim();
+						google.protobuf.Duration.encode(m.duration, w.uint32(18).fork()).ldelim();
 					if (m.initialPoolWeights != null && m.initialPoolWeights.length) {
 						for (var i = 0; i < m.initialPoolWeights.length; ++i)
-							$root.osmosis.gamm.v1beta1.PoolAsset.encode(m.initialPoolWeights[i], w.uint32(26).fork()).ldelim();
+							osmosis.gamm.v1beta1.PoolAsset.encode(m.initialPoolWeights[i], w.uint32(26).fork()).ldelim();
 					}
 					if (m.targetPoolWeights != null && m.targetPoolWeights.length) {
 						for (var i = 0; i < m.targetPoolWeights.length; ++i)
-							$root.osmosis.gamm.v1beta1.PoolAsset.encode(m.targetPoolWeights[i], w.uint32(34).fork()).ldelim();
+							osmosis.gamm.v1beta1.PoolAsset.encode(m.targetPoolWeights[i], w.uint32(34).fork()).ldelim();
 					}
 					return w;
 				};
 				SmoothWeightChangeParams.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.SmoothWeightChangeParams();
+						m = new osmosis.gamm.v1beta1.SmoothWeightChangeParams();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
 							case 1:
-								m.startTime = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+								m.startTime = google.protobuf.Timestamp.decode(r, r.uint32());
 								break;
 							case 2:
-								m.duration = $root.google.protobuf.Duration.decode(r, r.uint32());
+								m.duration = google.protobuf.Duration.decode(r, r.uint32());
 								break;
 							case 3:
 								if (!(m.initialPoolWeights && m.initialPoolWeights.length)) m.initialPoolWeights = [];
-								m.initialPoolWeights.push($root.osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
+								m.initialPoolWeights.push(osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
 								break;
 							case 4:
 								if (!(m.targetPoolWeights && m.targetPoolWeights.length)) m.targetPoolWeights = [];
-								m.targetPoolWeights.push($root.osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
+								m.targetPoolWeights.push(osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
 								break;
 							default:
 								r.skipType(t & 7);
@@ -2639,17 +2637,17 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				SmoothWeightChangeParams.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.SmoothWeightChangeParams) return d;
-					var m = new $root.osmosis.gamm.v1beta1.SmoothWeightChangeParams();
+					if (d instanceof osmosis.gamm.v1beta1.SmoothWeightChangeParams) return d;
+					var m = new osmosis.gamm.v1beta1.SmoothWeightChangeParams();
 					if (d.startTime != null) {
 						if (typeof d.startTime !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.SmoothWeightChangeParams.startTime: object expected');
-						m.startTime = $root.google.protobuf.Timestamp.fromObject(d.startTime);
+						m.startTime = google.protobuf.Timestamp.fromObject(d.startTime);
 					}
 					if (d.duration != null) {
 						if (typeof d.duration !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.SmoothWeightChangeParams.duration: object expected');
-						m.duration = $root.google.protobuf.Duration.fromObject(d.duration);
+						m.duration = google.protobuf.Duration.fromObject(d.duration);
 					}
 					if (d.initialPoolWeights) {
 						if (!Array.isArray(d.initialPoolWeights))
@@ -2658,7 +2656,7 @@ exports.osmosis = $root.osmosis = (() => {
 						for (var i = 0; i < d.initialPoolWeights.length; ++i) {
 							if (typeof d.initialPoolWeights[i] !== 'object')
 								throw TypeError('.osmosis.gamm.v1beta1.SmoothWeightChangeParams.initialPoolWeights: object expected');
-							m.initialPoolWeights[i] = $root.osmosis.gamm.v1beta1.PoolAsset.fromObject(d.initialPoolWeights[i]);
+							m.initialPoolWeights[i] = osmosis.gamm.v1beta1.PoolAsset.fromObject(d.initialPoolWeights[i]);
 						}
 					}
 					if (d.targetPoolWeights) {
@@ -2668,7 +2666,7 @@ exports.osmosis = $root.osmosis = (() => {
 						for (var i = 0; i < d.targetPoolWeights.length; ++i) {
 							if (typeof d.targetPoolWeights[i] !== 'object')
 								throw TypeError('.osmosis.gamm.v1beta1.SmoothWeightChangeParams.targetPoolWeights: object expected');
-							m.targetPoolWeights[i] = $root.osmosis.gamm.v1beta1.PoolAsset.fromObject(d.targetPoolWeights[i]);
+							m.targetPoolWeights[i] = osmosis.gamm.v1beta1.PoolAsset.fromObject(d.targetPoolWeights[i]);
 						}
 					}
 					return m;
@@ -2685,27 +2683,27 @@ exports.osmosis = $root.osmosis = (() => {
 						d.duration = null;
 					}
 					if (m.startTime != null && m.hasOwnProperty('startTime')) {
-						d.startTime = $root.google.protobuf.Timestamp.toObject(m.startTime, o);
+						d.startTime = google.protobuf.Timestamp.toObject(m.startTime, o);
 					}
 					if (m.duration != null && m.hasOwnProperty('duration')) {
-						d.duration = $root.google.protobuf.Duration.toObject(m.duration, o);
+						d.duration = google.protobuf.Duration.toObject(m.duration, o);
 					}
 					if (m.initialPoolWeights && m.initialPoolWeights.length) {
 						d.initialPoolWeights = [];
 						for (var j = 0; j < m.initialPoolWeights.length; ++j) {
-							d.initialPoolWeights[j] = $root.osmosis.gamm.v1beta1.PoolAsset.toObject(m.initialPoolWeights[j], o);
+							d.initialPoolWeights[j] = osmosis.gamm.v1beta1.PoolAsset.toObject(m.initialPoolWeights[j], o);
 						}
 					}
 					if (m.targetPoolWeights && m.targetPoolWeights.length) {
 						d.targetPoolWeights = [];
 						for (var j = 0; j < m.targetPoolWeights.length; ++j) {
-							d.targetPoolWeights[j] = $root.osmosis.gamm.v1beta1.PoolAsset.toObject(m.targetPoolWeights[j], o);
+							d.targetPoolWeights[j] = osmosis.gamm.v1beta1.PoolAsset.toObject(m.targetPoolWeights[j], o);
 						}
 					}
 					return d;
 				};
 				SmoothWeightChangeParams.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return SmoothWeightChangeParams;
 			})();
@@ -2724,7 +2722,7 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.swapFee != null && Object.hasOwnProperty.call(m, 'swapFee')) w.uint32(10).string(m.swapFee);
 					if (m.exitFee != null && Object.hasOwnProperty.call(m, 'exitFee')) w.uint32(18).string(m.exitFee);
 					if (m.smoothWeightChangeParams != null && Object.hasOwnProperty.call(m, 'smoothWeightChangeParams'))
-						$root.osmosis.gamm.v1beta1.SmoothWeightChangeParams.encode(
+						osmosis.gamm.v1beta1.SmoothWeightChangeParams.encode(
 							m.smoothWeightChangeParams,
 							w.uint32(26).fork()
 						).ldelim();
@@ -2733,7 +2731,7 @@ exports.osmosis = $root.osmosis = (() => {
 				PoolParams.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.PoolParams();
+						m = new osmosis.gamm.v1beta1.PoolParams();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2744,7 +2742,7 @@ exports.osmosis = $root.osmosis = (() => {
 								m.exitFee = r.string();
 								break;
 							case 3:
-								m.smoothWeightChangeParams = $root.osmosis.gamm.v1beta1.SmoothWeightChangeParams.decode(r, r.uint32());
+								m.smoothWeightChangeParams = osmosis.gamm.v1beta1.SmoothWeightChangeParams.decode(r, r.uint32());
 								break;
 							default:
 								r.skipType(t & 7);
@@ -2754,8 +2752,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				PoolParams.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.PoolParams) return d;
-					var m = new $root.osmosis.gamm.v1beta1.PoolParams();
+					if (d instanceof osmosis.gamm.v1beta1.PoolParams) return d;
+					var m = new osmosis.gamm.v1beta1.PoolParams();
 					if (d.swapFee != null) {
 						m.swapFee = String(d.swapFee);
 					}
@@ -2765,7 +2763,7 @@ exports.osmosis = $root.osmosis = (() => {
 					if (d.smoothWeightChangeParams != null) {
 						if (typeof d.smoothWeightChangeParams !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.PoolParams.smoothWeightChangeParams: object expected');
-						m.smoothWeightChangeParams = $root.osmosis.gamm.v1beta1.SmoothWeightChangeParams.fromObject(
+						m.smoothWeightChangeParams = osmosis.gamm.v1beta1.SmoothWeightChangeParams.fromObject(
 							d.smoothWeightChangeParams
 						);
 					}
@@ -2786,7 +2784,7 @@ exports.osmosis = $root.osmosis = (() => {
 						d.exitFee = m.exitFee;
 					}
 					if (m.smoothWeightChangeParams != null && m.hasOwnProperty('smoothWeightChangeParams')) {
-						d.smoothWeightChangeParams = $root.osmosis.gamm.v1beta1.SmoothWeightChangeParams.toObject(
+						d.smoothWeightChangeParams = osmosis.gamm.v1beta1.SmoothWeightChangeParams.toObject(
 							m.smoothWeightChangeParams,
 							o
 						);
@@ -2794,7 +2792,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				PoolParams.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return PoolParams;
 			})();
@@ -2818,14 +2816,14 @@ exports.osmosis = $root.osmosis = (() => {
 					if (m.address != null && Object.hasOwnProperty.call(m, 'address')) w.uint32(10).string(m.address);
 					if (m.id != null && Object.hasOwnProperty.call(m, 'id')) w.uint32(16).uint64(m.id);
 					if (m.poolParams != null && Object.hasOwnProperty.call(m, 'poolParams'))
-						$root.osmosis.gamm.v1beta1.PoolParams.encode(m.poolParams, w.uint32(26).fork()).ldelim();
+						osmosis.gamm.v1beta1.PoolParams.encode(m.poolParams, w.uint32(26).fork()).ldelim();
 					if (m.futurePoolGovernor != null && Object.hasOwnProperty.call(m, 'futurePoolGovernor'))
 						w.uint32(34).string(m.futurePoolGovernor);
 					if (m.totalShares != null && Object.hasOwnProperty.call(m, 'totalShares'))
-						$root.cosmos.base.v1beta1.Coin.encode(m.totalShares, w.uint32(42).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.totalShares, w.uint32(42).fork()).ldelim();
 					if (m.poolAssets != null && m.poolAssets.length) {
 						for (var i = 0; i < m.poolAssets.length; ++i)
-							$root.osmosis.gamm.v1beta1.PoolAsset.encode(m.poolAssets[i], w.uint32(50).fork()).ldelim();
+							osmosis.gamm.v1beta1.PoolAsset.encode(m.poolAssets[i], w.uint32(50).fork()).ldelim();
 					}
 					if (m.totalWeight != null && Object.hasOwnProperty.call(m, 'totalWeight')) w.uint32(58).string(m.totalWeight);
 					return w;
@@ -2833,7 +2831,7 @@ exports.osmosis = $root.osmosis = (() => {
 				Pool.decode = function decode(r, l) {
 					if (!(r instanceof $Reader)) r = $Reader.create(r);
 					var c = l === undefined ? r.len : r.pos + l,
-						m = new $root.osmosis.gamm.v1beta1.Pool();
+						m = new osmosis.gamm.v1beta1.Pool();
 					while (r.pos < c) {
 						var t = r.uint32();
 						switch (t >>> 3) {
@@ -2844,17 +2842,17 @@ exports.osmosis = $root.osmosis = (() => {
 								m.id = r.uint64();
 								break;
 							case 3:
-								m.poolParams = $root.osmosis.gamm.v1beta1.PoolParams.decode(r, r.uint32());
+								m.poolParams = osmosis.gamm.v1beta1.PoolParams.decode(r, r.uint32());
 								break;
 							case 4:
 								m.futurePoolGovernor = r.string();
 								break;
 							case 5:
-								m.totalShares = $root.cosmos.base.v1beta1.Coin.decode(r, r.uint32());
+								m.totalShares = cosmos.base.v1beta1.Coin.decode(r, r.uint32());
 								break;
 							case 6:
 								if (!(m.poolAssets && m.poolAssets.length)) m.poolAssets = [];
-								m.poolAssets.push($root.osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
+								m.poolAssets.push(osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
 								break;
 							case 7:
 								m.totalWeight = r.string();
@@ -2867,8 +2865,8 @@ exports.osmosis = $root.osmosis = (() => {
 					return m;
 				};
 				Pool.fromObject = function fromObject(d) {
-					if (d instanceof $root.osmosis.gamm.v1beta1.Pool) return d;
-					var m = new $root.osmosis.gamm.v1beta1.Pool();
+					if (d instanceof osmosis.gamm.v1beta1.Pool) return d;
+					var m = new osmosis.gamm.v1beta1.Pool();
 					if (d.address != null) {
 						m.address = String(d.address);
 					}
@@ -2882,7 +2880,7 @@ exports.osmosis = $root.osmosis = (() => {
 					if (d.poolParams != null) {
 						if (typeof d.poolParams !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.Pool.poolParams: object expected');
-						m.poolParams = $root.osmosis.gamm.v1beta1.PoolParams.fromObject(d.poolParams);
+						m.poolParams = osmosis.gamm.v1beta1.PoolParams.fromObject(d.poolParams);
 					}
 					if (d.futurePoolGovernor != null) {
 						m.futurePoolGovernor = String(d.futurePoolGovernor);
@@ -2890,7 +2888,7 @@ exports.osmosis = $root.osmosis = (() => {
 					if (d.totalShares != null) {
 						if (typeof d.totalShares !== 'object')
 							throw TypeError('.osmosis.gamm.v1beta1.Pool.totalShares: object expected');
-						m.totalShares = $root.cosmos.base.v1beta1.Coin.fromObject(d.totalShares);
+						m.totalShares = cosmos.base.v1beta1.Coin.fromObject(d.totalShares);
 					}
 					if (d.poolAssets) {
 						if (!Array.isArray(d.poolAssets)) throw TypeError('.osmosis.gamm.v1beta1.Pool.poolAssets: array expected');
@@ -2898,7 +2896,7 @@ exports.osmosis = $root.osmosis = (() => {
 						for (var i = 0; i < d.poolAssets.length; ++i) {
 							if (typeof d.poolAssets[i] !== 'object')
 								throw TypeError('.osmosis.gamm.v1beta1.Pool.poolAssets: object expected');
-							m.poolAssets[i] = $root.osmosis.gamm.v1beta1.PoolAsset.fromObject(d.poolAssets[i]);
+							m.poolAssets[i] = osmosis.gamm.v1beta1.PoolAsset.fromObject(d.poolAssets[i]);
 						}
 					}
 					if (d.totalWeight != null) {
@@ -2937,18 +2935,18 @@ exports.osmosis = $root.osmosis = (() => {
 									: m.id;
 					}
 					if (m.poolParams != null && m.hasOwnProperty('poolParams')) {
-						d.poolParams = $root.osmosis.gamm.v1beta1.PoolParams.toObject(m.poolParams, o);
+						d.poolParams = osmosis.gamm.v1beta1.PoolParams.toObject(m.poolParams, o);
 					}
 					if (m.futurePoolGovernor != null && m.hasOwnProperty('futurePoolGovernor')) {
 						d.futurePoolGovernor = m.futurePoolGovernor;
 					}
 					if (m.totalShares != null && m.hasOwnProperty('totalShares')) {
-						d.totalShares = $root.cosmos.base.v1beta1.Coin.toObject(m.totalShares, o);
+						d.totalShares = cosmos.base.v1beta1.Coin.toObject(m.totalShares, o);
 					}
 					if (m.poolAssets && m.poolAssets.length) {
 						d.poolAssets = [];
 						for (var j = 0; j < m.poolAssets.length; ++j) {
-							d.poolAssets[j] = $root.osmosis.gamm.v1beta1.PoolAsset.toObject(m.poolAssets[j], o);
+							d.poolAssets[j] = osmosis.gamm.v1beta1.PoolAsset.toObject(m.poolAssets[j], o);
 						}
 					}
 					if (m.totalWeight != null && m.hasOwnProperty('totalWeight')) {
@@ -2957,7 +2955,7 @@ exports.osmosis = $root.osmosis = (() => {
 					return d;
 				};
 				Pool.prototype.toJSON = function toJSON() {
-					return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+					return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 				};
 				return Pool;
 			})();
@@ -2985,19 +2983,19 @@ exports.osmosis = $root.osmosis = (() => {
 				if (m.ID != null && Object.hasOwnProperty.call(m, 'ID')) w.uint32(8).uint64(m.ID);
 				if (m.owner != null && Object.hasOwnProperty.call(m, 'owner')) w.uint32(18).string(m.owner);
 				if (m.duration != null && Object.hasOwnProperty.call(m, 'duration'))
-					$root.google.protobuf.Duration.encode(m.duration, w.uint32(26).fork()).ldelim();
+					google.protobuf.Duration.encode(m.duration, w.uint32(26).fork()).ldelim();
 				if (m.endTime != null && Object.hasOwnProperty.call(m, 'endTime'))
-					$root.google.protobuf.Timestamp.encode(m.endTime, w.uint32(34).fork()).ldelim();
+					google.protobuf.Timestamp.encode(m.endTime, w.uint32(34).fork()).ldelim();
 				if (m.coins != null && m.coins.length) {
 					for (var i = 0; i < m.coins.length; ++i)
-						$root.cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(42).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(42).fork()).ldelim();
 				}
 				return w;
 			};
 			PeriodLock.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.lockup.PeriodLock();
+					m = new osmosis.lockup.PeriodLock();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -3008,14 +3006,14 @@ exports.osmosis = $root.osmosis = (() => {
 							m.owner = r.string();
 							break;
 						case 3:
-							m.duration = $root.google.protobuf.Duration.decode(r, r.uint32());
+							m.duration = google.protobuf.Duration.decode(r, r.uint32());
 							break;
 						case 4:
-							m.endTime = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+							m.endTime = google.protobuf.Timestamp.decode(r, r.uint32());
 							break;
 						case 5:
 							if (!(m.coins && m.coins.length)) m.coins = [];
-							m.coins.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+							m.coins.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 							break;
 						default:
 							r.skipType(t & 7);
@@ -3025,8 +3023,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			PeriodLock.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.lockup.PeriodLock) return d;
-				var m = new $root.osmosis.lockup.PeriodLock();
+				if (d instanceof osmosis.lockup.PeriodLock) return d;
+				var m = new osmosis.lockup.PeriodLock();
 				if (d.ID != null) {
 					if ($util.Long) (m.ID = $util.Long.fromValue(d.ID)).unsigned = true;
 					else if (typeof d.ID === 'string') m.ID = parseInt(d.ID, 10);
@@ -3038,18 +3036,18 @@ exports.osmosis = $root.osmosis = (() => {
 				}
 				if (d.duration != null) {
 					if (typeof d.duration !== 'object') throw TypeError('.osmosis.lockup.PeriodLock.duration: object expected');
-					m.duration = $root.google.protobuf.Duration.fromObject(d.duration);
+					m.duration = google.protobuf.Duration.fromObject(d.duration);
 				}
 				if (d.endTime != null) {
 					if (typeof d.endTime !== 'object') throw TypeError('.osmosis.lockup.PeriodLock.endTime: object expected');
-					m.endTime = $root.google.protobuf.Timestamp.fromObject(d.endTime);
+					m.endTime = google.protobuf.Timestamp.fromObject(d.endTime);
 				}
 				if (d.coins) {
 					if (!Array.isArray(d.coins)) throw TypeError('.osmosis.lockup.PeriodLock.coins: array expected');
 					m.coins = [];
 					for (var i = 0; i < d.coins.length; ++i) {
 						if (typeof d.coins[i] !== 'object') throw TypeError('.osmosis.lockup.PeriodLock.coins: object expected');
-						m.coins[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
+						m.coins[i] = cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
 					}
 				}
 				return m;
@@ -3083,21 +3081,21 @@ exports.osmosis = $root.osmosis = (() => {
 					d.owner = m.owner;
 				}
 				if (m.duration != null && m.hasOwnProperty('duration')) {
-					d.duration = $root.google.protobuf.Duration.toObject(m.duration, o);
+					d.duration = google.protobuf.Duration.toObject(m.duration, o);
 				}
 				if (m.endTime != null && m.hasOwnProperty('endTime')) {
-					d.endTime = $root.google.protobuf.Timestamp.toObject(m.endTime, o);
+					d.endTime = google.protobuf.Timestamp.toObject(m.endTime, o);
 				}
 				if (m.coins && m.coins.length) {
 					d.coins = [];
 					for (var j = 0; j < m.coins.length; ++j) {
-						d.coins[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
+						d.coins[j] = cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
 					}
 				}
 				return d;
 			};
 			PeriodLock.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return PeriodLock;
 		})();
@@ -3125,15 +3123,15 @@ exports.osmosis = $root.osmosis = (() => {
 					w.uint32(8).int32(m.lockQueryType);
 				if (m.denom != null && Object.hasOwnProperty.call(m, 'denom')) w.uint32(18).string(m.denom);
 				if (m.duration != null && Object.hasOwnProperty.call(m, 'duration'))
-					$root.google.protobuf.Duration.encode(m.duration, w.uint32(26).fork()).ldelim();
+					google.protobuf.Duration.encode(m.duration, w.uint32(26).fork()).ldelim();
 				if (m.timestamp != null && Object.hasOwnProperty.call(m, 'timestamp'))
-					$root.google.protobuf.Timestamp.encode(m.timestamp, w.uint32(34).fork()).ldelim();
+					google.protobuf.Timestamp.encode(m.timestamp, w.uint32(34).fork()).ldelim();
 				return w;
 			};
 			QueryCondition.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.lockup.QueryCondition();
+					m = new osmosis.lockup.QueryCondition();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -3144,10 +3142,10 @@ exports.osmosis = $root.osmosis = (() => {
 							m.denom = r.string();
 							break;
 						case 3:
-							m.duration = $root.google.protobuf.Duration.decode(r, r.uint32());
+							m.duration = google.protobuf.Duration.decode(r, r.uint32());
 							break;
 						case 4:
-							m.timestamp = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+							m.timestamp = google.protobuf.Timestamp.decode(r, r.uint32());
 							break;
 						default:
 							r.skipType(t & 7);
@@ -3157,8 +3155,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			QueryCondition.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.lockup.QueryCondition) return d;
-				var m = new $root.osmosis.lockup.QueryCondition();
+				if (d instanceof osmosis.lockup.QueryCondition) return d;
+				var m = new osmosis.lockup.QueryCondition();
 				switch (d.lockQueryType) {
 					case 'ByDuration':
 					case 0:
@@ -3175,12 +3173,12 @@ exports.osmosis = $root.osmosis = (() => {
 				if (d.duration != null) {
 					if (typeof d.duration !== 'object')
 						throw TypeError('.osmosis.lockup.QueryCondition.duration: object expected');
-					m.duration = $root.google.protobuf.Duration.fromObject(d.duration);
+					m.duration = google.protobuf.Duration.fromObject(d.duration);
 				}
 				if (d.timestamp != null) {
 					if (typeof d.timestamp !== 'object')
 						throw TypeError('.osmosis.lockup.QueryCondition.timestamp: object expected');
-					m.timestamp = $root.google.protobuf.Timestamp.fromObject(d.timestamp);
+					m.timestamp = google.protobuf.Timestamp.fromObject(d.timestamp);
 				}
 				return m;
 			};
@@ -3194,21 +3192,21 @@ exports.osmosis = $root.osmosis = (() => {
 					d.timestamp = null;
 				}
 				if (m.lockQueryType != null && m.hasOwnProperty('lockQueryType')) {
-					d.lockQueryType = o.enums === String ? $root.osmosis.lockup.LockQueryType[m.lockQueryType] : m.lockQueryType;
+					d.lockQueryType = o.enums === String ? osmosis.lockup.LockQueryType[m.lockQueryType] : m.lockQueryType;
 				}
 				if (m.denom != null && m.hasOwnProperty('denom')) {
 					d.denom = m.denom;
 				}
 				if (m.duration != null && m.hasOwnProperty('duration')) {
-					d.duration = $root.google.protobuf.Duration.toObject(m.duration, o);
+					d.duration = google.protobuf.Duration.toObject(m.duration, o);
 				}
 				if (m.timestamp != null && m.hasOwnProperty('timestamp')) {
-					d.timestamp = $root.google.protobuf.Timestamp.toObject(m.timestamp, o);
+					d.timestamp = google.protobuf.Timestamp.toObject(m.timestamp, o);
 				}
 				return d;
 			};
 			QueryCondition.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return QueryCondition;
 		})();
@@ -3229,15 +3227,15 @@ exports.osmosis = $root.osmosis = (() => {
 					w.uint32(8).uint64(m.underlyingLockId);
 				if (m.synthDenom != null && Object.hasOwnProperty.call(m, 'synthDenom')) w.uint32(18).string(m.synthDenom);
 				if (m.endTime != null && Object.hasOwnProperty.call(m, 'endTime'))
-					$root.google.protobuf.Timestamp.encode(m.endTime, w.uint32(26).fork()).ldelim();
+					google.protobuf.Timestamp.encode(m.endTime, w.uint32(26).fork()).ldelim();
 				if (m.duration != null && Object.hasOwnProperty.call(m, 'duration'))
-					$root.google.protobuf.Duration.encode(m.duration, w.uint32(34).fork()).ldelim();
+					google.protobuf.Duration.encode(m.duration, w.uint32(34).fork()).ldelim();
 				return w;
 			};
 			SyntheticLock.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.lockup.SyntheticLock();
+					m = new osmosis.lockup.SyntheticLock();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -3248,10 +3246,10 @@ exports.osmosis = $root.osmosis = (() => {
 							m.synthDenom = r.string();
 							break;
 						case 3:
-							m.endTime = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+							m.endTime = google.protobuf.Timestamp.decode(r, r.uint32());
 							break;
 						case 4:
-							m.duration = $root.google.protobuf.Duration.decode(r, r.uint32());
+							m.duration = google.protobuf.Duration.decode(r, r.uint32());
 							break;
 						default:
 							r.skipType(t & 7);
@@ -3261,8 +3259,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			SyntheticLock.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.lockup.SyntheticLock) return d;
-				var m = new $root.osmosis.lockup.SyntheticLock();
+				if (d instanceof osmosis.lockup.SyntheticLock) return d;
+				var m = new osmosis.lockup.SyntheticLock();
 				if (d.underlyingLockId != null) {
 					if ($util.Long) (m.underlyingLockId = $util.Long.fromValue(d.underlyingLockId)).unsigned = true;
 					else if (typeof d.underlyingLockId === 'string') m.underlyingLockId = parseInt(d.underlyingLockId, 10);
@@ -3278,12 +3276,12 @@ exports.osmosis = $root.osmosis = (() => {
 				}
 				if (d.endTime != null) {
 					if (typeof d.endTime !== 'object') throw TypeError('.osmosis.lockup.SyntheticLock.endTime: object expected');
-					m.endTime = $root.google.protobuf.Timestamp.fromObject(d.endTime);
+					m.endTime = google.protobuf.Timestamp.fromObject(d.endTime);
 				}
 				if (d.duration != null) {
 					if (typeof d.duration !== 'object')
 						throw TypeError('.osmosis.lockup.SyntheticLock.duration: object expected');
-					m.duration = $root.google.protobuf.Duration.fromObject(d.duration);
+					m.duration = google.protobuf.Duration.fromObject(d.duration);
 				}
 				return m;
 			};
@@ -3314,23 +3312,23 @@ exports.osmosis = $root.osmosis = (() => {
 					d.synthDenom = m.synthDenom;
 				}
 				if (m.endTime != null && m.hasOwnProperty('endTime')) {
-					d.endTime = $root.google.protobuf.Timestamp.toObject(m.endTime, o);
+					d.endTime = google.protobuf.Timestamp.toObject(m.endTime, o);
 				}
 				if (m.duration != null && m.hasOwnProperty('duration')) {
-					d.duration = $root.google.protobuf.Duration.toObject(m.duration, o);
+					d.duration = google.protobuf.Duration.toObject(m.duration, o);
 				}
 				return d;
 			};
 			SyntheticLock.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return SyntheticLock;
 		})();
 		lockup.Msg = (function() {
 			function Msg(rpcImpl, requestDelimited, responseDelimited) {
-				$protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
+				protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
 			}
-			(Msg.prototype = Object.create($protobuf.rpc.Service.prototype)).constructor = Msg;
+			(Msg.prototype = Object.create(protobuf.rpc.Service.prototype)).constructor = Msg;
 			Msg.create = function create(rpcImpl, requestDelimited, responseDelimited) {
 				return new this(rpcImpl, requestDelimited, responseDelimited);
 			};
@@ -3338,8 +3336,8 @@ exports.osmosis = $root.osmosis = (() => {
 				(Msg.prototype.lockTokens = function lockTokens(request, callback) {
 					return this.rpcCall(
 						lockTokens,
-						$root.osmosis.lockup.MsgLockTokens,
-						$root.osmosis.lockup.MsgLockTokensResponse,
+						osmosis.lockup.MsgLockTokens,
+						osmosis.lockup.MsgLockTokensResponse,
 						request,
 						callback
 					);
@@ -3351,8 +3349,8 @@ exports.osmosis = $root.osmosis = (() => {
 				(Msg.prototype.beginUnlockingAll = function beginUnlockingAll(request, callback) {
 					return this.rpcCall(
 						beginUnlockingAll,
-						$root.osmosis.lockup.MsgBeginUnlockingAll,
-						$root.osmosis.lockup.MsgBeginUnlockingAllResponse,
+						osmosis.lockup.MsgBeginUnlockingAll,
+						osmosis.lockup.MsgBeginUnlockingAllResponse,
 						request,
 						callback
 					);
@@ -3364,8 +3362,8 @@ exports.osmosis = $root.osmosis = (() => {
 				(Msg.prototype.beginUnlocking = function beginUnlocking(request, callback) {
 					return this.rpcCall(
 						beginUnlocking,
-						$root.osmosis.lockup.MsgBeginUnlocking,
-						$root.osmosis.lockup.MsgBeginUnlockingResponse,
+						osmosis.lockup.MsgBeginUnlocking,
+						osmosis.lockup.MsgBeginUnlockingResponse,
 						request,
 						callback
 					);
@@ -3390,17 +3388,17 @@ exports.osmosis = $root.osmosis = (() => {
 				if (!w) w = $Writer.create();
 				if (m.owner != null && Object.hasOwnProperty.call(m, 'owner')) w.uint32(10).string(m.owner);
 				if (m.duration != null && Object.hasOwnProperty.call(m, 'duration'))
-					$root.google.protobuf.Duration.encode(m.duration, w.uint32(18).fork()).ldelim();
+					google.protobuf.Duration.encode(m.duration, w.uint32(18).fork()).ldelim();
 				if (m.coins != null && m.coins.length) {
 					for (var i = 0; i < m.coins.length; ++i)
-						$root.cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(26).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(26).fork()).ldelim();
 				}
 				return w;
 			};
 			MsgLockTokens.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.lockup.MsgLockTokens();
+					m = new osmosis.lockup.MsgLockTokens();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -3408,11 +3406,11 @@ exports.osmosis = $root.osmosis = (() => {
 							m.owner = r.string();
 							break;
 						case 2:
-							m.duration = $root.google.protobuf.Duration.decode(r, r.uint32());
+							m.duration = google.protobuf.Duration.decode(r, r.uint32());
 							break;
 						case 3:
 							if (!(m.coins && m.coins.length)) m.coins = [];
-							m.coins.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+							m.coins.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 							break;
 						default:
 							r.skipType(t & 7);
@@ -3422,22 +3420,22 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgLockTokens.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.lockup.MsgLockTokens) return d;
-				var m = new $root.osmosis.lockup.MsgLockTokens();
+				if (d instanceof osmosis.lockup.MsgLockTokens) return d;
+				var m = new osmosis.lockup.MsgLockTokens();
 				if (d.owner != null) {
 					m.owner = String(d.owner);
 				}
 				if (d.duration != null) {
 					if (typeof d.duration !== 'object')
 						throw TypeError('.osmosis.lockup.MsgLockTokens.duration: object expected');
-					m.duration = $root.google.protobuf.Duration.fromObject(d.duration);
+					m.duration = google.protobuf.Duration.fromObject(d.duration);
 				}
 				if (d.coins) {
 					if (!Array.isArray(d.coins)) throw TypeError('.osmosis.lockup.MsgLockTokens.coins: array expected');
 					m.coins = [];
 					for (var i = 0; i < d.coins.length; ++i) {
 						if (typeof d.coins[i] !== 'object') throw TypeError('.osmosis.lockup.MsgLockTokens.coins: object expected');
-						m.coins[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
+						m.coins[i] = cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
 					}
 				}
 				return m;
@@ -3456,18 +3454,18 @@ exports.osmosis = $root.osmosis = (() => {
 					d.owner = m.owner;
 				}
 				if (m.duration != null && m.hasOwnProperty('duration')) {
-					d.duration = $root.google.protobuf.Duration.toObject(m.duration, o);
+					d.duration = google.protobuf.Duration.toObject(m.duration, o);
 				}
 				if (m.coins && m.coins.length) {
 					d.coins = [];
 					for (var j = 0; j < m.coins.length; ++j) {
-						d.coins[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
+						d.coins[j] = cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
 					}
 				}
 				return d;
 			};
 			MsgLockTokens.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgLockTokens;
 		})();
@@ -3487,7 +3485,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgLockTokensResponse.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.lockup.MsgLockTokensResponse();
+					m = new osmosis.lockup.MsgLockTokensResponse();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -3502,8 +3500,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgLockTokensResponse.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.lockup.MsgLockTokensResponse) return d;
-				var m = new $root.osmosis.lockup.MsgLockTokensResponse();
+				if (d instanceof osmosis.lockup.MsgLockTokensResponse) return d;
+				var m = new osmosis.lockup.MsgLockTokensResponse();
 				if (d.ID != null) {
 					if ($util.Long) (m.ID = $util.Long.fromValue(d.ID)).unsigned = true;
 					else if (typeof d.ID === 'string') m.ID = parseInt(d.ID, 10);
@@ -3534,7 +3532,7 @@ exports.osmosis = $root.osmosis = (() => {
 				return d;
 			};
 			MsgLockTokensResponse.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgLockTokensResponse;
 		})();
@@ -3554,7 +3552,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgBeginUnlockingAll.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.lockup.MsgBeginUnlockingAll();
+					m = new osmosis.lockup.MsgBeginUnlockingAll();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -3569,8 +3567,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgBeginUnlockingAll.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.lockup.MsgBeginUnlockingAll) return d;
-				var m = new $root.osmosis.lockup.MsgBeginUnlockingAll();
+				if (d instanceof osmosis.lockup.MsgBeginUnlockingAll) return d;
+				var m = new osmosis.lockup.MsgBeginUnlockingAll();
 				if (d.owner != null) {
 					m.owner = String(d.owner);
 				}
@@ -3588,7 +3586,7 @@ exports.osmosis = $root.osmosis = (() => {
 				return d;
 			};
 			MsgBeginUnlockingAll.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgBeginUnlockingAll;
 		})();
@@ -3605,20 +3603,20 @@ exports.osmosis = $root.osmosis = (() => {
 				if (!w) w = $Writer.create();
 				if (m.unlocks != null && m.unlocks.length) {
 					for (var i = 0; i < m.unlocks.length; ++i)
-						$root.osmosis.lockup.PeriodLock.encode(m.unlocks[i], w.uint32(10).fork()).ldelim();
+						osmosis.lockup.PeriodLock.encode(m.unlocks[i], w.uint32(10).fork()).ldelim();
 				}
 				return w;
 			};
 			MsgBeginUnlockingAllResponse.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.lockup.MsgBeginUnlockingAllResponse();
+					m = new osmosis.lockup.MsgBeginUnlockingAllResponse();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
 						case 1:
 							if (!(m.unlocks && m.unlocks.length)) m.unlocks = [];
-							m.unlocks.push($root.osmosis.lockup.PeriodLock.decode(r, r.uint32()));
+							m.unlocks.push(osmosis.lockup.PeriodLock.decode(r, r.uint32()));
 							break;
 						default:
 							r.skipType(t & 7);
@@ -3628,8 +3626,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgBeginUnlockingAllResponse.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.lockup.MsgBeginUnlockingAllResponse) return d;
-				var m = new $root.osmosis.lockup.MsgBeginUnlockingAllResponse();
+				if (d instanceof osmosis.lockup.MsgBeginUnlockingAllResponse) return d;
+				var m = new osmosis.lockup.MsgBeginUnlockingAllResponse();
 				if (d.unlocks) {
 					if (!Array.isArray(d.unlocks))
 						throw TypeError('.osmosis.lockup.MsgBeginUnlockingAllResponse.unlocks: array expected');
@@ -3637,7 +3635,7 @@ exports.osmosis = $root.osmosis = (() => {
 					for (var i = 0; i < d.unlocks.length; ++i) {
 						if (typeof d.unlocks[i] !== 'object')
 							throw TypeError('.osmosis.lockup.MsgBeginUnlockingAllResponse.unlocks: object expected');
-						m.unlocks[i] = $root.osmosis.lockup.PeriodLock.fromObject(d.unlocks[i]);
+						m.unlocks[i] = osmosis.lockup.PeriodLock.fromObject(d.unlocks[i]);
 					}
 				}
 				return m;
@@ -3651,13 +3649,13 @@ exports.osmosis = $root.osmosis = (() => {
 				if (m.unlocks && m.unlocks.length) {
 					d.unlocks = [];
 					for (var j = 0; j < m.unlocks.length; ++j) {
-						d.unlocks[j] = $root.osmosis.lockup.PeriodLock.toObject(m.unlocks[j], o);
+						d.unlocks[j] = osmosis.lockup.PeriodLock.toObject(m.unlocks[j], o);
 					}
 				}
 				return d;
 			};
 			MsgBeginUnlockingAllResponse.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgBeginUnlockingAllResponse;
 		})();
@@ -3678,14 +3676,14 @@ exports.osmosis = $root.osmosis = (() => {
 				if (m.ID != null && Object.hasOwnProperty.call(m, 'ID')) w.uint32(16).uint64(m.ID);
 				if (m.coins != null && m.coins.length) {
 					for (var i = 0; i < m.coins.length; ++i)
-						$root.cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(26).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(26).fork()).ldelim();
 				}
 				return w;
 			};
 			MsgBeginUnlocking.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.lockup.MsgBeginUnlocking();
+					m = new osmosis.lockup.MsgBeginUnlocking();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -3697,7 +3695,7 @@ exports.osmosis = $root.osmosis = (() => {
 							break;
 						case 3:
 							if (!(m.coins && m.coins.length)) m.coins = [];
-							m.coins.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+							m.coins.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 							break;
 						default:
 							r.skipType(t & 7);
@@ -3707,8 +3705,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgBeginUnlocking.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.lockup.MsgBeginUnlocking) return d;
-				var m = new $root.osmosis.lockup.MsgBeginUnlocking();
+				if (d instanceof osmosis.lockup.MsgBeginUnlocking) return d;
+				var m = new osmosis.lockup.MsgBeginUnlocking();
 				if (d.owner != null) {
 					m.owner = String(d.owner);
 				}
@@ -3724,7 +3722,7 @@ exports.osmosis = $root.osmosis = (() => {
 					for (var i = 0; i < d.coins.length; ++i) {
 						if (typeof d.coins[i] !== 'object')
 							throw TypeError('.osmosis.lockup.MsgBeginUnlocking.coins: object expected');
-						m.coins[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
+						m.coins[i] = cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
 					}
 				}
 				return m;
@@ -3758,13 +3756,13 @@ exports.osmosis = $root.osmosis = (() => {
 				if (m.coins && m.coins.length) {
 					d.coins = [];
 					for (var j = 0; j < m.coins.length; ++j) {
-						d.coins[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
+						d.coins[j] = cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
 					}
 				}
 				return d;
 			};
 			MsgBeginUnlocking.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgBeginUnlocking;
 		})();
@@ -3784,7 +3782,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgBeginUnlockingResponse.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.lockup.MsgBeginUnlockingResponse();
+					m = new osmosis.lockup.MsgBeginUnlockingResponse();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -3799,8 +3797,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgBeginUnlockingResponse.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.lockup.MsgBeginUnlockingResponse) return d;
-				var m = new $root.osmosis.lockup.MsgBeginUnlockingResponse();
+				if (d instanceof osmosis.lockup.MsgBeginUnlockingResponse) return d;
+				var m = new osmosis.lockup.MsgBeginUnlockingResponse();
 				if (d.success != null) {
 					m.success = Boolean(d.success);
 				}
@@ -3818,7 +3816,7 @@ exports.osmosis = $root.osmosis = (() => {
 				return d;
 			};
 			MsgBeginUnlockingResponse.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgBeginUnlockingResponse;
 		})();
@@ -3828,9 +3826,9 @@ exports.osmosis = $root.osmosis = (() => {
 		const incentives = {};
 		incentives.Msg = (function() {
 			function Msg(rpcImpl, requestDelimited, responseDelimited) {
-				$protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
+				protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
 			}
-			(Msg.prototype = Object.create($protobuf.rpc.Service.prototype)).constructor = Msg;
+			(Msg.prototype = Object.create(protobuf.rpc.Service.prototype)).constructor = Msg;
 			Msg.create = function create(rpcImpl, requestDelimited, responseDelimited) {
 				return new this(rpcImpl, requestDelimited, responseDelimited);
 			};
@@ -3838,8 +3836,8 @@ exports.osmosis = $root.osmosis = (() => {
 				(Msg.prototype.createGauge = function createGauge(request, callback) {
 					return this.rpcCall(
 						createGauge,
-						$root.osmosis.incentives.MsgCreateGauge,
-						$root.osmosis.incentives.MsgCreateGaugeResponse,
+						osmosis.incentives.MsgCreateGauge,
+						osmosis.incentives.MsgCreateGaugeResponse,
 						request,
 						callback
 					);
@@ -3851,8 +3849,8 @@ exports.osmosis = $root.osmosis = (() => {
 				(Msg.prototype.addToGauge = function addToGauge(request, callback) {
 					return this.rpcCall(
 						addToGauge,
-						$root.osmosis.incentives.MsgAddToGauge,
-						$root.osmosis.incentives.MsgAddToGaugeResponse,
+						osmosis.incentives.MsgAddToGauge,
+						osmosis.incentives.MsgAddToGaugeResponse,
 						request,
 						callback
 					);
@@ -3881,13 +3879,13 @@ exports.osmosis = $root.osmosis = (() => {
 				if (m.isPerpetual != null && Object.hasOwnProperty.call(m, 'isPerpetual')) w.uint32(8).bool(m.isPerpetual);
 				if (m.owner != null && Object.hasOwnProperty.call(m, 'owner')) w.uint32(18).string(m.owner);
 				if (m.distributeTo != null && Object.hasOwnProperty.call(m, 'distributeTo'))
-					$root.osmosis.lockup.QueryCondition.encode(m.distributeTo, w.uint32(26).fork()).ldelim();
+					osmosis.lockup.QueryCondition.encode(m.distributeTo, w.uint32(26).fork()).ldelim();
 				if (m.coins != null && m.coins.length) {
 					for (var i = 0; i < m.coins.length; ++i)
-						$root.cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(34).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(34).fork()).ldelim();
 				}
 				if (m.startTime != null && Object.hasOwnProperty.call(m, 'startTime'))
-					$root.google.protobuf.Timestamp.encode(m.startTime, w.uint32(42).fork()).ldelim();
+					google.protobuf.Timestamp.encode(m.startTime, w.uint32(42).fork()).ldelim();
 				if (m.numEpochsPaidOver != null && Object.hasOwnProperty.call(m, 'numEpochsPaidOver'))
 					w.uint32(48).uint64(m.numEpochsPaidOver);
 				return w;
@@ -3895,7 +3893,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgCreateGauge.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.incentives.MsgCreateGauge();
+					m = new osmosis.incentives.MsgCreateGauge();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -3906,14 +3904,14 @@ exports.osmosis = $root.osmosis = (() => {
 							m.owner = r.string();
 							break;
 						case 3:
-							m.distributeTo = $root.osmosis.lockup.QueryCondition.decode(r, r.uint32());
+							m.distributeTo = osmosis.lockup.QueryCondition.decode(r, r.uint32());
 							break;
 						case 4:
 							if (!(m.coins && m.coins.length)) m.coins = [];
-							m.coins.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+							m.coins.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 							break;
 						case 5:
-							m.startTime = $root.google.protobuf.Timestamp.decode(r, r.uint32());
+							m.startTime = google.protobuf.Timestamp.decode(r, r.uint32());
 							break;
 						case 6:
 							m.numEpochsPaidOver = r.uint64();
@@ -3926,8 +3924,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgCreateGauge.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.incentives.MsgCreateGauge) return d;
-				var m = new $root.osmosis.incentives.MsgCreateGauge();
+				if (d instanceof osmosis.incentives.MsgCreateGauge) return d;
+				var m = new osmosis.incentives.MsgCreateGauge();
 				if (d.isPerpetual != null) {
 					m.isPerpetual = Boolean(d.isPerpetual);
 				}
@@ -3937,7 +3935,7 @@ exports.osmosis = $root.osmosis = (() => {
 				if (d.distributeTo != null) {
 					if (typeof d.distributeTo !== 'object')
 						throw TypeError('.osmosis.incentives.MsgCreateGauge.distributeTo: object expected');
-					m.distributeTo = $root.osmosis.lockup.QueryCondition.fromObject(d.distributeTo);
+					m.distributeTo = osmosis.lockup.QueryCondition.fromObject(d.distributeTo);
 				}
 				if (d.coins) {
 					if (!Array.isArray(d.coins)) throw TypeError('.osmosis.incentives.MsgCreateGauge.coins: array expected');
@@ -3945,13 +3943,13 @@ exports.osmosis = $root.osmosis = (() => {
 					for (var i = 0; i < d.coins.length; ++i) {
 						if (typeof d.coins[i] !== 'object')
 							throw TypeError('.osmosis.incentives.MsgCreateGauge.coins: object expected');
-						m.coins[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
+						m.coins[i] = cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
 					}
 				}
 				if (d.startTime != null) {
 					if (typeof d.startTime !== 'object')
 						throw TypeError('.osmosis.incentives.MsgCreateGauge.startTime: object expected');
-					m.startTime = $root.google.protobuf.Timestamp.fromObject(d.startTime);
+					m.startTime = google.protobuf.Timestamp.fromObject(d.startTime);
 				}
 				if (d.numEpochsPaidOver != null) {
 					if ($util.Long) (m.numEpochsPaidOver = $util.Long.fromValue(d.numEpochsPaidOver)).unsigned = true;
@@ -3988,16 +3986,16 @@ exports.osmosis = $root.osmosis = (() => {
 					d.owner = m.owner;
 				}
 				if (m.distributeTo != null && m.hasOwnProperty('distributeTo')) {
-					d.distributeTo = $root.osmosis.lockup.QueryCondition.toObject(m.distributeTo, o);
+					d.distributeTo = osmosis.lockup.QueryCondition.toObject(m.distributeTo, o);
 				}
 				if (m.coins && m.coins.length) {
 					d.coins = [];
 					for (var j = 0; j < m.coins.length; ++j) {
-						d.coins[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
+						d.coins[j] = cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
 					}
 				}
 				if (m.startTime != null && m.hasOwnProperty('startTime')) {
-					d.startTime = $root.google.protobuf.Timestamp.toObject(m.startTime, o);
+					d.startTime = google.protobuf.Timestamp.toObject(m.startTime, o);
 				}
 				if (m.numEpochsPaidOver != null && m.hasOwnProperty('numEpochsPaidOver')) {
 					if (typeof m.numEpochsPaidOver === 'number')
@@ -4013,7 +4011,7 @@ exports.osmosis = $root.osmosis = (() => {
 				return d;
 			};
 			MsgCreateGauge.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgCreateGauge;
 		})();
@@ -4031,7 +4029,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgCreateGaugeResponse.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.incentives.MsgCreateGaugeResponse();
+					m = new osmosis.incentives.MsgCreateGaugeResponse();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4043,14 +4041,14 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgCreateGaugeResponse.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.incentives.MsgCreateGaugeResponse) return d;
-				return new $root.osmosis.incentives.MsgCreateGaugeResponse();
+				if (d instanceof osmosis.incentives.MsgCreateGaugeResponse) return d;
+				return new osmosis.incentives.MsgCreateGaugeResponse();
 			};
 			MsgCreateGaugeResponse.toObject = function toObject() {
 				return {};
 			};
 			MsgCreateGaugeResponse.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgCreateGaugeResponse;
 		})();
@@ -4071,14 +4069,14 @@ exports.osmosis = $root.osmosis = (() => {
 				if (m.gaugeId != null && Object.hasOwnProperty.call(m, 'gaugeId')) w.uint32(16).uint64(m.gaugeId);
 				if (m.rewards != null && m.rewards.length) {
 					for (var i = 0; i < m.rewards.length; ++i)
-						$root.cosmos.base.v1beta1.Coin.encode(m.rewards[i], w.uint32(26).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.rewards[i], w.uint32(26).fork()).ldelim();
 				}
 				return w;
 			};
 			MsgAddToGauge.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.incentives.MsgAddToGauge();
+					m = new osmosis.incentives.MsgAddToGauge();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4090,7 +4088,7 @@ exports.osmosis = $root.osmosis = (() => {
 							break;
 						case 3:
 							if (!(m.rewards && m.rewards.length)) m.rewards = [];
-							m.rewards.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+							m.rewards.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 							break;
 						default:
 							r.skipType(t & 7);
@@ -4100,8 +4098,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgAddToGauge.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.incentives.MsgAddToGauge) return d;
-				var m = new $root.osmosis.incentives.MsgAddToGauge();
+				if (d instanceof osmosis.incentives.MsgAddToGauge) return d;
+				var m = new osmosis.incentives.MsgAddToGauge();
 				if (d.owner != null) {
 					m.owner = String(d.owner);
 				}
@@ -4118,7 +4116,7 @@ exports.osmosis = $root.osmosis = (() => {
 					for (var i = 0; i < d.rewards.length; ++i) {
 						if (typeof d.rewards[i] !== 'object')
 							throw TypeError('.osmosis.incentives.MsgAddToGauge.rewards: object expected');
-						m.rewards[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.rewards[i]);
+						m.rewards[i] = cosmos.base.v1beta1.Coin.fromObject(d.rewards[i]);
 					}
 				}
 				return m;
@@ -4152,13 +4150,13 @@ exports.osmosis = $root.osmosis = (() => {
 				if (m.rewards && m.rewards.length) {
 					d.rewards = [];
 					for (var j = 0; j < m.rewards.length; ++j) {
-						d.rewards[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.rewards[j], o);
+						d.rewards[j] = cosmos.base.v1beta1.Coin.toObject(m.rewards[j], o);
 					}
 				}
 				return d;
 			};
 			MsgAddToGauge.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgAddToGauge;
 		})();
@@ -4176,7 +4174,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgAddToGaugeResponse.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.incentives.MsgAddToGaugeResponse();
+					m = new osmosis.incentives.MsgAddToGaugeResponse();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4188,14 +4186,14 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgAddToGaugeResponse.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.incentives.MsgAddToGaugeResponse) return d;
-				return new $root.osmosis.incentives.MsgAddToGaugeResponse();
+				if (d instanceof osmosis.incentives.MsgAddToGaugeResponse) return d;
+				return new osmosis.incentives.MsgAddToGaugeResponse();
 			};
 			MsgAddToGaugeResponse.toObject = function toObject() {
 				return {};
 			};
 			MsgAddToGaugeResponse.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgAddToGaugeResponse;
 		})();
@@ -4205,9 +4203,9 @@ exports.osmosis = $root.osmosis = (() => {
 		const superfluid = {};
 		superfluid.Msg = (function() {
 			function Msg(rpcImpl, requestDelimited, responseDelimited) {
-				$protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
+				protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
 			}
-			(Msg.prototype = Object.create($protobuf.rpc.Service.prototype)).constructor = Msg;
+			(Msg.prototype = Object.create(protobuf.rpc.Service.prototype)).constructor = Msg;
 			Msg.create = function create(rpcImpl, requestDelimited, responseDelimited) {
 				return new this(rpcImpl, requestDelimited, responseDelimited);
 			};
@@ -4215,8 +4213,8 @@ exports.osmosis = $root.osmosis = (() => {
 				(Msg.prototype.superfluidDelegate = function superfluidDelegate(request, callback) {
 					return this.rpcCall(
 						superfluidDelegate,
-						$root.osmosis.superfluid.MsgSuperfluidDelegate,
-						$root.osmosis.superfluid.MsgSuperfluidDelegateResponse,
+						osmosis.superfluid.MsgSuperfluidDelegate,
+						osmosis.superfluid.MsgSuperfluidDelegateResponse,
 						request,
 						callback
 					);
@@ -4228,8 +4226,8 @@ exports.osmosis = $root.osmosis = (() => {
 				(Msg.prototype.superfluidUndelegate = function superfluidUndelegate(request, callback) {
 					return this.rpcCall(
 						superfluidUndelegate,
-						$root.osmosis.superfluid.MsgSuperfluidUndelegate,
-						$root.osmosis.superfluid.MsgSuperfluidUndelegateResponse,
+						osmosis.superfluid.MsgSuperfluidUndelegate,
+						osmosis.superfluid.MsgSuperfluidUndelegateResponse,
 						request,
 						callback
 					);
@@ -4241,8 +4239,8 @@ exports.osmosis = $root.osmosis = (() => {
 				(Msg.prototype.superfluidUnbondLock = function superfluidUnbondLock(request, callback) {
 					return this.rpcCall(
 						superfluidUnbondLock,
-						$root.osmosis.superfluid.MsgSuperfluidUnbondLock,
-						$root.osmosis.superfluid.MsgSuperfluidUnbondLockResponse,
+						osmosis.superfluid.MsgSuperfluidUnbondLock,
+						osmosis.superfluid.MsgSuperfluidUnbondLockResponse,
 						request,
 						callback
 					);
@@ -4254,8 +4252,8 @@ exports.osmosis = $root.osmosis = (() => {
 				(Msg.prototype.lockAndSuperfluidDelegate = function lockAndSuperfluidDelegate(request, callback) {
 					return this.rpcCall(
 						lockAndSuperfluidDelegate,
-						$root.osmosis.superfluid.MsgLockAndSuperfluidDelegate,
-						$root.osmosis.superfluid.MsgLockAndSuperfluidDelegateResponse,
+						osmosis.superfluid.MsgLockAndSuperfluidDelegate,
+						osmosis.superfluid.MsgLockAndSuperfluidDelegateResponse,
 						request,
 						callback
 					);
@@ -4285,7 +4283,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgSuperfluidDelegate.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.superfluid.MsgSuperfluidDelegate();
+					m = new osmosis.superfluid.MsgSuperfluidDelegate();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4306,8 +4304,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgSuperfluidDelegate.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.superfluid.MsgSuperfluidDelegate) return d;
-				var m = new $root.osmosis.superfluid.MsgSuperfluidDelegate();
+				if (d instanceof osmosis.superfluid.MsgSuperfluidDelegate) return d;
+				var m = new osmosis.superfluid.MsgSuperfluidDelegate();
 				if (d.sender != null) {
 					m.sender = String(d.sender);
 				}
@@ -4353,7 +4351,7 @@ exports.osmosis = $root.osmosis = (() => {
 				return d;
 			};
 			MsgSuperfluidDelegate.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgSuperfluidDelegate;
 		})();
@@ -4371,7 +4369,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgSuperfluidDelegateResponse.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.superfluid.MsgSuperfluidDelegateResponse();
+					m = new osmosis.superfluid.MsgSuperfluidDelegateResponse();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4383,14 +4381,14 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgSuperfluidDelegateResponse.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.superfluid.MsgSuperfluidDelegateResponse) return d;
-				return new $root.osmosis.superfluid.MsgSuperfluidDelegateResponse();
+				if (d instanceof osmosis.superfluid.MsgSuperfluidDelegateResponse) return d;
+				return new osmosis.superfluid.MsgSuperfluidDelegateResponse();
 			};
 			MsgSuperfluidDelegateResponse.toObject = function toObject() {
 				return {};
 			};
 			MsgSuperfluidDelegateResponse.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgSuperfluidDelegateResponse;
 		})();
@@ -4412,7 +4410,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgSuperfluidUndelegate.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.superfluid.MsgSuperfluidUndelegate();
+					m = new osmosis.superfluid.MsgSuperfluidUndelegate();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4430,8 +4428,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgSuperfluidUndelegate.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.superfluid.MsgSuperfluidUndelegate) return d;
-				var m = new $root.osmosis.superfluid.MsgSuperfluidUndelegate();
+				if (d instanceof osmosis.superfluid.MsgSuperfluidUndelegate) return d;
+				var m = new osmosis.superfluid.MsgSuperfluidUndelegate();
 				if (d.sender != null) {
 					m.sender = String(d.sender);
 				}
@@ -4470,7 +4468,7 @@ exports.osmosis = $root.osmosis = (() => {
 				return d;
 			};
 			MsgSuperfluidUndelegate.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgSuperfluidUndelegate;
 		})();
@@ -4488,7 +4486,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgSuperfluidUndelegateResponse.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.superfluid.MsgSuperfluidUndelegateResponse();
+					m = new osmosis.superfluid.MsgSuperfluidUndelegateResponse();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4500,14 +4498,14 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgSuperfluidUndelegateResponse.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.superfluid.MsgSuperfluidUndelegateResponse) return d;
-				return new $root.osmosis.superfluid.MsgSuperfluidUndelegateResponse();
+				if (d instanceof osmosis.superfluid.MsgSuperfluidUndelegateResponse) return d;
+				return new osmosis.superfluid.MsgSuperfluidUndelegateResponse();
 			};
 			MsgSuperfluidUndelegateResponse.toObject = function toObject() {
 				return {};
 			};
 			MsgSuperfluidUndelegateResponse.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgSuperfluidUndelegateResponse;
 		})();
@@ -4529,7 +4527,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgSuperfluidUnbondLock.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.superfluid.MsgSuperfluidUnbondLock();
+					m = new osmosis.superfluid.MsgSuperfluidUnbondLock();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4547,8 +4545,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgSuperfluidUnbondLock.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.superfluid.MsgSuperfluidUnbondLock) return d;
-				var m = new $root.osmosis.superfluid.MsgSuperfluidUnbondLock();
+				if (d instanceof osmosis.superfluid.MsgSuperfluidUnbondLock) return d;
+				var m = new osmosis.superfluid.MsgSuperfluidUnbondLock();
 				if (d.sender != null) {
 					m.sender = String(d.sender);
 				}
@@ -4587,7 +4585,7 @@ exports.osmosis = $root.osmosis = (() => {
 				return d;
 			};
 			MsgSuperfluidUnbondLock.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgSuperfluidUnbondLock;
 		})();
@@ -4605,7 +4603,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgSuperfluidUnbondLockResponse.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.superfluid.MsgSuperfluidUnbondLockResponse();
+					m = new osmosis.superfluid.MsgSuperfluidUnbondLockResponse();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4617,14 +4615,14 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgSuperfluidUnbondLockResponse.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.superfluid.MsgSuperfluidUnbondLockResponse) return d;
-				return new $root.osmosis.superfluid.MsgSuperfluidUnbondLockResponse();
+				if (d instanceof osmosis.superfluid.MsgSuperfluidUnbondLockResponse) return d;
+				return new osmosis.superfluid.MsgSuperfluidUnbondLockResponse();
 			};
 			MsgSuperfluidUnbondLockResponse.toObject = function toObject() {
 				return {};
 			};
 			MsgSuperfluidUnbondLockResponse.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgSuperfluidUnbondLockResponse;
 		})();
@@ -4644,7 +4642,7 @@ exports.osmosis = $root.osmosis = (() => {
 				if (m.sender != null && Object.hasOwnProperty.call(m, 'sender')) w.uint32(10).string(m.sender);
 				if (m.coins != null && m.coins.length) {
 					for (var i = 0; i < m.coins.length; ++i)
-						$root.cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(18).fork()).ldelim();
+						cosmos.base.v1beta1.Coin.encode(m.coins[i], w.uint32(18).fork()).ldelim();
 				}
 				if (m.valAddr != null && Object.hasOwnProperty.call(m, 'valAddr')) w.uint32(26).string(m.valAddr);
 				return w;
@@ -4652,7 +4650,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgLockAndSuperfluidDelegate.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.superfluid.MsgLockAndSuperfluidDelegate();
+					m = new osmosis.superfluid.MsgLockAndSuperfluidDelegate();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4661,7 +4659,7 @@ exports.osmosis = $root.osmosis = (() => {
 							break;
 						case 2:
 							if (!(m.coins && m.coins.length)) m.coins = [];
-							m.coins.push($root.cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
+							m.coins.push(cosmos.base.v1beta1.Coin.decode(r, r.uint32()));
 							break;
 						case 3:
 							m.valAddr = r.string();
@@ -4674,8 +4672,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgLockAndSuperfluidDelegate.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.superfluid.MsgLockAndSuperfluidDelegate) return d;
-				var m = new $root.osmosis.superfluid.MsgLockAndSuperfluidDelegate();
+				if (d instanceof osmosis.superfluid.MsgLockAndSuperfluidDelegate) return d;
+				var m = new osmosis.superfluid.MsgLockAndSuperfluidDelegate();
 				if (d.sender != null) {
 					m.sender = String(d.sender);
 				}
@@ -4686,7 +4684,7 @@ exports.osmosis = $root.osmosis = (() => {
 					for (var i = 0; i < d.coins.length; ++i) {
 						if (typeof d.coins[i] !== 'object')
 							throw TypeError('.osmosis.superfluid.MsgLockAndSuperfluidDelegate.coins: object expected');
-						m.coins[i] = $root.cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
+						m.coins[i] = cosmos.base.v1beta1.Coin.fromObject(d.coins[i]);
 					}
 				}
 				if (d.valAddr != null) {
@@ -4710,7 +4708,7 @@ exports.osmosis = $root.osmosis = (() => {
 				if (m.coins && m.coins.length) {
 					d.coins = [];
 					for (var j = 0; j < m.coins.length; ++j) {
-						d.coins[j] = $root.cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
+						d.coins[j] = cosmos.base.v1beta1.Coin.toObject(m.coins[j], o);
 					}
 				}
 				if (m.valAddr != null && m.hasOwnProperty('valAddr')) {
@@ -4719,7 +4717,7 @@ exports.osmosis = $root.osmosis = (() => {
 				return d;
 			};
 			MsgLockAndSuperfluidDelegate.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgLockAndSuperfluidDelegate;
 		})();
@@ -4739,7 +4737,7 @@ exports.osmosis = $root.osmosis = (() => {
 			MsgLockAndSuperfluidDelegateResponse.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.osmosis.superfluid.MsgLockAndSuperfluidDelegateResponse();
+					m = new osmosis.superfluid.MsgLockAndSuperfluidDelegateResponse();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4754,8 +4752,8 @@ exports.osmosis = $root.osmosis = (() => {
 				return m;
 			};
 			MsgLockAndSuperfluidDelegateResponse.fromObject = function fromObject(d) {
-				if (d instanceof $root.osmosis.superfluid.MsgLockAndSuperfluidDelegateResponse) return d;
-				var m = new $root.osmosis.superfluid.MsgLockAndSuperfluidDelegateResponse();
+				if (d instanceof osmosis.superfluid.MsgLockAndSuperfluidDelegateResponse) return d;
+				var m = new osmosis.superfluid.MsgLockAndSuperfluidDelegateResponse();
 				if (d.ID != null) {
 					if ($util.Long) (m.ID = $util.Long.fromValue(d.ID)).unsigned = true;
 					else if (typeof d.ID === 'string') m.ID = parseInt(d.ID, 10);
@@ -4786,7 +4784,7 @@ exports.osmosis = $root.osmosis = (() => {
 				return d;
 			};
 			MsgLockAndSuperfluidDelegateResponse.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return MsgLockAndSuperfluidDelegateResponse;
 		})();
@@ -4794,7 +4792,7 @@ exports.osmosis = $root.osmosis = (() => {
 	})();
 	return osmosis;
 })();
-exports.google = $root.google = (() => {
+export const google = (() => {
 	const google = {};
 	google.protobuf = (function() {
 		const protobuf = {};
@@ -4816,7 +4814,7 @@ exports.google = $root.google = (() => {
 			Duration.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.google.protobuf.Duration();
+					m = new google.protobuf.Duration();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4834,8 +4832,8 @@ exports.google = $root.google = (() => {
 				return m;
 			};
 			Duration.fromObject = function fromObject(d) {
-				if (d instanceof $root.google.protobuf.Duration) return d;
-				var m = new $root.google.protobuf.Duration();
+				if (d instanceof google.protobuf.Duration) return d;
+				var m = new google.protobuf.Duration();
 				if (d.seconds != null) {
 					if ($util.Long) (m.seconds = $util.Long.fromValue(d.seconds)).unsigned = false;
 					else if (typeof d.seconds === 'string') m.seconds = parseInt(d.seconds, 10);
@@ -4874,7 +4872,7 @@ exports.google = $root.google = (() => {
 				return d;
 			};
 			Duration.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return Duration;
 		})();
@@ -4896,7 +4894,7 @@ exports.google = $root.google = (() => {
 			Timestamp.decode = function decode(r, l) {
 				if (!(r instanceof $Reader)) r = $Reader.create(r);
 				var c = l === undefined ? r.len : r.pos + l,
-					m = new $root.google.protobuf.Timestamp();
+					m = new google.protobuf.Timestamp();
 				while (r.pos < c) {
 					var t = r.uint32();
 					switch (t >>> 3) {
@@ -4914,8 +4912,8 @@ exports.google = $root.google = (() => {
 				return m;
 			};
 			Timestamp.fromObject = function fromObject(d) {
-				if (d instanceof $root.google.protobuf.Timestamp) return d;
-				var m = new $root.google.protobuf.Timestamp();
+				if (d instanceof google.protobuf.Timestamp) return d;
+				var m = new google.protobuf.Timestamp();
 				if (d.seconds != null) {
 					if ($util.Long) (m.seconds = $util.Long.fromValue(d.seconds)).unsigned = false;
 					else if (typeof d.seconds === 'string') m.seconds = parseInt(d.seconds, 10);
@@ -4954,7 +4952,7 @@ exports.google = $root.google = (() => {
 				return d;
 			};
 			Timestamp.prototype.toJSON = function toJSON() {
-				return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+				return this.constructor.toObject(this, protobuf.util.toJSONOptions);
 			};
 			return Timestamp;
 		})();
@@ -4962,4 +4960,3 @@ exports.google = $root.google = (() => {
 	})();
 	return google;
 })();
-module.exports = $root;

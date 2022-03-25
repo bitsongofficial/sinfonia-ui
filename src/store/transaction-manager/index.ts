@@ -1,6 +1,9 @@
+import { osmosisRegistry } from '@/signing/registry';
+import useConfig from '@/store/config';
+import useAuth from '@/store/auth';
 import { amountIBCFromCoin, amountFromCoin } from '@/common/numbers'
 import { TransactionManager } from '@/signing/transaction-manager'
-import { Token, Transaction } from '@/types'
+import { LockableDurationWithApr, Token, Transaction } from '@/types'
 import { Coin } from '@cosmjs/proto-signing'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
@@ -60,6 +63,57 @@ const useTransactionManager = defineStore('transactionManager', {
         this.loading = false
       }
     },
+		async lockTokens(duration: LockableDurationWithApr, coins: Coin[]) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+      try {
+        this.loading = true
+
+				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+					const signer = await window.keplr.getOfflineSignerAuto(configStore.osmosisToken.chainID)
+					const manager = new TransactionManager(signer, configStore.osmosisToken)
+
+					const tsx = await manager.lockTokens(
+						authStore.osmosisAddress,
+						duration.duration,
+						coins
+					)
+
+					console.log(tsx)
+				}
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+		async beginUnlocking(id: string) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+      try {
+        this.loading = true
+
+				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+					const signer = await window.keplr.getOfflineSignerAuto(configStore.osmosisToken.chainID)
+					const manager = new TransactionManager(signer, configStore.osmosisToken)
+
+					const tsx = await manager.beginUnlocking(
+						authStore.osmosisAddress,
+						id
+					)
+
+					console.log(tsx)
+				}
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+        this.loading = false
+      }
+    }
 	},
   persistedState: {
 		persist: true,
