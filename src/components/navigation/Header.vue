@@ -10,7 +10,7 @@
         <RouterLink to="/fantokens">
             <Logo></Logo>
         </RouterLink>
-        <div class="row items-center">
+        <!-- <div class="row items-center">
             <IconButton class="q-mr-20" icon="setting" width="20" height="20" size="sm"></IconButton>
             <div class="settings">
                 <q-toggle
@@ -19,6 +19,6 @@
                     class="dark-mode-toggle"
                 />
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
