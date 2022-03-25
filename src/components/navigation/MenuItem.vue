@@ -2,19 +2,28 @@
     import { RouterLink } from "vue-router"
     import IconButton from '../buttons/IconButton.vue'
 
-    const props = defineProps(['icon', 'width', 'height', 'url'])
-    const icon = props.icon
-    const width = props.width ? props.width : 20
-    const height = props.height ? props.height : 20
+    const props = defineProps<{
+        icon: {name: string, width: number, height: number},
+        url: string,
+        isLink?: boolean,
+    }>()
+    const width = props.icon.width ? props.icon.width : 20
+    const height = props.icon.height ? props.icon.height : 20
     const url = props.url ? props.url : "/"
 </script>
 <template>
     <div class="menu-item">
-        <RouterLink :to="url" class="relative-position row items-center">
-            <IconButton :icon="icon" :width="width" :height="height" class="fs-20 min-s-50"></IconButton>
+        <RouterLink v-if="!isLink" :to="url" class="relative-position row items-center">
+            <IconButton :icon="icon.name" :width="width" :height="height" class="fs-20 min-s-50"></IconButton>
             <div class="absolute text-white">
                 <slot></slot>
             </div>
         </RouterLink>
+        <a v-else :href="url" target="_BLANK" class="relative-position row items-center">
+            <IconButton :icon="icon.name" :width="width" :height="height" class="fs-20 min-s-50"></IconButton>
+            <div class="absolute text-white">
+                <slot></slot>
+            </div>
+        </a>
     </div>
 </template>

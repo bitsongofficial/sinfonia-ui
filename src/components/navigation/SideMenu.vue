@@ -3,19 +3,19 @@
 </script>
 <template>
     <div class="column min-width justify-around items-center bg-rounded-translucent q-px-20 q-py-28">
-        <MenuItem icon="list" width="19" height="13" class="q-mb-lg" url="/fantokens">
+        <MenuItem :icon="{name: 'list', width:19, height:13}" class="q-mb-lg" url="/fantokens">
             DEX
         </MenuItem>
-        <MenuItem icon="refresh" class="q-mb-lg" url="/swap">
+        <MenuItem :icon="{name: 'refresh', width:21, height:17}" class="q-mb-lg" url="/swap">
             Swap
         </MenuItem>
-        <MenuItem icon="stack" class="q-mb-lg" url="/pools">
+        <MenuItem :icon="{name: 'stack', width:17, height:17}" class="q-mb-lg" url="/pools">
             Pool
         </MenuItem>
-        <MenuItem icon="suitcase" class="q-mb-lg" url="/assets">
+        <MenuItem :icon="{name: 'suitcase', width:18, height:16}" class="q-mb-lg" url="/assets">
             Assets
         </MenuItem>
-        <MenuItem icon="swap" url="/5">
+        <MenuItem is-link :icon="{name: 'swap', width:21, height:16}" url="https://www.mintscan.io/bitsong/txs">
             History
         </MenuItem>
     </div>
