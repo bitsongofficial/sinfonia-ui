@@ -43,32 +43,34 @@
 }
 
 .dark-mode-toggle {
-    .q-toggle__track {
+    .q-toggle__inner {
         position: relative;
 
         &::before {
             content: "";
             position: absolute;
-            right: 8px;
+            left: 20px;
+            top: 12px;
             background: url('@/assets/images/icons/sun.svg') no-repeat center;
             background-size: 100% 100%;
-            width: 16px;
-            height: 17px;
-            top: 8px;
+            width: 0.4em;
+            height: 0.4em;
+            z-index: 1;
         }
 
         &::after {
             content: "";
+            color: white;
             position: absolute;
-            left: 0.15em;
-            top: 0.2em;
-            width: 0.4em;
-            height: 0.4em;
-            z-index: 1;
+            right: 20px;
+            top: 11px;
+            width: 16px;
+            height: 17px;
             display: block;
             background-image: url("@/assets/images/icons/moon.svg");
             background-position: center;
             background-repeat: no-repeat;
+            z-index: 1;
         }
     }
 }
@@ -139,14 +141,15 @@
     border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
-:not(.q-field--with-bottom) {
+label:not(.q-field--with-bottom) {
     .q-field__bottom {
         display: none;
     }
 }
 
-.address-select-tile {
+.title-with-error {
     .q-icon {
+        pointer-events: none;
         visibility: hidden;
     }
 }
@@ -162,12 +165,13 @@
         display: none;
     }
 
-    .address-select-tile {
+    .title-with-error {
         color: $primary;
         p {
             opacity: 1;
         }
         .q-icon {
+            pointer-events: all;
             visibility: visible;
         }
     }

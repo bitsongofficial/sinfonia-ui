@@ -5,6 +5,7 @@
 	  import { TokenWithAddress } from '@/types'
     import { computed, ref } from 'vue'
     import DangerTooltip from '../tooltips/DangerTooltip.vue'
+import { validateRules } from '@/common/inputs';
 
 	const props = defineProps<{
 		addresses: TokenWithAddress[],
@@ -24,22 +25,7 @@
             return props.modelValue
         },
         set(value) {
-            const failedRule = props.rules?.find(r =>
-            {
-                if(typeof(r) === "function")
-                {
-                    return r(value) != true
-                }
-                return false
-            })
-            if(typeof(failedRule) === "function")
-            {
-                const possibleErrorMessage = failedRule(value)
-                if(typeof(possibleErrorMessage) === "string")
-                {
-                    errorMessage.value = possibleErrorMessage
-                }
-            }
+            validateRules(props.rules, value, errorMessage)
             emit('update:modelValue', value)
         }
 	})
@@ -69,7 +55,7 @@
         </template>
         <template v-slot:selected-item="{ opt }">
             <div class="q-py-15">
-                <div class="address-select-tile flex q-mb-8 items-center">
+                <div class="title-with-error flex q-mb-8 items-center">
                     <p class="fs-10 text-uppercase text-weight-medium opacity-40 q-mr-8">
                         {{title}}
                     </p>

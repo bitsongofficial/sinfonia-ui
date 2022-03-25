@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { balancedCurrency as currency, toFiatValue, percentage, balancedCurrency } from '@/common/numbers'
+	import { balancedCurrency as  balancedCurrency } from '@/common/numbers'
 	import useConfig from '@/store/config'
 	import { TableColumn } from '@/types/table'
 	import CryptoTable from "../CryptoTable.vue"
@@ -46,6 +46,6 @@
 	]
 </script>
 <template>
-	<h3 class="q-mb-xl fs-27">Dex</h3>
+	<h3 class="q-mb-xl fs-27">DEx</h3>
 	<CryptoTable :columns="columns" :rows="configStore.fantokens" />
 </template>

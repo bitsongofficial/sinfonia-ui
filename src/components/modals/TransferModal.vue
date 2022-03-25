@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	import { Token, TokenWithAddress } from '@/types'
-	import { computed, ref, watch } from 'vue'
+	import { computed, onMounted, ref, watch } from 'vue'
 	import { resolveIcon } from '@/common/resolvers'
 	import { balancedCurrency, amountToCoin } from '@/common/numbers'
 	import ModalWithClose from '@/components/modals/ModalWithClose.vue'
@@ -13,6 +13,7 @@
 	import useTransactionManager from '@/store/transaction-manager'
 	import useBank from '@/store/bank'
 	import { Coin } from '@cosmjs/proto-signing'
+import DangerTooltip from '../tooltips/DangerTooltip.vue'
 
 	const configStore = useConfig()
 	const keplrStore = useKeplr()
@@ -192,10 +193,29 @@
 			)
 		}
 	}
+
+	const showBigTransferTooltip = ref(false)
+	const bigTransferInternal = ref(false)
+	const hasAmountError = ref<boolean>(false)
+
+	const bigTransfer = computed(
+	{
+		get(): (boolean) {
+			return bigTransferInternal.value
+		},
+		set(value: boolean) {
+			bigTransferInternal.value = value
+			if(value)
+			{
+				showBigTransferTooltip.value = value
+				hasAmountError.value = true
+			}
+		}
+	})
 </script>
 
 <template>
-	<ModalWithClose v-model="model" :title="title">
+	<ModalWithClose v-model="model" :title="title" @click="showBigTransferTooltip = false">
 		<q-form @submit="onSubmit">
 			<div class="flex items-center no-wrap q-mb-40">
 				<AddressesSelect v-model="fromToken" :addresses="fromAddresses" title="From" class="flex-1" />
@@ -207,12 +227,27 @@
 				<AddressesSelect v-model="toToken" :addresses="toAddresses" title="To" class="flex-1" />
 			</div>
 
-			<div class="flex justify-between items-center q-mb-16 fs-12 text-dark">
-				<p class="font-weight-medium text-uppercase">Amount to transfer</p>
+			<div :class="'flex justify-between items-center q-mb-16 fs-12 text-dark' + (bigTransfer ? ' q-field--error' : '')">
+				<div class="flex title-with-error">
+					<p :class="'text-weight-medium text-uppercase q-mr-12' + (hasAmountError ? ' text-primary' : '')">Amount to transfer</p>
+					<q-icon
+						:name="resolveIcon('info', 15, 15)"
+						size="12px"
+						color="primary"
+					>
+						<DangerTooltip
+							anchor="center right"
+							self="center start"
+							v-model="showBigTransferTooltip"
+						>
+							Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.
+						</DangerTooltip>
+					</q-icon>
+				</div>
 				<p>Available <span class="q-ml-8 text-white">{{ balancedCurrency(available) }}</span></p>
 			</div>
 
-			<Amount v-model="amount" :max="available" class="q-mb-32" />
+			<Amount v-model="amount" :max="available" class="q-mb-32" @error-change="(val) => hasAmountError = val" />
 
 			<div class="flex justify-center">
 				<LargeButton type="submit" fit class="q-px-80" :padding-y="14">

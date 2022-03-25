@@ -21,7 +21,7 @@
     src: local('Circular Std Bold'), local('CircularStd-Bold'), url('@/assets/fonts/CircularStd-Bold.woff2') format('woff2');
 }
 
-$font-sizes: ();
+$font-sizes: ('13': 13, '15': 15);
 
 @for $i from 0 through 22 {
     $s: $i * 2;

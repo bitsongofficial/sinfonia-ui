@@ -27,10 +27,11 @@
     ]
     const selected = ref(timeOptions[0])
     const tabs = [
-        {name: "info", tooltip: "Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.", icon:{name:"info", width: 15, height:15}},
-        {name: "whitepaper", label:"Whitepaper"},
+        {tooltip: "Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.", icon:{name:"info", width: 15, height:15}},
+        {label:"Whitepaper", url:"https://bitsong.io/fantokens/adam-clay"},
         {name: "pools", label:"Pools"},
-        {name: "analytics", label:"Analytics"},
+        {name:"analytics", label:"Analytics"},
+        {label:"Airdrop", url:"https://bitsong.io/airdrop/"},
         {name: "social", label:"Social"},
     ]
     const stats = [
@@ -47,9 +48,11 @@
     const email = ref("")
     const newsletter = ref(false)
     const socials = {
-        facebook: 'www.facebook.com',
-        instagram: 'www.instagram.com',
-        twitter: 'www.twitter.com',
+        facebook: 'https://www.facebook.com/adamclaymusic',
+        instagram: 'https://www.instagram.com/adamclayreal/?hl=en',
+        twitter: 'https://twitter.com/adamclaymusic',
+        spotify: 'https://open.spotify.com/artist/19jXtZ3WctjL00MMVqYrv8?si=Q_TJsXqORs6WSkQIV4F9DQ&nd=1',
+        website: 'http://www.adamclay.com/',
     }
     let pools = [
         newMyPool(),
@@ -270,10 +273,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="row q-col-gutter-xl">
+                <div class="row q-col-gutter-x-xl">
                     <div class="col-4">
                         <p class="fs-16 opacity-30 q-mb-24">Bonding</p>
-                        <div class="row q-col-gutter-xl">
+                        <div class="row q-col-gutter-x-xl">
                             <div class="col-4">
                                 <CardWithHeader header="bonded tokens" class="q-py-34">
                                     <div class="flex justify-between items-center text-center q-mb-20">
@@ -293,18 +296,23 @@
                                         </p>
                                     </div>
                                     <div class="flex">
-                                        <PercentageWithImage :value="50" :image="coin.iconUrl"></PercentageWithImage>
+                                        <PercentageWithImage :value="50" :image="coin.iconUrl" class="q-mr-20"></PercentageWithImage>
+                                        <div class="text-weight-medium">
+                                            <p class="fs-12 text-uppercase q-mb-10 opacity-50">% bonded</p>
+                                            <p class="fs-18">50%</p>
+                                        </div>
                                     </div>
                                 </CardWithHeader>
                             </div>
                             <div class="col-4">
-                                <img src="@/assets/images/round_chart_placeholder.png" alt="">
+                                <PercentageWithImage alt-style full negative class="full-width full-height--15" imageSize="48px" :thickness="0.35" :image="coin.iconUrl" :value="50">
+                                </PercentageWithImage>
                             </div>
                         </div>
                     </div>
                     <div class="col-4">
                         <p class="fs-16 opacity-30 q-mb-24">Community</p>
-                        <Card class="q-py-34 q-mb-22">
+                        <Card class="q-mb-22" :padding="20">
                             <div class="flex justify-between items-stretch">
                                 <div class="column justify-between">
                                     <p class="fs-12 opacity-50 text-uppercase">liquidity</p>
@@ -317,14 +325,14 @@
                                 </div>
                             </div>
                         </Card>
-                        <div class="row q-col-gutter-xl">
+                        <div class="row q-col-gutter-x-xl">
                             <div class="col-4">
-                                <InfoCard header="$CLAY CIRCULATING " class="q-py-34">
+                                <InfoCard header="$CLAY CIRCULATING " :padding="20">
                                     {{balancedCurrency(21600000)}}
                                 </InfoCard>                                
                             </div>
                             <div class="col-4">
-                                <InfoCard header="$CLAY CIRCULATING " class="q-py-34">
+                                <InfoCard header="$CLAY CIRCULATING " :padding="20">
                                     {{balancedCurrency(21600000)}}
                                 </InfoCard>                                
                             </div>
@@ -332,7 +340,7 @@
                     </div>
                 </div>
             </template>
-            <template v-slot:whitepaper>
+            <!-- <template v-slot:whitepaper>
                 <Sections :sections="sections">
                     <template v-slot:bio>
                         <div class="q-mb-60">
@@ -363,7 +371,7 @@
                         </div>
                     </template>
                 </Sections>
-            </template>
+            </template> -->
             <template v-slot:pools>
                 <LightTable
                     :rows="pools"

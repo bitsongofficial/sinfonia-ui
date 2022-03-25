@@ -5,13 +5,15 @@ import StandardButton from "./StandardButton.vue"
     const props = defineProps<{
         fit?: boolean,
         paddingY? : number,
+        paddingX? : number,
         type?: string,
     }>()
-    const paddingClass = "q-py-" + (props.paddingY ? props.paddingY : 20)
+    const paddingYClass = "q-py-" + (props.paddingY ? props.paddingY : 20)
+    const paddingXClass = "q-px-" + (props.paddingX ? props.paddingX : 40)
 </script>
 
 <template>
-    <StandardButton :type="type" :class="'fs-16 text-center ' + paddingClass + ' ' + (fit ? 'w-fit q-px-40' : 'full-width')">
+    <StandardButton :type="type" :class="'fs-16 text-center ' + paddingYClass + ' ' + (fit ? ('w-fit ' + paddingXClass) : 'full-width')">
         <slot></slot>
     </StandardButton>
 </template>

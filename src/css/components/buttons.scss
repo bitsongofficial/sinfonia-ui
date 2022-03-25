@@ -24,3 +24,9 @@
         }
     }
 }
+
+.q-btn.no-hover {
+    .q-focus-helper {
+        display: none;
+    }
+}

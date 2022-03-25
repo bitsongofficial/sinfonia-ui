@@ -12,7 +12,7 @@
     <LightTable :rows="rows" :columns="columns">
 			<template v-slot:body-cell-symbol="slotProps">
 				<q-td :props="slotProps">
-					<span class="opacity-40 fs-10">
+					<span class="opacity-40">
 						${{ slotProps.row.symbol }}
 					</span>
 				</q-td>
@@ -21,11 +21,11 @@
 				<q-td :props="slotProps">
 					<div class="row items-center no-wrap">
 						<q-avatar
-							size="sm"
+							size="30px"
 							class="q-mr-22">
 							<img :src="slotProps.row.logos.default" :alt="slotProps.row.name">                   
 						</q-avatar>
-						<p class="text-weight-medium">
+						<p class="text-weight-medium fs-15">
 							{{ slotProps.row.name }}
 						</p>
 					</div>

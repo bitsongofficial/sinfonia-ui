@@ -10,7 +10,7 @@
 </script>
 <template>
     <q-table
-        row-key="index"
+        row-key="name"
         :rows="rows"
         :columns="columns"
         :class="(noBackground ? 'table-no-background' : '')"
@@ -21,7 +21,7 @@
                     v-for="col in slotProps.cols"
                     :key="col.name"
                     :props="slotProps"
-                    class="fs-12 text-uppercase text-weight-medium transactions-table-head-row"
+                    class="fs-13 text-uppercase text-weight-medium transactions-table-head-row"
                 >
                     {{ col.label }}
                 </q-th>

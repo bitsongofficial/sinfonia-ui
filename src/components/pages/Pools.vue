@@ -19,19 +19,19 @@
 					<div class="separator-light q-my-20"></div>
 					<div class="row">
 						<div class="col-4">
-							<p class="fs-10 font-weight-medium opacity-40 q-pb-10">My Liquidity</p>
-							<p class="fs-16 font-weight-medium text-no-wrap">{{balancedCurrency(userPool.userLiquidity)}} $</p>
+							<p class="fs-10 text-weight-medium opacity-40 q-pb-10">My Liquidity</p>
+							<p class="fs-16 text-weight-medium text-no-wrap">{{balancedCurrency(userPool.userLiquidity)}} $</p>
 						</div>
 						<div class="col-4">
-							<p class="fs-10 font-weight-medium opacity-40 q-pb-10">My Bonded Tokens</p>
-							<p class="fs-16 font-weight-medium text-no-wrap">{{balancedCurrency(userPool.bonded)}} $</p>
+							<p class="fs-10 text-weight-medium opacity-40 q-pb-10">My Bonded Tokens</p>
+							<p class="fs-16 text-weight-medium text-no-wrap">{{balancedCurrency(userPool.bonded)}} $</p>
 						</div>
 					</div>
 				</Card>
 			</RouterLink>
 		</div>
 	</div>
-	<Title class="q-mb-50">All Pools</Title>
+	<Title class="q-mb-50" :font-size="18">All Pools</Title>
 	<div class="row q-col-gutter-xl">
 		<div v-for="(pool) in poolsStore.pools" class="col-2">
 			<RouterLink :to="'/pools/' + pool.id" class="block">
