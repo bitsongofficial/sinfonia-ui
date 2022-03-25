@@ -2,7 +2,7 @@
     import { ref } from 'vue';
     import Logo from '@/components/Logo.vue';
     import IconButton from '../buttons/IconButton.vue';
-    const first = ref(true);
+    const first = ref(false);
 </script>
 <template>
     <div class="row justify-between items-center">
