@@ -38,15 +38,6 @@ export const LockTokens = (
 ): SignerMessage<any> => {
 	const msgDuration = (duration * 1_000_000_000).toString()
 
-	console.log(osmosis.lockup.MsgLockTokens.encode({
-		owner: senderAddress,
-		duration: {
-			seconds: Long.fromNumber(Math.floor(parseInt(msgDuration) / 1_000_000_000)),
-			nanos: parseInt(msgDuration) % 1_000_000_000,
-		},
-		coins,
-	}).finish())
-
 	return {
 		typeUrl: '/osmosis.lockup.MsgLockTokens',
 		value: {
@@ -56,6 +47,25 @@ export const LockTokens = (
 				nanos: parseInt(msgDuration) % 1_000_000_000,
 			},
 			coins,
+		},
+	}
+}
+
+export const BeginUnlocking = (
+	senderAddress: string, // Owner
+	id: string
+): SignerMessage<any> => {
+
+	console.log(senderAddress, id, osmosis.lockup.MsgBeginUnlocking.encode({
+		owner: senderAddress,
+		ID: Long.fromString(id),
+	}).finish())
+
+	return {
+		typeUrl: '/osmosis.lockup.MsgBeginUnlocking',
+		value: {
+			owner: senderAddress,
+			ID: Long.fromString(id),
 		},
 	}
 }

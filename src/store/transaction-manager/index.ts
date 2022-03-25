@@ -89,6 +89,31 @@ const useTransactionManager = defineStore('transactionManager', {
         this.loading = false
       }
     },
+		async beginUnlocking(id: string) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+      try {
+        this.loading = true
+
+				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+					const signer = await window.keplr.getOfflineSignerAuto(configStore.osmosisToken.chainID)
+					const manager = new TransactionManager(signer, configStore.osmosisToken)
+
+					const tsx = await manager.beginUnlocking(
+						authStore.osmosisAddress,
+						id
+					)
+
+					console.log(tsx)
+				}
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+        this.loading = false
+      }
+    }
 	},
   persistedState: {
 		persist: true,

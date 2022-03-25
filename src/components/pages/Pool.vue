@@ -17,8 +17,10 @@
 	import { BigNumber } from 'bignumber.js'
 	import { reduce } from 'lodash'
 	import { Coin } from '@cosmjs/proto-signing'
-	import { formatEpochDate } from '@/common'
+	import { formatEpochDate, unboundingEndTimeStart, fromNow } from '@/common'
+	import useTransactionManager from '@/store/transaction-manager'
 
+	const transactionManagerStore = useTransactionManager()
 	const poolsStore = usePools()
 	const route = useRoute();
 	const id = route.params['id'] as string;
@@ -69,6 +71,10 @@
 			sortable: false,
 		},
 	]
+
+	const beginUnlocking = (id: string) => {
+		transactionManagerStore.beginUnlocking(id)
+	}
 </script>
 
 <template>
@@ -229,7 +235,15 @@
 		<LightTable :rows="pool.lockableDurationApr" :columns="columns">
 			<template v-slot:body-cell-unbond="props">
 					<q-td :props="props">
-						<span class="text-primary text-weight-medium cursor-pointer">
+						<template v-if="props.row.lockedLonger">
+							<span class="text-primary text-weight-medium cursor-pointer" v-if="!unboundingEndTimeStart(props.row.lockedLonger.end_time)" @click="beginUnlocking(props.row.lockedLonger.ID)">
+								Unbond all
+							</span>
+							<span class="text-white opacity-20 text-weight-medium" v-else>
+								{{ fromNow(props.row.lockedLonger.end_time) }}
+							</span>
+						</template>
+						<span class="text-white opacity-20 text-weight-medium" v-else>
 							Unbond all
 						</span>
 					</q-td>

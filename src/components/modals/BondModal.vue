@@ -7,10 +7,8 @@
 	import LargeButton from '@/components/buttons/LargeButton.vue'
 	import { Pool } from '@/types'
 	import useTransactionManager from '@/store/transaction-manager'
-	import useAuth from '@/store/auth'
 
 	const transactionManagerStore = useTransactionManager()
-	const authStore = useAuth()
 
 	const props = defineProps<{
 		pool: Pool

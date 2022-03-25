@@ -1,7 +1,7 @@
 import { SignerMessage, Token } from '@/types'
 import { Coin, coins, OfflineDirectSigner, OfflineSigner } from '@cosmjs/proto-signing'
 import { BigNumber } from 'bignumber.js'
-import { SendIbcTokens, LockTokens } from './messages'
+import { SendIbcTokens, LockTokens, BeginUnlocking } from './messages'
 import { assertIsDeliverTxSuccess, SigningStargateClient } from '@cosmjs/stargate'
 import { osmosisRegistry } from './registry'
 
@@ -84,6 +84,15 @@ export class TransactionManager {
 		)
 
 		return this.createSignBroadcast('LockTokens', [message], senderAddress, memo ?? '')
+	}
+
+	public beginUnlocking(senderAddress: string, id: string, memo?: string) {
+		const message = BeginUnlocking(
+			senderAddress,
+			id
+		)
+
+		return this.createSignBroadcast('BeginUnlocking', [message], senderAddress, memo ?? '')
 	}
 
 	public createSignBroadcast = async (messageType: string, messages: SignerMessage<any>[], senderAddress: string, memo: string) => {
