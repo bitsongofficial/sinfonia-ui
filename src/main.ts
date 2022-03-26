@@ -13,33 +13,33 @@ import App from "./App.vue"
 import routes from "@/configs/routes"
 
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
-  scrollBehavior: function (to) {
-    if (to.hash) {
-      return { el: to.hash }
-    }
-  },
+	history: createWebHashHistory(),
+	routes,
+	scrollBehavior: function (to) {
+		if (to.hash) {
+			return { el: to.hash }
+		}
+	},
 })
 
 const app = createApp(App)
 
 app.use(Quasar, {
-  plugins: {
-    Dialog,
-    Notify,
-  },
-  config: {
-    framework: {
-      cssAddon: true,
-    },
-    notify: {
-      classes:
-        "bg-notification-background rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440",
-      iconSize: "28px",
-      html: true,
-    },
-  },
+	plugins: {
+		Dialog,
+		Notify,
+	},
+	config: {
+		framework: {
+			cssAddon: true,
+		},
+		notify: {
+			classes:
+				"bg-notification-background rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440",
+			iconSize: "28px",
+			html: true,
+		},
+	},
 })
 
 const pinia = createPinia()
