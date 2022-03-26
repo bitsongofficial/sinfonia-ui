@@ -1,36 +1,39 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { AccountData } from '@cosmjs/proto-signing';
-import { tokenToKeplrCoin } from '@/common';
-import { AppCurrency } from '@keplr-wallet/types';
-import useConfig from '@/store/config';
+import { acceptHMRUpdate, defineStore } from "pinia"
+import { AccountData } from "@cosmjs/proto-signing"
+import { tokenToKeplrCoin } from "@/common"
+import { AppCurrency } from "@keplr-wallet/types"
+import useConfig from "@/store/config"
 
 export interface KeplrState {
 	accounts: AccountData[]
-  initialized: boolean
+	initialized: boolean
 	error?: Error
 	loading: boolean
 }
 
-const useKeplr = defineStore('keplr', {
+const useKeplr = defineStore("keplr", {
 	state: (): KeplrState => ({
 		accounts: [],
 		initialized: false,
-		loading: false
+		loading: false,
 	}),
 	actions: {
 		async init() {
-      try {
-        this.loading = true
+			try {
+				this.loading = true
 				const configStore = useConfig()
 
 				if (window.keplr && configStore.bitsongToken) {
-					const stakeCurrency = tokenToKeplrCoin(configStore.bitsongToken, configStore.bitsongToken.symbol)
+					const stakeCurrency = tokenToKeplrCoin(
+						configStore.bitsongToken,
+						configStore.bitsongToken.symbol
+					)
 					const currencies: AppCurrency[] = []
 					const feeCurrencies: AppCurrency[] = []
 
 					for (const lookup of configStore.bitsongToken.coinLookup) {
 						const coin = tokenToKeplrCoin(configStore.bitsongToken, lookup.viewDenom)
-	
+
 						if (coin) {
 							currencies.push(coin)
 							feeCurrencies.push(coin)
@@ -49,11 +52,14 @@ const useKeplr = defineStore('keplr', {
 							},
 							bech32Config: {
 								bech32PrefixAccAddr: configStore.bitsongToken.addressPrefix,
-								bech32PrefixAccPub: configStore.bitsongToken.addressPrefix + 'pub',
-								bech32PrefixValAddr: configStore.bitsongToken.addressPrefix + 'valoper',
-								bech32PrefixValPub: configStore.bitsongToken.addressPrefix + 'valoperpub',
-								bech32PrefixConsAddr: configStore.bitsongToken.addressPrefix + 'valcons',
-								bech32PrefixConsPub: configStore.bitsongToken.addressPrefix + 'valconspub',
+								bech32PrefixAccPub: configStore.bitsongToken.addressPrefix + "pub",
+								bech32PrefixValAddr: configStore.bitsongToken.addressPrefix + "valoper",
+								bech32PrefixValPub:
+									configStore.bitsongToken.addressPrefix + "valoperpub",
+								bech32PrefixConsAddr:
+									configStore.bitsongToken.addressPrefix + "valcons",
+								bech32PrefixConsPub:
+									configStore.bitsongToken.addressPrefix + "valconspub",
 							},
 							currencies,
 							feeCurrencies,
@@ -63,18 +69,22 @@ const useKeplr = defineStore('keplr', {
 								average: 0.025,
 								high: 0.04,
 							},
-							features: ['stargate', 'ibc-transfer', 'no-legacy-stdTx', 'ibc-go'],
+							features: ["stargate", "ibc-transfer", "no-legacy-stdTx", "ibc-go"],
 						})
 
 						await window.keplr.enable(configStore.bitsongToken.chainID)
-	
-						const offlineSigner = await window.keplr.getOfflineSignerAuto(configStore.bitsongToken.chainID)
-						const accounts = [...await offlineSigner.getAccounts()]
+
+						const offlineSigner = await window.keplr.getOfflineSignerAuto(
+							configStore.bitsongToken.chainID
+						)
+						const accounts = [...(await offlineSigner.getAccounts())]
 
 						if (configStore.osmosisToken) {
-							await window.keplr.enable(configStore.osmosisToken.chainID);
-							const offlineTokenSigner = await window.keplr.getOfflineSignerAuto(configStore.osmosisToken.chainID)
-							const tokenAccounts = [...await offlineTokenSigner.getAccounts()]
+							await window.keplr.enable(configStore.osmosisToken.chainID)
+							const offlineTokenSigner = await window.keplr.getOfflineSignerAuto(
+								configStore.osmosisToken.chainID
+							)
+							const tokenAccounts = [...(await offlineTokenSigner.getAccounts())]
 
 							accounts.push(...tokenAccounts)
 						}
@@ -83,31 +93,31 @@ const useKeplr = defineStore('keplr', {
 						this.initialized = true
 					}
 				}
-      } catch (error) {
-        console.error(error)
+			} catch (error) {
+				console.error(error)
 				this.error = error as Error
-        throw error
-      } finally {
-        this.loading = false
-      }
-    },
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
 		async getAddress(chainId: string) {
 			if (window.keplr) {
 				await window.keplr.enable(chainId)
-	
+
 				const offlineSigner = await window.keplr.getOfflineSignerAuto(chainId)
-				const accounts = [...await offlineSigner.getAccounts()]
+				const accounts = [...(await offlineSigner.getAccounts())]
 
 				return accounts.shift()
 			}
-		}
+		},
 	},
 	getters: {
-		addresses: ({ accounts }) => accounts.map(account => account.address)
+		addresses: ({ accounts }) => accounts.map((account) => account.address),
 	},
-  persistedState: {
+	persistedState: {
 		persist: false,
-	}
+	},
 })
 
 if (import.meta.hot) {

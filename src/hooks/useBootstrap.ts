@@ -1,9 +1,9 @@
-import { SessionType } from '@/types'
-import useAuth from '@/store/auth'
-import useBank from '@/store/bank'
-import useConfig from '@/store/config'
-import usePools from '@/store/pools'
-import usePrices from '@/store/prices'
+import { SessionType } from "@/types"
+import useAuth from "@/store/auth"
+import useBank from "@/store/bank"
+import useConfig from "@/store/config"
+import usePools from "@/store/pools"
+import usePrices from "@/store/prices"
 
 const useBootstrap = () => {
 	const configStore = useConfig()
@@ -13,7 +13,10 @@ const useBootstrap = () => {
 	const pricesStore = usePrices()
 
 	const checkAuthState = () => {
-		if (authStore.session && authStore.session.sessionType === SessionType.KEPLR) {
+		if (
+			authStore.session &&
+			authStore.session.sessionType === SessionType.KEPLR
+		) {
 			authStore.signIn()
 		}
 	}
@@ -32,12 +35,12 @@ const useBootstrap = () => {
 		}
 	}
 
-	window.addEventListener('keplr_keystorechange', () => {
+	window.addEventListener("keplr_keystorechange", () => {
 		checkAuthState()
 	})
 
 	return {
-		bootstrap
+		bootstrap,
 	}
 }
 

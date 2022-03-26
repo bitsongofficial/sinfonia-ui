@@ -1,3 +1,3 @@
 export const endpoints = {
-	coingecko: 'https://api.coingecko.com/api/v3/'
+	coingecko: "https://api.coingecko.com/api/v3/",
 }

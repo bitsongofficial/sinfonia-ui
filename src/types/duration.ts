@@ -1,4 +1,4 @@
-import { GaugeToken, OsmosisLock } from './osmosis'
+import { GaugeToken, OsmosisLock } from "./osmosis"
 export interface LockableDuration {
 	rawDuration: string
 	duration: number

@@ -1,6 +1,6 @@
-import { FantokenMedia, FantokenSocial, FantokenWhitePaper } from './fantoken'
+import { FantokenMedia, FantokenSocial, FantokenWhitePaper } from "./fantoken"
 
-export type TokenLogo = 'default' | 'svg' | 'png'
+export type TokenLogo = "default" | "svg" | "png"
 
 export interface BaseToken {
 	name: string
@@ -15,7 +15,7 @@ export interface CoinLookup {
 	chainToViewConversionFactor: number
 }
 
-export type IBCChain = 'osmosis';
+export type IBCChain = "osmosis"
 
 export interface IBC {
 	sourceChannelId: string
@@ -25,13 +25,13 @@ export interface IBC {
 }
 
 export interface NetworkConfigFeeOption {
-  denom: string;
-  amount: string;
+	denom: string
+	amount: string
 }
 
 export interface NetworkConfigFee {
-  gasEstimate: number;
-  feeOptions: NetworkConfigFeeOption[],
+	gasEstimate: number
+	feeOptions: NetworkConfigFeeOption[]
 }
 
 export interface Token extends BaseToken {
@@ -46,9 +46,9 @@ export interface Token extends BaseToken {
 	coinType: number
 	ibc: { [key in IBCChain]: IBC }
 	fees: {
-		default: NetworkConfigFee,
+		default: NetworkConfigFee
 		[key: string]: NetworkConfigFee
-	},
+	}
 	routes?: {
 		poolID: string
 	}

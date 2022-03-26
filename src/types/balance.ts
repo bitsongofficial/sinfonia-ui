@@ -1,4 +1,4 @@
-import { BaseToken, Token } from './config'
+import { BaseToken, Token } from "./config"
 
 export interface Balance {
 	total?: string

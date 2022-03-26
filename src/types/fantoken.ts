@@ -1,4 +1,9 @@
-export type Social = 'instagram' | 'facebook' | 'website' | 'twitter' | 'spotify'
+export type Social =
+	| "instagram"
+	| "facebook"
+	| "website"
+	| "twitter"
+	| "spotify"
 
 export interface FantokenSocialLink {
 	type: Social

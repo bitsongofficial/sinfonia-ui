@@ -1,8 +1,7 @@
-import { Coin } from '@cosmjs/proto-signing'
-import { BaseToken } from './config'
-import { LockableDurationWithApr } from './duration'
-import { OsmosisPool } from './osmosis'
-
+import { Coin } from "@cosmjs/proto-signing"
+import { BaseToken } from "./config"
+import { LockableDurationWithApr } from "./duration"
+import { OsmosisPool } from "./osmosis"
 
 export interface PoolUser {
 	liquidity: number
