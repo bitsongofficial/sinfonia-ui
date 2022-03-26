@@ -1,4 +1,4 @@
-import { Token } from '@/types'
+import { Token } from "@/types"
 
 export const tokenWithDefaults = (token: Token): Token => {
 	const logoExtensions = Object.keys(token.logos)
@@ -9,15 +9,15 @@ export const tokenWithDefaults = (token: Token): Token => {
 		defaultLogo = token.logos[logoExtension]
 	}
 
-	return ({
+	return {
 		...token,
 		logos: {
 			...token.logos,
 			default: defaultLogo,
-		}
-	})
+		},
+	}
 }
 
 export const mapTokensWithDefaults = (tokens: Token[]): Token[] => {
-	return tokens.map(token => tokenWithDefaults(token))
+	return tokens.map((token) => tokenWithDefaults(token))
 }

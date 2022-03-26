@@ -1,9 +1,9 @@
-import { DeliverTxResponse } from '@cosmjs/stargate'
+import { DeliverTxResponse } from "@cosmjs/stargate"
 
 export enum TransactionStatus {
-	PENDING = 'pending',
-	SUCCESS = 'success',
-	FAILED = 'failed'
+	PENDING = "pending",
+	SUCCESS = "success",
+	FAILED = "failed",
 }
 
 export interface Transaction {

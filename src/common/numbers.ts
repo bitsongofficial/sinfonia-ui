@@ -1,28 +1,27 @@
-import { Token, OsmosisPoolAsset } from '@/types'
-import { coin } from '@cosmjs/proto-signing'
-import { BigNumber } from 'bignumber.js'
+import { Token, OsmosisPoolAsset } from "@/types"
+import { coin } from "@cosmjs/proto-signing"
+import { BigNumber } from "bignumber.js"
 
 export const currency = (number: number | string, fraction = 2): string => {
 	const amount = new BigNumber(number)
 
 	if (amount.isEqualTo(0)) {
-		return '0'
+		return "0"
 	}
 
 	if (amount.gt(0.01)) {
-		return new Intl.NumberFormat('en-US', {
-			maximumFractionDigits: fraction
+		return new Intl.NumberFormat("en-US", {
+			maximumFractionDigits: fraction,
 		}).format(amount.toNumber())
 	}
 
-	return '< 0.01'
+	return "< 0.01"
 }
 
 export const balancedCurrency = (number: number | string): string => {
 	let value = new BigNumber(number)
 
-	if(value.abs().gt(1000))
-	{
+	if (value.abs().gt(1000)) {
 		value = new BigNumber(Math.floor(value.toNumber()))
 	}
 
@@ -32,13 +31,12 @@ export const balancedCurrency = (number: number | string): string => {
 export const balancedGamm = (number: number | string): string => {
 	let value = new BigNumber(number)
 
-	if(value.abs().gt(1000))
-	{
+	if (value.abs().gt(1000)) {
 		value = new BigNumber(Math.floor(value.toNumber()))
 	}
 
-	return new Intl.NumberFormat('en-US', {
-		maximumFractionDigits: 5
+	return new Intl.NumberFormat("en-US", {
+		maximumFractionDigits: 5,
 	}).format(value.toNumber())
 }
 
@@ -55,18 +53,26 @@ export const toFiatValue = (value: string | number, fiat: string | number) => {
 }
 
 export const toDecimalGamm = (value: string) => {
-	return new BigNumber(value).multipliedBy(1e-18).toString() 
+	return new BigNumber(value).multipliedBy(1e-18).toString()
 }
 
 export const fromDecimalGamm = (value: string) => {
-	return new BigNumber(value).div(1e-18).toString() 
+	return new BigNumber(value).div(1e-18).toString()
 }
 
-export const toViewDenom = (value: string | number, chainToViewConversionFactor: string | number) => {
-	return new BigNumber(value).multipliedBy(chainToViewConversionFactor).toString()
+export const toViewDenom = (
+	value: string | number,
+	chainToViewConversionFactor: string | number
+) => {
+	return new BigNumber(value)
+		.multipliedBy(chainToViewConversionFactor)
+		.toString()
 }
 
-export const fromViewDenom = (value: string | number, chainToViewConversionFactor: string | number) => {
+export const fromViewDenom = (
+	value: string | number,
+	chainToViewConversionFactor: string | number
+) => {
 	return new BigNumber(value).div(chainToViewConversionFactor).toString()
 }
 
@@ -78,7 +84,7 @@ export const amountToCoin = (value: string, network: Token) => {
 	if (coinLookup) {
 		return {
 			amount: toViewDenom(value, coinLookup.chainToViewConversionFactor),
-			denom: coinLookup.chainDenom
+			denom: coinLookup.chainDenom,
 		}
 	}
 }
@@ -110,45 +116,49 @@ export const amountIBCFromCoin = (value: string, network: Token) => {
 }
 
 export const compareBalance = (amount: string, compare: string): boolean => {
-  const number = new BigNumber(amount)
-  const compareNumber = new BigNumber(compare)
+	const number = new BigNumber(amount)
+	const compareNumber = new BigNumber(compare)
 
-  return number.lte(compareNumber)
+	return number.lte(compareNumber)
 }
 
 export const isNegative = (amount: string): boolean => {
-  const number = new BigNumber(amount)
+	const number = new BigNumber(amount)
 
-  return number.isNegative()
+	return number.isNegative()
 }
 
 export const isNaN = (amount: string): boolean => {
-  const number = new BigNumber(amount)
+	const number = new BigNumber(amount)
 
-  return number.isNaN()
+	return number.isNaN()
 }
 
 export const gtnZero = (amount: string): boolean => {
-  const number = new BigNumber(amount)
+	const number = new BigNumber(amount)
 
-  return number.gt(0)
+	return number.gt(0)
 }
 
 export const gteCompare = (amount: string, compare: string): boolean => {
-  const number = new BigNumber(amount)
+	const number = new BigNumber(amount)
 
-  return number.gte(new BigNumber(compare))
+	return number.gte(new BigNumber(compare))
 }
 
-export const calculateSpotPrice = (assetIn: OsmosisPoolAsset, assetOut: OsmosisPoolAsset, swapFee = '0') => {
+export const calculateSpotPrice = (
+	assetIn: OsmosisPoolAsset,
+	assetOut: OsmosisPoolAsset,
+	swapFee = "0"
+) => {
 	const tokenBalanceIn = new BigNumber(assetIn.token.amount)
 	const tokenWeightIn = new BigNumber(assetIn.weight)
 	const tokenBalanceOut = new BigNumber(assetOut.token.amount)
 	const tokenWeightOut = new BigNumber(assetOut.weight)
 
-	const number = tokenBalanceIn.div(tokenWeightIn);
-	const denom = tokenBalanceOut.div(tokenWeightOut);
-	const scale = new BigNumber(1).div(new BigNumber(1).minus(swapFee));
+	const number = tokenBalanceIn.div(tokenWeightIn)
+	const denom = tokenBalanceOut.div(tokenWeightOut)
+	const scale = new BigNumber(1).div(new BigNumber(1).minus(swapFee))
 
-	return number.div(denom).multipliedBy(scale);
+	return number.div(denom).multipliedBy(scale)
 }

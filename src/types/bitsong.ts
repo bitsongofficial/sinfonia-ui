@@ -1,4 +1,4 @@
-import { DenomUnit } from './chain'
+import { DenomUnit } from "./chain"
 
 export interface BitsongFantokenMetaData {
 	description: string
@@ -14,5 +14,5 @@ export interface BitsongFantoken {
 	max_supply: string
 	mintable: boolean
 	owner: string
-	meta_data: BitsongFantokenMetaData	
+	meta_data: BitsongFantokenMetaData
 }

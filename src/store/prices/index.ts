@@ -1,48 +1,48 @@
-import { BigNumber } from 'bignumber.js';
-import { coinGeckoClient } from '@/services'
-import { CoinGeckoPriceResponse } from '@/types'
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import useConfig from '@/store/config'
-import usePools from '@/store/pools'
-import { calculateSpotPrice } from '@/common/numbers'
+import { BigNumber } from "bignumber.js"
+import { coinGeckoClient } from "@/services"
+import { CoinGeckoPriceResponse } from "@/types"
+import { acceptHMRUpdate, defineStore } from "pinia"
+import useConfig from "@/store/config"
+import usePools from "@/store/pools"
+import { calculateSpotPrice } from "@/common/numbers"
 
 export interface PricesState {
-  loading: boolean
-  coinGeckoPrices?: CoinGeckoPriceResponse
+	loading: boolean
+	coinGeckoPrices?: CoinGeckoPriceResponse
 }
 
-const usePrices = defineStore('prices', {
-  state: (): PricesState => ({
-    loading: false,
-    coinGeckoPrices: undefined,
-  }),
-  actions: {
-    async init() {
-      try {
-        const configStore = useConfig()
-        this.loading = true
+const usePrices = defineStore("prices", {
+	state: (): PricesState => ({
+		loading: false,
+		coinGeckoPrices: undefined,
+	}),
+	actions: {
+		async init() {
+			try {
+				const configStore = useConfig()
+				this.loading = true
 
-				const ids = configStore.allMainTokens.map(token => token.coinGeckoId)
+				const ids = configStore.allMainTokens.map((token) => token.coinGeckoId)
 
-        const response = await coinGeckoClient.simplePrices(ids, ['usd'])
+				const response = await coinGeckoClient.simplePrices(ids, ["usd"])
 
 				this.coinGeckoPrices = response.data
-      } catch (error) {
-        console.error(error)
-        throw error
-      } finally {
-        this.loading = false
-      }
-    },
-  },
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
+	},
 	getters: {
 		getPriceById: ({ coinGeckoPrices }) => {
 			return (id: string) => {
 				if (coinGeckoPrices) {
-					return coinGeckoPrices[id]['usd']
+					return coinGeckoPrices[id]["usd"]
 				}
 
-				return '0'
+				return "0"
 			}
 		},
 		getFantokensPrices: ({ coinGeckoPrices }) => {
@@ -51,8 +51,8 @@ const usePrices = defineStore('prices', {
 			const bitsongToken = configStore.bitsongToken
 
 			if (coinGeckoPrices && bitsongToken) {
-				return configStore.rawFantokens.map(fantoken => {
-					let price = '0'
+				return configStore.rawFantokens.map((fantoken) => {
+					let price = "0"
 
 					const coinLookup = fantoken.coinLookup.find(
 						(coin) => coin.viewDenom === fantoken.symbol
@@ -60,22 +60,24 @@ const usePrices = defineStore('prices', {
 
 					if (fantoken.routes) {
 						const pool = poolsStore.poolById(fantoken.routes.poolID)
-	
+
 						if (pool) {
 							const btsgAsset = pool.poolAssets.find(
-								asset => asset.token.denom === bitsongToken.ibc.osmosis.destDenom
+								(asset) => asset.token.denom === bitsongToken.ibc.osmosis.destDenom
 							)
-	
+
 							const fantokenAsset = pool.poolAssets.find(
-								asset => asset.token.denom === fantoken.ibc.osmosis.destDenom
+								(asset) => asset.token.denom === fantoken.ibc.osmosis.destDenom
 							)
 
 							if (btsgAsset && fantokenAsset) {
 								const inSpotPrice = calculateSpotPrice(fantokenAsset, btsgAsset)
-								const spotPriceDec = inSpotPrice.isEqualTo(0) ? new BigNumber(0) : new BigNumber(1).div(inSpotPrice)
-	
-								const destCoinPrice = coinGeckoPrices[bitsongToken.coinGeckoId]['usd']
-		
+								const spotPriceDec = inSpotPrice.isEqualTo(0)
+									? new BigNumber(0)
+									: new BigNumber(1).div(inSpotPrice)
+
+								const destCoinPrice = coinGeckoPrices[bitsongToken.coinGeckoId]["usd"]
+
 								if (destCoinPrice) {
 									const res = spotPriceDec.multipliedBy(destCoinPrice)
 
@@ -87,11 +89,13 @@ const usePrices = defineStore('prices', {
 						}
 					}
 
-					const denom = coinLookup ? coinLookup.fantokenDenom ?? fantoken.symbol : fantoken.symbol
+					const denom = coinLookup
+						? coinLookup.fantokenDenom ?? fantoken.symbol
+						: fantoken.symbol
 
 					return {
 						denom,
-						price
+						price,
 					}
 				})
 			}
@@ -100,7 +104,7 @@ const usePrices = defineStore('prices', {
 			return (denom: string) => {
 				if (this.getFantokensPrices) {
 					const fantokenPrice = this.getFantokensPrices.find(
-						price => price.denom === denom
+						(price) => price.denom === denom
 					)
 
 					if (fantokenPrice) {
@@ -108,23 +112,23 @@ const usePrices = defineStore('prices', {
 					}
 				}
 
-				return '0'
+				return "0"
 			}
 		},
 		btsgPrice({ coinGeckoPrices }) {
 			const configStore = useConfig()
 
 			if (coinGeckoPrices && configStore.bitsongToken) {
-				return coinGeckoPrices[configStore.bitsongToken.coinGeckoId]['usd']
+				return coinGeckoPrices[configStore.bitsongToken.coinGeckoId]["usd"]
 			}
 
-			return '0'
-		}
-	}
-});
+			return "0"
+		},
+	},
+})
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(usePrices, import.meta.hot))
+	import.meta.hot.accept(acceptHMRUpdate(usePrices, import.meta.hot))
 }
 
 export default usePrices
