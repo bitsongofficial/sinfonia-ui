@@ -1,23 +1,22 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import { Quasar, Notify, Dialog } from 'quasar'
-import { createPersistedStatePlugin } from 'pinia-plugin-persistedstate-2'
-import {createRouter, createWebHashHistory} from 'vue-router'
+import { createApp } from "vue"
+import { createPinia } from "pinia"
+import { Quasar, Notify, Dialog } from "quasar"
+import { createPersistedStatePlugin } from "pinia-plugin-persistedstate-2"
+import { createRouter, createWebHashHistory } from "vue-router"
 
 // Import Quasar css
-import 'quasar/src/css/index.sass'
-import './css/main.scss'
+import "quasar/src/css/index.sass"
+import "./css/main.scss"
 
-import App from './App.vue'
+import App from "./App.vue"
 
-import routes from '@/configs/routes'
+import routes from "@/configs/routes"
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-  scrollBehavior: function(to, from, savedPosition) {
+  scrollBehavior: function (to) {
     if (to.hash) {
-
       return { el: to.hash }
     }
   },
@@ -28,17 +27,18 @@ const app = createApp(App)
 app.use(Quasar, {
   plugins: {
     Dialog,
-    Notify
+    Notify,
   },
   config: {
     framework: {
       cssAddon: true,
     },
     notify: {
-      classes: 'bg-notification-background rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440',
-      iconSize: '28px',
+      classes:
+        "bg-notification-background rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440",
+      iconSize: "28px",
       html: true,
-    }
+    },
   },
 })
 
@@ -50,4 +50,4 @@ app.use(pinia)
 
 app.use(router)
 
-app.mount('#app')
+app.mount("#app")

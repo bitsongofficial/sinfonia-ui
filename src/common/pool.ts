@@ -75,8 +75,8 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 
 	return rawPools.map(pool => {
 		const poolAssets = [...pool.poolAssets]
-		let rawCoin1 = poolAssets.shift()
-		let rawCoin2 = poolAssets.pop()
+		const rawCoin1 = poolAssets.shift()
+		const rawCoin2 = poolAssets.pop()
 		let coin1: PoolAsset | undefined = undefined
 		let coin2: PoolAsset | undefined = undefined
 		let liquidity = new BigNumber('0')

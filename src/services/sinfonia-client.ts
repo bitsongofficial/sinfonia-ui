@@ -1,18 +1,18 @@
-import OsmosisClient from './osmosis-client'
-import ConfigClient from './config-client'
-import BitsongClient from './bitsong-client'
-import { AssetListConfig, ChainData, ExtraGaugeList, OsmosisPool } from '@/types'
-import { AxiosResponse } from 'axios'
-import { Coin } from '@cosmjs/proto-signing'
-import { mapTokensWithDefaults, tokenWithDefaults } from '@/common'
-import ChainClient from './chain-client'
-import { compact } from 'lodash'
+import OsmosisClient from "./osmosis-client"
+import ConfigClient from "./config-client"
+import BitsongClient from "./bitsong-client"
+import { AssetListConfig, ChainData, OsmosisPool } from "@/types"
+import { AxiosResponse } from "axios"
+import { Coin } from "@cosmjs/proto-signing"
+import { mapTokensWithDefaults, tokenWithDefaults } from "@/common"
+import ChainClient from "./chain-client"
+import { compact } from "lodash"
 
 export default class SinfoniaClient {
   private assetListsConfig?: AssetListConfig
-	private osmosisClient?: OsmosisClient
-	private bitsongClient?: BitsongClient
-	private configClient: ConfigClient
+  private osmosisClient?: OsmosisClient
+  private bitsongClient?: BitsongClient
+  private configClient: ConfigClient
 
   public constructor(configUrl: string) {
     this.configClient = new ConfigClient(configUrl)
@@ -36,7 +36,7 @@ export default class SinfoniaClient {
   public totalMintedFantokens = async (): Promise<Coin[]> => {
     try {
       if (this.bitsongClient && this.assetListsConfig) {
-        const requests: Promise<AxiosResponse<ChainData<'amount', Coin>>>[] = []
+        const requests: Promise<AxiosResponse<ChainData<"amount", Coin>>>[] = []
 
         for (const fantokenDenom of this.allowedFantokenDenom) {
           requests.push(this.bitsongClient.supplyByDenom(fantokenDenom))
@@ -44,7 +44,7 @@ export default class SinfoniaClient {
 
         const supplyResponses = await Promise.all(requests)
 
-        return supplyResponses.map(el => el.data.amount)
+        return supplyResponses.map((el) => el.data.amount)
       }
     } catch (error) {
       console.error(error)
@@ -81,7 +81,7 @@ export default class SinfoniaClient {
       throw error
     }
 
-    return '0'
+    return "0"
   }
 
   public poolIncentivesDistrInfo = async () => {
@@ -130,8 +130,8 @@ export default class SinfoniaClient {
       if (this.osmosisClient && this.assetListsConfig) {
         const response = await this.osmosisClient.incentivizedPools()
 
-        return response.data.incentivized_pools.filter(
-          pool => this.allowedPoolIDs.includes(pool.pool_id)
+        return response.data.incentivized_pools.filter((pool) =>
+          this.allowedPoolIDs.includes(pool.pool_id)
         )
       }
     } catch (error) {
@@ -142,10 +142,12 @@ export default class SinfoniaClient {
     return []
   }
 
-	public pools = async (): Promise<OsmosisPool[]> => {
+  public pools = async (): Promise<OsmosisPool[]> => {
     try {
       if (this.osmosisClient && this.assetListsConfig) {
-        const requests: Promise<AxiosResponse<ChainData<"pool", OsmosisPool>>>[] = []
+        const requests: Promise<
+          AxiosResponse<ChainData<"pool", OsmosisPool>>
+        >[] = []
 
         for (const pool of this.assetListsConfig.pools) {
           requests.push(this.osmosisClient.poolDetails(pool.id))
@@ -153,7 +155,7 @@ export default class SinfoniaClient {
 
         const poolResponses = await Promise.all(requests)
 
-        return poolResponses.map(el => el.data.pool)
+        return poolResponses.map((el) => el.data.pool)
       }
     } catch (error) {
       console.error(error)
@@ -177,10 +179,10 @@ export default class SinfoniaClient {
   public extraGaugesDetails = async (ids: string[]) => {
     try {
       if (this.osmosisClient) {
-        const gaugeRequests = ids.map(id => this.osmosisClient?.gaugeById(id))
+        const gaugeRequests = ids.map((id) => this.osmosisClient?.gaugeById(id))
         const responses = await Promise.all(gaugeRequests)
 
-        return compact(responses.map(response => response?.data.gauge))
+        return compact(responses.map((response) => response?.data.gauge))
       }
     } catch (error) {
       console.error(error)
@@ -190,7 +192,7 @@ export default class SinfoniaClient {
     return []
   }
 
-	public assetLists = async () => {
+  public assetLists = async () => {
     try {
       const response = await this.configClient.assetLists()
 
@@ -199,14 +201,20 @@ export default class SinfoniaClient {
         bitsongToken: tokenWithDefaults(response.data.bitsongToken),
         osmosisToken: tokenWithDefaults(response.data.osmosisToken),
         tokens: mapTokensWithDefaults(response.data.tokens),
-        fantokens: mapTokensWithDefaults(response.data.fantokens).map(fantoken => ({
-          ...response.data.bitsongToken,
-          ...fantoken
-        }))
+        fantokens: mapTokensWithDefaults(response.data.fantokens).map(
+          (fantoken) => ({
+            ...response.data.bitsongToken,
+            ...fantoken,
+          })
+        ),
       }
 
-      this.osmosisClient = new OsmosisClient(this.assetListsConfig.osmosisToken.apiURL)
-      this.bitsongClient = new BitsongClient(this.assetListsConfig.bitsongToken.apiURL)
+      this.osmosisClient = new OsmosisClient(
+        this.assetListsConfig.osmosisToken.apiURL
+      )
+      this.bitsongClient = new BitsongClient(
+        this.assetListsConfig.bitsongToken.apiURL
+      )
 
       return this.assetListsConfig
     } catch (error) {
@@ -230,23 +238,28 @@ export default class SinfoniaClient {
   public balances = async (bitsongAddress: string, osmosisAddress: string) => {
     try {
       if (this.bitsongClient && this.osmosisClient && this.assetListsConfig) {
-        const [bitsongResponse, osmosisResponse, lockedCoinsResponse, lockedLongerDurationResponse] = await Promise.all([
+        const [
+          bitsongResponse,
+          osmosisResponse,
+          lockedCoinsResponse,
+          lockedLongerDurationResponse,
+        ] = await Promise.all([
           this.bitsongClient.bankBalances(bitsongAddress),
           this.osmosisClient.bankBalances(osmosisAddress),
           this.osmosisClient.accountLockedCoins(osmosisAddress),
-          this.osmosisClient.accountLockedLongerDuration(osmosisAddress)
+          this.osmosisClient.accountLockedLongerDuration(osmosisAddress),
         ])
 
         return {
           osmosisBalance: osmosisResponse.data.balances,
           bitsongBalance: bitsongResponse.data.balances.filter(
-            el => !this.allowedFantokenDenom.includes(el.denom)
+            (el) => !this.allowedFantokenDenom.includes(el.denom)
           ),
-          fantokensBalance: bitsongResponse.data.balances.filter(
-            el => this.allowedFantokenDenom.includes(el.denom)
+          fantokensBalance: bitsongResponse.data.balances.filter((el) =>
+            this.allowedFantokenDenom.includes(el.denom)
           ),
           lockedCoinsBalance: lockedCoinsResponse.data.coins,
-          lockedLongerDuration: lockedLongerDurationResponse.data.locks
+          lockedLongerDuration: lockedLongerDurationResponse.data.locks,
         }
       }
     } catch (error) {
@@ -294,7 +307,7 @@ export default class SinfoniaClient {
       for (const fantoken of assetListsConfig.fantokens) {
         const coinLookup = fantoken.coinLookup.find(
           (coin) => coin.viewDenom === fantoken.symbol
-        );
+        )
 
         if (coinLookup && coinLookup.fantokenDenom) {
           denoms.push(coinLookup.fantokenDenom)
@@ -311,7 +324,7 @@ export default class SinfoniaClient {
     const assetListsConfig = this.assetListsConfig
 
     if (assetListsConfig) {
-      return assetListsConfig.pools.map(el => el.id)
+      return assetListsConfig.pools.map((el) => el.id)
     }
 
     return []

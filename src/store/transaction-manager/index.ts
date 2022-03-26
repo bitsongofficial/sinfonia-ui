@@ -1,33 +1,38 @@
-import { osmosisRegistry } from '@/signing/registry';
-import useConfig from '@/store/config';
-import useAuth from '@/store/auth';
-import { amountIBCFromCoin, amountFromCoin } from '@/common/numbers'
-import { TransactionManager } from '@/signing/transaction-manager'
-import { LockableDurationWithApr, Token, Transaction } from '@/types'
-import { Coin } from '@cosmjs/proto-signing'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import useConfig from "@/store/config"
+import useAuth from "@/store/auth"
+import { amountIBCFromCoin, amountFromCoin } from "@/common/numbers"
+import { TransactionManager } from "@/signing/transaction-manager"
+import { LockableDurationWithApr, Token, Transaction } from "@/types"
+import { Coin } from "@cosmjs/proto-signing"
+import { acceptHMRUpdate, defineStore } from "pinia"
 
 export interface TransactionManagerState {
 	loading: boolean
 	transactions: Transaction[]
 }
 
-const useTransactionManager = defineStore('transactionManager', {
+const useTransactionManager = defineStore("transactionManager", {
 	state: (): TransactionManagerState => ({
 		loading: false,
-		transactions: []
+		transactions: [],
 	}),
 	actions: {
 		// IBC Transfer from Token to Osmosis or viceversa
-		async sendIbcTokens(senderAddress: string, recipientAddress: string, from: Token, to: Token, amount: string) {
-      try {
-        this.loading = true
+		async sendIbcTokens(
+			senderAddress: string,
+			recipientAddress: string,
+			from: Token,
+			to: Token,
+			amount: string
+		) {
+			try {
+				this.loading = true
 
 				if (window.keplr) {
 					const signer = await window.keplr.getOfflineSignerOnlyAmino(from.chainID)
 					const manager = new TransactionManager(signer, from)
 					let transferAmount: Coin | undefined = undefined
-					let sourceChannel = ''
+					let sourceChannel = ""
 
 					if (from.ibcEnabled) {
 						sourceChannel = from.ibc.osmosis.destChannelId
@@ -38,14 +43,6 @@ const useTransactionManager = defineStore('transactionManager', {
 					}
 
 					if (transferAmount) {
-						let sourceChannel = ''
-
-						if (from.ibcEnabled) {
-							sourceChannel = from.ibc.osmosis.destChannelId
-						} else {
-							sourceChannel = to.ibc.osmosis.sourceChannelId
-						}
-
 						const tsx = await manager.sendIbcTokens(
 							senderAddress,
 							recipientAddress,
@@ -56,22 +53,24 @@ const useTransactionManager = defineStore('transactionManager', {
 						console.log(tsx)
 					}
 				}
-      } catch (error) {
-        console.error(error)
-        throw error
-      } finally {
-        this.loading = false
-      }
-    },
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
 		async lockTokens(duration: LockableDurationWithApr, coins: Coin[]) {
 			const authStore = useAuth()
 			const configStore = useConfig()
 
-      try {
-        this.loading = true
+			try {
+				this.loading = true
 
 				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(configStore.osmosisToken.chainID)
+					const signer = await window.keplr.getOfflineSignerAuto(
+						configStore.osmosisToken.chainID
+					)
 					const manager = new TransactionManager(signer, configStore.osmosisToken)
 
 					const tsx = await manager.lockTokens(
@@ -82,43 +81,42 @@ const useTransactionManager = defineStore('transactionManager', {
 
 					console.log(tsx)
 				}
-      } catch (error) {
-        console.error(error)
-        throw error
-      } finally {
-        this.loading = false
-      }
-    },
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
 		async beginUnlocking(id: string) {
 			const authStore = useAuth()
 			const configStore = useConfig()
 
-      try {
-        this.loading = true
+			try {
+				this.loading = true
 
 				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(configStore.osmosisToken.chainID)
+					const signer = await window.keplr.getOfflineSignerAuto(
+						configStore.osmosisToken.chainID
+					)
 					const manager = new TransactionManager(signer, configStore.osmosisToken)
 
-					const tsx = await manager.beginUnlocking(
-						authStore.osmosisAddress,
-						id
-					)
+					const tsx = await manager.beginUnlocking(authStore.osmosisAddress, id)
 
 					console.log(tsx)
 				}
-      } catch (error) {
-        console.error(error)
-        throw error
-      } finally {
-        this.loading = false
-      }
-    }
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
 	},
-  persistedState: {
+	persistedState: {
 		persist: true,
-		includePaths: ['transactions']
-	}
+		includePaths: ["transactions"],
+	},
 })
 
 if (import.meta.hot) {
