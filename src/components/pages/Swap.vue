@@ -195,14 +195,14 @@ onUnmounted(() => {
 							<template v-slot:body-cell-token="slotProps">
 								<q-td :props="slotProps">
 									<div class="flex no-wrap items-center">
-										<ImagePair
+										<!-- <ImagePair
 											:image1="slotProps.row.coin1.iconUrl"
 											:image2="slotProps.row.coin2.iconUrl"
 											:size="24"
 											:smaller-size="20"
 											:offset="[-8, -1]"
 										>
-										</ImagePair>
+										</ImagePair> -->
 									</div>
 								</q-td>
 							</template>

@@ -57,20 +57,45 @@ export const BeginUnlocking = (
 	senderAddress: string, // Owner
 	id: string
 ): SignerMessage<any> => {
-	console.log(
-		senderAddress,
-		id,
-		osmosis.lockup.MsgBeginUnlocking.encode({
-			owner: senderAddress,
-			ID: Long.fromString(id),
-		}).finish()
-	)
-
 	return {
 		typeUrl: "/osmosis.lockup.MsgBeginUnlocking",
 		value: {
 			owner: senderAddress,
 			ID: Long.fromString(id),
+		},
+	}
+}
+
+export const JoinPool = (
+	senderAddress: string, // Owner
+	poolId: string,
+	shareOutAmount: string,
+	tokenInMaxs: Coin[]
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/osmosis.gamm.v1beta1.MsgJoinPool",
+		value: {
+			sender: senderAddress,
+			poolId: Long.fromString(poolId),
+			shareOutAmount,
+			tokenInMaxs,
+		},
+	}
+}
+
+export const JoinSwapExternAmountIn = (
+	senderAddress: string, // Owner
+	poolId: string,
+	tokenIn: Coin,
+	shareOutMinAmount: string
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn",
+		value: {
+			sender: senderAddress,
+			poolId: Long.fromString(poolId),
+			tokenIn,
+			shareOutMinAmount,
 		},
 	}
 }

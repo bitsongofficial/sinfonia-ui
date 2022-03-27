@@ -1,6 +1,6 @@
 import { compact } from "lodash"
 import { sinfoniaClient } from "@/services"
-import { acceptHMRUpdate, defineStore } from "pinia"
+import { defineStore } from "pinia"
 import {
 	DistrInfo,
 	Epoch,
@@ -148,8 +148,8 @@ const usePools = defineStore("pools", {
 	},
 })
 
-if (import.meta.hot) {
+/* if (import.meta.hot) {
 	import.meta.hot.accept(acceptHMRUpdate(usePools, import.meta.hot))
-}
+} */
 
 export default usePools

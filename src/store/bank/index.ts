@@ -129,6 +129,9 @@ const useBank = defineStore("bank", {
 						osmosisChain = {
 							name: configStore.osmosisToken.name,
 							symbol: configStore.osmosisToken.symbol,
+							denom: token.ibcEnabled
+								? token.ibc.osmosis.sourceDenom
+								: coinLookup.chainDenom,
 							logos: configStore.osmosisToken.logos,
 							total: osmosisTotal.toString(),
 							available: osmosisAvailable.toString(),
@@ -157,6 +160,7 @@ const useBank = defineStore("bank", {
 						bitsongChain = {
 							name: token.name,
 							symbol: token.symbol,
+							denom: token.ibc.osmosis.sourceDenom,
 							logos: token.logos,
 							total: bitsongTotal.toString(),
 							available: bitsongAvailable.toString(),
@@ -246,6 +250,24 @@ const useBank = defineStore("bank", {
 						lockedLonger.coins.filter((coin) => coin.denom === `gamm/pool/${poolID}`)
 							.length > 0 && lockedLonger.duration === duration
 				)
+		},
+		osmosisAvailableBalances() {
+			return (denoms: string[]) =>
+				this.balances.filter((balance) => {
+					if (balance.ibcEnabled) {
+						return denoms.includes(balance.ibc.osmosis.sourceDenom)
+					}
+
+					const coinLookup = balance.coinLookup.find(
+						(coin) => coin.viewDenom === balance.symbol
+					)
+
+					if (coinLookup) {
+						return denoms.includes(coinLookup.chainDenom)
+					}
+
+					return false
+				})
 		},
 	},
 	persistedState: {

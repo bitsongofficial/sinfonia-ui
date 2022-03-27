@@ -16,11 +16,7 @@ const show = ref(false)
 	<div class="row q-mb-34">
 		<div class="col-4">
 			<div class="q-pr-24">
-				<ImagePair
-					:image1="props.pool.coin1?.token.logos.default"
-					:image2="props.pool.coin2?.token.logos.default"
-				>
-				</ImagePair>
+				<ImagePair :coins="pool.coins"> </ImagePair>
 			</div>
 		</div>
 		<div class="col-4 q-ml--12">
@@ -29,13 +25,15 @@ const show = ref(false)
 					<p class="fs-12 opacity-40 text-weight-medium q-mb-8">
 						Pool {{ pool.id }}
 					</p>
-					<p class="fs-16 font-weight-bold w-fit" v-if="pool.coin1">
-						{{ pool.coin1.token.symbol }}
-					</p>
-					<div class="separator q-my-4"></div>
-					<p class="fs-16 font-weight-bold w-fit" v-if="pool.coin2">
-						{{ pool.coin2.token.symbol }}
-					</p>
+					<template v-for="(coin, index) in pool.coins" :key="index">
+						<p class="fs-16 font-weight-bold w-fit">
+							{{ coin.token.symbol }}
+						</p>
+						<div
+							class="separator q-my-4"
+							v-if="index !== pool.coins.length - 1"
+						></div>
+					</template>
 				</div>
 				<div class="q-mr--12" @click.native.prevent="show = true">
 					<q-icon

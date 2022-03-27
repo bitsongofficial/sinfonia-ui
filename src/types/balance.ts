@@ -3,6 +3,7 @@ import { BaseToken, Token } from "./config"
 export interface Balance {
 	total?: string
 	available?: string
+	denom?: string
 	bonded?: string
 	totalFiat?: string
 	availableFiat?: string

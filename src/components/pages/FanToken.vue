@@ -26,6 +26,7 @@ const poolsStore = usePools()
 const coin = newCoin("$CLAY", "Adam Clay")
 const timeOptions = ["Today", "Tomorrow", "Toyota"]
 const selected = ref(timeOptions[0])
+
 const tabs = [
 	{
 		tooltip:
@@ -438,18 +439,17 @@ onUnmounted(() => {
 						<q-td :props="slotProps">
 							<div class="flex no-wrap items-center">
 								<ImagePair
-									v-if="slotProps.row.coin1 && slotProps.row.coin2"
-									:image1="slotProps.row.coin1.token.logos.default"
-									:image2="slotProps.row.coin2.token.logos.default"
+									:coins="slotProps.row.coins"
 									class="q-mr-30"
 									:size="32"
 									:smaller-size="26"
 									:offset="[-8, -1]"
-								>
-								</ImagePair>
+								/>
 								<p class="fs-14 text-weight-medium">
-									{{ slotProps.row.coin1.token.symbol }} /
-									{{ slotProps.row.coin2.token.symbol }}
+									<template v-for="(coin, index) of slotProps.row.coins" :key="index">
+										{{ coin.token.symbol }}
+										{{ index === slotProps.row.coins.length - 1 ? "" : "/" }}
+									</template>
 								</p>
 							</div>
 						</q-td>
