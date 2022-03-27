@@ -1,4 +1,5 @@
 import { DeliverTxResponse } from "@cosmjs/stargate"
+import { Token } from "./config"
 
 export enum TransactionStatus {
 	PENDING = "pending",
@@ -8,5 +9,6 @@ export enum TransactionStatus {
 
 export interface Transaction {
 	tx: DeliverTxResponse
+	from: Token
 	status: TransactionStatus
 }
