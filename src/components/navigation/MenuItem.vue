@@ -24,7 +24,7 @@ const url = props.url ? props.url : "/"
 				:height="height"
 				class="fs-20 min-s-50"
 			></IconButton>
-			<div class="absolute text-white">
+			<div class="absolute text-white gt-xs">
 				<div class="fs-16">
 					<slot></slot>
 				</div>
@@ -42,7 +42,7 @@ const url = props.url ? props.url : "/"
 				:height="height"
 				class="fs-20 min-s-50"
 			></IconButton>
-			<div class="absolute text-white">
+			<div class="absolute text-white gt-xs">
 				<div class="fs-16">
 					<slot></slot>
 				</div>

@@ -4,6 +4,7 @@ import Header from "@/components/navigation/Header.vue"
 import SideMenu from "@/components/navigation/SideMenu.vue"
 import WalletAddress from "@/components/WalletAddress.vue"
 import useBootstrap from "@/hooks/useBootstrap"
+import { externalWebsites } from "./configs/config"
 
 const { bootstrap } = useBootstrap()
 
@@ -11,26 +12,26 @@ bootstrap()
 </script>
 
 <template>
-	<div class="min-h-window-height q-pt-70 q-pb-60 column">
+	<div class="min-h-window-height q-pt-70 q-pb-60 q-pb-xs-150 column">
 		<div class="container column col-grow">
 			<Header></Header>
-			<div class="flex col-grow q-col-gutter-x-xl">
+			<div class="flex col-grow q-col-gutter-x-xl no-pointer-events">
 				<div
-					class="w-xs-1/3 w-sm-1/4 w-md-1/6 self-end absolute-xs left-0 bottom-0"
+					class="full-width !w-xs-1/3 q-px-xs-0 !w-sm-1/4 !w-md-1/6 self-end fixed-xs bg-xs-white left-0 bottom-0"
 				>
 					<div class="column justify-end">
 						<div
-							class="vertical-sm-fixed q-mt-vsm-40 no-pointer-events top-0 vertical-sm-window-height min-h-fit column justify-center"
+							class="vertical-sm-fixed relative-xs flex-xs items-center-xs justify-end-xs q-mt-vsm-40 top-0 bottom-xs-0 vertical-sm-window-height min-h-fit column justify-center"
 						>
 							<SideMenu class="all-pointer-events"></SideMenu>
 						</div>
 						<div
-							class="vertical-sm-fixed no-pointer-events bottom-0 q-mb-40 q-pt-lg w-fit"
+							class="vertical-sm-fixed full-width flex-xs jsutify-center-xs relative-xs no-pointer-events bottom-0 q-mb-40 q-mb-xs-14 q-pt-lg w-fit"
 						>
-							<p class="text-center fs-12 text-weight-medium opacity-30 q-mb-15">
+							<a :href="externalWebsites.coingecko" class="all-pointer-events text-center fs-12 text-weight-medium opacity-30 q-mb-15">
 								Price Data by CoinGecko
-							</p>
-							<WalletAddress class="all-pointer-events"></WalletAddress>
+							</a>
+							<WalletAddress class="all-pointer-events gt-xs"></WalletAddress>
 						</div>
 					</div>
 				</div>
