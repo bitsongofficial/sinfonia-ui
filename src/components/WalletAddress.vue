@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import IconButton from "./buttons/IconButton.vue"
-import LargeButton from "./buttons/LargeButton.vue"
+import { formatShortAddress } from "@/common"
+import IconButton from "@/components/buttons/IconButton.vue"
+import LargeButton from "@/components/buttons/LargeButton.vue"
 import useAuth from "@/store/auth"
+import useClipboard from "@/hooks/useClipboard"
 
 const authStore = useAuth()
+
+const { onCopy } = useClipboard()
 </script>
 <template>
 	<div
@@ -13,14 +16,21 @@ const authStore = useAuth()
 	>
 		<div class="q-mr-50">
 			<p class="text-uppercase text-caption fs-8 opacity-40 q-mb-3">Address</p>
-			<p class="text-weight-bold text-subtitle1 fs-12">bitsong1...u085</p>
+			<p
+				class="text-weight-bold text-subtitle1 fs-12"
+				v-if="authStore.bitsongAddress"
+			>
+				{{ formatShortAddress(authStore.bitsongAddress) }}
+			</p>
 		</div>
 		<IconButton
 			icon="copy"
 			width="20"
 			height="20"
 			class="opacity-40 fs-15"
-		></IconButton>
+			v-if="authStore.bitsongAddress"
+			@click="onCopy(authStore.bitsongAddress)"
+		/>
 	</div>
 	<div v-else>
 		<LargeButton :padding-x="36" fit @click="authStore.signIn"
