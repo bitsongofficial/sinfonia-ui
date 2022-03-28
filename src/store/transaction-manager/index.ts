@@ -1,15 +1,28 @@
+import useBank from "@/store/bank"
+import usePools from "@/store/pools"
 import useConfig from "@/store/config"
 import useAuth from "@/store/auth"
 import { amountIBCFromCoin, amountFromCoin } from "@/common/numbers"
 import { TransactionManager } from "@/signing/transaction-manager"
-import { LockableDurationWithApr, Token, Transaction } from "@/types"
+import {
+	LockableDurationWithApr,
+	Token,
+	Transaction,
+	TransactionStatus,
+} from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
 import { acceptHMRUpdate, defineStore } from "pinia"
+import { DeliverTxResponse } from "@cosmjs/stargate"
+import { notifyError, notifySuccess } from "@/common"
+import ChainClient from "@/services/chain-client"
 
 export interface TransactionManagerState {
 	loading: boolean
 	transactions: Transaction[]
 }
+
+const pollingTime = 5000
+let subscription: NodeJS.Timeout
 
 const useTransactionManager = defineStore("transactionManager", {
 	state: (): TransactionManagerState => ({
@@ -50,11 +63,12 @@ const useTransactionManager = defineStore("transactionManager", {
 							sourceChannel
 						)
 
-						console.log(tsx)
+						this.addPendingTx(tsx, from)
 					}
 				}
 			} catch (error) {
 				console.error(error)
+				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
 				this.loading = false
@@ -79,10 +93,11 @@ const useTransactionManager = defineStore("transactionManager", {
 						coins
 					)
 
-					console.log(tsx)
+					this.addPendingTx(tsx, configStore.osmosisToken)
 				}
 			} catch (error) {
 				console.error(error)
+				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
 				this.loading = false
@@ -103,14 +118,82 @@ const useTransactionManager = defineStore("transactionManager", {
 
 					const tsx = await manager.beginUnlocking(authStore.osmosisAddress, id)
 
-					console.log(tsx)
+					this.addPendingTx(tsx, configStore.osmosisToken)
 				}
 			} catch (error) {
 				console.error(error)
+				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
 				this.loading = false
 			}
+		},
+		addPendingTx(tsx: DeliverTxResponse, from: Token) {
+			this.transactions.push({
+				tx: tsx,
+				from,
+				status: TransactionStatus.PENDING,
+			})
+
+			this.clearSubscription()
+			this.subscribe()
+		},
+		subscribe() {
+			subscription = setInterval(async () => {
+				let transactions = [...this.transactions]
+				const pendingTransactions = transactions.filter(
+					(transaction) => transaction.status === TransactionStatus.PENDING
+				)
+
+				if (pendingTransactions.length > 0) {
+					const requests: Promise<Partial<DeliverTxResponse>>[] = []
+
+					for (const transaction of pendingTransactions) {
+						const chainClient = new ChainClient(transaction.from.apiURL)
+
+						requests.push(chainClient.tx(transaction.tx.transactionHash))
+					}
+
+					const responses = await Promise.all(requests)
+
+					transactions = transactions.map((transaction) => {
+						const response = responses.find(
+							(el) => el.transactionHash === transaction.tx.transactionHash
+						)
+						let status = TransactionStatus.SUCCESS
+
+						if (response) {
+							if (response.code === 404) {
+								status = TransactionStatus.FAILED
+
+								notifyError("Transaction Failed", "Request Rejected, try later.")
+							} else {
+								notifySuccess("Transaction Successful", "View Explorer")
+								const poolsStore = usePools()
+								const bankStore = useBank()
+								poolsStore.init()
+								bankStore.loadBalances()
+							}
+
+							return {
+								...transaction,
+								status,
+							}
+						}
+
+						return {
+							...transaction,
+						}
+					})
+
+					this.transactions = transactions
+				} else {
+					this.clearSubscription()
+				}
+			}, pollingTime)
+		},
+		clearSubscription() {
+			clearInterval(subscription)
 		},
 	},
 	persistedState: {

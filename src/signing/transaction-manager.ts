@@ -12,6 +12,8 @@ import {
 	SigningStargateClient,
 } from "@cosmjs/stargate"
 import { osmosisRegistry } from "./registry"
+import { notifyLoading } from "@/common"
+import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx"
 
 export class TransactionManager {
 	signer: OfflineSigner | OfflineDirectSigner
@@ -155,11 +157,15 @@ export class TransactionManager {
 			}
 		)
 
-		const txResult = await client.signAndBroadcast(
-			senderAddress,
-			messages,
-			stdFee,
-			memo || ""
+		const raw = await client.sign(senderAddress, messages, stdFee, memo || "")
+
+		notifyLoading(
+			"Transaction Broadcasting",
+			"Waiting for transaction to be included in the block"
+		)
+
+		const txResult = await client.broadcastTx(
+			Uint8Array.from(TxRaw.encode(raw).finish())
 		)
 
 		assertIsDeliverTxSuccess(txResult)

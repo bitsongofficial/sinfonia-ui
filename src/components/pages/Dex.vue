@@ -52,7 +52,13 @@ const columns: TableColumn[] = [
 		:rows="configStore.fantokens"
 		@row-click="
 			(_, row, index) => {
-				$router.push('/fantokens/prova')
+				const coinLookup = row.coinLookup.find(
+					(coin) => coin.viewDenom === row.symbol
+				)
+
+				if (coinLookup) {
+					$router.push(`/fantokens/${coinLookup.fantokenDenom}`)
+				}
 			}
 		"
 	/>

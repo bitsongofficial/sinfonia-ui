@@ -19,12 +19,14 @@ import { reduce } from "lodash"
 import { Coin } from "@cosmjs/proto-signing"
 import { formatEpochDate, unboundingEndTimeStart, fromNow } from "@/common"
 import useTransactionManager from "@/store/transaction-manager"
+import LiquidityModal from "../modals/LiquidityModal.vue"
 
 const transactionManagerStore = useTransactionManager()
 const poolsStore = usePools()
 const route = useRoute()
 const id = route.params["id"] as string
 const openBondModal = ref(false)
+const openAddRemoveModal = ref(false)
 
 const pool = computed(() => poolsStore.poolById(id))
 const lpLiquidity = computed(() => {
@@ -36,6 +38,10 @@ const lpLiquidity = computed(() => {
 
 	return "0"
 })
+
+const poolTokensName = computed(() =>
+	pool.value?.coins.map((coin) => coin.token.symbol).join("/")
+)
 
 const columns: TableColumn[] = [
 	{
@@ -121,21 +127,14 @@ onUnmounted(() => {
 	<div class="text-white text-weight-medium" v-if="pool">
 		<div class="q-mb-90 flex justify-between items-center">
 			<div class="flex">
-				<ImagePair
-					:image1="pool.coin1?.token.logos.default"
-					:image2="pool.coin2?.token.logos.default"
-					class="q-mr-20"
-				>
-				</ImagePair>
-				<h1 class="fs-27">
-					#{{ pool.id }}: {{ pool.coin1?.token.symbol }}/{{
-						pool.coin2?.token.symbol
-					}}
-				</h1>
+				<ImagePair :coins="pool.coins" class="q-mr-20"> </ImagePair>
+				<h1 class="fs-27">#{{ pool.id }}: {{ poolTokensName }}</h1>
 			</div>
 			<div class="flex items-center">
 				<OutlineButton class="q-mr-12">Swap Tokens</OutlineButton>
-				<StandardButton>Add/Remove Liquidity</StandardButton>
+				<StandardButton @click="openAddRemoveModal = true">
+					Add/Remove Liquidity
+				</StandardButton>
 			</div>
 		</div>
 		<div class="row q-col-gutter-x-xl q-col-gutter-y-lg q-mb-72">
@@ -159,41 +158,30 @@ onUnmounted(() => {
 						:padding="0"
 						class="q-px-30 q-py-20"
 					>
-						<div class="flex justify-between q-pt-24 q-mb-48" v-if="pool.coin1">
+						<div
+							class="flex justify-between"
+							v-for="(coin, index) in pool.coins"
+							:key="index"
+							:class="{
+								'q-mb-48': index !== pool.coins.length - 1,
+								'q-pt-24': index === 0,
+							}"
+						>
 							<div class="flex">
 								<PercentageWithImage
 									class="q-mr-22"
-									:image="pool.coin1.token.logos.default ?? ''"
-									:value="pool.coin1.weightPercentage * 100"
+									:image="coin.token.logos.default ?? ''"
+									:value="coin.weightPercentage * 100"
+									:negative="index % 2 !== 0"
 								/>
 								<div>
 									<p class="fs-21 q-mb-14">
-										{{ balancedCurrency(pool.coin1.token.amount) }}
+										{{ balancedCurrency(coin.token.amount) }}
 									</p>
-									<p class="fs-14">{{ percentage(pool.coin1.weightPercentage) }} %</p>
+									<p class="fs-14">{{ percentage(coin.weightPercentage) }} %</p>
 								</div>
 							</div>
-							<p class="fs-12 opacity-50">{{ pool.coin1.token.symbol }}</p>
-						</div>
-						<div class="flex justify-between" v-if="pool.coin2">
-							<div class="flex">
-								<PercentageWithImage
-									class="q-mr-22"
-									v-if="pool.coin2"
-									negative
-									:image="pool.coin2.token.logos.default ?? ''"
-									:value="pool.coin2.weightPercentage * 100"
-								/>
-								<div>
-									<p class="fs-21 q-mb-14">
-										{{ balancedCurrency(pool.coin2.token.amount) }}
-									</p>
-									<p class="fs-14">{{ percentage(pool.coin2.weightPercentage) }} %</p>
-								</div>
-							</div>
-							<p class="fs-12 opacity-50" v-if="pool.coin2">
-								{{ pool.coin2.token.symbol }}
-							</p>
+							<p class="fs-12 opacity-50">{{ coin.token.symbol }}</p>
 						</div>
 					</CardWithHeader>
 				</div>
@@ -342,5 +330,6 @@ onUnmounted(() => {
 		</LightTable>
 
 		<BondModal v-model="openBondModal" :pool="pool" />
+		<LiquidityModal v-model="openAddRemoveModal" :pool="pool" />
 	</div>
 </template>

@@ -18,7 +18,7 @@ import useConfig from "@/store/config"
 import usePools from "@/store/pools"
 import usePrices from "@/store/prices"
 import { mapLockableDuration } from "./duration"
-import { max } from "lodash"
+import { compact, max } from "lodash"
 import { add, parseISO } from "date-fns"
 import { Coin } from "@cosmjs/proto-signing"
 
@@ -86,6 +86,9 @@ export const tokenToPoolAsset = (
 						totalTokenGamm.toString(),
 						coinLookup.chainToViewConversionFactor
 					),
+					denom: token.ibcEnabled
+						? token.ibc.osmosis.sourceDenom
+						: coinLookup.chainDenom,
 					userTotalAmount: gammToPoolAmount(
 						userTotalGamm,
 						totalPoolGamm,
@@ -118,45 +121,27 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 
 	return rawPools.map((pool) => {
 		const poolAssets = [...pool.poolAssets]
-		const rawCoin1 = poolAssets.shift()
-		const rawCoin2 = poolAssets.pop()
-		let coin1: PoolAsset | undefined = undefined
-		let coin2: PoolAsset | undefined = undefined
 		let liquidity = new BigNumber("0")
 		let userLiquidity = new BigNumber("0")
 		let bonded = new BigNumber("0")
 
-		if (rawCoin1) {
-			coin1 = tokenToPoolAsset(pool, rawCoin1)
+		const coins = poolAssets.map((asset) => {
+			const coin = tokenToPoolAsset(pool, asset)
 
-			if (coin1) {
-				const coinLiquidity = new BigNumber(coin1.token.amount)
-				const userTotalAmount = new BigNumber(coin1.token.userTotalAmount)
-				const bondedAmount = new BigNumber(coin1.token.bondedAmount)
+			if (coin) {
+				const coinLiquidity = new BigNumber(coin.token.amount)
+				const userTotalAmount = new BigNumber(coin.token.userTotalAmount)
+				const bondedAmount = new BigNumber(coin.token.bondedAmount)
 
-				liquidity = liquidity.plus(coinLiquidity.multipliedBy(coin1.token.price))
+				liquidity = liquidity.plus(coinLiquidity.multipliedBy(coin.token.price))
 				userLiquidity = userLiquidity.plus(
-					userTotalAmount.multipliedBy(coin1.token.price)
+					userTotalAmount.multipliedBy(coin.token.price)
 				)
-				bonded = bonded.plus(bondedAmount.multipliedBy(coin1.token.price))
+				bonded = bonded.plus(bondedAmount.multipliedBy(coin.token.price))
 			}
-		}
 
-		if (rawCoin2) {
-			coin2 = tokenToPoolAsset(pool, rawCoin2)
-
-			if (coin2) {
-				const coinLiquidity = new BigNumber(coin2.token.amount)
-				const userTotalAmount = new BigNumber(coin2.token.userTotalAmount)
-				const bondedAmount = new BigNumber(coin2.token.bondedAmount)
-
-				liquidity = liquidity.plus(coinLiquidity.multipliedBy(coin2.token.price))
-				userLiquidity = userLiquidity.plus(
-					userTotalAmount.multipliedBy(coin2.token.price)
-				)
-				bonded = bonded.plus(bondedAmount.multipliedBy(coin2.token.price))
-			}
-		}
+			return coin
+		})
 
 		let availableLPTokens = new BigNumber("0")
 		const availableBalances: Coin[] = bankStore.osmosisBalance.filter(
@@ -193,8 +178,7 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 
 		return {
 			...pool,
-			coin1,
-			coin2,
+			coins: compact(coins),
 			lockableDurationApr,
 			APR: new BigNumber(maxIncentivizedApr ?? "0").toString(),
 			liquidity: liquidity.toString(),

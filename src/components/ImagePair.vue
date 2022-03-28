@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { PoolAsset } from "@/types"
 import { computed } from "vue"
 
 const props = defineProps<{
-	image1?: string
-	image2?: string
+	coins: PoolAsset[]
 	size?: number
 	smallerSize?: number
 	offset?: number[]
@@ -28,18 +28,20 @@ const style = props.offset
 
 <template>
 	<div class="relative-position w-fit">
-		<q-img
-			v-if="image1"
-			:src="image1"
-			:class="'rounded cover ' + sizeClass"
-			fit="cover"
-		/>
-		<div class="absolute right-0 bottom-0" :style="style" v-if="image2">
+		<template v-for="(coin, index) of coins" :key="index">
 			<q-img
-				:src="image2"
-				:class="'rounded cover ' + smallerSizeClass"
+				v-if="index === 0"
+				:src="coin.token.logos.default"
+				:class="'rounded cover ' + sizeClass"
 				fit="cover"
 			/>
-		</div>
+			<div class="absolute right-0 bottom-0" :style="style" v-else>
+				<q-img
+					:src="coin.token.logos.default"
+					:class="'rounded cover ' + smallerSizeClass"
+					fit="cover"
+				/>
+			</div>
+		</template>
 	</div>
 </template>

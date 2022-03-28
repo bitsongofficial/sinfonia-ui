@@ -20,12 +20,16 @@ import { TableColumn } from "@/types/table"
 import ImagePair from "../ImagePair.vue"
 import usePools from "@/store/pools"
 import { Pool } from "@/types"
+import { useRoute } from "vue-router"
 
 const poolsStore = usePools()
+const route = useRoute()
+const id = route.params["id"] as string
 
 const coin = newCoin("$CLAY", "Adam Clay")
 const timeOptions = ["Today", "Tomorrow", "Toyota"]
 const selected = ref(timeOptions[0])
+
 const tabs = [
 	{
 		tooltip:
@@ -167,7 +171,7 @@ onUnmounted(() => {
 			<div class="col-8 col-md-4 column items-end">
 				<p class="text-dark fs-12 text-uppercase q-mb-10">Price</p>
 				<p class="fs-44 q-mb-12">$ {{ smallNumber(coin.price) }}</p>
-				<div class="flex items-center q-mb-42">
+				<!-- <div class="flex items-center q-mb-42">
 					<StandardSelect
 						color="dark"
 						v-model="selected"
@@ -175,25 +179,25 @@ onUnmounted(() => {
 						class="q-mr-30 text-uppercase"
 					></StandardSelect>
 					<p class="fs-24">{{ percentage(coin.lastDayGain) }} %</p>
-				</div>
+				</div> -->
 				<div class="flex">
-					<div class="q-mr-66">
+					<div>
 						<p class="fs-12 text-dark q-mb-10 text-uppercase text-right">
 							Avg pool APR
 						</p>
 						<p class="fs-32">{{ percentage(34.45) }} %</p>
 					</div>
-					<div>
+					<!-- <div>
 						<p class="fs-12 text-dark q-mb-10 text-uppercase text-right">Backers</p>
 						<p class="fs-32">547</p>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>
 		<Tabs :options="tabs">
 			<template v-slot:info> </template>
 			<template v-slot:analytics>
-				<p class="fs-16 opacity-30 q-mb-12">Token</p>
+				<!-- <p class="fs-16 opacity-30 q-mb-12">Token</p>
 				<div class="flex justify-between items-center q-mb-30">
 					<p class="fs-32 font-weight-bold">
 						{{ coin.symbol }}
@@ -274,7 +278,7 @@ onUnmounted(() => {
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<div class="q-mb-52">
 					<p class="fs-16 opacity-30 q-mb-24">Tokenomics</p>
 					<div class="row q-col-gutter-xl">
@@ -438,18 +442,17 @@ onUnmounted(() => {
 						<q-td :props="slotProps">
 							<div class="flex no-wrap items-center">
 								<ImagePair
-									v-if="slotProps.row.coin1 && slotProps.row.coin2"
-									:image1="slotProps.row.coin1.token.logos.default"
-									:image2="slotProps.row.coin2.token.logos.default"
+									:coins="slotProps.row.coins"
 									class="q-mr-30"
 									:size="32"
 									:smaller-size="26"
 									:offset="[-8, -1]"
-								>
-								</ImagePair>
+								/>
 								<p class="fs-14 text-weight-medium">
-									{{ slotProps.row.coin1.token.symbol }} /
-									{{ slotProps.row.coin2.token.symbol }}
+									<template v-for="(coin, index) of slotProps.row.coins" :key="index">
+										{{ coin.token.symbol }}
+										{{ index === slotProps.row.coins.length - 1 ? "" : "/" }}
+									</template>
 								</p>
 							</div>
 						</q-td>
