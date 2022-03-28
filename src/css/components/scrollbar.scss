@@ -5,6 +5,10 @@
     scrollbar-width: thin;
 }
 
+.overflow-overlay {
+    overflow: overlay;
+}
+
 ::-webkit-scrollbar {
     width: $scrollbarSize;
     height: $scrollbarSize;
