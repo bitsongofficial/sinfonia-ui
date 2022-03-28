@@ -1,136 +1,34 @@
 <script setup lang="ts">
 import { Pool } from "@/types"
-import { watch, ref, onUnmounted, computed } from "vue"
-import ModalWithClose from "./ModalWithClose.vue"
-import Amount from "../inputs/Amount.vue"
-import PercentageWithImage from "../infographics/PercentageWithImage.vue"
-import { percentage, amountBalancer, amountIBCFromCoin } from "@/common"
+import { toRef } from "vue"
+import { percentage } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
-import LargeButton from "../buttons/LargeButton.vue"
-import Progress from "../Progress.vue"
-import useBank from "@/store/bank"
-import useConfig from "@/store/config"
-import useTransactionManager from "@/store/transaction-manager"
-import { Coin } from "@cosmjs/proto-signing"
-import { BigNumber } from "bignumber.js"
-import { coinsConfig } from "@/configs/config"
-
-const bankStore = useBank()
-const configStore = useConfig()
-const transactionManagerStore = useTransactionManager()
+import ModalWithClose from "@/components/modals/ModalWithClose.vue"
+import Amount from "@/components/inputs/Amount.vue"
+import PercentageWithImage from "@/components/infographics/PercentageWithImage.vue"
+import LargeButton from "@/components/buttons/LargeButton.vue"
+import Progress from "@/components/Progress.vue"
+import useLiquidityModal from "@/hooks/useLiquidityModal"
 
 const props = defineProps<{
 	pool: Pool
 }>()
 
-const add = ref(true)
-const coinsAmounts = ref({})
-const shareOutAmount = ref("0")
-const single = ref(false)
-const currentSingle = ref(0)
+const currentPool = toRef(props, "pool")
 
-const poolWatcher = watch(
-	() => props.pool,
-	() => {
-		const coinsAmountsMap = {}
-
-		props.pool.coins.forEach((coin) => {
-			coinsAmountsMap[coin.token.symbol] = "0"
-		})
-
-		coinsAmounts.value = coinsAmountsMap
-	},
-	{ immediate: true }
-)
-
-// Balances denoms on osmosis
-const balanceDenoms = computed(() =>
-	props.pool.coins.map((el) => el.token.denom)
-)
-
-const balances = computed(() => {
-	const balancesMap = {}
-
-	const tokenBalances = bankStore.osmosisAvailableBalances(balanceDenoms.value)
-
-	if (configStore.osmosisToken) {
-		tokenBalances.forEach((balance) => {
-			if (balance.chains) {
-				const chain = balance.chains.find(
-					(el) => el.symbol === configStore.osmosisToken?.symbol
-				)
-
-				if (chain) {
-					balancesMap[balance.symbol] = chain.available
-				} else {
-					balancesMap[balance.symbol] = "0"
-				}
-			}
-		})
-	}
-
-	return balancesMap
-})
-
-const removeValues = [0.25, 0.5, 0.75, 1]
-const removePercent = ref(removeValues[2])
-
-onUnmounted(() => {
-	poolWatcher()
-})
-
-const onSubmit = () => {
-	if (single.value) {
-	} else {
-		const tokenInMaxs: Coin[] = []
-		const joinSlippage = new BigNumber(coinsConfig.joinPoolSlippage).plus(1)
-
-		for (const symbol in coinsAmounts.value) {
-			const token = configStore.findTokenBySymbol(symbol)
-
-			if (token) {
-				const tokenInMax = amountIBCFromCoin(coinsAmounts.value[symbol], token)
-
-				if (tokenInMax) {
-					tokenInMaxs.push({
-						...tokenInMax,
-						amount: new BigNumber(tokenInMax.amount)
-							.multipliedBy(joinSlippage)
-							.toFixed(0),
-					})
-				}
-			}
-		}
-
-		transactionManagerStore.joinPool(
-			props.pool.id,
-			new BigNumber(shareOutAmount.value).toFixed(0),
-			tokenInMaxs
-		)
-	}
-}
-
-const changeToken = () => {
-	let nextIndex = currentSingle.value + 1
-
-	if (nextIndex > props.pool.coins.length - 1) {
-		nextIndex = 0
-	}
-
-	currentSingle.value = nextIndex
-}
-
-const onAmountChange = (symbol: string, rawAmount: string) => {
-	const balancer = amountBalancer(props.pool, symbol, rawAmount)
-	const tempCoinsAmounts = { ...coinsAmounts.value }
-
-	for (const symbol in balancer.assetsAmounts) {
-		tempCoinsAmounts[symbol] = balancer.assetsAmounts[symbol]
-	}
-
-	coinsAmounts.value = tempCoinsAmounts
-	shareOutAmount.value = balancer.shareOutAmount
-}
+const {
+	add,
+	single,
+	currentSingle,
+	coinsAmounts,
+	balances,
+	removePercent,
+	removeValues,
+	priceImpact,
+	onAmountChange,
+	onSubmit,
+	changeToken,
+} = useLiquidityModal(currentPool)
 </script>
 
 <template>
