@@ -12,6 +12,7 @@ import {
 	BeginUnlocking,
 	JoinPool,
 	JoinSwapExternAmountIn,
+	ExitPool,
 } from "./messages"
 import {
 	assertIsDeliverTxSuccess,
@@ -155,6 +156,23 @@ export class TransactionManager {
 
 		return this.createSignBroadcast(
 			"JoinSwapExternAmountIn",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public exitPool(
+		senderAddress: string,
+		poolId: string,
+		shareInAmount: string,
+		tokenOutMins: Coin[],
+		memo?: string
+	) {
+		const message = ExitPool(senderAddress, poolId, shareInAmount, tokenOutMins)
+
+		return this.createSignBroadcast(
+			"ExitPool",
 			[message],
 			senderAddress,
 			memo ?? ""

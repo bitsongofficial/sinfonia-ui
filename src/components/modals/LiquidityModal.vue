@@ -142,7 +142,7 @@ const {
 					</div>
 				</div>
 				<div class="flex justify-center">
-					<LargeButton fit :padding-y="14" class="q-px-52">
+					<LargeButton type="submit" fit :padding-y="14" class="q-px-52">
 						<span class="text-uppercase"> Remove liquidity </span>
 					</LargeButton>
 				</div>

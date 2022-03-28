@@ -1,5 +1,5 @@
-import { Dictionary } from "lodash"
-import { Pool } from "@/types"
+import { compact, Dictionary, reduce } from "lodash"
+import { Pool, PoolAsset } from "@/types"
 import { Ref, ref, computed, watch, onUnmounted } from "vue"
 import useBank from "@/store/bank"
 import useConfig from "@/store/config"
@@ -8,6 +8,7 @@ import {
 	amountBalancer,
 	amountIBCFromCoin,
 	calcPoolOutGivenSingleIn,
+	fromViewDenom,
 	percentageRange,
 	singleAmountInPriceImpact,
 } from "@/common"
@@ -174,10 +175,53 @@ const useLiquidityModal = (pool: Ref<Pool>) => {
 	}
 
 	const onSubmit = () => {
-		if (single.value) {
-			joinSwapExternAmountIn()
+		if (add.value) {
+			if (single.value) {
+				joinSwapExternAmountIn()
+			} else {
+				joinPool()
+			}
 		} else {
-			joinPool()
+			const bondendLP = reduce<Coin, BigNumber>(
+				pool.value.availableLPBalances,
+				(all, coin) => {
+					return all.plus(coin.amount)
+				},
+				new BigNumber("0")
+			).toString()
+
+			const poolShareWithPercentage = new BigNumber(bondendLP).multipliedBy(
+				new BigNumber(removePercent.value)
+			)
+
+			const shareInAmount = poolShareWithPercentage.toFixed(0)
+			const shareRatio = new BigNumber(poolShareWithPercentage).div(
+				new BigNumber(pool.value.totalShares.amount)
+			)
+
+			const tokenOutMins = pool.value.coins.map((coin) => {
+				if (coin.token.coinLookup) {
+					const amountIn = fromViewDenom(
+						coin.token.amount,
+						coin.token.coinLookup.chainToViewConversionFactor
+					)
+
+					const tokenOutAmount = shareRatio.multipliedBy(amountIn)
+
+					return {
+						amount: tokenOutAmount
+							.multipliedBy(new BigNumber(1).minus(coinsConfig.exitPoolSlippage))
+							.toFixed(0),
+						denom: coin.token.denom,
+					}
+				}
+			})
+
+			transactionManagerStore.exitPool(
+				pool.value.id,
+				shareInAmount,
+				compact(tokenOutMins)
+			)
 		}
 	}
 

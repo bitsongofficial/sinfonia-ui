@@ -167,6 +167,36 @@ const useTransactionManager = defineStore("transactionManager", {
 				this.loading = false
 			}
 		},
+		async exitPool(poolId: string, shareInAmount: string, tokenOutMins: Coin[]) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+			try {
+				this.loading = true
+
+				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+					const signer = await window.keplr.getOfflineSignerAuto(
+						configStore.osmosisToken.chainID
+					)
+					const manager = new TransactionManager(signer, configStore.osmosisToken)
+
+					const tsx = await manager.exitPool(
+						authStore.osmosisAddress,
+						poolId,
+						shareInAmount,
+						tokenOutMins
+					)
+
+					this.addPendingTx(tsx, configStore.osmosisToken)
+				}
+			} catch (error) {
+				console.error(error)
+				notifyError("Transaction Failed", (error as Error).message)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
 		async beginUnlocking(id: string) {
 			const authStore = useAuth()
 			const configStore = useConfig()

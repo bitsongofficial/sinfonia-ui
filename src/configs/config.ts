@@ -5,4 +5,5 @@ export const endpoints = {
 export const coinsConfig = {
 	shareCoinPoolDecimals: 1e-18,
 	joinPoolSlippage: 0.025,
+	exitPoolSlippage: 0.025,
 }
