@@ -125,6 +125,10 @@
     width: 46px;
 }
 
+.w-max {
+    width: max-content;
+}
+
 .full-height--15 {
     height: calc(100% - 15px);
 }
@@ -152,6 +156,15 @@
 .fixed {
     position: fixed;
 }
+
+.max-w-full {
+    max-width: 100%;
+}
+
+.max-w-screen {
+    max-width: 100vw;
+}
+
 
 .max-w-582 {
     max-width: 582px;

@@ -27,49 +27,51 @@ const isTab = (name): boolean => {
 </script>
 
 <template>
-	<q-tabs
-		v-model="tab"
-		dense
-		active-color="primary"
-		indicator-color="primary"
-		align="justify"
-		narrow-indicator
-		class="q-mb-26 q-px-60"
-	>
-		<template v-for="option in options">
-			<q-tab
-				v-if="option.name && !option.url"
-				:name="option.name"
-				:label="option.label"
-				class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0"
-				content-class="q-py-0"
-			/>
-			<a
-				v-if="option.url"
-				:href="option.url"
-				target="_BLANK"
-				class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100"
-			>
-				{{ option.label }}
-			</a>
-			<q-icon
-				v-if="option.icon"
-				:name="resolveIcon(option.icon.name, option.icon.width, option.icon.height)"
-				class="opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100"
-				content-class="q-py-0"
-			>
-				<InformativeTooltip
-					anchor="bottom right"
-					self="top left"
-					:offset="[17, -40]"
+	<div class="q-mb-26 q-px-60 max-w-full overflow-auto">
+		<q-tabs
+			v-model="tab"
+			dense
+			active-color="primary"
+			indicator-color="primary"
+			align="justify"
+			narrow-indicator
+			class="w-max"
+		>
+			<template v-for="option in options">
+				<q-tab
+					v-if="option.name && !option.url"
+					:name="option.name"
+					:label="option.label"
+					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0"
+					content-class="q-py-0"
+				/>
+				<a
+					v-if="option.url"
+					:href="option.url"
+					target="_BLANK"
+					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100"
 				>
-					<p>
-						{{ option.tooltip }}
-					</p>
-				</InformativeTooltip>
-			</q-icon>
-		</template>
-	</q-tabs>
+					{{ option.label }}
+				</a>
+				<q-icon
+					v-if="option.icon"
+					:name="resolveIcon(option.icon.name, option.icon.width, option.icon.height)"
+					class="opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100"
+					content-class="q-py-0"
+				>
+					<InformativeTooltip
+						anchor="bottom right"
+						self="top left"
+						:offset="[17, -40]"
+					>
+						<p>
+							{{ option.tooltip }}
+						</p>
+					</InformativeTooltip>
+				</q-icon>
+			</template>
+		</q-tabs>
+	</div>
 	<q-tab-panels
 		v-model="tab"
 		animated
