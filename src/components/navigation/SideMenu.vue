@@ -4,7 +4,7 @@ import MenuItem from "@/components/navigation/MenuItem.vue"
 </script>
 <template>
 	<div
-		class="column row-xs min-width justify-around items-center bg-rounded-translucent q-px-20 q-py-28 q-py-xs-20 q-px-xs-28"
+		class="column row-xs min-width justify-around items-center bg-rounded-translucent bg-xs-white q-px-20 q-py-28 q-py-xs-20 q-px-xs-28"
 	>
 		<MenuItem
 			:icon="{ name: 'list', width: 19, height: 13 }"

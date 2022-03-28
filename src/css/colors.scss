@@ -172,3 +172,9 @@
         backdrop-filter: blur(#{$i*10}px);
     }
 }
+
+@media screen and (max-width: $breakpoint-xs) {
+    .text-xs-secondary {
+        color: $secondary !important;
+    }
+}
