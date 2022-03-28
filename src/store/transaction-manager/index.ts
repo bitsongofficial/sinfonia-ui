@@ -103,6 +103,70 @@ const useTransactionManager = defineStore("transactionManager", {
 				this.loading = false
 			}
 		},
+		async joinPool(poolId: string, shareOutAmount: string, tokenInMaxs: Coin[]) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+			try {
+				this.loading = true
+
+				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+					const signer = await window.keplr.getOfflineSignerAuto(
+						configStore.osmosisToken.chainID
+					)
+					const manager = new TransactionManager(signer, configStore.osmosisToken)
+
+					const tsx = await manager.joinPool(
+						authStore.osmosisAddress,
+						poolId,
+						shareOutAmount,
+						tokenInMaxs
+					)
+
+					this.addPendingTx(tsx, configStore.osmosisToken)
+				}
+			} catch (error) {
+				console.error(error)
+				notifyError("Transaction Failed", (error as Error).message)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
+		async joinSwapExternAmountIn(
+			poolId: string,
+			tokenIn: Coin,
+			shareOutMinAmount: string
+		) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+			try {
+				this.loading = true
+
+				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+					const signer = await window.keplr.getOfflineSignerAuto(
+						configStore.osmosisToken.chainID
+					)
+					const manager = new TransactionManager(signer, configStore.osmosisToken)
+
+					const tsx = await manager.joinSwapExternAmountIn(
+						authStore.osmosisAddress,
+						poolId,
+						tokenIn,
+						shareOutMinAmount
+					)
+
+					this.addPendingTx(tsx, configStore.osmosisToken)
+				}
+			} catch (error) {
+				console.error(error)
+				notifyError("Transaction Failed", (error as Error).message)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
 		async beginUnlocking(id: string) {
 			const authStore = useAuth()
 			const configStore = useConfig()

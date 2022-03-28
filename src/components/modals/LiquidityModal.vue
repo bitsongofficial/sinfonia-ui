@@ -4,15 +4,20 @@ import { watch, ref, onUnmounted, computed } from "vue"
 import ModalWithClose from "./ModalWithClose.vue"
 import Amount from "../inputs/Amount.vue"
 import PercentageWithImage from "../infographics/PercentageWithImage.vue"
-import { percentage, amountBalancer } from "@/common"
+import { percentage, amountBalancer, amountIBCFromCoin } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import LargeButton from "../buttons/LargeButton.vue"
 import Progress from "../Progress.vue"
 import useBank from "@/store/bank"
 import useConfig from "@/store/config"
+import useTransactionManager from "@/store/transaction-manager"
+import { Coin } from "@cosmjs/proto-signing"
+import { BigNumber } from "bignumber.js"
+import { coinsConfig } from "@/configs/config"
 
 const bankStore = useBank()
 const configStore = useConfig()
+const transactionManagerStore = useTransactionManager()
 
 const props = defineProps<{
 	pool: Pool
@@ -20,6 +25,7 @@ const props = defineProps<{
 
 const add = ref(true)
 const coinsAmounts = ref({})
+const shareOutAmount = ref("0")
 const single = ref(false)
 const currentSingle = ref(0)
 
@@ -74,7 +80,34 @@ onUnmounted(() => {
 })
 
 const onSubmit = () => {
-	console.log("submit", coinsAmounts.value)
+	if (single.value) {
+	} else {
+		const tokenInMaxs: Coin[] = []
+		const joinSlippage = new BigNumber(coinsConfig.joinPoolSlippage).plus(1)
+
+		for (const symbol in coinsAmounts.value) {
+			const token = configStore.findTokenBySymbol(symbol)
+
+			if (token) {
+				const tokenInMax = amountIBCFromCoin(coinsAmounts.value[symbol], token)
+
+				if (tokenInMax) {
+					tokenInMaxs.push({
+						...tokenInMax,
+						amount: new BigNumber(tokenInMax.amount)
+							.multipliedBy(joinSlippage)
+							.toFixed(0),
+					})
+				}
+			}
+		}
+
+		transactionManagerStore.joinPool(
+			props.pool.id,
+			new BigNumber(shareOutAmount.value).toFixed(0),
+			tokenInMaxs
+		)
+	}
 }
 
 const changeToken = () => {
@@ -91,11 +124,12 @@ const onAmountChange = (symbol: string, rawAmount: string) => {
 	const balancer = amountBalancer(props.pool, symbol, rawAmount)
 	const tempCoinsAmounts = { ...coinsAmounts.value }
 
-	for (const symbol in balancer) {
-		tempCoinsAmounts[symbol] = balancer[symbol]
+	for (const symbol in balancer.assetsAmounts) {
+		tempCoinsAmounts[symbol] = balancer.assetsAmounts[symbol]
 	}
 
 	coinsAmounts.value = tempCoinsAmounts
+	shareOutAmount.value = balancer.shareOutAmount
 }
 </script>
 

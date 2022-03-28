@@ -1,3 +1,4 @@
+import { coinsConfig } from "@/configs/config"
 import { Token, OsmosisPoolAsset } from "@/types"
 import { coin } from "@cosmjs/proto-signing"
 import { BigNumber } from "bignumber.js"
@@ -53,11 +54,13 @@ export const toFiatValue = (value: string | number, fiat: string | number) => {
 }
 
 export const toDecimalGamm = (value: string) => {
-	return new BigNumber(value).multipliedBy(1e-18).toString()
+	return new BigNumber(value)
+		.multipliedBy(coinsConfig.shareCoinPoolDecimals)
+		.toString()
 }
 
 export const fromDecimalGamm = (value: string) => {
-	return new BigNumber(value).div(1e-18).toString()
+	return new BigNumber(value).div(coinsConfig.shareCoinPoolDecimals).toString()
 }
 
 export const toViewDenom = (
@@ -110,7 +113,7 @@ export const amountIBCFromCoin = (value: string, network: Token) => {
 	if (coinLookup) {
 		return coin(
 			fromViewDenom(value, coinLookup.chainToViewConversionFactor),
-			network.ibc.osmosis.destDenom
+			network.ibcEnabled ? network.ibc.osmosis.destDenom : coinLookup.chainDenom
 		)
 	}
 }

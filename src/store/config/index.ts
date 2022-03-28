@@ -147,6 +147,10 @@ const useConfig = defineStore("config", {
 					return token.ibc.osmosis.destDenom === denom
 				})
 		},
+		findTokenBySymbol() {
+			return (symbol: string) =>
+				this.allTokens.find((token) => token.symbol === symbol)
+		},
 		extraGaugeIds({ extraGauges, assetsConfig }) {
 			let gaugeIds: ExtraGauge[] = []
 

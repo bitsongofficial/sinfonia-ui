@@ -11,9 +11,11 @@ import { TokenBalance } from "@/types"
 import { resolveIcon } from "@/common/resolvers"
 import useBank from "@/store/bank"
 import usePrices from "@/store/prices"
+import usePools from "@/store/pools"
 
 const bankStore = useBank()
 const pricesStore = usePrices()
+const poolsStore = usePools()
 const openTransferDialog = ref(false)
 const transferFrom = ref<TokenBalance>()
 
@@ -89,7 +91,7 @@ const openTransfer = (from: TokenBalance) => {
 		</div>
 		<div class="col-8 col-md-4 col-lg-2">
 			<InfoCard header="Bonded assets">
-				{{ balancedCurrency(bankStore.bonded) }} $
+				{{ balancedCurrency(poolsStore.totalBondedFiat) }} $
 			</InfoCard>
 		</div>
 		<div class="col-8 col-md-4 col-lg-2">
@@ -137,16 +139,26 @@ const openTransfer = (from: TokenBalance) => {
 					</q-td>
 					<q-td>
 						<p
-							:class="'text-right ' + (rowProps.row.available > 0 ? '' : 'opacity-40')"
+							:class="
+								'text-right ' + (rowProps.row.availableFiat > 0 ? '' : 'opacity-40')
+							"
 						>
 							{{
-								rowProps.row.available ? balancedCurrency(rowProps.row.available) : "-"
+								rowProps.row.availableFiat
+									? `${balancedCurrency(rowProps.row.availableFiat)} $`
+									: "-"
 							}}
 						</p>
 					</q-td>
 					<q-td>
-						<p :class="'text-right ' + (rowProps.row.bonded > 0 ? '' : 'opacity-40')">
-							{{ rowProps.row.bonded ? balancedCurrency(rowProps.row.bonded) : "-" }}
+						<p
+							:class="'text-right ' + (rowProps.row.available > 0 ? '' : 'opacity-40')"
+						>
+							{{
+								rowProps.row.available
+									? `${balancedCurrency(rowProps.row.available)} ${rowProps.row.symbol}`
+									: "-"
+							}}
 						</p>
 					</q-td>
 					<q-td>
@@ -191,13 +203,19 @@ const openTransfer = (from: TokenBalance) => {
 					<q-td> </q-td>
 					<q-td> </q-td>
 					<q-td>
-						<p :class="'text-right ' + (chain.total > 0 ? '' : 'opacity-40')">
-							{{ chain.available ? balancedCurrency(chain.available) : "-" }}
+						<p :class="'text-right ' + (chain.availableFiat > 0 ? '' : 'opacity-40')">
+							{{
+								chain.availableFiat ? `${balancedCurrency(chain.availableFiat)} $` : "-"
+							}}
 						</p>
 					</q-td>
 					<q-td>
-						<p :class="'text-right ' + (chain.bonded > 0 ? '' : 'opacity-40')">
-							{{ chain.bonded ? balancedCurrency(chain.bonded) : "-" }}
+						<p :class="'text-right ' + (chain.available > 0 ? '' : 'opacity-40')">
+							{{
+								chain.available
+									? `${balancedCurrency(chain.available)} ${rowProps.row.symbol}`
+									: "-"
+							}}
 						</p>
 					</q-td>
 					<q-td></q-td>
