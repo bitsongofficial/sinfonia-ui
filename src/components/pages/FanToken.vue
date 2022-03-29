@@ -21,6 +21,7 @@ import ImagePair from "../ImagePair.vue"
 import usePools from "@/store/pools"
 import { Pool } from "@/types"
 import { useRoute } from "vue-router"
+import WorkInProgress from "../WorkInProgress.vue"
 
 const poolsStore = usePools()
 const route = useRoute()
@@ -144,33 +145,25 @@ onUnmounted(() => {
 			class="absolute-top full-width -z-1 hv-3/5 !bg-cover"
 			:style="topImageStyle"
 		></div>
-		<div class="row q-mb-60">
+		<div class="row q-mb-70">
 			<div class="col-8 col-md-4">
-				<div class="flex q-mb-60 items-center">
+				<div class="flex q-mb-60 items-start">
 					<q-avatar size="120px" class="q-mr-40">
 						<img :src="coin.iconUrl" alt="" />
 					</q-avatar>
 					<div>
-						<p class="text-dark q-mb-8 fs-21">
+						<p class="text-dark q-mb-18 fs-21">
 							{{ coin.name }}
 						</p>
-						<p class="fs-54">
+						<p class="fs-60 q-mb-20">
 							{{ coin.symbol }}
 						</p>
-					</div>
-				</div>
-				<div class="flex">
-					<div class="q-mr-10">
-						<OutlineButton>Swap Tokens</OutlineButton>
-					</div>
-					<div>
-						<StandardButton>Add/Remove Liquidity</StandardButton>
+						<p class="text-dark fs-16 text-uppercase q-mb-16">Price</p>
+						<p class="fs-32">$ {{ smallNumber(coin.price) }}</p>
 					</div>
 				</div>
 			</div>
 			<div class="col-8 col-md-4 column items-end">
-				<p class="text-dark fs-12 text-uppercase q-mb-10">Price</p>
-				<p class="fs-44 q-mb-12">$ {{ smallNumber(coin.price) }}</p>
 				<!-- <div class="flex items-center q-mb-42">
 					<StandardSelect
 						color="dark"
@@ -181,11 +174,13 @@ onUnmounted(() => {
 					<p class="fs-24">{{ percentage(coin.lastDayGain) }} %</p>
 				</div> -->
 				<div class="flex">
-					<div>
-						<p class="fs-12 text-dark q-mb-10 text-uppercase text-right">
-							Avg pool APR
+					<div class="column items-end">
+						<p class="fs-16 text-dark q-mb-12 text-uppercase text-right">
+							{{ coin.symbol }}
 						</p>
-						<p class="fs-32">{{ percentage(34.45) }} %</p>
+						<p class="fs-44 q-mb-12">100,345.34</p>
+						<p class="fs-21 text-dark text-right q-mb-33">9,234.29 $</p>
+						<LargeButton fit>Swap Tokens</LargeButton>
 					</div>
 					<!-- <div>
 						<p class="fs-12 text-dark q-mb-10 text-uppercase text-right">Backers</p>
@@ -197,7 +192,7 @@ onUnmounted(() => {
 		<Tabs :options="tabs">
 			<template v-slot:info> </template>
 			<template v-slot:analytics>
-				<!-- <p class="fs-16 opacity-30 q-mb-12">Token</p>
+				<p class="fs-16 opacity-30 q-mb-12">Token</p>
 				<div class="flex justify-between items-center q-mb-30">
 					<p class="fs-32 font-weight-bold">
 						{{ coin.symbol }}
@@ -212,11 +207,11 @@ onUnmounted(() => {
 							rounded
 							class="bg-dark-light fs-12 opacity-40 text-lowercase"
 						>
-							<q-btn label="daily" class="opacity-100 q-pl-30 q-py-8" />
-							<q-btn label="weekly" />
-							<q-btn label="monthly" />
-							<q-btn label="ytd" />
-							<q-btn label="all" class="q-pr-30 q-py-8" />
+							<q-btn label="daily" class="opacity-100q-px-10 q-pl-12 q-py-8" />
+							<q-btn label="weekly" class="q-px-10 " />
+							<q-btn label="monthly" class="q-px-10 " />
+							<q-btn label="ytd" class="q-px-10 " />
+							<q-btn label="all" class="q-px-10 q-pr-12 q-py-8" />
 						</q-btn-group>
 					</div>
 				</div>
@@ -228,7 +223,7 @@ onUnmounted(() => {
 							class="full-width"
 						/>
 					</div>
-					<div class="col-8 col-md-4 col-lg-2">
+					<div class="col-8 col-md-4 col-lg-2 relative-position q-pr-10 q-pb-10">
 						<div class="flex justify-between q-mb-24">
 							<div>
 								<p class="fs-10 q-mb-12 text-uppercase opacity-60">min</p>
@@ -277,8 +272,11 @@ onUnmounted(() => {
 								></q-icon>
 							</div>
 						</div>
+						<WorkInProgress>
+							Price Data will be provided soon.
+						</WorkInProgress>
 					</div>
-				</div> -->
+				</div>
 				<div class="q-mb-52">
 					<p class="fs-16 opacity-30 q-mb-24">Tokenomics</p>
 					<div class="row q-col-gutter-xl">
@@ -292,7 +290,7 @@ onUnmounted(() => {
 				<div class="q-mb-52">
 					<p class="fs-16 opacity-30 q-mb-24">Pool Stats</p>
 					<div class="row q-col-gutter-xl">
-						<div class="col-8 col-lg-4">
+						<!-- <div class="col-8 col-lg-4">
 							<Card class="q-py-34">
 								<div class="flex justify-between items-stretch">
 									<div class="column justify-between">
@@ -304,8 +302,8 @@ onUnmounted(() => {
 									</div>
 								</div>
 							</Card>
-						</div>
-						<div v-for="n in 2" class="col-8 col-md-4 col-lg-2">
+						</div> -->
+						<div v-for="n in 3" class="col-8 col-md-4 col-lg-2">
 							<InfoCard header="$CLAY CIRCULATING " class="q-py-34">
 								{{ balancedCurrency(21600000) }}
 							</InfoCard>
@@ -364,7 +362,7 @@ onUnmounted(() => {
 							</div>
 						</div>
 					</div>
-					<div class="col-8 col-lg-4">
+					<!-- <div class="col-8 col-lg-4">
 						<p class="fs-16 opacity-30 q-mb-24">Community</p>
 						<Card class="q-mb-22" :padding="20">
 							<div class="flex justify-between items-stretch">
@@ -389,7 +387,7 @@ onUnmounted(() => {
 								</InfoCard>
 							</div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</template>
 			<!-- <template v-slot:whitepaper>

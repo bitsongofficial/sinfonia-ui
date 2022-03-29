@@ -26,6 +26,10 @@ $row-padding-x: 30px;
                     opacity: 1;
                 }
             }
+
+            .q-table__sort-icon {
+                margin-top: -3px;
+            }
         }
     
         tbody {

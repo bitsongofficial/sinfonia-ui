@@ -1,0 +1,36 @@
+.work-in-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > div {
+    position: relative;
+    padding: 12px 16px;
+
+    p {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      text-align: center;
+      color: #FFFFFF;
+      opacity: 0.3;
+    }
+
+    &::before {
+      content: "";
+      background: #301C40;
+      border-radius: 50px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+    }
+  }
+}
