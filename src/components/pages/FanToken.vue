@@ -2,26 +2,22 @@
 import { newCoin } from "@/common/mockups"
 import { balancedCurrency, percentage, smallNumber } from "@/common/numbers"
 import { onMounted, onUnmounted, ref } from "vue"
-import OutlineButton from "../buttons/OutlineButton.vue"
-import StandardButton from "../buttons/StandardButton.vue"
-import StandardSelect from "../inputs/StandardSelect.vue"
-import Tabs from "../Tabs.vue"
-import Progress from "../Progress.vue"
 import { resolveIcon } from "@/common/resolvers"
-import InfoCard from "../cards/InfoCard.vue"
-import Card from "../cards/Card.vue"
-import CardWithHeader from "../cards/CardWithHeader.vue"
-import PercentageWithImage from "../infographics/PercentageWithImage.vue"
-import Sections from "../Sections.vue"
-import LargeButton from "../buttons/LargeButton.vue"
-import Socials from "../Socials.vue"
-import LightTable from "../LightTable.vue"
 import { TableColumn } from "@/types/table"
-import ImagePair from "../ImagePair.vue"
-import usePools from "@/store/pools"
 import { Pool } from "@/types"
 import { useRoute } from "vue-router"
-import WorkInProgress from "../WorkInProgress.vue"
+import StandardSelect from "@/components/inputs/StandardSelect.vue"
+import Tabs from "@/components/Tabs.vue"
+import Progress from "@/components/Progress.vue"
+import ImagePair from "@/components/ImagePair.vue"
+import InfoCard from "@/components/cards/InfoCard.vue"
+import CardWithHeader from "@/components/cards/CardWithHeader.vue"
+import PercentageWithImage from "@/components/infographics/PercentageWithImage.vue"
+import LargeButton from "@/components/buttons/LargeButton.vue"
+import Socials from "@/components/Socials.vue"
+import LightTable from "@/components/LightTable.vue"
+import WorkInProgress from "@/components/WorkInProgress.vue"
+import usePools from "@/store/pools"
 
 const poolsStore = usePools()
 const route = useRoute()
@@ -208,9 +204,9 @@ onUnmounted(() => {
 							class="bg-dark-light fs-12 opacity-40 text-lowercase"
 						>
 							<q-btn label="daily" class="opacity-100q-px-10 q-pl-12 q-py-8" />
-							<q-btn label="weekly" class="q-px-10 " />
-							<q-btn label="monthly" class="q-px-10 " />
-							<q-btn label="ytd" class="q-px-10 " />
+							<q-btn label="weekly" class="q-px-10" />
+							<q-btn label="monthly" class="q-px-10" />
+							<q-btn label="ytd" class="q-px-10" />
 							<q-btn label="all" class="q-px-10 q-pr-12 q-py-8" />
 						</q-btn-group>
 					</div>
@@ -272,9 +268,7 @@ onUnmounted(() => {
 								></q-icon>
 							</div>
 						</div>
-						<WorkInProgress>
-							Price Data will be provided soon.
-						</WorkInProgress>
+						<WorkInProgress> Price Data will be provided soon. </WorkInProgress>
 					</div>
 				</div>
 				<div class="q-mb-52">

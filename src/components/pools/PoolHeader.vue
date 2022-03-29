@@ -1,15 +1,26 @@
 <script setup lang="ts">
 import { Pool } from "@/types/pool"
 import { balancedCurrency, percentage } from "@/common/numbers"
-import ImagePair from "../ImagePair.vue"
 import { resolveIcon } from "@/common/resolvers"
 import { ref } from "vue"
-import PoolContextMenu from "../navigation/PoolContextMenu.vue"
+import { useRouter } from "vue-router"
 
-const props = defineProps<{
+import PoolContextMenu from "@/components/navigation/PoolContextMenu.vue"
+import ImagePair from "@/components/ImagePair.vue"
+import LiquidityModal from "../modals/LiquidityModal.vue"
+
+const router = useRouter()
+
+defineProps<{
 	pool: Pool
 }>()
+
 const show = ref(false)
+const openAddRemoveModal = ref(false)
+
+const onSwapClick = () => {
+	router.push("/swap")
+}
 </script>
 
 <template>
@@ -40,7 +51,11 @@ const show = ref(false)
 						:name="resolveIcon('vertical-dots', 4, 16)"
 						class="fs-14 s-28 q-mr--12 opacity-30 hover:opacity-100"
 					></q-icon>
-					<PoolContextMenu v-model="show"></PoolContextMenu>
+					<PoolContextMenu
+						v-model="show"
+						@swap="onSwapClick"
+						@liquidity="openAddRemoveModal = true"
+					></PoolContextMenu>
 				</div>
 			</div>
 		</div>
@@ -57,4 +72,5 @@ const show = ref(false)
 			</p>
 		</div>
 	</div>
+	<LiquidityModal v-model="openAddRemoveModal" :pool="pool" />
 </template>

@@ -265,6 +265,7 @@ const useTransactionManager = defineStore("transactionManager", {
 								notifySuccess("Transaction Successful", "View Explorer")
 								const poolsStore = usePools()
 								const bankStore = useBank()
+
 								poolsStore.init()
 								bankStore.loadBalances()
 							}
