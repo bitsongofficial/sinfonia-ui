@@ -1,4 +1,4 @@
-import { compact } from "lodash"
+import { compact, reduce } from "lodash"
 import { sinfoniaClient } from "@/services"
 import { defineStore } from "pinia"
 import {
@@ -13,6 +13,7 @@ import {
 import { mapPools, mapLockableDuration } from "@/common"
 import useBank from "@/store/bank"
 import useConfig from "@/store/config"
+import BigNumber from "bignumber.js"
 
 export interface PoolsState {
 	loading: boolean
@@ -109,6 +110,21 @@ const usePools = defineStore("pools", {
 
 				return gammIds.length > 0
 			})
+		},
+		totalBondedFiat() {
+			let totalBonded = new BigNumber("0")
+
+			totalBonded = totalBonded.plus(
+				reduce<Pool, BigNumber>(
+					this.myPools,
+					(all, balance) => {
+						return all.plus(balance.bonded ?? "0")
+					},
+					new BigNumber("0")
+				)
+			)
+
+			return totalBonded.toString()
 		},
 		poolById() {
 			return (id: string) => this.pools.find((pool) => pool.id === id)

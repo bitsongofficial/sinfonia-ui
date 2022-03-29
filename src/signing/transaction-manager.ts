@@ -6,7 +6,14 @@ import {
 	OfflineSigner,
 } from "@cosmjs/proto-signing"
 import { BigNumber } from "bignumber.js"
-import { SendIbcTokens, LockTokens, BeginUnlocking } from "./messages"
+import {
+	SendIbcTokens,
+	LockTokens,
+	BeginUnlocking,
+	JoinPool,
+	JoinSwapExternAmountIn,
+	ExitPool,
+} from "./messages"
 import {
 	assertIsDeliverTxSuccess,
 	SigningStargateClient,
@@ -110,6 +117,62 @@ export class TransactionManager {
 
 		return this.createSignBroadcast(
 			"LockTokens",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public joinPool(
+		senderAddress: string,
+		poolId: string,
+		shareOutAmount: string,
+		tokenInMaxs: Coin[],
+		memo?: string
+	) {
+		const message = JoinPool(senderAddress, poolId, shareOutAmount, tokenInMaxs)
+
+		return this.createSignBroadcast(
+			"JoinPool",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public joinSwapExternAmountIn(
+		senderAddress: string,
+		poolId: string,
+		tokenIn: Coin,
+		shareOutMinAmount: string,
+		memo?: string
+	) {
+		const message = JoinSwapExternAmountIn(
+			senderAddress,
+			poolId,
+			tokenIn,
+			shareOutMinAmount
+		)
+
+		return this.createSignBroadcast(
+			"JoinSwapExternAmountIn",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public exitPool(
+		senderAddress: string,
+		poolId: string,
+		shareInAmount: string,
+		tokenOutMins: Coin[],
+		memo?: string
+	) {
+		const message = ExitPool(senderAddress, poolId, shareInAmount, tokenOutMins)
+
+		return this.createSignBroadcast(
+			"ExitPool",
 			[message],
 			senderAddress,
 			memo ?? ""

@@ -1,6 +1,8 @@
-import { Token, OsmosisPoolAsset } from "@/types"
-import { coin } from "@cosmjs/proto-signing"
+import { coinsConfig } from "@/configs/config"
+import { Token, OsmosisPoolAsset, PoolAsset } from "@/types"
+import { Coin, coin } from "@cosmjs/proto-signing"
 import { BigNumber } from "bignumber.js"
+import { Decimal } from "decimal.js"
 
 export const currency = (number: number | string, fraction = 2): string => {
 	const amount = new BigNumber(number)
@@ -44,8 +46,25 @@ export const smallNumber = (number: number | string): string => {
 	return new BigNumber(number).toFixed(2)
 }
 
-export const percentage = (number: number | string): string => {
-	return new BigNumber(number).multipliedBy(100).toFixed(2)
+export const percentageRange = (
+	number: number | string,
+	decimals = 3
+): string => {
+	const amount = new BigNumber(number)
+
+	if (amount.isNaN() || amount.isEqualTo(0)) {
+		return "0"
+	}
+
+	if (amount.gt(0.001)) {
+		return new BigNumber(amount.toString()).toFixed(decimals, 3)
+	}
+
+	return "< 0.001"
+}
+
+export const percentage = (number: number | string, decimals = 2): string => {
+	return new BigNumber(number).multipliedBy(100).toFixed(decimals)
 }
 
 export const toFiatValue = (value: string | number, fiat: string | number) => {
@@ -53,11 +72,13 @@ export const toFiatValue = (value: string | number, fiat: string | number) => {
 }
 
 export const toDecimalGamm = (value: string) => {
-	return new BigNumber(value).multipliedBy(1e-18).toString()
+	return new BigNumber(value)
+		.multipliedBy(coinsConfig.shareCoinPoolDecimals)
+		.toString()
 }
 
 export const fromDecimalGamm = (value: string) => {
-	return new BigNumber(value).div(1e-18).toString()
+	return new BigNumber(value).div(coinsConfig.shareCoinPoolDecimals).toString()
 }
 
 export const toViewDenom = (
@@ -110,7 +131,7 @@ export const amountIBCFromCoin = (value: string, network: Token) => {
 	if (coinLookup) {
 		return coin(
 			fromViewDenom(value, coinLookup.chainToViewConversionFactor),
-			network.ibc.osmosis.destDenom
+			network.ibcEnabled ? network.ibc.osmosis.destDenom : coinLookup.chainDenom
 		)
 	}
 }
@@ -161,4 +182,52 @@ export const calculateSpotPrice = (
 	const scale = new BigNumber(1).div(new BigNumber(1).minus(swapFee))
 
 	return number.div(denom).multipliedBy(scale)
+}
+
+export const calcPoolOutGivenSingleIn = (
+	tokenBalanceIn: string,
+	tokenWeightIn: string,
+	poolSupply: string,
+	totalWeight: string,
+	tokenAmountIn: string,
+	swapFee: string
+) => {
+	const normalizedWeight = new Decimal(tokenWeightIn).div(totalWeight)
+	const zaz = new Decimal(1).minus(normalizedWeight).mul(swapFee)
+	const tokenAmountInAfterFee = new Decimal(tokenAmountIn).mul(
+		new Decimal(1).minus(zaz)
+	)
+
+	const newTokenBalanceIn = new Decimal(tokenBalanceIn).plus(
+		tokenAmountInAfterFee
+	)
+	const tokenInRatio = newTokenBalanceIn.div(tokenBalanceIn)
+
+	const poolRatio = Decimal.pow(tokenInRatio, normalizedWeight)
+	const newPoolSupply = poolRatio.mul(poolSupply)
+
+	return newPoolSupply.minus(poolSupply).toString()
+}
+
+export const singleAmountInPriceImpact = (
+	token: Token,
+	poolAsset: PoolAsset,
+	coin: Coin
+) => {
+	const coinLookup = token.coinLookup.find(
+		(coin) => coin.viewDenom === token.symbol
+	)
+
+	if (coinLookup) {
+		const poolAssetAmount = new BigNumber(poolAsset.token.amount).div(
+			coinLookup.chainToViewConversionFactor
+		)
+
+		return new BigNumber(1)
+			.minus(poolAssetAmount.div(poolAssetAmount.plus(coin.amount)))
+			.multipliedBy(100)
+			.toString()
+	}
+
+	return "0"
 }

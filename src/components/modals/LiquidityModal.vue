@@ -1,106 +1,52 @@
 <script setup lang="ts">
 import { Pool } from "@/types"
-import { watch, ref, onUnmounted, computed } from "vue"
-import ModalWithClose from "./ModalWithClose.vue"
-import Amount from "../inputs/Amount.vue"
-import PercentageWithImage from "../infographics/PercentageWithImage.vue"
-import { percentage, amountBalancer } from "@/common"
+import { toRef, computed } from "vue"
+import { percentage } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
-import LargeButton from "../buttons/LargeButton.vue"
-import Progress from "../Progress.vue"
-import useBank from "@/store/bank"
-import useConfig from "@/store/config"
-
-const bankStore = useBank()
-const configStore = useConfig()
+import ModalWithClose from "@/components/modals/ModalWithClose.vue"
+import Amount from "@/components/inputs/Amount.vue"
+import PercentageWithImage from "@/components/infographics/PercentageWithImage.vue"
+import LargeButton from "@/components/buttons/LargeButton.vue"
+import Progress from "@/components/Progress.vue"
+import useLiquidityModal from "@/hooks/useLiquidityModal"
 
 const props = defineProps<{
+	modelValue: boolean
 	pool: Pool
 }>()
 
-const add = ref(true)
-const coinsAmounts = ref({})
-const single = ref(false)
-const currentSingle = ref(0)
+const emit = defineEmits<{
+	(e: "update:modelValue", value: boolean): void
+}>()
 
-const poolWatcher = watch(
-	() => props.pool,
-	() => {
-		const coinsAmountsMap = {}
-
-		props.pool.coins.forEach((coin) => {
-			coinsAmountsMap[coin.token.symbol] = "0"
-		})
-
-		coinsAmounts.value = coinsAmountsMap
+const model = computed<boolean>({
+	get() {
+		return props.modelValue
 	},
-	{ immediate: true }
-)
-
-// Balances denoms on osmosis
-const balanceDenoms = computed(() =>
-	props.pool.coins.map((el) => el.token.denom)
-)
-
-const balances = computed(() => {
-	const balancesMap = {}
-
-	const tokenBalances = bankStore.osmosisAvailableBalances(balanceDenoms.value)
-
-	if (configStore.osmosisToken) {
-		tokenBalances.forEach((balance) => {
-			if (balance.chains) {
-				const chain = balance.chains.find(
-					(el) => el.symbol === configStore.osmosisToken?.symbol
-				)
-
-				if (chain) {
-					balancesMap[balance.symbol] = chain.available
-				} else {
-					balancesMap[balance.symbol] = "0"
-				}
-			}
-		})
-	}
-
-	return balancesMap
+	set(value) {
+		emit("update:modelValue", value)
+	},
 })
 
-const removeValues = [0.25, 0.5, 0.75, 1]
-const removePercent = ref(removeValues[2])
+const currentPool = toRef(props, "pool")
 
-onUnmounted(() => {
-	poolWatcher()
-})
-
-const onSubmit = () => {
-	console.log("submit", coinsAmounts.value)
-}
-
-const changeToken = () => {
-	let nextIndex = currentSingle.value + 1
-
-	if (nextIndex > props.pool.coins.length - 1) {
-		nextIndex = 0
-	}
-
-	currentSingle.value = nextIndex
-}
-
-const onAmountChange = (symbol: string, rawAmount: string) => {
-	const balancer = amountBalancer(props.pool, symbol, rawAmount)
-	const tempCoinsAmounts = { ...coinsAmounts.value }
-
-	for (const symbol in balancer) {
-		tempCoinsAmounts[symbol] = balancer[symbol]
-	}
-
-	coinsAmounts.value = tempCoinsAmounts
-}
+const {
+	add,
+	single,
+	currentSingle,
+	coinsAmounts,
+	balances,
+	removePercent,
+	removeValues,
+	priceImpact,
+	onAmountChange,
+	onSubmit,
+	changeToken,
+} = useLiquidityModal(currentPool, model)
 </script>
 
 <template>
-	<ModalWithClose title="Manage Liquidity">
+	<ModalWithClose v-model="model" title="Manage Liquidity">
 		<q-form @submit="onSubmit">
 			<div class="flex fs-15 q-mb-22">
 				<p
@@ -228,7 +174,7 @@ const onAmountChange = (symbol: string, rawAmount: string) => {
 					</div>
 				</div>
 				<div class="flex justify-center">
-					<LargeButton fit :padding-y="14" class="q-px-52">
+					<LargeButton type="submit" fit :padding-y="14" class="q-px-52">
 						<span class="text-uppercase"> Remove liquidity </span>
 					</LargeButton>
 				</div>

@@ -8,6 +8,8 @@ import useClipboard from "@/hooks/useClipboard"
 const authStore = useAuth()
 
 const { onCopy } = useClipboard()
+
+const keplrInstalled = window.keplr !== undefined
 </script>
 <template>
 	<div
@@ -33,7 +35,11 @@ const { onCopy } = useClipboard()
 		/>
 	</div>
 	<div v-else>
-		<LargeButton :padding-x="36" fit @click="authStore.signIn"
+		<LargeButton
+			:disable="!keplrInstalled"
+			:padding-x="36"
+			fit
+			@click="authStore.signIn"
 			>Connect to Keplr</LargeButton
 		>
 	</div>

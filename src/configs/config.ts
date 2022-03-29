@@ -5,3 +5,9 @@ export const endpoints = {
 export const externalWebsites = {
 	coingecko: "https://www.coingecko.com/",
 }
+
+export const coinsConfig = {
+	shareCoinPoolDecimals: 1e-18,
+	joinPoolSlippage: 0.025,
+	exitPoolSlippage: 0.025,
+}

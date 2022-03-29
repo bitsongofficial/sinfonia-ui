@@ -120,11 +120,7 @@ const useBank = defineStore("bank", {
 							osmosisBalance.amount,
 							coinLookup.chainToViewConversionFactor
 						)
-						const osmosisBonded = toViewDenom(
-							"0",
-							coinLookup.chainToViewConversionFactor
-						)
-						const osmosisTotal = new BigNumber(osmosisAvailable).plus(osmosisBonded)
+						const osmosisTotal = new BigNumber(osmosisAvailable)
 
 						osmosisChain = {
 							name: configStore.osmosisToken.name,
@@ -135,12 +131,10 @@ const useBank = defineStore("bank", {
 							logos: configStore.osmosisToken.logos,
 							total: osmosisTotal.toString(),
 							available: osmosisAvailable.toString(),
-							bonded: osmosisBonded.toString(),
 							totalFiat: price.multipliedBy(osmosisTotal.toString()).toString(),
 							availableFiat: price
 								.multipliedBy(osmosisAvailable.toString())
 								.toString(),
-							bondedFiat: price.multipliedBy(osmosisBonded.toString()).toString(),
 						}
 
 						chains.push(osmosisChain)
@@ -151,11 +145,7 @@ const useBank = defineStore("bank", {
 							bitsongBalance.amount,
 							coinLookup.chainToViewConversionFactor
 						)
-						const bitsongBonded = toViewDenom(
-							"0",
-							coinLookup.chainToViewConversionFactor
-						)
-						const bitsongTotal = new BigNumber(bitsongAvailable).plus(bitsongBonded)
+						const bitsongTotal = new BigNumber(bitsongAvailable)
 
 						bitsongChain = {
 							name: token.name,
@@ -164,12 +154,10 @@ const useBank = defineStore("bank", {
 							logos: token.logos,
 							total: bitsongTotal.toString(),
 							available: bitsongAvailable.toString(),
-							bonded: bitsongBonded.toString(),
 							totalFiat: price.multipliedBy(bitsongTotal.toString()).toString(),
 							availableFiat: price
 								.multipliedBy(bitsongAvailable.toString())
 								.toString(),
-							bondedFiat: price.multipliedBy(bitsongBonded.toString()).toString(),
 						}
 
 						chains.push(bitsongChain)
@@ -183,23 +171,15 @@ const useBank = defineStore("bank", {
 					},
 					new BigNumber("0")
 				).toString()
-				const bonded = reduce<ChainBalance, BigNumber>(
-					chains,
-					(all, balance) => {
-						return all.plus(balance.bonded ?? "0")
-					},
-					new BigNumber("0")
-				).toString()
-				const total = new BigNumber(available).plus(bonded).toString()
+
+				const total = new BigNumber(available).toString()
 
 				return {
 					...token,
 					total,
 					available,
-					bonded,
 					totalFiat: price.multipliedBy(total).toString(),
 					availableFiat: price.multipliedBy(available).toString(),
-					bondedFiat: price.multipliedBy(bonded).toString(),
 					chains,
 				}
 			})
@@ -211,17 +191,6 @@ const useBank = defineStore("bank", {
 				balances,
 				(all, balance) => {
 					return all.plus(balance.totalFiat ?? "0")
-				},
-				new BigNumber("0")
-			).toString()
-		},
-		bonded() {
-			const balances = this.balances as TokenBalance[]
-
-			return reduce<TokenBalance, BigNumber>(
-				balances,
-				(all, balance) => {
-					return all.plus(balance.bondedFiat ?? "0")
 				},
 				new BigNumber("0")
 			).toString()
