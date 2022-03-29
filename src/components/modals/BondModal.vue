@@ -44,7 +44,7 @@ const onSubmit = () => {
 						@click="chosenUnbonding = up"
 						:class="
 							'rounded-20 q-py-16 q-px-16 flex justify-center items-center full-height cursor-pointer ' +
-							(up.apr == chosenUnbonding.apr
+							(up.duration == chosenUnbonding.duration
 								? 'bg-gradient'
 								: 'border-primary-darker hover:bg-white-5')
 						"
@@ -56,7 +56,9 @@ const onSubmit = () => {
 							<p
 								:class="
 									'fs-15 text-center ' +
-									(up.apr == chosenUnbonding.apr ? 'text-primary-dark-700' : 'text-dark')
+									(up.duration == chosenUnbonding.duration
+										? 'text-primary-dark-700'
+										: 'text-dark')
 								"
 							>
 								{{ percentage(up.apr) }} %

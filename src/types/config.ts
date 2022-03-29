@@ -1,3 +1,4 @@
+import { Dictionary } from "lodash"
 import { FantokenMedia, FantokenSocial, FantokenWhitePaper } from "./fantoken"
 
 export type TokenLogo = "default" | "svg" | "png"
@@ -73,12 +74,18 @@ export interface ActivePool {
 	id: string
 }
 
+export interface SwapRoute {
+	id: string
+	out: string
+}
+
 export interface AssetListConfig {
 	bitsongToken: Token
 	osmosisToken: Token
 	tokens: Token[]
 	fantokens: Token[]
 	pools: ActivePool[]
+	routes: Dictionary<Dictionary<SwapRoute[]>>
 	timestamp: string
 	version: ConfigVersion
 }

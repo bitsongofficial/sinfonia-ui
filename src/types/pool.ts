@@ -40,3 +40,8 @@ export interface Pool extends OsmosisPool {
 	availableLPTokens: string
 	availableLPBalances: Coin[]
 }
+
+export interface SwapPool {
+	pool: Pool
+	out: string
+}

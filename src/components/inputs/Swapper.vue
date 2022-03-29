@@ -1,50 +1,67 @@
 <script setup lang="ts">
-import { balancedCurrency, smallNumber } from "@/common/numbers"
-import { UserCoinInfo } from "@/types/user"
+import { balancedCurrency, smallNumberRate } from "@/common/numbers"
 import { computed, ref } from "vue"
-import CardDark from "../cards/CardDark.vue"
-import SmallButton from "../buttons/SmallButton.vue"
-import CoinSelect from "./CoinSelect.vue"
-import InlineButton from "../buttons/InlineButton.vue"
+import { calculateRouteSpotPrice } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
-import LargeButton from "../buttons/LargeButton.vue"
+import { TokenBalance } from "@/types"
+import CardDark from "@/components/cards/CardDark.vue"
+import SmallButton from "@/components/buttons/SmallButton.vue"
+import CoinSelect from "@/components/inputs/CoinSelect.vue"
+import InlineButton from "@/components/buttons/InlineButton.vue"
+import LargeButton from "@/components/buttons/LargeButton.vue"
+import useBank from "@/store/bank"
+import usePools from "@/store/pools"
+import BigNumber from "bignumber.js"
+
+const bankStore = useBank()
+const poolsStore = usePools()
+
 const props = defineProps<{
-	coin1: UserCoinInfo | null
-	coin2: UserCoinInfo | null
+	coin1: TokenBalance | null
+	coin2: TokenBalance | null
 }>()
+
 const emit = defineEmits<{
-	(e: "update:coin1", value: UserCoinInfo | null): void
-	(e: "update:coin2", value: UserCoinInfo | null): void
+	(e: "update:coin1", value: TokenBalance | null): void
+	(e: "update:coin2", value: TokenBalance | null): void
 }>()
-const coin1Wrapper = computed({
-	get(): UserCoinInfo | null {
+
+const fromCoin = computed<TokenBalance | null>({
+	get() {
 		return props.coin1
 	},
-	set(value: UserCoinInfo | null) {
+	set(value) {
 		emit("update:coin1", value)
 	},
 })
-const coin2Wrapper = computed({
-	get(): UserCoinInfo | null {
+
+const toCoin = computed<TokenBalance | null>({
+	get() {
 		return props.coin2
 	},
-	set(value: UserCoinInfo | null) {
+	set(value) {
 		emit("update:coin2", value)
 	},
 })
+
 const slippage = -0.21
 
 const swapRatio = computed<number>(() => {
-	if (coin1Wrapper.value && coin2Wrapper.value)
-		return coin1Wrapper.value.coin.price / coin2Wrapper.value.coin.price
+	if (fromCoin.value) {
+		return calculateRouteSpotPrice(fromCoin.value, swapRoutes.value)
+	}
+
 	return 0
 })
 
-const swapAmountNumber = computed<number>(() => {
-	return parseInt(swapAmountWrapper.value)
+const swapAmountFiat = computed<string>(() => {
+	return new BigNumber(swapAmountWrapper.value)
+		.multipliedBy(fromCoin.value?.price ?? "0")
+		.toString()
 })
 
 const swapAmount = ref("0")
+
 const swapAmountWrapper = computed<string>({
 	get() {
 		return swapAmount.value
@@ -55,15 +72,36 @@ const swapAmountWrapper = computed<string>({
 })
 
 const invert = () => {
-	const tmp = coin1Wrapper
-	coin1Wrapper.value = coin2Wrapper.value
-	coin2Wrapper.value = tmp.value
+	const tmp = fromCoin
+	fromCoin.value = toCoin.value
+	toCoin.value = tmp.value
 }
 
 const show = ref(false)
 const slippageExpanded = ref(false)
 const maxSlippage = ref(1)
 const customSelected = ref(false)
+
+const setSlippage = (index: number) => {
+	maxSlippage.value = index
+	customSelected.value = false
+}
+
+const swapRoutes = computed(() => {
+	if (fromCoin.value && toCoin.value) {
+		return poolsStore.routesPoolByDenom(fromCoin.value, toCoin.value)
+	}
+
+	return []
+})
+
+const onAmountChange = () => {
+	if (fromCoin.value && toCoin.value) {
+		console.log(
+			new BigNumber(swapAmountWrapper.value).div(swapRatio.value).toString()
+		)
+	}
+}
 </script>
 
 <template>
@@ -75,10 +113,11 @@ const customSelected = ref(false)
 					<q-input
 						borderless
 						v-model="swapAmountWrapper"
+						@update:model-value="onAmountChange"
 						class="fs-24 q-mb-0 text-white"
 					/>
 					<p v-if="coin1" class="fs-12 text-dark">
-						{{ balancedCurrency(swapAmountNumber * coin1.coin.price) }} $
+						{{ balancedCurrency(swapAmountFiat) }} $
 					</p>
 				</div>
 				<div>
@@ -87,7 +126,11 @@ const customSelected = ref(false)
 			</div>
 			<div class="vertical-separator q-mx-28"></div>
 			<div class="flex-1">
-				<CoinSelect v-model="coin1" class="q-mx--30"></CoinSelect>
+				<CoinSelect
+					v-model="coin1"
+					:options="bankStore.allSwappableBalances"
+					class="q-mx--30"
+				></CoinSelect>
 			</div>
 		</div>
 	</CardDark>
@@ -104,28 +147,33 @@ const customSelected = ref(false)
 		<div class="flex justify-between no-wrap">
 			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
 				<div class="q-mr-24">
-					<p v-if="coin1 && coin2" class="fs-24">
-						{{ balancedCurrency(swapRatio * swapAmountNumber) }}
-					</p>
+					<p v-if="coin1 && coin2" class="fs-24">0</p>
 				</div>
 			</div>
 			<div class="vertical-separator q-mx-28"></div>
 			<div class="flex-1">
-				<CoinSelect v-model="coin2" class="q-mx--30"></CoinSelect>
+				<CoinSelect
+					v-model="coin2"
+					:options="bankStore.allSwappableBalances"
+					class="q-mx--30"
+				></CoinSelect>
 			</div>
 		</div>
 	</CardDark>
-	<div
-		class="q-py-15 q-px-30 bg-white-5 rounded-25 fs-14 q-mb-57"
-	>
+	<div class="q-py-15 q-px-30 bg-white-5 rounded-25 fs-14 q-mb-57">
 		<div
 			class="cursor-pointer flex justify-between items-center"
-			@click="slippageExpanded=!slippageExpanded"
+			@click="slippageExpanded = !slippageExpanded"
 		>
 			<p>Estimated slippage</p>
 			<div class="flex">
-				<p :class="'q-mr-14' + (slippage > maxSlippage ? ' text-negative' : '')">{{ smallNumber(slippage) }} %</p>
-				<q-icon :name="resolveIcon('dropdown', 11, 7)" :class="slippageExpanded ? 'rotate-180' : ''"></q-icon>
+				<p :class="'q-mr-14' + (slippage > maxSlippage ? ' text-negative' : '')">
+					{{ smallNumberRate(slippage) }} %
+				</p>
+				<q-icon
+					:name="resolveIcon('dropdown', 11, 7)"
+					:class="slippageExpanded ? 'rotate-180' : ''"
+				></q-icon>
 			</div>
 		</div>
 		<div
@@ -134,22 +182,25 @@ const customSelected = ref(false)
 		>
 			<div class="flex items-center text-dark">
 				<p class="fs-13 font-weight-medium q-mr-9">Slippage Tolerance</p>
-				<q-icon
-					size="12px"
-					:name="resolveIcon('info', 15, 15)"
-				></q-icon>
+				<q-icon size="12px" :name="resolveIcon('info', 15, 15)"></q-icon>
 			</div>
 			<div class="flex">
 				<div
 					v-for="i in 3"
-					@click="maxSlippage = i; customSelected = false"
-					:class="'rounded-30 border-dark q-px-18 q-py-6 q-mr-6 cursor-pointer' + ((maxSlippage == i && !customSelected) ? ' bg-dark' : '')"
+					@click="setSlippage(i)"
+					:class="
+						'rounded-30 border-dark q-px-18 q-py-6 q-mr-6 cursor-pointer' +
+						(maxSlippage == i && !customSelected ? ' bg-dark' : '')
+					"
 				>
-					{{i}} %
+					{{ i }} %
 				</div>
 				<div
 					@click="customSelected = true"
-					:class="'flex rounded-30 border-dark q-px-18 q-py-6 q-mr-6 cursor-pointer ' + (customSelected ? 'bg-dark' : 'bg-primary-darker opacity-50')"
+					:class="
+						'flex rounded-30 border-dark q-px-18 q-py-6 q-mr-6 cursor-pointer ' +
+						(customSelected ? 'bg-dark' : 'bg-primary-darker opacity-50')
+					"
 				>
 					<div class="flex">
 						<q-input
@@ -160,7 +211,8 @@ const customSelected = ref(false)
 							v-show="customSelected"
 							v-model="maxSlippage"
 							size="1"
-							dense />
+							dense
+						/>
 						<p>%</p>
 					</div>
 				</div>
@@ -168,18 +220,18 @@ const customSelected = ref(false)
 		</div>
 	</div>
 	<div class="flex items-center q-col-gutter-x-xl">
-		<div class="flex-1 flex justify-between" v-if="coin1Wrapper && coin2Wrapper">
+		<div class="flex-1 flex justify-between" v-if="fromCoin && toCoin">
 			<p class="fs-16">Rates</p>
 			<div class="fs-12">
 				<p class="q-mb-6">
-					<span class="opacity-40">{{ coin1Wrapper.coin.symbol }} =</span>
-					{{ smallNumber(swapRatio) }}
-					<span class="opacity-40">{{ coin2Wrapper.coin.symbol }}</span>
+					<span class="opacity-40">{{ fromCoin.symbol }} =</span>
+					{{ smallNumberRate(swapRatio) }}
+					<span class="opacity-40">{{ toCoin.symbol }}</span>
 				</p>
 				<p>
-					<span class="opacity-40">{{ coin2Wrapper.coin.symbol }} =</span>
-					{{ smallNumber(1 / swapRatio) }}
-					<span class="opacity-40">{{ coin1Wrapper.coin.symbol }}</span>
+					<span class="opacity-40">{{ toCoin.symbol }} =</span>
+					{{ smallNumberRate(1 / swapRatio) }}
+					<span class="opacity-40">{{ fromCoin.symbol }}</span>
 				</p>
 			</div>
 		</div>

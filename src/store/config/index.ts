@@ -147,6 +147,18 @@ const useConfig = defineStore("config", {
 					return token.ibc.osmosis.destDenom === denom
 				})
 		},
+		findFantokenByDenom() {
+			return (denom: string) =>
+				this.fantokens.find((token) => {
+					const coinLookup = token.coinLookup.find(
+						(coin) => coin.viewDenom === token.symbol
+					)
+
+					if (coinLookup) {
+						return coinLookup.fantokenDenom === denom
+					}
+				})
+		},
 		findTokenBySymbol() {
 			return (symbol: string) =>
 				this.allTokens.find((token) => token.symbol === symbol)
@@ -174,8 +186,8 @@ const useConfig = defineStore("config", {
 	},
 })
 
-if (import.meta.hot) {
+/* if (import.meta.hot) {
 	import.meta.hot.accept(acceptHMRUpdate(useConfig, import.meta.hot))
-}
+} */
 
 export default useConfig

@@ -1,5 +1,5 @@
 import { coinsConfig } from "@/configs/config"
-import { Token, OsmosisPoolAsset, PoolAsset } from "@/types"
+import { Token, OsmosisPoolAsset, PoolAsset, SwapPool } from "@/types"
 import { Coin, coin } from "@cosmjs/proto-signing"
 import { BigNumber } from "bignumber.js"
 import { Decimal } from "decimal.js"
@@ -46,6 +46,10 @@ export const smallNumber = (number: number | string): string => {
 	return new BigNumber(number).toFixed(2)
 }
 
+export const smallNumberRate = (number: number | string): string => {
+	return new BigNumber(number).toFixed(3)
+}
+
 export const percentageRange = (
 	number: number | string,
 	decimals = 3
@@ -53,7 +57,7 @@ export const percentageRange = (
 	const amount = new BigNumber(number)
 
 	if (amount.isNaN() || amount.isEqualTo(0)) {
-		return "0"
+		return "0.00"
 	}
 
 	if (amount.gt(0.001)) {
@@ -182,6 +186,45 @@ export const calculateSpotPrice = (
 	const scale = new BigNumber(1).div(new BigNumber(1).minus(swapFee))
 
 	return number.div(denom).multipliedBy(scale)
+}
+
+export const calculateRouteSpotPrice = (
+	fromCoin: Token,
+	swapRoutes: SwapPool[]
+) => {
+	const coinLookup = fromCoin.coinLookup.find(
+		(coin) => coin.viewDenom === fromCoin.symbol
+	)
+
+	let from: string | undefined = fromCoin.ibcEnabled
+		? fromCoin.ibc.osmosis.destDenom
+		: coinLookup?.chainDenom
+	let to: string | undefined = undefined
+	let spotPrice = new BigNumber("1")
+
+	for (const swapRoute of swapRoutes) {
+		to = swapRoute.out
+		let poolAssetIn: OsmosisPoolAsset | undefined = undefined
+		let poolAssetOut: OsmosisPoolAsset | undefined = undefined
+
+		for (const poolAsset of swapRoute.pool.poolAssets) {
+			if (poolAsset.token.denom === from) {
+				poolAssetIn = poolAsset
+			} else if (poolAsset.token.denom === to) {
+				poolAssetOut = poolAsset
+			}
+		}
+
+		if (poolAssetIn && poolAssetOut) {
+			spotPrice = spotPrice.multipliedBy(
+				calculateSpotPrice(poolAssetIn, poolAssetOut).toString()
+			)
+		}
+
+		from = to
+	}
+
+	return spotPrice.toNumber()
 }
 
 export const calcPoolOutGivenSingleIn = (
