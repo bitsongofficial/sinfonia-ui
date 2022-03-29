@@ -160,16 +160,34 @@ const onAmountChange = (symbol: string, rawAmount: string) => {
 					<p class="text-center fs-12 q-pa-12 text-weight-medium">Change token</p>
 				</div>
 				<div class="flex justify-between no-wrap">
-					<div class="q-mr-20 flex no-wrap items-center">
-						<q-toggle v-model="single" color="white" class="q-mr-8" />
-						<p class="fs-12 text-weight-medium q-mr-12">Single Asset LP</p>
-						<q-icon
-							:name="resolveIcon('info', 15, 15)"
-							class="text-dark cursor-pointer"
-						>
-						</q-icon>
+					<div class="column q-mr-20">
+						<div v-if="single" class="flex fs-13 q-mb-14">
+							<p class="q-mr-6">
+								&nbsp;
+							</p>
+							<p>
+								&nbsp;
+							</p>
+						</div>
+						<div class="flex no-wrap items-center">
+							<q-toggle v-model="single" color="white" class="q-mr-8" />
+							<p class="fs-12 text-weight-medium q-mr-12">Single Asset LP</p>
+							<q-icon
+								:name="resolveIcon('info', 15, 15)"
+								class="text-dark cursor-pointer"
+							>
+							</q-icon>
+						</div>
 					</div>
-					<div>
+					<div class="column items-center">
+						<div v-if="single" class="flex fs-13 q-mb-14">
+							<p class="q-mr-6 text-gradient">
+								Price Impact
+							</p>
+							<p>
+								2.43%
+							</p>
+						</div>
 						<LargeButton type="submit" fit :padding-y="14">
 							<span class="text-uppercase"> Add liquidity </span>
 						</LargeButton>
