@@ -125,8 +125,8 @@ onUnmounted(() => {
 
 <template>
 	<div class="text-white text-weight-medium" v-if="pool">
-		<div class="q-mb-90 flex justify-between items-center">
-			<div class="flex">
+		<div class="q-mb-90 flex justify-between justify-sm-center items-center">
+			<div class="flex q-mb-sm-30">
 				<ImagePair :coins="pool.coins" class="q-mr-20"> </ImagePair>
 				<h1 class="fs-27">#{{ pool.id }}: {{ poolTokensName }}</h1>
 			</div>

@@ -338,6 +338,17 @@
     .absolute-sm {
         position: absolute;
     }
+
+    .q-mb-sm-30 {
+        margin-bottom: 30px;
+    }
+
+    .justify-sm-center {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: $breakpoint-md) {
 }
 
 @media screen and (min-width: $breakpoint-xs) {
