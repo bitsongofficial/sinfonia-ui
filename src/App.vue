@@ -29,7 +29,7 @@ bootstrap()
 							<div
 								class="vertical-sm-fixed full-width flex-xs jsutify-center-xs relative-xs no-pointer-events bottom-0 q-mb-40 q-mb-xs-14 q-pt-lg w-fit"
 							>
-								<a :href="externalWebsites.coingecko" class="all-pointer-events text-center fs-12 text-weight-medium opacity-30 q-mb-15">
+								<a :href="externalWebsites.coingecko" class="q-pl-24 block w-fit q-mb-14 all-pointer-events text-center fs-12 text-weight-medium opacity-30">
 									Price Data by CoinGecko
 								</a>
 								<WalletAddress class="all-pointer-events gt-xs"></WalletAddress>

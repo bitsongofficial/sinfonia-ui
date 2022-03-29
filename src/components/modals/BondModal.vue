@@ -44,7 +44,7 @@ const onSubmit = () => {
 						@click="chosenUnbonding = up"
 						:class="
 							'rounded-20 q-py-16 q-px-16 flex justify-center items-center full-height cursor-pointer ' +
-							(up.apr == chosenUnbonding.apr
+							(up.duration == chosenUnbonding.duration
 								? 'bg-gradient'
 								: 'border-primary-darker hover:bg-white-5')
 						"
