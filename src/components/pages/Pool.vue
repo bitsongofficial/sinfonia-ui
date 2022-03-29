@@ -43,7 +43,7 @@ const poolTokensName = computed(() =>
 	pool.value?.coins.map((coin) => coin.token.symbol).join("/")
 )
 
-const columns: TableColumn[] = [
+const bondingsColumn: TableColumn[] = [
 	{
 		name: "title",
 		required: true,
@@ -81,7 +81,53 @@ const columns: TableColumn[] = [
 	},
 	{
 		name: "unbond",
-		align: "center",
+		align: "right",
+		label: "",
+		field: "max",
+		sortable: false,
+	},
+]
+
+const unbondingsColumn: TableColumn[] = [
+	{
+		name: "title",
+		required: true,
+		label: "unbonding duration",
+		align: "left",
+		field: (row: LockableDurationWithApr) => row.readableDuration,
+		format: (duration: string) => `${duration} unbonding`,
+		sortable: false,
+	},
+	{
+		name: "empty",
+		align: "right",
+		label: "",
+		field: (row: LockableDurationWithApr) => '',
+		format: (duration: string) => `53.`,
+		style: 'visibility: hidden;',
+		sortable: false,
+	},
+	{
+		name: "total",
+		align: "right",
+		label: "amount",
+		field: (row: LockableDurationWithApr) =>
+			row.lockedLonger
+				? reduce<Coin, BigNumber>(
+						row.lockedLonger.coins,
+						(all, coin) => {
+							return all.plus(coin.amount)
+						},
+						new BigNumber("0")
+				  )
+				: "0",
+		format: (val: string) =>
+			`${balancedCurrency(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
+		sortable: true,
+	},
+	{
+		name: "time",
+		align: "right",
 		label: "",
 		field: "max",
 		sortable: false,
@@ -125,8 +171,8 @@ onUnmounted(() => {
 
 <template>
 	<div class="text-white text-weight-medium" v-if="pool">
-		<div class="q-mb-90 flex justify-between items-center">
-			<div class="flex">
+		<div class="q-mb-90 flex justify-between justify-sm-center items-center">
+			<div class="flex q-mb-sm-30">
 				<ImagePair :coins="pool.coins" class="q-mr-20" />
 				<h1 class="fs-27">#{{ pool.id }}: {{ poolTokensName }}</h1>
 			</div>
@@ -254,7 +300,7 @@ onUnmounted(() => {
 							</p>
 						</div>
 						<Progress
-							:height="6"
+							:height="12"
 							:value="unbonding.extraGagues[0].filledEpochs"
 							:max="unbonding.extraGagues[0].numEpochsPaidOver"
 						></Progress>
@@ -308,7 +354,7 @@ onUnmounted(() => {
 			</div>
 		</div>
 		<p class="fs-18 q-mb-30">My Bondings</p>
-		<LightTable :rows="pool.lockableDurationApr" :columns="columns">
+		<LightTable class="q-mb-88" :rows="pool.lockableDurationApr" :columns="bondingsColumn">
 			<template v-slot:body-cell-unbond="props">
 				<q-td :props="props">
 					<template v-if="props.row.lockedLonger">
@@ -325,6 +371,16 @@ onUnmounted(() => {
 					</template>
 					<span class="text-white opacity-20 text-weight-medium" v-else>
 						Unbond all
+					</span>
+				</q-td>
+			</template>
+		</LightTable>
+		<p class="fs-18 q-mb-30">My Unbondings</p>
+		<LightTable :rows="pool.lockableDurationApr" :columns="unbondingsColumn">
+			<template v-slot:body-cell-time="props">
+				<q-td :props="props">
+					<span class="font-weight-medium opacity-40">
+						23 hours
 					</span>
 				</q-td>
 			</template>

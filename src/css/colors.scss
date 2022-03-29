@@ -25,6 +25,10 @@
     background: $primary-dark !important;
 }
 
+.border-dark {
+    border: 1px solid $dark;
+}
+
 .text-primary-dark-700 {
     color: $primary-dark-700 !important;
 }
@@ -81,6 +85,14 @@
 .bg-gradient {
     background: linear-gradient(147.07deg, $primary-complementary 21.78%, $primary 79.22%);
     border-radius: 30px;
+}
+
+.text-gradient {
+    background: linear-gradient(147.07deg, #9C589C 21.78%, #FF005C 79.22%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
 }
 
 .shadow-20 {
@@ -170,5 +182,11 @@
 {
     .blur-#{$i*10} {
         backdrop-filter: blur(#{$i*10}px);
+    }
+}
+
+@media screen and (max-width: $breakpoint-xs) {
+    .text-xs-secondary {
+        color: $secondary !important;
     }
 }

@@ -8,7 +8,6 @@ import CoinSelect from "./CoinSelect.vue"
 import InlineButton from "../buttons/InlineButton.vue"
 import { resolveIcon } from "@/common/resolvers"
 import LargeButton from "../buttons/LargeButton.vue"
-
 const props = defineProps<{
 	coin1: UserCoinInfo | null
 	coin2: UserCoinInfo | null
@@ -62,6 +61,9 @@ const invert = () => {
 }
 
 const show = ref(false)
+const slippageExpanded = ref(false)
+const maxSlippage = ref(1)
+const customSelected = ref(false)
 </script>
 
 <template>
@@ -114,10 +116,56 @@ const show = ref(false)
 		</div>
 	</CardDark>
 	<div
-		class="q-py-15 q-px-30 bg-white-5 rounded flex justify-between items-center fs-14 q-mb-57"
+		class="q-py-15 q-px-30 bg-white-5 rounded-25 fs-14 q-mb-57"
 	>
-		<p>Estimated slippage</p>
-		<p>{{ smallNumber(slippage) }} %</p>
+		<div
+			class="cursor-pointer flex justify-between items-center"
+			@click="slippageExpanded=!slippageExpanded"
+		>
+			<p>Estimated slippage</p>
+			<div class="flex">
+				<p :class="'q-mr-14' + (slippage > maxSlippage ? ' text-negative' : '')">{{ smallNumber(slippage) }} %</p>
+				<q-icon :name="resolveIcon('dropdown', 11, 7)" :class="slippageExpanded ? 'rotate-180' : ''"></q-icon>
+			</div>
+		</div>
+		<div
+			v-if="slippageExpanded"
+			class="flex justify-between items-center q-mt-20"
+		>
+			<div class="flex items-center text-dark">
+				<p class="fs-13 font-weight-medium q-mr-9">Slippage Tolerance</p>
+				<q-icon
+					size="12px"
+					:name="resolveIcon('info', 15, 15)"
+				></q-icon>
+			</div>
+			<div class="flex">
+				<div
+					v-for="i in 3"
+					@click="maxSlippage = i; customSelected = false"
+					:class="'rounded-30 border-dark q-px-18 q-py-6 q-mr-6 cursor-pointer' + ((maxSlippage == i && !customSelected) ? ' bg-dark' : '')"
+				>
+					{{i}} %
+				</div>
+				<div
+					@click="customSelected = true"
+					:class="'flex rounded-30 border-dark q-px-18 q-py-6 q-mr-6 cursor-pointer ' + (customSelected ? 'bg-dark' : 'bg-primary-darker opacity-50')"
+				>
+					<div class="flex">
+						<q-input
+							class="min-size-input text-right q-mr-4"
+							input-class="q-py-0"
+							hide-bottom-space
+							borderless
+							v-show="customSelected"
+							v-model="maxSlippage"
+							size="1"
+							dense />
+						<p>%</p>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="flex items-center q-col-gutter-x-xl">
 		<div class="flex-1 flex justify-between" v-if="coin1Wrapper && coin2Wrapper">
