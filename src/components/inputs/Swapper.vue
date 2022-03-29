@@ -55,6 +55,15 @@ const swapAmountWrapper = computed<string>({
 	},
 })
 
+const toAmount = computed({
+	get():string {
+		return balancedCurrency(parseFloat(swapAmount.value) * swapAmountNumber.value)
+	},
+	set(value:string):void {
+
+	},
+})
+
 const invert = () => {
 	const tmp = coin1Wrapper
 	coin1Wrapper.value = coin2Wrapper.value
@@ -105,9 +114,12 @@ const customSelected = ref(false)
 		<div class="flex justify-between no-wrap">
 			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
 				<div class="q-mr-24">
-					<p v-if="coin1 && coin2" class="fs-24">
-						{{ balancedCurrency(swapRatio * swapAmountNumber) }}
-					</p>
+					<q-input
+						borderless
+						v-model="toAmount"
+						class="fs-24 q-mb-0 text-white"
+						v-if="coin1 && coin2"
+					/>
 				</div>
 			</div>
 			<div class="vertical-separator q-mx-28"></div>
