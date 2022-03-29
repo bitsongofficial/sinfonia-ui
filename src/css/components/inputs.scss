@@ -176,3 +176,13 @@ label:not(.q-field--with-bottom) {
         }
     }
 }
+
+.min-size-input {
+    .q-field__control {
+        height: fit-content;
+
+        input {
+            width: fit-content;
+        }
+    }
+}
