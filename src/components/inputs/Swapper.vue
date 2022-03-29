@@ -8,6 +8,7 @@ import CoinSelect from "./CoinSelect.vue"
 import InlineButton from "../buttons/InlineButton.vue"
 import { resolveIcon } from "@/common/resolvers"
 import LargeButton from "../buttons/LargeButton.vue"
+import InformativeTooltip from "../tooltips/InformativeTooltip.vue"
 const props = defineProps<{
 	coin1: UserCoinInfo | null
 	coin2: UserCoinInfo | null
@@ -137,7 +138,14 @@ const customSelected = ref(false)
 				<q-icon
 					size="12px"
 					:name="resolveIcon('info', 15, 15)"
-				></q-icon>
+				>
+					<InformativeTooltip
+						anchor="center right"
+						self="center left"
+					>
+						Your transaction will revert if the price changes unfavorably by more than this percentage.
+					</InformativeTooltip>
+				</q-icon>
 			</div>
 			<div class="flex">
 				<div
