@@ -420,3 +420,13 @@ export const estimateHopSwapExactAmountIn = (
 		slippage,
 	}
 }
+
+export const calculateSlippageTokenIn = (
+	spotPriceBefore: Decimal,
+	tokenIn: string,
+	slippage: Decimal
+) => {
+	const effectivePrice = spotPriceBefore.mul(slippage.add(new Decimal(1)))
+
+	return new Decimal(tokenIn).div(effectivePrice)
+}

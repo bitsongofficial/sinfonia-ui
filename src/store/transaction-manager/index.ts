@@ -6,6 +6,9 @@ import { amountIBCFromCoin, amountFromCoin } from "@/common/numbers"
 import { TransactionManager } from "@/signing/transaction-manager"
 import {
 	LockableDurationWithApr,
+	OsmosisRoute,
+	SwapPool,
+	SwapRoute,
 	Token,
 	Transaction,
 	TransactionStatus,
@@ -185,6 +188,46 @@ const useTransactionManager = defineStore("transactionManager", {
 						poolId,
 						shareInAmount,
 						tokenOutMins
+					)
+
+					this.addPendingTx(tsx, configStore.osmosisToken)
+				}
+			} catch (error) {
+				console.error(error)
+				notifyError("Transaction Failed", (error as Error).message)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
+		async swapExactAmountIn(
+			routes: SwapPool[],
+			tokenIn: Coin,
+			tokenOutMinAmount: string
+		) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+			try {
+				this.loading = true
+
+				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+					const signer = await window.keplr.getOfflineSignerAuto(
+						configStore.osmosisToken.chainID
+					)
+
+					const manager = new TransactionManager(signer, configStore.osmosisToken)
+
+					const osmosisRoutes: OsmosisRoute[] = routes.map((route) => ({
+						poolId: route.pool.id,
+						tokenOutDenom: route.out,
+					}))
+
+					const tsx = await manager.swapExactAmountIn(
+						authStore.osmosisAddress,
+						osmosisRoutes,
+						tokenIn,
+						tokenOutMinAmount
 					)
 
 					this.addPendingTx(tsx, configStore.osmosisToken)

@@ -101,3 +101,8 @@ export interface DistrInfo {
 	total_weight: string
 	records: DistrInfoGauge[]
 }
+
+export interface OsmosisRoute {
+	poolId: string
+	tokenOutDenom: string
+}

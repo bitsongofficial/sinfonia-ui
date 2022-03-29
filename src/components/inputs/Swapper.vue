@@ -6,6 +6,7 @@ import {
 	estimateHopSwapExactAmountIn,
 	amountIBCFromCoin,
 	percentageRange,
+	calculateSlippageTokenIn,
 } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
@@ -19,10 +20,12 @@ import usePools from "@/store/pools"
 import BigNumber from "bignumber.js"
 import Decimal from "decimal.js"
 import useConfig from "@/store/config"
+import useTransactionManager from "@/store/transaction-manager"
 
 const bankStore = useBank()
 const poolsStore = usePools()
 const configStore = useConfig()
+const transactionManagerStore = useTransactionManager()
 
 const props = defineProps<{
 	coin1: TokenBalance | null
@@ -81,13 +84,19 @@ const swapCoin = computed(() => {
 	return undefined
 })
 
-const slippage = computed(() => {
+const estimatedHopSwap = computed(() => {
 	if (fromCoin.value && swapCoin.value) {
-		const { slippage } = estimateHopSwapExactAmountIn(
+		return estimateHopSwapExactAmountIn(
 			swapCoin.value,
 			fromCoin.value,
 			swapRoutes.value
 		)
+	}
+})
+
+const slippage = computed(() => {
+	if (estimatedHopSwap.value) {
+		const { slippage } = estimatedHopSwap.value
 
 		return slippage.mul(100).toString()
 	}
@@ -160,6 +169,27 @@ const available = computed(() => {
 const setMaxAmount = () => {
 	if (props.coin1) {
 		swapAmount.value = available.value
+	}
+}
+
+const onSubmit = () => {
+	if (swapCoin.value && estimatedHopSwap.value) {
+		let tokenOutMinAmount = "1"
+		const maxSlippageDec = new Decimal(maxSlippage.value).div(100)
+
+		if (maxSlippageDec.gt("0")) {
+			tokenOutMinAmount = calculateSlippageTokenIn(
+				estimatedHopSwap.value.spotPriceBefore,
+				swapCoin.value.amount,
+				maxSlippageDec
+			).toString()
+		}
+
+		transactionManagerStore.swapExactAmountIn(
+			swapRoutes.value,
+			swapCoin.value,
+			tokenOutMinAmount
+		)
 	}
 }
 </script>
@@ -297,7 +327,7 @@ const setMaxAmount = () => {
 			</div>
 		</div>
 		<div class="flex-1">
-			<LargeButton>Swap Tokens</LargeButton>
+			<LargeButton @click="onSubmit">Swap Tokens</LargeButton>
 		</div>
 	</div>
 </template>

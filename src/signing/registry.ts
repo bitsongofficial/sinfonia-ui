@@ -25,5 +25,9 @@ export const osmosisRegistry = (): Registry => {
 			"/osmosis.gamm.v1beta1.MsgExitPool",
 			osmosis.gamm.v1beta1.MsgExitPool as GeneratedType,
 		],
+		[
+			"/osmosis.gamm.v1beta1.MsgSwapExactAmountIn",
+			osmosis.gamm.v1beta1.MsgSwapExactAmountIn as GeneratedType,
+		],
 	])
 }
