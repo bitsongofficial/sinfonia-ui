@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { balancedCurrency, smallNumberRate } from "@/common/numbers"
 import { computed, ref } from "vue"
-import { calculateRouteSpotPrice } from "@/common"
+import {
+	calculateRouteSpotPrice,
+	estimateHopSwapExactAmountIn,
+	amountIBCFromCoin,
+	percentageRange,
+} from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
 import CardDark from "@/components/cards/CardDark.vue"
@@ -12,9 +17,12 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 import useBank from "@/store/bank"
 import usePools from "@/store/pools"
 import BigNumber from "bignumber.js"
+import Decimal from "decimal.js"
+import useConfig from "@/store/config"
 
 const bankStore = useBank()
 const poolsStore = usePools()
+const configStore = useConfig()
 
 const props = defineProps<{
 	coin1: TokenBalance | null
@@ -44,8 +52,6 @@ const toCoin = computed<TokenBalance | null>({
 	},
 })
 
-const slippage = -0.21
-
 const swapRatio = computed<number>(() => {
 	if (fromCoin.value) {
 		return calculateRouteSpotPrice(fromCoin.value, swapRoutes.value)
@@ -55,12 +61,39 @@ const swapRatio = computed<number>(() => {
 })
 
 const swapAmountFiat = computed<string>(() => {
-	return new BigNumber(swapAmountWrapper.value)
-		.multipliedBy(fromCoin.value?.price ?? "0")
+	console.log(
+		new BigNumber(swapAmountWrapper.value)
+			.multipliedBy(fromCoin.value?.price ?? "0")
+			.toString()
+	)
+	return new Decimal(swapAmountWrapper.value)
+		.mul(fromCoin.value?.price ?? "0")
 		.toString()
 })
 
 const swapAmount = ref("0")
+
+const swapCoin = computed(() => {
+	if (fromCoin.value) {
+		return amountIBCFromCoin(swapAmount.value, fromCoin.value)
+	}
+
+	return undefined
+})
+
+const slippage = computed(() => {
+	if (fromCoin.value && swapCoin.value) {
+		const { slippage } = estimateHopSwapExactAmountIn(
+			swapCoin.value,
+			fromCoin.value,
+			swapRoutes.value
+		)
+
+		return slippage.mul(100).toString()
+	}
+
+	return "0"
+})
 
 const swapAmountWrapper = computed<string>({
 	get() {
@@ -79,13 +112,18 @@ const invert = () => {
 
 const show = ref(false)
 const slippageExpanded = ref(false)
-const maxSlippage = ref(1)
+const maxSlippage = ref("1")
+const maxSlippageOption = ["1", "3", "5"]
 const customSelected = ref(false)
 
-const setSlippage = (index: number) => {
+const setSlippage = (index: string) => {
 	maxSlippage.value = index
 	customSelected.value = false
 }
+
+const invalidSlippage = computed(() => {
+	return new BigNumber(slippage.value).gt(maxSlippage.value)
+})
 
 const swapRoutes = computed(() => {
 	if (fromCoin.value && toCoin.value) {
@@ -100,6 +138,28 @@ const onAmountChange = () => {
 		console.log(
 			new BigNumber(swapAmountWrapper.value).div(swapRatio.value).toString()
 		)
+	}
+}
+
+const available = computed(() => {
+	const osmosisToken = configStore.osmosisToken
+
+	if (osmosisToken && props.coin1 && props.coin1.chains) {
+		const chain = props.coin1.chains.find(
+			(el) => el.symbol === osmosisToken.symbol
+		)
+
+		if (chain) {
+			return balancedCurrency(chain.available ?? "0")
+		}
+	}
+
+	return "0"
+})
+
+const setMaxAmount = () => {
+	if (props.coin1) {
+		swapAmount.value = available.value
 	}
 }
 </script>
@@ -121,7 +181,7 @@ const onAmountChange = () => {
 					</p>
 				</div>
 				<div>
-					<SmallButton label="MAX"></SmallButton>
+					<SmallButton label="MAX" @click="setMaxAmount"></SmallButton>
 				</div>
 			</div>
 			<div class="vertical-separator q-mx-28"></div>
@@ -167,8 +227,8 @@ const onAmountChange = () => {
 		>
 			<p>Estimated slippage</p>
 			<div class="flex">
-				<p :class="'q-mr-14' + (slippage > maxSlippage ? ' text-negative' : '')">
-					{{ smallNumberRate(slippage) }} %
+				<p :class="'q-mr-14' + (invalidSlippage ? ' text-negative' : '')">
+					{{ percentageRange(slippage) }} %
 				</p>
 				<q-icon
 					:name="resolveIcon('dropdown', 11, 7)"
@@ -186,12 +246,13 @@ const onAmountChange = () => {
 			</div>
 			<div class="flex">
 				<div
-					v-for="i in 3"
+					v-for="i in maxSlippageOption"
 					@click="setSlippage(i)"
 					:class="
 						'rounded-30 border-dark q-px-18 q-py-6 q-mr-6 cursor-pointer' +
 						(maxSlippage == i && !customSelected ? ' bg-dark' : '')
 					"
+					:key="i"
 				>
 					{{ i }} %
 				</div>

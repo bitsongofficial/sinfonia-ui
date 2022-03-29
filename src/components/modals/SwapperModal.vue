@@ -8,10 +8,12 @@ const props = defineProps<{
 	coin1: TokenBalance | null
 	coin2: TokenBalance | null
 }>()
+
 const emit = defineEmits<{
 	(e: "update:coin1", value: TokenBalance | null): void
 	(e: "update:coin2", value: TokenBalance | null): void
 }>()
+
 const coin1Wrapper = computed<TokenBalance | null>({
 	get() {
 		return props.coin1
@@ -20,6 +22,7 @@ const coin1Wrapper = computed<TokenBalance | null>({
 		emit("update:coin1", value)
 	},
 })
+
 const coin2Wrapper = computed<TokenBalance | null>({
 	get() {
 		return props.coin2
