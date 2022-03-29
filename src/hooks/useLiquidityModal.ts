@@ -1,6 +1,13 @@
 import { compact, Dictionary, reduce } from "lodash"
-import { Pool, PoolAsset } from "@/types"
-import { Ref, ref, computed, watch, onUnmounted } from "vue"
+import { Pool } from "@/types"
+import {
+	Ref,
+	ref,
+	computed,
+	watch,
+	onUnmounted,
+	WritableComputedRef,
+} from "vue"
 import useBank from "@/store/bank"
 import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
@@ -16,7 +23,10 @@ import { BigNumber } from "bignumber.js"
 import { coinsConfig } from "@/configs/config"
 import { Coin } from "@cosmjs/proto-signing"
 
-const useLiquidityModal = (pool: Ref<Pool>) => {
+const useLiquidityModal = (
+	pool: Ref<Pool>,
+	model: WritableComputedRef<boolean>
+) => {
 	const bankStore = useBank()
 	const configStore = useConfig()
 	const transactionManagerStore = useTransactionManager()
@@ -78,16 +88,27 @@ const useLiquidityModal = (pool: Ref<Pool>) => {
 		return "-"
 	})
 
+	const onInputUpdate = () => {
+		const coinsAmountsMap = {}
+
+		pool.value.coins.forEach((coin) => {
+			coinsAmountsMap[coin.token.symbol] = "0"
+		})
+
+		coinsAmounts.value = coinsAmountsMap
+	}
+
 	const poolWatcher = watch(
-		() => pool.value,
+		() => pool.value || model.value,
 		() => {
-			const coinsAmountsMap = {}
+			onInputUpdate()
+		}
+	)
 
-			pool.value.coins.forEach((coin) => {
-				coinsAmountsMap[coin.token.symbol] = "0"
-			})
-
-			coinsAmounts.value = coinsAmountsMap
+	const modelWatcher = watch(
+		() => model.value,
+		() => {
+			onInputUpdate()
 		},
 		{ immediate: true }
 	)
@@ -249,6 +270,7 @@ const useLiquidityModal = (pool: Ref<Pool>) => {
 
 	onUnmounted(() => {
 		poolWatcher()
+		modelWatcher()
 	})
 
 	return {

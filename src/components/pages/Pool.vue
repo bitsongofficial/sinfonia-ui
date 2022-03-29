@@ -127,11 +127,11 @@ onUnmounted(() => {
 	<div class="text-white text-weight-medium" v-if="pool">
 		<div class="q-mb-90 flex justify-between items-center">
 			<div class="flex">
-				<ImagePair :coins="pool.coins" class="q-mr-20"> </ImagePair>
+				<ImagePair :coins="pool.coins" class="q-mr-20" />
 				<h1 class="fs-27">#{{ pool.id }}: {{ poolTokensName }}</h1>
 			</div>
 			<div class="flex items-center">
-				<OutlineButton class="q-mr-12">Swap Tokens</OutlineButton>
+				<OutlineButton class="q-mr-12" to="/swap">Swap Tokens</OutlineButton>
 				<StandardButton @click="openAddRemoveModal = true">
 					Add/Remove Liquidity
 				</StandardButton>
@@ -242,7 +242,8 @@ onUnmounted(() => {
 						</div>
 					</div>
 					<p class="fs-12 opacity-40 font-weight-regular q-mb-20">
-						BitSong Launchpad is the platform where you can buy and. Incentives for 22
+						BitSong Launchpad is the platform where you can buy and. Incentives for
+						{{ unbonding.extraGagues[0].leftEpochs }}
 						epochs.
 					</p>
 					<div class="flex no-wrap items-center text-weight-medium">

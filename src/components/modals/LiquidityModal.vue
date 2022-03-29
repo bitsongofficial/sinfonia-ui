@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Pool } from "@/types"
-import { toRef } from "vue"
+import { toRef, computed } from "vue"
 import { percentage } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import ModalWithClose from "@/components/modals/ModalWithClose.vue"
@@ -11,8 +11,22 @@ import Progress from "@/components/Progress.vue"
 import useLiquidityModal from "@/hooks/useLiquidityModal"
 
 const props = defineProps<{
+	modelValue: boolean
 	pool: Pool
 }>()
+
+const emit = defineEmits<{
+	(e: "update:modelValue", value: boolean): void
+}>()
+
+const model = computed<boolean>({
+	get() {
+		return props.modelValue
+	},
+	set(value) {
+		emit("update:modelValue", value)
+	},
+})
 
 const currentPool = toRef(props, "pool")
 
@@ -28,11 +42,11 @@ const {
 	onAmountChange,
 	onSubmit,
 	changeToken,
-} = useLiquidityModal(currentPool)
+} = useLiquidityModal(currentPool, model)
 </script>
 
 <template>
-	<ModalWithClose title="Manage Liquidity">
+	<ModalWithClose v-model="model" title="Manage Liquidity">
 		<q-form @submit="onSubmit">
 			<div class="flex fs-15 q-mb-22">
 				<p
