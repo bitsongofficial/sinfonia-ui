@@ -21,6 +21,7 @@ export interface PoolToken extends BaseToken {
 	availableAmount: string
 	bondedAmount: string
 	coinLookup: CoinLookup
+	coinDenom: string
 }
 
 export interface PoolAsset {

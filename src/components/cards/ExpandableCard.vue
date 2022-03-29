@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import Card from "./Card.vue"
-import IconButton from "../buttons/IconButton.vue"
 import { ref } from "vue"
 import { resolveIcon } from "@/common/resolvers"
+
+withDefaults(
+	defineProps<{
+		expandable: boolean
+	}>(),
+	{
+		expandable: true,
+	}
+)
 
 const expanded = ref(false)
 </script>
@@ -20,7 +28,7 @@ const expanded = ref(false)
 				</q-card-section>
 			</div>
 		</q-slide-transition>
-		<div class="flex justify-center">
+		<div class="flex justify-center" v-if="expandable">
 			<q-card-actions>
 				<div
 					class="w-46 h-21 rounded shadow-20 bg-primary-dark cursor-pointer"

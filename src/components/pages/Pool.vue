@@ -12,7 +12,7 @@ import LightTable from "@/components/LightTable.vue"
 import BondModal from "@/components/modals/BondModal.vue"
 import { TableColumn, LockableDurationWithApr } from "@/types"
 import usePools from "@/store/pools"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { computed, onMounted, onUnmounted, ref } from "vue"
 import { BigNumber } from "bignumber.js"
 import { reduce } from "lodash"
@@ -102,9 +102,9 @@ const unbondingsColumn: TableColumn[] = [
 		name: "empty",
 		align: "right",
 		label: "",
-		field: (row: LockableDurationWithApr) => '',
+		field: (row: LockableDurationWithApr) => "",
 		format: (duration: string) => `53.`,
-		style: 'visibility: hidden;',
+		style: "visibility: hidden;",
 		sortable: false,
 	},
 	{
@@ -265,13 +265,16 @@ onUnmounted(() => {
 		</div>
 		<div class="row q-col-gutter-xl items-center q-mb-80">
 			<div class="col-8 !w-md-1/3" v-for="unbonding in pool.lockableDurationApr">
-				<ExpandableCard transparency="5">
+				<ExpandableCard
+					transparency="5"
+					:expandable="unbonding.extraGagues.length > 0"
+				>
 					<p class="fs-12 opacity-30 q-mb-16 text-uppercase">
 						{{ unbonding.readableDuration }} unbonding
 					</p>
 					<div class="q-mb-20">
 						<p class="fs-36 q-mb-8">{{ percentage(unbonding.apr) }} %</p>
-						<div class="flex items-center">
+						<div class="flex items-center" v-if="unbonding.extraGagues.length > 0">
 							<p class="text-primary fs-14 q-mr-16 text-weight-medium">
 								External Incentives Pool
 							</p>
@@ -287,12 +290,18 @@ onUnmounted(() => {
 							</template>
 						</div>
 					</div>
-					<p class="fs-12 opacity-40 font-weight-regular q-mb-20">
+					<p
+						class="fs-12 opacity-40 font-weight-regular q-mb-20"
+						v-if="unbonding.extraGagues.length > 0"
+					>
 						BitSong Launchpad is the platform where you can buy and. Incentives for
 						{{ unbonding.extraGagues[0].leftEpochs }}
 						epochs.
 					</p>
-					<div class="flex no-wrap items-center text-weight-medium">
+					<div
+						class="flex no-wrap items-center text-weight-medium"
+						v-if="unbonding.extraGagues.length > 0"
+					>
 						<div class="q-mr-21">
 							<p class="fs-12 text-uppercase opacity-50 q-mb-8">Start</p>
 							<p class="fs-18 text-no-wrap">
@@ -354,7 +363,11 @@ onUnmounted(() => {
 			</div>
 		</div>
 		<p class="fs-18 q-mb-30">My Bondings</p>
-		<LightTable class="q-mb-88" :rows="pool.lockableDurationApr" :columns="bondingsColumn">
+		<LightTable
+			class="q-mb-88"
+			:rows="pool.lockableDurationApr"
+			:columns="bondingsColumn"
+		>
 			<template v-slot:body-cell-unbond="props">
 				<q-td :props="props">
 					<template v-if="props.row.lockedLonger">
@@ -379,9 +392,7 @@ onUnmounted(() => {
 		<LightTable :rows="pool.lockableDurationApr" :columns="unbondingsColumn">
 			<template v-slot:body-cell-time="props">
 				<q-td :props="props">
-					<span class="font-weight-medium opacity-40">
-						23 hours
-					</span>
+					<span class="font-weight-medium opacity-40"> 23 hours </span>
 				</q-td>
 			</template>
 		</LightTable>
