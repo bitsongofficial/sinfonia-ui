@@ -1,5 +1,5 @@
 import { Coin } from "@cosmjs/proto-signing"
-import { BaseToken } from "./config"
+import { BaseToken, CoinLookup } from "./config"
 import { LockableDurationWithApr } from "./duration"
 import { OsmosisPool } from "./osmosis"
 
@@ -20,6 +20,7 @@ export interface PoolToken extends BaseToken {
 	userTotalAmount: string
 	availableAmount: string
 	bondedAmount: string
+	coinLookup: CoinLookup
 }
 
 export interface PoolAsset {

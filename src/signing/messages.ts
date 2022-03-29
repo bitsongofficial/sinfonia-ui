@@ -99,3 +99,29 @@ export const JoinSwapExternAmountIn = (
 		},
 	}
 }
+
+export const ExitPool = (
+	senderAddress: string, // Owner
+	poolId: string,
+	shareInAmount: string,
+	tokenOutMins: Coin[]
+): SignerMessage<any> => {
+	console.log({
+		typeUrl: "/osmosis.gamm.v1beta1.MsgExitPool",
+		value: {
+			sender: senderAddress,
+			poolId: Long.fromString(poolId),
+			shareInAmount,
+			tokenOutMins,
+		},
+	})
+	return {
+		typeUrl: "/osmosis.gamm.v1beta1.MsgExitPool",
+		value: {
+			sender: senderAddress,
+			poolId: Long.fromString(poolId),
+			shareInAmount,
+			tokenOutMins,
+		},
+	}
+}

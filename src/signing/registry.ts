@@ -13,5 +13,17 @@ export const osmosisRegistry = (): Registry => {
 			"/osmosis.lockup.MsgBeginUnlocking",
 			osmosis.lockup.MsgBeginUnlocking as GeneratedType,
 		],
+		[
+			"/osmosis.gamm.v1beta1.MsgJoinPool",
+			osmosis.gamm.v1beta1.MsgJoinPool as GeneratedType,
+		],
+		[
+			"/osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn",
+			osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn as GeneratedType,
+		],
+		[
+			"/osmosis.gamm.v1beta1.MsgExitPool",
+			osmosis.gamm.v1beta1.MsgExitPool as GeneratedType,
+		],
 	])
 }

@@ -60,10 +60,10 @@ export const tokenToPoolAsset = (
 		const bondedBalances = bankStore.lockedCoinsBalance.filter(
 			(coin) => coin.denom === `gamm/pool/${pool.id}`
 		)
+
 		const availableBalances = bankStore.osmosisBalance.filter(
 			(coin) => coin.denom === `gamm/pool/${pool.id}`
 		)
-		console.log(availableBalances)
 
 		for (const bondedBalance of bondedBalances) {
 			bondedAmount = bondedAmount.plus(bondedBalance.amount)
@@ -82,6 +82,7 @@ export const tokenToPoolAsset = (
 					name: token.name,
 					symbol: token.symbol,
 					logos: token.logos,
+					coinLookup,
 					amount: toViewDenom(
 						totalTokenGamm.toString(),
 						coinLookup.chainToViewConversionFactor
