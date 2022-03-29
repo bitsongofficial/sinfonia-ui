@@ -71,6 +71,7 @@ $row-padding-x: 30px;
                     padding-bottom: $row-padding-y;
                     position: relative;
                     z-index: 1;
+                    font-size: 16px;
 
                     &::before {
                         background: none;
