@@ -97,6 +97,11 @@ const bondedPercentage = computed(() => {
 })
 
 const tabs = [
+	// {
+	// 	tooltip:
+	// 		"Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.",
+	// 	icon: { name: "info", width: 15, height: 15 },
+	// },
 	{ label: "Whitepaper", url: "https://bitsong.io/fantokens/adam-clay" },
 	{ name: "pools", label: "Pools" },
 	{ name: "analytics", label: "Analytics" },

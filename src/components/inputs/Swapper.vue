@@ -15,6 +15,7 @@ import SmallButton from "@/components/buttons/SmallButton.vue"
 import CoinSelect from "@/components/inputs/CoinSelect.vue"
 import InlineButton from "@/components/buttons/InlineButton.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
+import InformativeTooltip from "@/components/tooltips/InformativeTooltip.vue"
 import useBank from "@/store/bank"
 import usePools from "@/store/pools"
 import BigNumber from "bignumber.js"
@@ -26,7 +27,6 @@ const bankStore = useBank()
 const poolsStore = usePools()
 const configStore = useConfig()
 const transactionManagerStore = useTransactionManager()
-
 const props = defineProps<{
 	coin1: TokenBalance | null
 	coin2: TokenBalance | null
@@ -105,6 +105,15 @@ const swapAmountWrapper = computed<string>({
 	},
 	set(value) {
 		swapAmount.value = value != "" && parseInt(value) > 0 ? value : "0"
+	},
+})
+
+const toAmount = computed({
+	get():string {
+		return balancedCurrency(parseFloat(swapAmount.value) * swapAmountNumber.value)
+	},
+	set(value:string):void {
+
 	},
 })
 
@@ -232,7 +241,12 @@ const onSubmit = () => {
 		<div class="flex justify-between no-wrap">
 			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
 				<div class="q-mr-24">
-					<p v-if="coin1 && coin2" class="fs-24">0</p>
+					<q-input
+						borderless
+						v-model="toAmount"
+						class="fs-24 q-mb-0 text-white"
+						v-if="coin1 && coin2"
+					/>
 				</div>
 			</div>
 			<div class="vertical-separator q-mx-28"></div>
@@ -267,7 +281,17 @@ const onSubmit = () => {
 		>
 			<div class="flex items-center text-dark">
 				<p class="fs-13 font-weight-medium q-mr-9">Slippage Tolerance</p>
-				<q-icon size="12px" :name="resolveIcon('info', 15, 15)"></q-icon>
+				<q-icon
+					size="12px"
+					:name="resolveIcon('info', 15, 15)"
+				>
+					<InformativeTooltip
+						anchor="center right"
+						self="center left"
+					>
+						Your transaction will revert if the price changes unfavorably by more than this percentage.
+					</InformativeTooltip>
+				</q-icon>
 			</div>
 			<div class="flex">
 				<div
