@@ -1,20 +1,24 @@
 <script setup lang="ts">
-import Card from "../cards/Card.vue"
-import Title from "../typography/Title.vue"
-import { newCoin, newUser, newUserCoin } from "@/common/mockups"
-import { onMounted, onUnmounted, ref, computed } from "vue"
+import { onMounted, onUnmounted, ref } from "vue"
 import { balancedCurrency, smallNumber } from "@/common/numbers"
-import CryptoTable from "../CryptoTable.vue"
 import { TableColumn } from "@/types/table"
-import Swapper from "../inputs/Swapper.vue"
-import LightTable from "../LightTable.vue"
-import ImagePair from "../ImagePair.vue"
 import { formatDistanceToNow } from "date-fns"
-import useConfig from "@/store/config"
-import { TokenBalance } from "@/types"
+import { TokenBalance, Transaction } from "@/types"
 import { useRoute, useRouter } from "vue-router"
+import { externalWebsites } from "@/configs/config"
+import Card from "@/components/cards/Card.vue"
+import Title from "@/components/typography/Title.vue"
+import CryptoTable from "@/components/CryptoTable.vue"
+import Swapper from "@/components/inputs/Swapper.vue"
+import LightTable from "@/components/LightTable.vue"
+import useConfig from "@/store/config"
+import useAuth from "@/store/auth"
+import useTransactionManager from "@/store/transaction-manager"
+import ImagePair from "../ImagePair.vue"
 
 const configStore = useConfig()
+const transactionManagerStore = useTransactionManager()
+const authStore = useAuth()
 const router = useRouter()
 const route = useRoute()
 
@@ -31,31 +35,6 @@ const props = withDefaults(
 
 let coin1 = ref<TokenBalance | null>(null)
 let coin2 = ref<TokenBalance | null>(null)
-
-const transactions = [
-	{
-		coin1: newCoin("CLAY", "Adam Clay"),
-		coin2: newCoin("VBRN", "Vibranium"),
-		amount: 2355,
-		rate: 2 / 18,
-		status: "pending",
-	},
-	{
-		coin1: newCoin("VBRN", "Vibranium"),
-		coin2: newCoin("CLAY", "Adam Clay"),
-		amount: 20,
-		rate: 9,
-		status: "failed",
-	},
-	{
-		coin1: newCoin("FNTY", "Fonti"),
-		coin2: newCoin("MCX", "Mace"),
-		amount: 2355,
-		rate: 3 / 18,
-		status: "completed",
-		time: 1647974156,
-	},
-]
 
 const columns: TableColumn[] = [
 	{
@@ -81,6 +60,7 @@ const columns: TableColumn[] = [
 		format: (val: any) => `${smallNumber(val)} $`,
 	},
 ]
+
 const transactionColumns: TableColumn[] = [
 	{
 		name: "token",
@@ -136,9 +116,16 @@ const swapperTokenChange = () => {
 		to = coin2.value.symbol
 	}
 
-	console.log(from, to)
-
 	router.replace({ ...route, query: { from, to } })
+}
+
+const onTxClick = (tx: Transaction) => {
+	if (tx.fromSwap) {
+		window.open(
+			`${externalWebsites.mintscan}${tx.from.coinGeckoId}/txs/${tx.tx.transactionHash}`,
+			"_blank"
+		)
+	}
 }
 </script>
 <template>
@@ -165,7 +152,14 @@ const swapperTokenChange = () => {
 				<div class="max-w-582 q-mx-auto">
 					<div class="flex justify-between items-center q-mb-30">
 						<p class="fs-18">DEX</p>
-						<q-btn outline rounded color="white" label="View all" class="q-px-22" />
+						<q-btn
+							outline
+							rounded
+							to="/fantokens"
+							color="white"
+							label="View all"
+							class="q-px-22"
+						/>
 					</div>
 					<Card
 						class="q-py-10 q-px-none q-mb-51 scroll-container"
@@ -179,12 +173,32 @@ const swapperTokenChange = () => {
 							no-background
 							hide-header
 							class="small-rows full-height"
+							@row-click="
+								(_, row) => {
+									const coinLookup = row.coinLookup.find(
+										(coin) => coin.viewDenom === row.symbol
+									)
+
+									if (coinLookup) {
+										$router.push(`/fantokens/${coinLookup.fantokenDenom}`)
+									}
+								}
+							"
 						>
 						</CryptoTable>
 					</Card>
 					<div class="flex justify-between items-center q-mb-30">
 						<p class="fs-18">Transactions</p>
-						<q-btn outline rounded color="white" label="View all" class="q-px-22" />
+						<q-btn
+							v-if="authStore.osmosisAddress"
+							outline
+							rounded
+							color="white"
+							:href="`${externalWebsites.mintscan}osmosis/account/${authStore.osmosisAddress}`"
+							target="_blank"
+							label="View all"
+							class="q-px-22"
+						/>
 					</div>
 					<Card
 						class="q-py-10 q-px-none overflow-auto items-center"
@@ -193,23 +207,27 @@ const swapperTokenChange = () => {
 						:style="boxesStyle"
 					>
 						<LightTable
-							:rows="transactions"
+							:rows="transactionManagerStore.swapTransactions"
 							:columns="transactionColumns"
 							no-background
 							hide-header
 							class="full-height"
+							@row-click="
+								(_, row) => {
+									onTxClick(row)
+								}
+							"
 						>
 							<template v-slot:body-cell-token="slotProps">
 								<q-td :props="slotProps">
 									<div class="flex no-wrap items-center">
-										<!-- <ImagePair
-											:image1="slotProps.row.coin1.iconUrl"
-											:image2="slotProps.row.coin2.iconUrl"
+										<ImagePair
+											v-if="slotProps.row.fromSwap && slotProps.row.toSwap"
+											:tokens="[slotProps.row.fromSwap, slotProps.row.toSwap]"
 											:size="24"
 											:smaller-size="20"
 											:offset="[-8, -1]"
-										>
-										</ImagePair> -->
+										/>
 									</div>
 								</q-td>
 							</template>
@@ -217,14 +235,18 @@ const swapperTokenChange = () => {
 								<q-td :props="slotProps">
 									<p class="fs-12 text-gray">
 										You swapped
-										<span class="text-white font-weight-500 q-mx-4"
-											>{{ balancedCurrency(slotProps.row.amount) }}
-											{{ slotProps.row.coin1.symbol }}</span
+										<span
+											class="text-white font-weight-500 q-mx-4"
+											v-if="slotProps.row.fromSwap"
+											>{{ balancedCurrency(slotProps.row.fromAmount) }}
+											{{ slotProps.row.fromSwap.symbol }}</span
 										>
 										in
-										<span class="text-white font-weight-500 q-mx-4"
-											>{{ balancedCurrency(slotProps.row.amount * slotProps.row.rate) }}
-											{{ slotProps.row.coin2.symbol }}</span
+										<span
+											class="text-white font-weight-500 q-mx-4"
+											v-if="slotProps.row.toSwap"
+											>{{ balancedCurrency(slotProps.row.toAmount) }}
+											{{ slotProps.row.toSwap.symbol }}</span
 										>
 									</p>
 								</q-td>
@@ -233,7 +255,7 @@ const swapperTokenChange = () => {
 								<q-td :props="slotProps">
 									<div class="flex justify-end">
 										<p
-											v-if="slotProps.row.status != 'completed'"
+											v-if="slotProps.row.status != 'success'"
 											:class="
 												'rounded-20 q-py-9 q-px-8 text-white text-capitalize fs-9 ' +
 												(slotProps.row.status == 'pending' ? 'bg-dark' : 'bg-primary')
@@ -242,7 +264,7 @@ const swapperTokenChange = () => {
 											{{ slotProps.row.status }}
 										</p>
 										<p v-else class="fs-9 text-gray">
-											{{ formatDistanceToNow(new Date(slotProps.row.time * 1000)) }}
+											{{ formatDistanceToNow(new Date(slotProps.row.time)) }}
 										</p>
 									</div>
 								</q-td>

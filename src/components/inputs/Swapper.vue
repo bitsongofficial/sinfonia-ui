@@ -59,11 +59,15 @@ const toCoin = computed<TokenBalance | null>({
 })
 
 const setDefaultValues = (balances: TokenBalance[]) => {
-	fromCoin.value =
-		balances.find((balance) => balance.symbol === props.defaultFrom) ?? null
+	if (!fromCoin.value) {
+		fromCoin.value =
+			balances.find((balance) => balance.symbol === props.defaultFrom) ?? null
+	}
 
-	toCoin.value =
-		balances.find((balance) => balance.symbol === props.defaultTo) ?? null
+	if (!toCoin.value) {
+		toCoin.value =
+			balances.find((balance) => balance.symbol === props.defaultTo) ?? null
+	}
 }
 
 const balancesWatcher = watch(
@@ -74,6 +78,22 @@ const balancesWatcher = watch(
 		}
 	}
 )
+
+const fromSwappableBalances = computed(() => {
+	if (toCoin.value) {
+		return bankStore.swappableBalancesByRouteDenom(toCoin.value)
+	}
+
+	return []
+})
+
+const toSwappableBalances = computed(() => {
+	if (fromCoin.value) {
+		return bankStore.swappableBalancesByRouteDenom(fromCoin.value)
+	}
+
+	return []
+})
 
 onMounted(() => {
 	setDefaultValues(bankStore.allSwappableBalances)
@@ -192,7 +212,7 @@ const available = computed(() => {
 		)
 
 		if (chain) {
-			return balancedCurrency(chain.available ?? "0")
+			return chain.available ? new BigNumber(chain.available).toFixed(2) : "0"
 		}
 	}
 
@@ -200,13 +220,16 @@ const available = computed(() => {
 })
 
 const setMaxAmount = () => {
-	if (props.coin1) {
-		swapAmount.value = available.value
-	}
+	swapAmountWrapper.value = available.value
 }
 
 const onSubmit = () => {
-	if (swapCoin.value && estimatedHopSwap.value) {
+	if (
+		swapCoin.value &&
+		estimatedHopSwap.value &&
+		fromCoin.value &&
+		toCoin.value
+	) {
 		let tokenOutMinAmount = "1"
 		const maxSlippageDec = new Decimal(maxSlippage.value).div(100)
 
@@ -221,7 +244,11 @@ const onSubmit = () => {
 		transactionManagerStore.swapExactAmountIn(
 			swapRoutes.value,
 			swapCoin.value,
-			tokenOutMinAmount
+			tokenOutMinAmount,
+			fromCoin.value,
+			swapAmount.value,
+			toCoin.value,
+			toAmount.value
 		)
 	}
 }
@@ -250,7 +277,7 @@ const onSubmit = () => {
 			<div class="flex-1">
 				<CoinSelect
 					v-model="fromCoin"
-					:options="bankStore.allSwappableBalances"
+					:options="fromSwappableBalances"
 					class="q-mx--30"
 				></CoinSelect>
 			</div>
@@ -281,7 +308,7 @@ const onSubmit = () => {
 			<div class="flex-1">
 				<CoinSelect
 					v-model="toCoin"
-					:options="bankStore.allSwappableBalances"
+					:options="toSwappableBalances"
 					class="q-mx--30"
 				></CoinSelect>
 			</div>
