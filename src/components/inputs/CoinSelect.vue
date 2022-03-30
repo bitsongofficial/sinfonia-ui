@@ -1,37 +1,59 @@
 <script setup lang="ts">
-import { newUserCoin } from "@/common/mockups"
-import { balancedCurrency } from "@/common/numbers"
 import { resolveIcon } from "@/common/resolvers"
-import { UserCoinInfo } from "@/types/user"
-import { computed, ref } from "vue"
+import { TokenBalance } from "@/types"
+import { computed, ref, watch, onUnmounted } from "vue"
 import CoinSelectItem from "./CoinSelectItem.vue"
 import CoinSelectSelected from "./CoinSelectSelected.vue"
 
 const props = defineProps<{
-	modelValue: UserCoinInfo | null
+	modelValue: TokenBalance | null
+	options: TokenBalance[]
 }>()
+
 const emit = defineEmits<{
-	(e: "update:modelValue", value: UserCoinInfo | null): void
+	(e: "update:modelValue", value: TokenBalance | null): void
 }>()
-const options = [newUserCoin("BTSG", "Bitsong"), newUserCoin("ADAM", "Adam")]
-const value = computed({
-	get(): UserCoinInfo | null {
+
+const value = computed<TokenBalance | null>({
+	get() {
 		return props.modelValue
 	},
-	set(value: UserCoinInfo | null) {
+	set(value) {
 		emit("update:modelValue", value)
 	},
 })
+
 const width = ref(0)
+
 const select = ref<any>(null)
+
 const setWidth = () => {
 	if (select.value) {
-		console.log(select.value)
 		width.value = select.value.$el.offsetWidth
 	}
 }
+
 const popupStyle = computed(() => {
 	return { width: width.value + "px" }
+})
+
+const optionsWatcher = watch(
+	() => props.options,
+	(options) => {
+		if (value.value) {
+			const newValue = options.find(
+				(option) => option.symbol === value.value?.symbol
+			)
+
+			if (newValue) {
+				value.value = newValue
+			}
+		}
+	}
+)
+
+onUnmounted(() => {
+	optionsWatcher()
 })
 </script>
 

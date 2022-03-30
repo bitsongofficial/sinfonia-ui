@@ -1,5 +1,5 @@
 import { coinsConfig } from "@/configs/config"
-import { Token, OsmosisPoolAsset, PoolAsset } from "@/types"
+import { Token, OsmosisPoolAsset, PoolAsset, SwapPool } from "@/types"
 import { Coin, coin } from "@cosmjs/proto-signing"
 import { BigNumber } from "bignumber.js"
 import { Decimal } from "decimal.js"
@@ -14,6 +14,7 @@ export const currency = (number: number | string, fraction = 2): string => {
 	if (amount.gt(0.01)) {
 		return new Intl.NumberFormat("en-US", {
 			maximumFractionDigits: fraction,
+			minimumFractionDigits: fraction,
 		}).format(amount.toNumber())
 	}
 
@@ -46,6 +47,10 @@ export const smallNumber = (number: number | string): string => {
 	return new BigNumber(number).toFixed(2)
 }
 
+export const smallNumberRate = (number: number | string): string => {
+	return new BigNumber(number).toFixed(3)
+}
+
 export const percentageRange = (
 	number: number | string,
 	decimals = 3
@@ -53,7 +58,7 @@ export const percentageRange = (
 	const amount = new BigNumber(number)
 
 	if (amount.isNaN() || amount.isEqualTo(0)) {
-		return "0"
+		return "0.00"
 	}
 
 	if (amount.gt(0.001)) {
@@ -184,6 +189,45 @@ export const calculateSpotPrice = (
 	return number.div(denom).multipliedBy(scale)
 }
 
+export const calculateRouteSpotPrice = (
+	fromCoin: Token,
+	swapRoutes: SwapPool[]
+) => {
+	const coinLookup = fromCoin.coinLookup.find(
+		(coin) => coin.viewDenom === fromCoin.symbol
+	)
+
+	let from: string | undefined = fromCoin.ibcEnabled
+		? fromCoin.ibc.osmosis.destDenom
+		: coinLookup?.chainDenom
+	let to: string | undefined = undefined
+	let spotPrice = new BigNumber("1")
+
+	for (const swapRoute of swapRoutes) {
+		to = swapRoute.out
+		let poolAssetIn: OsmosisPoolAsset | undefined = undefined
+		let poolAssetOut: OsmosisPoolAsset | undefined = undefined
+
+		for (const poolAsset of swapRoute.pool.poolAssets) {
+			if (poolAsset.token.denom === from) {
+				poolAssetIn = poolAsset
+			} else if (poolAsset.token.denom === to) {
+				poolAssetOut = poolAsset
+			}
+		}
+
+		if (poolAssetIn && poolAssetOut) {
+			spotPrice = spotPrice.multipliedBy(
+				calculateSpotPrice(poolAssetIn, poolAssetOut).toString()
+			)
+		}
+
+		from = to
+	}
+
+	return spotPrice.toNumber()
+}
+
 export const calcPoolOutGivenSingleIn = (
 	tokenBalanceIn: string,
 	tokenWeightIn: string,
@@ -230,4 +274,157 @@ export const singleAmountInPriceImpact = (
 	}
 
 	return "0"
+}
+
+export function calcOutGivenIn(
+	tokenIn: Coin,
+	poolAssetIn: OsmosisPoolAsset,
+	poolAssetOut: OsmosisPoolAsset,
+	swapFee: string
+) {
+	const poolAssetBalanceIn = new Decimal(poolAssetIn.token.amount)
+	const weightRatio = new Decimal(poolAssetIn.weight).div(poolAssetOut.weight)
+	let adjustedIn = new Decimal(1).sub(swapFee)
+	adjustedIn = new Decimal(tokenIn.amount).mul(adjustedIn)
+	const midResult = poolAssetBalanceIn.div(poolAssetBalanceIn.plus(adjustedIn))
+
+	const power = Decimal.pow(midResult, weightRatio)
+	const difference = new Decimal(1).sub(power)
+
+	return new Decimal(poolAssetOut.token.amount).mul(difference)
+}
+
+export const estimateSwapExactAmountIn = (
+	tokenIn: Coin,
+	poolAssetIn: OsmosisPoolAsset,
+	poolAssetOut: OsmosisPoolAsset,
+	swapFee: string
+) => {
+	const spotPriceBefore = calculateSpotPrice(poolAssetIn, poolAssetOut, swapFee)
+
+	const tokenOutAmount = calcOutGivenIn(
+		tokenIn,
+		poolAssetIn,
+		poolAssetOut,
+		swapFee
+	)
+
+	const afterPoolAssetIn = {
+		...poolAssetIn,
+		token: {
+			...poolAssetIn.token,
+			amount: new Decimal(poolAssetIn.token.amount)
+				.plus(tokenIn.amount)
+				.toString(),
+		},
+	}
+
+	const afterPoolAssetOut = {
+		...poolAssetOut,
+		token: {
+			...poolAssetOut.token,
+			amount: new Decimal(poolAssetOut.token.amount)
+				.sub(tokenOutAmount)
+				.toString(),
+		},
+	}
+
+	const spotPriceAfter = calculateSpotPrice(
+		afterPoolAssetIn,
+		afterPoolAssetOut,
+		swapFee
+	)
+
+	if (spotPriceAfter.lt(spotPriceBefore)) {
+		return null
+	}
+
+	const effectivePrice = new Decimal(tokenIn.amount).div(tokenOutAmount)
+	const slippage = effectivePrice
+		.div(spotPriceBefore.toString())
+		.sub(new Decimal("1"))
+
+	return {
+		tokenOutAmount,
+		spotPriceBefore,
+		spotPriceAfter,
+		slippage,
+	}
+}
+
+export const estimateHopSwapExactAmountIn = (
+	tokenIn: Coin,
+	fromCoin: Token,
+	swapRoutes: SwapPool[]
+) => {
+	const coinLookup = fromCoin.coinLookup.find(
+		(coin) => coin.viewDenom === fromCoin.symbol
+	)
+
+	let from: string | undefined = fromCoin.ibcEnabled
+		? fromCoin.ibc.osmosis.destDenom
+		: coinLookup?.chainDenom
+	let to: string | undefined = undefined
+
+	let spotPriceBefore = new Decimal(1)
+	let spotPriceAfter = new Decimal(1)
+
+	let tokenOut = { ...tokenIn }
+
+	for (const swapRoute of swapRoutes) {
+		to = swapRoute.out
+		let poolAssetIn: OsmosisPoolAsset | undefined = undefined
+		let poolAssetOut: OsmosisPoolAsset | undefined = undefined
+
+		for (const poolAsset of swapRoute.pool.poolAssets) {
+			if (poolAsset.token.denom === from) {
+				poolAssetIn = poolAsset
+			} else if (poolAsset.token.denom === to) {
+				poolAssetOut = poolAsset
+			}
+		}
+
+		if (poolAssetIn && poolAssetOut) {
+			const estimated = estimateSwapExactAmountIn(
+				tokenIn,
+				poolAssetIn,
+				poolAssetOut,
+				swapRoute.pool.poolParams.swapFee
+			)
+
+			if (estimated) {
+				spotPriceBefore = spotPriceBefore.mul(estimated.spotPriceBefore.toString())
+				spotPriceAfter = spotPriceAfter.mul(estimated.spotPriceAfter.toString())
+
+				tokenOut = {
+					denom: to,
+					amount: estimated.tokenOutAmount.toString(),
+				}
+			}
+		}
+
+		from = to
+	}
+
+	const effectivePrice = new Decimal(tokenIn.amount).div(
+		new Decimal(tokenOut.amount)
+	)
+	const slippage = effectivePrice.div(spotPriceBefore).sub(new Decimal("1"))
+
+	return {
+		spotPriceBefore,
+		spotPriceAfter,
+		tokenOut,
+		slippage,
+	}
+}
+
+export const calculateSlippageTokenIn = (
+	spotPriceBefore: Decimal,
+	tokenIn: string,
+	slippage: Decimal
+) => {
+	const effectivePrice = spotPriceBefore.mul(slippage.add(new Decimal(1)))
+
+	return new Decimal(tokenIn).div(effectivePrice)
 }

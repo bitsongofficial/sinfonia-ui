@@ -9,6 +9,8 @@ import {
 	MintParams,
 	OsmosisPool,
 	Pool,
+	SwapPool,
+	Token,
 } from "@/types"
 import { mapPools, mapLockableDuration } from "@/common"
 import useBank from "@/store/bank"
@@ -129,6 +131,12 @@ const usePools = defineStore("pools", {
 		poolById() {
 			return (id: string) => this.pools.find((pool) => pool.id === id)
 		},
+		poolsBySymbol() {
+			return (symbol: string) =>
+				this.pools.filter((pool) =>
+					pool.coins.find((coin) => coin.token.symbol === symbol)
+				)
+		},
 		incentivizedPoolById() {
 			return (id: string) =>
 				this.incentivizedPools.find((pool) => pool.pool_id === id)
@@ -157,6 +165,52 @@ const usePools = defineStore("pools", {
 						gauge.distribute_to.denom === `gamm/pool/${id}` &&
 						gauge.distribute_to.duration === duration
 				)
+		},
+		routesPoolByDenom() {
+			const configStore = useConfig()
+
+			return (from: Token, to: Token): SwapPool[] => {
+				const coinLookupFrom = from.coinLookup.find(
+					(coin) => coin.viewDenom === from.symbol
+				)
+
+				const coinLookupTo = to.coinLookup.find(
+					(coin) => coin.viewDenom === to.symbol
+				)
+
+				const fromDenom = from.ibcEnabled
+					? from.ibc.osmosis.destDenom
+					: coinLookupFrom?.chainDenom
+
+				const toDenom = to.ibcEnabled
+					? to.ibc.osmosis.destDenom
+					: coinLookupTo?.chainDenom
+
+				if (fromDenom && toDenom && configStore.assetsConfig) {
+					const fromDictionary = configStore.assetsConfig.routes[fromDenom]
+
+					if (fromDictionary) {
+						const routes = fromDictionary[toDenom]
+
+						if (routes) {
+							return compact(
+								routes.map((route) => {
+									const pool = this.poolById(route.id)
+
+									if (pool) {
+										return {
+											pool,
+											out: route.out,
+										}
+									}
+								})
+							)
+						}
+					}
+				}
+
+				return []
+			}
 		},
 	},
 	persistedState: {
