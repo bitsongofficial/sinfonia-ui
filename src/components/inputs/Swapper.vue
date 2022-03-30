@@ -64,11 +64,6 @@ const swapRatio = computed<number>(() => {
 })
 
 const swapAmountFiat = computed<string>(() => {
-	console.log(
-		new BigNumber(swapAmountWrapper.value)
-			.multipliedBy(fromCoin.value?.price ?? "0")
-			.toString()
-	)
 	return new Decimal(swapAmountWrapper.value)
 		.mul(fromCoin.value?.price ?? "0")
 		.toString()
@@ -316,12 +311,12 @@ const onSubmit = () => {
 			<div class="fs-12">
 				<p class="q-mb-6">
 					<span class="opacity-40">{{ fromCoin.symbol }} =</span>
-					{{ smallNumberRate(swapRatio) }}
+					{{ smallNumberRate(1 / swapRatio) }}
 					<span class="opacity-40">{{ toCoin.symbol }}</span>
 				</p>
 				<p>
 					<span class="opacity-40">{{ toCoin.symbol }} =</span>
-					{{ smallNumberRate(1 / swapRatio) }}
+					{{ smallNumberRate(swapRatio) }}
 					<span class="opacity-40">{{ fromCoin.symbol }}</span>
 				</p>
 			</div>

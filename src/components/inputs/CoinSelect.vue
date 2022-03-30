@@ -29,7 +29,6 @@ const select = ref<any>(null)
 
 const setWidth = () => {
 	if (select.value) {
-		console.log(select.value)
 		width.value = select.value.$el.offsetWidth
 	}
 }

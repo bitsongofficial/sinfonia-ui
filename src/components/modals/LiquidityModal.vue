@@ -108,12 +108,8 @@ const {
 				<div class="flex justify-between no-wrap">
 					<div class="column q-mr-20">
 						<div v-if="single" class="flex fs-13 q-mb-14">
-							<p class="q-mr-6">
-								&nbsp;
-							</p>
-							<p>
-								&nbsp;
-							</p>
+							<p class="q-mr-6">&nbsp;</p>
+							<p>&nbsp;</p>
 						</div>
 						<div class="flex no-wrap items-center">
 							<q-toggle v-model="single" color="white" class="q-mr-8" />
@@ -127,12 +123,8 @@ const {
 					</div>
 					<div class="column items-center">
 						<div v-if="single" class="flex fs-13 q-mb-14">
-							<p class="q-mr-6 text-gradient">
-								Price Impact
-							</p>
-							<p>
-								2.43%
-							</p>
+							<p class="q-mr-6 text-gradient">Price Impact</p>
+							<p>{{ priceImpact }} %</p>
 						</div>
 						<LargeButton type="submit" fit :padding-y="14">
 							<span class="text-uppercase"> Add liquidity </span>

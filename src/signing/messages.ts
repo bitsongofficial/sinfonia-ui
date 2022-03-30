@@ -122,19 +122,6 @@ export const SwapExactAmountIn = (
 	tokenIn: Coin,
 	tokenOutMinAmount: string
 ): SignerMessage<any> => {
-	console.log({
-		typeUrl: "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn",
-		value: {
-			sender: senderAddress,
-			routes: routes.map((route) => ({
-				...route,
-				poolId: Long.fromString(route.poolId),
-			})),
-			tokenIn,
-			tokenOutMinAmount,
-		},
-	})
-
 	return {
 		typeUrl: "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn",
 		value: {
