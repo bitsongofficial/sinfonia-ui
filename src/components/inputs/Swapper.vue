@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { balancedCurrency, smallNumberRate } from "@/common/numbers"
-import { computed, ref, watch, onUnmounted } from "vue"
+import { computed, ref, watch, onUnmounted, onMounted } from "vue"
 import {
 	calculateRouteSpotPrice,
 	estimateHopSwapExactAmountIn,
@@ -58,22 +58,26 @@ const toCoin = computed<TokenBalance | null>({
 	},
 })
 
+const setDefaultValues = (balances: TokenBalance[]) => {
+	fromCoin.value =
+		balances.find((balance) => balance.symbol === props.defaultFrom) ?? null
+
+	toCoin.value =
+		balances.find((balance) => balance.symbol === props.defaultTo) ?? null
+}
+
 const balancesWatcher = watch(
 	() => bankStore.allSwappableBalances,
 	(balances, oldBalances) => {
 		if (balances.length > oldBalances.length) {
-			fromCoin.value =
-				bankStore.allSwappableBalances.find(
-					(balance) => balance.symbol === props.defaultFrom
-				) ?? null
-
-			toCoin.value =
-				bankStore.allSwappableBalances.find(
-					(balance) => balance.symbol === props.defaultTo
-				) ?? null
+			setDefaultValues(balances)
 		}
 	}
 )
+
+onMounted(() => {
+	setDefaultValues(bankStore.allSwappableBalances)
+})
 
 onUnmounted(() => {
 	balancesWatcher()
