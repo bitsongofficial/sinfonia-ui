@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
-import { computed, ref } from "vue"
+import { computed, ref, watch, onUnmounted } from "vue"
 import CoinSelectItem from "./CoinSelectItem.vue"
 import CoinSelectSelected from "./CoinSelectSelected.vue"
 
@@ -36,6 +36,25 @@ const setWidth = () => {
 
 const popupStyle = computed(() => {
 	return { width: width.value + "px" }
+})
+
+const optionsWatcher = watch(
+	() => props.options,
+	(options) => {
+		if (value.value) {
+			const newValue = options.find(
+				(option) => option.symbol === value.value?.symbol
+			)
+
+			if (newValue) {
+				value.value = newValue
+			}
+		}
+	}
+)
+
+onUnmounted(() => {
+	optionsWatcher()
 })
 </script>
 

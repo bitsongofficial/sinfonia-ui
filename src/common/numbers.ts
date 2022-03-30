@@ -14,6 +14,7 @@ export const currency = (number: number | string, fraction = 2): string => {
 	if (amount.gt(0.01)) {
 		return new Intl.NumberFormat("en-US", {
 			maximumFractionDigits: fraction,
+			minimumFractionDigits: fraction,
 		}).format(amount.toNumber())
 	}
 
@@ -365,7 +366,6 @@ export const estimateHopSwapExactAmountIn = (
 		: coinLookup?.chainDenom
 	let to: string | undefined = undefined
 
-	let spotPriceBeforeRaw = new Decimal(1)
 	let spotPriceBefore = new Decimal(1)
 	let spotPriceAfter = new Decimal(1)
 
@@ -393,7 +393,6 @@ export const estimateHopSwapExactAmountIn = (
 			)
 
 			if (estimated) {
-				spotPriceBeforeRaw = spotPriceBeforeRaw.mul(estimated.slippage)
 				spotPriceBefore = spotPriceBefore.mul(estimated.spotPriceBefore.toString())
 				spotPriceAfter = spotPriceAfter.mul(estimated.spotPriceAfter.toString())
 
@@ -413,7 +412,6 @@ export const estimateHopSwapExactAmountIn = (
 	const slippage = effectivePrice.div(spotPriceBefore).sub(new Decimal("1"))
 
 	return {
-		spotPriceBeforeRaw,
 		spotPriceBefore,
 		spotPriceAfter,
 		tokenOut,

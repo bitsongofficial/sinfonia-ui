@@ -309,8 +309,10 @@ const useTransactionManager = defineStore("transactionManager", {
 								const poolsStore = usePools()
 								const bankStore = useBank()
 
-								poolsStore.init()
-								bankStore.loadBalances()
+								setTimeout(() => {
+									poolsStore.init()
+									bankStore.loadBalances()
+								}, 500)
 							}
 
 							return {

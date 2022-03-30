@@ -182,7 +182,7 @@ const onSubmit = () => {
 				estimatedHopSwap.value.spotPriceBefore,
 				swapCoin.value.amount,
 				maxSlippageDec
-			).toString()
+			).toFixed(0)
 		}
 
 		transactionManagerStore.swapExactAmountIn(
