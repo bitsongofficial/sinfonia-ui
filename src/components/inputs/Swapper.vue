@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { balancedCurrency, smallNumberRate } from "@/common/numbers"
-import { computed, ref } from "vue"
+import { computed, ref, watch, onUnmounted } from "vue"
 import {
 	calculateRouteSpotPrice,
 	estimateHopSwapExactAmountIn,
@@ -27,7 +27,10 @@ const bankStore = useBank()
 const poolsStore = usePools()
 const configStore = useConfig()
 const transactionManagerStore = useTransactionManager()
+
 const props = defineProps<{
+	defaultFrom: string
+	defaultTo: string
 	coin1: TokenBalance | null
 	coin2: TokenBalance | null
 }>()
@@ -55,6 +58,27 @@ const toCoin = computed<TokenBalance | null>({
 	},
 })
 
+const balancesWatcher = watch(
+	() => bankStore.allSwappableBalances,
+	(balances, oldBalances) => {
+		if (balances.length > oldBalances.length) {
+			fromCoin.value =
+				bankStore.allSwappableBalances.find(
+					(balance) => balance.symbol === props.defaultFrom
+				) ?? null
+
+			toCoin.value =
+				bankStore.allSwappableBalances.find(
+					(balance) => balance.symbol === props.defaultTo
+				) ?? null
+		}
+	}
+)
+
+onUnmounted(() => {
+	balancesWatcher()
+})
+
 const swapRatio = computed<number>(() => {
 	if (fromCoin.value) {
 		return calculateRouteSpotPrice(fromCoin.value, swapRoutes.value)
@@ -63,17 +87,44 @@ const swapRatio = computed<number>(() => {
 	return 0
 })
 
+const swapAmount = ref("0")
+const toAmount = ref("0")
+
+const swapAmountWrapper = computed<string>({
+	get() {
+		return swapAmount.value
+	},
+	set(value) {
+		swapAmount.value = value.length > 0 ? value : "0"
+
+		toAmount.value = new BigNumber(swapAmount.value)
+			.div(swapRatio.value)
+			.toFixed(2)
+	},
+})
+
+const toAmountWrapper = computed<string>({
+	get() {
+		return toAmount.value
+	},
+	set(value) {
+		toAmount.value = value.length > 0 ? value : "0"
+
+		swapAmount.value = new BigNumber(toAmount.value)
+			.div(1 / swapRatio.value)
+			.toFixed(2)
+	},
+})
+
 const swapAmountFiat = computed<string>(() => {
 	return new Decimal(swapAmountWrapper.value)
 		.mul(fromCoin.value?.price ?? "0")
 		.toString()
 })
 
-const swapAmount = ref("0")
-
 const swapCoin = computed(() => {
 	if (fromCoin.value) {
-		return amountIBCFromCoin(swapAmount.value, fromCoin.value)
+		return amountIBCFromCoin(swapAmountWrapper.value, fromCoin.value)
 	}
 
 	return undefined
@@ -97,24 +148,6 @@ const slippage = computed(() => {
 	}
 
 	return "0"
-})
-
-const swapAmountWrapper = computed<string>({
-	get() {
-		return swapAmount.value
-	},
-	set(value) {
-		swapAmount.value = value != "" && parseInt(value) > 0 ? value : "0"
-	},
-})
-
-const toAmount = computed({
-	get():string {
-		return balancedCurrency(parseFloat(swapAmount.value) * swapAmountNumber.value)
-	},
-	set(value:string):void {
-
-	},
 })
 
 const invert = () => {
@@ -145,14 +178,6 @@ const swapRoutes = computed(() => {
 
 	return []
 })
-
-const onAmountChange = () => {
-	if (fromCoin.value && toCoin.value) {
-		console.log(
-			new BigNumber(swapAmountWrapper.value).div(swapRatio.value).toString()
-		)
-	}
-}
 
 const available = computed(() => {
 	const osmosisToken = configStore.osmosisToken
@@ -207,7 +232,6 @@ const onSubmit = () => {
 					<q-input
 						borderless
 						v-model="swapAmountWrapper"
-						@update:model-value="onAmountChange"
 						class="fs-24 q-mb-0 text-white"
 					/>
 					<p v-if="coin1" class="fs-12 text-dark">
@@ -221,7 +245,7 @@ const onSubmit = () => {
 			<div class="vertical-separator q-mx-28"></div>
 			<div class="flex-1">
 				<CoinSelect
-					v-model="coin1"
+					v-model="fromCoin"
 					:options="bankStore.allSwappableBalances"
 					class="q-mx--30"
 				></CoinSelect>
@@ -243,7 +267,7 @@ const onSubmit = () => {
 				<div class="q-mr-24">
 					<q-input
 						borderless
-						v-model="toAmount"
+						v-model="toAmountWrapper"
 						class="fs-24 q-mb-0 text-white"
 						v-if="coin1 && coin2"
 					/>
@@ -252,7 +276,7 @@ const onSubmit = () => {
 			<div class="vertical-separator q-mx-28"></div>
 			<div class="flex-1">
 				<CoinSelect
-					v-model="coin2"
+					v-model="toCoin"
 					:options="bankStore.allSwappableBalances"
 					class="q-mx--30"
 				></CoinSelect>
@@ -281,15 +305,10 @@ const onSubmit = () => {
 		>
 			<div class="flex items-center text-dark">
 				<p class="fs-13 font-weight-medium q-mr-9">Slippage Tolerance</p>
-				<q-icon
-					size="12px"
-					:name="resolveIcon('info', 15, 15)"
-				>
-					<InformativeTooltip
-						anchor="center right"
-						self="center left"
-					>
-						Your transaction will revert if the price changes unfavorably by more than this percentage.
+				<q-icon size="12px" :name="resolveIcon('info', 15, 15)">
+					<InformativeTooltip anchor="center right" self="center left">
+						Your transaction will revert if the price changes unfavorably by more than
+						this percentage.
 					</InformativeTooltip>
 				</q-icon>
 			</div>

@@ -6,7 +6,7 @@ import {
 	Token,
 	TokenBalance,
 } from "@/types"
-import { acceptHMRUpdate, defineStore } from "pinia"
+import { defineStore } from "pinia"
 import { BigNumber } from "bignumber.js"
 import { compact, reduce } from "lodash"
 import useBank from "@/store/bank"

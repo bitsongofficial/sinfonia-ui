@@ -11,11 +11,26 @@ import LightTable from "../LightTable.vue"
 import ImagePair from "../ImagePair.vue"
 import { formatDistanceToNow } from "date-fns"
 import useConfig from "@/store/config"
+import { TokenBalance } from "@/types"
+import { useRoute, useRouter } from "vue-router"
 
 const configStore = useConfig()
+const router = useRouter()
+const route = useRoute()
 
-let coin1 = ref(null)
-let coin2 = ref(null)
+const props = withDefaults(
+	defineProps<{
+		from: string
+		to: string
+	}>(),
+	{
+		from: "BTSG",
+		to: "CLAY",
+	}
+)
+
+let coin1 = ref<TokenBalance | null>(null)
+let coin2 = ref<TokenBalance | null>(null)
 
 const transactions = [
 	{
@@ -108,6 +123,23 @@ onMounted(() => {
 onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
 })
+
+const swapperTokenChange = () => {
+	let from = props.from
+	let to = props.to
+
+	if (coin1.value) {
+		from = coin1.value.symbol
+	}
+
+	if (coin2.value) {
+		to = coin2.value.symbol
+	}
+
+	console.log(from, to)
+
+	router.replace({ ...route, query: { from, to } })
+}
 </script>
 <template>
 	<div class="text-weight-medium">
@@ -118,7 +150,14 @@ onUnmounted(() => {
 				<div class="max-w-582">
 					<Title class="q-mb-36">Swap Tokens</Title>
 					<Card ref="heightRef" class="q-pa-36" transparency="5">
-						<Swapper v-model:coin1="coin1" v-model:coin2="coin2"></Swapper>
+						<Swapper
+							:default-from="from"
+							:default-to="to"
+							v-model:coin1="coin1"
+							v-model:coin2="coin2"
+							@update:coin1="swapperTokenChange"
+							@update:coin2="swapperTokenChange"
+						/>
 					</Card>
 				</div>
 			</div>
