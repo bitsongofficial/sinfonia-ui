@@ -38,11 +38,14 @@ const tabs = [
 	// 	icon: { name: "info", width: 15, height: 15 },
 	// },
 	{ label: "Whitepaper", url: "https://bitsong.io/fantokens/adam-clay" },
-	{ name: "pools", label: "Pools" },
 	{ name: "analytics", label: "Analytics" },
 	{ label: "Airdrop", url: "https://bitsong.io/airdrop/" },
 	{ name: "social", label: "Social" },
 ]
+if(poolsStore.myPools.length > 0)
+{
+	tabs.splice(1, 0, { name: "pools", label: "Pools" })
+}
 const stats = ["Price", "Gain"]
 const selectedStat = ref(stats[0])
 
@@ -422,7 +425,10 @@ onUnmounted(() => {
                     </template>
                 </Sections>
             </template> -->
-			<template v-slot:pools>
+			<template
+				v-slot:pools
+				v-if="poolsStore.myPools.length > 0">
+			>
 				<LightTable
 					:rows="poolsStore.myPools"
 					:columns="poolsColumns"
