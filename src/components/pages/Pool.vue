@@ -183,7 +183,7 @@ onUnmounted(() => {
 				</StandardButton>
 			</div>
 		</div>
-		<div class="row q-col-gutter-x-xl q-col-gutter-y-lg q-mb-72">
+		<div class="row q-col-gutter-xl q-col-gutter-y-lg q-mb-72">
 			<div class="col-8 col-md-4 col-xl-2 flex justify-center">
 				<div :style="compositionGraphStyle">
 					<PercentageWithImage
