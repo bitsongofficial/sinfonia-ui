@@ -163,7 +163,7 @@ const openTransfer = (from: TokenBalance) => {
 					</q-td>
 					<q-td>
 						<div
-							class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right"
+							class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right light:hover:text-primary"
 							@click="openTransfer(rowProps.row)"
 						>
 							<q-icon :name="resolveIcon('swap', 21, 16)"></q-icon>

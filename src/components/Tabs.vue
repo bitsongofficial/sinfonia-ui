@@ -31,7 +31,7 @@ const isTab = (name): boolean => {
 		<q-tabs
 			v-model="tab"
 			dense
-			active-color="primary"
+			:active-color="$q.dark.isActive ? 'primary' : 'gradient'"
 			indicator-color="primary"
 			align="justify"
 			narrow-indicator

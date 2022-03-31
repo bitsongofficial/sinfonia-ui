@@ -5,6 +5,10 @@ import SideMenu from "@/components/navigation/SideMenu.vue"
 import WalletAddress from "@/components/WalletAddress.vue"
 import useBootstrap from "@/hooks/useBootstrap"
 import { externalWebsites } from "./configs/config"
+import { useQuasar } from 'quasar'
+
+const $q = useQuasar()
+$q.dark.set(true)
 
 const { bootstrap } = useBootstrap()
 

@@ -1,0 +1,265 @@
+body.body--light {
+  color: $secondary;
+
+  #app {
+    color: $secondary;
+  }
+
+  &.main-page-background {
+    background: linear-gradient(338.9deg, rgba(17, 8, 44, 0.1) -14.43%, rgba(21, 10, 52, 0) 70.51%), #F0EDF2 !important;
+  }
+
+  .text-white {
+    color: $secondary !important;
+  }
+
+  .q-tab.q-tab--active {
+    color: unset !important;
+
+    .q-tab__label {
+      @include text-gradient();
+    }
+  }
+
+  .q-tab-panels {
+    position: relative;
+    background: none;
+
+    &::before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      content: "";
+      background: #FFFFFF;
+      opacity: 0.5;
+      backdrop-filter: blur(60px);
+      border-radius: 30px;
+      z-index: -1;
+    }
+  }
+
+  .q-table__container {
+    color: $secondary;
+
+    .q-table {
+      thead {
+        th {
+          color: $secondary;
+
+          &.sorted {
+            color: $secondary-300;
+          }
+        }
+      }
+
+      tbody {
+        &::before {
+          box-shadow: none;
+          background: #FFFFFF;
+          opacity: 0.5;
+          backdrop-filter: blur(60px);
+          border-radius: 30px;
+        }
+
+        tr {
+          &:hover::after {
+            background-color: #FFFFFF;
+            box-shadow: 0px 0px 15px rgba(20, 20, 46, 0.04);
+            backdrop-filter: blur(60px);
+          }
+        }
+      }
+    }
+
+    .transactions-table-head-row {
+      .q-table__sort-icon {
+        background-image: url("@/assets/images/icons/sortarrow_light.svg");
+      }
+    }
+  }
+
+  .light\: {
+    &text-weight-medium {
+      font-weight: 500;
+    }
+
+    &text-white {
+      color: #FFFFFF !important;
+    }
+
+    &text-secondary-320 {
+      color: $secondary-320 !important;
+    }
+
+    &bg-secondary-320 {
+      background: $secondary-320 !important;
+    }
+
+    &bg-gray-light {
+      background: $gray-light !important;
+    }
+
+    &border-primary {
+      border-color: $primary !important;
+    }
+
+    &bg-none {
+      background: none !important;
+    }
+
+    &border-none {
+      border: none !important;
+    }
+
+    &text-primary {
+      color: $primary;
+    }
+
+    &bg-primary {
+      background-color: $primary !important;
+    }
+
+    &border-primary {
+      border-color: $primary !important;
+    }
+
+    &text-primary-complementary {
+      color: $primary-complementary;
+    }
+
+    &bg-primary-complementary {
+      background-color: $primary-complementary !important;
+    }
+
+    &border-primary-complementary {
+      border-color: $primary-complementary;
+    }
+
+    &text-secondry-390 {
+      color: $secondary-390;
+    }
+
+    &text-dark {
+      color: $dark;
+    }
+
+    &opacity- {
+      &5 {
+        opacity: 0.05;
+      }
+
+      &100 {
+        opacity: 1;
+      }
+    }
+
+    &bg-white\/ {
+      &50 {
+        background: rgba(255, 255, 255, 0.5) !important;
+      }
+    }
+
+    &before\: {
+      &fill {
+        position: relative;
+
+        &::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+        }
+      }
+
+      &border-2::before {
+        border-width: 2px;
+      }
+
+      &shadow-none::before {
+        box-shadow: none;
+      }
+
+      &bg-dark-light::before {
+        background: $dark-light !important;
+      }
+
+      &opacity-5::before {
+        opacity: 0.05;
+      }
+    }
+
+    &group:hover {
+      .light\:group-hover\: {
+        &text-primary {
+          color: $primary;
+        }
+      }
+    }
+
+    &hover\: {
+      &text-primary:hover {
+        color: $primary;
+      }
+
+      &helper-white:hover {
+        .q-focus-helper {
+          background: #FFFFFF;
+          z-index: -1;
+          opacity: 0.8;
+        }
+      }
+    }
+
+    &shadow-none {
+      box-shadow: none;
+    }
+
+    &bg-gradient {
+      background: linear-gradient(147.07deg, $primary-complementary 21.78%, $primary 79.22%) !important;
+      border-radius: 30px;
+    }
+  }
+
+  .bg-rounded-translucent {
+    background: #FFFFFF;
+    backdrop-filter: blur(60px);
+    box-shadow: none;
+  }
+
+  .separator {
+    opacity: 0.2;
+    border: 1px solid #3A294F;
+  }
+
+  .q-menu {
+    background-color: white;
+
+    .q-item:hover {
+      color: $secondary;
+    }
+  }
+
+  .work-in-progress {
+    >div {
+      p {
+        color: $secondary-390;
+      }
+
+      &::before {
+        background: white;
+      }
+    }
+  }
+
+  .text-light\:white {
+    color: white !important;
+  }
+
+  // .shadow-20 {
+  //   box-shadow: 0px 0px 15px rgba(20, 20, 46, 0.04);
+  // }
+}

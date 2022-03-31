@@ -7,17 +7,29 @@ $primary-darker: #1B0B30;
 $primary-dark-700 : #261639;
 $primary-dark: #220D32;
 $primary-light: #6D547A;
+$secondary-390: #413156;
+$secondary-320: #49395C;
+$secondary-300: #4B3B5E;
 $dark-background: #1F0C32;
 $dark-light: #301C40;
 $dark-lighter: #322142;
+$gray-light: #E9E6EC;
 $notification-background: rgba(122, 110, 124, 0.15);
 
 $thumbSize: 8px;
 $padding: 11px;
-$scrollbarSize: $padding * 2 + $thumbSize;
+$scrollbarSize: $padding * 2+$thumbSize;
 
 @mixin background-gradient() {
-    background: linear-gradient(304.1deg, rgba(17, 8, 44, 0.5) 27.13%, rgba(21, 10, 52, 0) 64.84%), #220D32;
+    background: linear-gradient(304.1deg, rgba(17, 8, 44, 0.5) 27.13%, rgba(21, 10, 52, 0) 64.84%), #220D32 !important;
+}
+
+@mixin text-gradient() {
+    background: linear-gradient(147.07deg, #9C589C 21.78%, #FF005C 79.22%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
 }
 
 $custom-sizes: ();

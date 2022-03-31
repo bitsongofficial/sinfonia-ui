@@ -287,7 +287,7 @@ onUnmounted(() => {
 							</template>
 						</div>
 					</div>
-					<p class="fs-12 opacity-40 font-weight-regular q-mb-20">
+					<p class="fs-12 opacity-40 text-weight-regular q-mb-20">
 						BitSong Launchpad is the platform where you can buy and. Incentives for
 						{{ unbonding.extraGagues[0].leftEpochs }}
 						epochs.
@@ -379,7 +379,7 @@ onUnmounted(() => {
 		<LightTable :rows="pool.lockableDurationApr" :columns="unbondingsColumn">
 			<template v-slot:body-cell-time="props">
 				<q-td :props="props">
-					<span class="font-weight-medium opacity-40">
+					<span class="text-weight-medium opacity-40">
 						23 hours
 					</span>
 				</q-td>
