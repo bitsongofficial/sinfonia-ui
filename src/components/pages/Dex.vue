@@ -46,7 +46,7 @@ const columns: TableColumn[] = [
 ]
 </script>
 <template>
-	<h3 class="q-mb-xl fs-27">DEx</h3>
+	<h3 class="q-mb-xl fs-27 light:text-weight-medium">DEx</h3>
 	<CryptoTable
 		:columns="columns"
 		:rows="configStore.fantokens"

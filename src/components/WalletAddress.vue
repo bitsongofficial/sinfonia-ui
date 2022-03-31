@@ -19,7 +19,7 @@ const keplrInstalled = window.keplr !== undefined
 		<div class="q-mr-50">
 			<p class="text-uppercase text-caption fs-8 opacity-40 q-mb-3">Address</p>
 			<p
-				class="text-weight-bold text-subtitle1 fs-12"
+				class="text-weight-bold text-subtitle1 fs-12 light:text-secondary-320"
 				v-if="authStore.bitsongAddress"
 			>
 				{{ formatShortAddress(authStore.bitsongAddress) }}

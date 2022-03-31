@@ -183,7 +183,7 @@ onUnmounted(() => {
 				</StandardButton>
 			</div>
 		</div>
-		<div class="row q-col-gutter-x-xl q-col-gutter-y-lg q-mb-72">
+		<div class="row q-col-gutter-xl q-col-gutter-y-lg q-mb-72">
 			<div class="col-8 col-md-4 col-xl-2 flex justify-center">
 				<div :style="compositionGraphStyle">
 					<PercentageWithImage
@@ -291,7 +291,7 @@ onUnmounted(() => {
 						</div>
 					</div>
 					<p
-						class="fs-12 opacity-40 font-weight-regular q-mb-20"
+						class="fs-12 opacity-40 text-weight-regular q-mb-20"
 						v-if="unbonding.extraGagues.length > 0"
 					>
 						BitSong Launchpad is the platform where you can buy and. Incentives for
@@ -392,7 +392,7 @@ onUnmounted(() => {
 		<LightTable :rows="pool.lockableDurationApr" :columns="unbondingsColumn">
 			<template v-slot:body-cell-time="props">
 				<q-td :props="props">
-					<span class="font-weight-medium opacity-40"> 23 hours </span>
+					<span class="text-weight-medium opacity-40"> 23 hours </span>
 				</q-td>
 			</template>
 		</LightTable>

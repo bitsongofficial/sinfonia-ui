@@ -210,6 +210,13 @@
     background-size: cover !important;
 }
 
+.overflow-down {
+    &,
+    * {
+        overflow: visible;
+    }
+}
+
 @for $border from 0 to 10 {
     $val: $border * 5;
     .rounded-#{$val} {
@@ -358,8 +365,8 @@
     .\!w-xs-1\/3 {
         width: 1/3 * 100% !important;
     }
-    .w-xs-2\/3 {
-        width: 2/3 * 100%;
+    .\!w-xs-2\/3 {
+        width: 2/3 * 100% !important;
     }
 }
 
@@ -376,8 +383,8 @@
     .\!w-sm-1\/4 {
         width: 1/4 * 100% !important;
     }
-    .w-sm-3\/4 {
-        width: 3/4 * 100%;
+    .\!w-sm-3\/4 {
+        width: 3/4 * 100% !important;
     }
 }
 
@@ -385,8 +392,8 @@
     .\!w-md-1\/6 {
         width: 17% !important;
     }
-    .w-md-5\/6 {
-        width: 83%;
+    .\!w-md-5\/6 {
+        width: 83% !important;
     }
     .\!w-md-1\/3 {
         width: 33.33% !important;

@@ -126,7 +126,7 @@ onUnmounted(() => {
 				<div class="max-w-582 q-mx-auto">
 					<div class="flex justify-between items-center q-mb-30">
 						<p class="fs-18">DEX</p>
-						<q-btn outline rounded color="white" label="View all" class="q-px-22" />
+						<q-btn outline rounded color="white" label="View all" class="q-px-22 text-secondry-390 light:before:border-2 light:hover:helper-white" />
 					</div>
 					<Card
 						class="q-py-10 q-px-none q-mb-51 scroll-container"
@@ -145,7 +145,7 @@ onUnmounted(() => {
 					</Card>
 					<div class="flex justify-between items-center q-mb-30">
 						<p class="fs-18">Transactions</p>
-						<q-btn outline rounded color="white" label="View all" class="q-px-22" />
+						<q-btn outline rounded color="white" label="View all" class="q-px-22 text-secondry-390 light:before:border-2 light:hover:helper-white" />
 					</div>
 					<Card
 						class="q-py-10 q-px-none overflow-auto items-center"
@@ -178,12 +178,12 @@ onUnmounted(() => {
 								<q-td :props="slotProps">
 									<p class="fs-12 text-gray">
 										You swapped
-										<span class="text-white font-weight-500 q-mx-4"
+										<span class="text-white text-weight-500 q-mx-4"
 											>{{ balancedCurrency(slotProps.row.amount) }}
 											{{ slotProps.row.coin1.symbol }}</span
 										>
 										in
-										<span class="text-white font-weight-500 q-mx-4"
+										<span class="text-white text-weight-500 q-mx-4"
 											>{{ balancedCurrency(slotProps.row.amount * slotProps.row.rate) }}
 											{{ slotProps.row.coin2.symbol }}</span
 										>
@@ -196,7 +196,7 @@ onUnmounted(() => {
 										<p
 											v-if="slotProps.row.status != 'completed'"
 											:class="
-												'rounded-20 q-py-9 q-px-8 text-white text-capitalize fs-9 ' +
+												'rounded-20 q-py-9 q-px-8 text-white light:text- text-capitalize fs-9 ' +
 												(slotProps.row.status == 'pending' ? 'bg-dark' : 'bg-primary')
 											"
 										>

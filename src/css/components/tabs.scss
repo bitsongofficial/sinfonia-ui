@@ -1,9 +1,17 @@
-.q-tab-panel {
-    padding: 0;
+.q-panel.scroll {
+    margin-left: -15px;
+    margin-right: -15px;
+
+    .q-tab-panel {
+        padding: 0;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
 .q-tab {
     text-transform: none;
+
     .q-tab__label {
         font-size: inherit;
     }
@@ -27,6 +35,7 @@
         opacity: 0.8;
 
         .q-focus-helper {
+
             &,
             &::before,
             &::after {
