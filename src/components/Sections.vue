@@ -41,7 +41,7 @@ const intersectionOptions = {
 							:to="'#' + section.anchor"
 							:class="
 								(index == 0 ? 'active' : '') +
-								' section-anchor opacity-50 font-weight-500 fs-12 cursor-pointer text-uppercase'
+								' section-anchor opacity-50 text-weight-medium fs-12 cursor-pointer text-uppercase'
 							"
 						>
 							{{ section.label }}

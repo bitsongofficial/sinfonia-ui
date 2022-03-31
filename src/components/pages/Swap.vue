@@ -153,13 +153,13 @@ const onTxClick = (tx: Transaction) => {
 					<div class="flex justify-between items-center q-mb-30">
 						<p class="fs-18">DEX</p>
 						<q-btn
-							outline
-							rounded
-							to="/fantokens"
-							color="white"
-							label="View all"
-							class="q-px-22"
-						/>
+              outline
+              rounded
+              to="/fantokens"
+              color="white"
+              label="View all"
+              class="q-px-22 text-secondry-390 light:before:border-2 light:hover:helper-white"
+            />
 					</div>
 					<Card
 						class="q-py-10 q-px-none q-mb-51 scroll-container"
@@ -190,15 +190,15 @@ const onTxClick = (tx: Transaction) => {
 					<div class="flex justify-between items-center q-mb-30">
 						<p class="fs-18">Transactions</p>
 						<q-btn
-							v-if="authStore.osmosisAddress"
-							outline
-							rounded
-							color="white"
-							:href="`${externalWebsites.mintscan}osmosis/account/${authStore.osmosisAddress}`"
+              v-if="authStore.osmosisAddress"
+              outline
+              rounded
+              color="white"
+              :href="`${externalWebsites.mintscan}osmosis/account/${authStore.osmosisAddress}`"
 							target="_blank"
-							label="View all"
-							class="q-px-22"
-						/>
+              label="View all"
+              class="q-px-22 text-secondry-390 light:before:border-2 light:hover:helper-white"
+            />
 					</div>
 					<Card
 						class="q-py-10 q-px-none overflow-auto items-center"
@@ -239,15 +239,13 @@ const onTxClick = (tx: Transaction) => {
 											class="text-white font-weight-500 q-mx-4"
 											v-if="slotProps.row.fromSwap"
 											>{{ balancedCurrency(slotProps.row.fromAmount) }}
-											{{ slotProps.row.fromSwap.symbol }}</span
-										>
+											{{ slotProps.row.fromSwap.symbol }}</span>
 										in
 										<span
 											class="text-white font-weight-500 q-mx-4"
 											v-if="slotProps.row.toSwap"
 											>{{ balancedCurrency(slotProps.row.toAmount) }}
-											{{ slotProps.row.toSwap.symbol }}</span
-										>
+											{{ slotProps.row.toSwap.symbol }}</span>
 									</p>
 								</q-td>
 							</template>
@@ -257,7 +255,7 @@ const onTxClick = (tx: Transaction) => {
 										<p
 											v-if="slotProps.row.status != 'success'"
 											:class="
-												'rounded-20 q-py-9 q-px-8 text-white text-capitalize fs-9 ' +
+												'rounded-20 q-py-9 q-px-8 text-white light:text- text-capitalize fs-9 ' +
 												(slotProps.row.status == 'pending' ? 'bg-dark' : 'bg-primary')
 											"
 										>

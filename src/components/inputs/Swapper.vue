@@ -256,7 +256,7 @@ const onSubmit = () => {
 
 <template>
 	<p class="fs-14 q-mb-20 opacity-30">Swap from</p>
-	<CardDark>
+	<CardDark class="light:bg-white/50 light:shadow-none">
 		<div class="flex justify-between no-wrap">
 			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
 				<div class="q-mr-24">
@@ -292,7 +292,7 @@ const onSubmit = () => {
 			</span>
 		</InlineButton>
 	</div>
-	<CardDark class="q-mb-24">
+	<CardDark class="q-mb-24 light:bg-white/50 light:shadow-none">
 		<div class="flex justify-between no-wrap">
 			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
 				<div class="q-mr-24">
@@ -314,7 +314,9 @@ const onSubmit = () => {
 			</div>
 		</div>
 	</CardDark>
-	<div class="q-py-15 q-px-30 bg-white-5 rounded-25 fs-14 q-mb-57">
+	<div
+		class="q-py-15 q-px-30 bg-white-5 light:bg-gray-light rounded-25 fs-14 q-mb-57"
+	>
 		<div
 			class="cursor-pointer flex justify-between items-center"
 			@click="slippageExpanded = !slippageExpanded"
@@ -335,11 +337,17 @@ const onSubmit = () => {
 			class="flex justify-between items-center q-mt-20"
 		>
 			<div class="flex items-center text-dark">
-				<p class="fs-13 font-weight-medium q-mr-9">Slippage Tolerance</p>
-				<q-icon size="12px" :name="resolveIcon('info', 15, 15)">
-					<InformativeTooltip anchor="center right" self="center left">
-						Your transaction will revert if the price changes unfavorably by more than
-						this percentage.
+				<p class="fs-13 text-weight-medium q-mr-9 light:text-primary-complementary">Slippage Tolerance</p>
+				<q-icon
+					size="12px"
+					:name="resolveIcon('info', 15, 15)"
+					class="light:text-primary-complementary"
+				>
+					<InformativeTooltip
+						anchor="center right"
+						self="center left"
+					>
+						Your transaction will revert if the price changes unfavorably by more than this percentage.
 					</InformativeTooltip>
 				</q-icon>
 			</div>
@@ -348,8 +356,8 @@ const onSubmit = () => {
 					v-for="i in maxSlippageOption"
 					@click="setSlippage(i)"
 					:class="
-						'rounded-30 border-dark q-px-18 q-py-6 q-mr-6 cursor-pointer' +
-						(maxSlippage == i && !customSelected ? ' bg-dark' : '')
+						'rounded-30 border-dark light:border-primary-complementary light:text-primary-complementary q-px-18 q-py-6 q-mr-6 cursor-pointer' +
+						(maxSlippage == i && !customSelected ? ' bg-dark light:bg-gradient light:border-none light:text-white' : '')
 					"
 					:key="i"
 				>
@@ -358,8 +366,8 @@ const onSubmit = () => {
 				<div
 					@click="customSelected = true"
 					:class="
-						'flex rounded-30 border-dark q-px-18 q-py-6 q-mr-6 cursor-pointer ' +
-						(customSelected ? 'bg-dark' : 'bg-primary-darker opacity-50')
+						'flex rounded-30 border-dark light:border-primary-complementary light:text-white q-px-18 q-py-6 q-mr-6 cursor-pointer ' +
+						(customSelected ? 'bg-dark light:bg-gradient light:border-none' : 'bg-primary-darker light:bg-primary-complementary opacity-50')
 					"
 				>
 					<div class="flex">

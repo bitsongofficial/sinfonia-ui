@@ -31,7 +31,7 @@ const isTab = (name): boolean => {
 		<q-tabs
 			v-model="tab"
 			dense
-			active-color="primary"
+			:active-color="$q.dark.isActive ? 'primary' : 'gradient'"
 			indicator-color="primary"
 			align="justify"
 			narrow-indicator
@@ -49,9 +49,12 @@ const isTab = (name): boolean => {
 					v-if="option.url"
 					:href="option.url"
 					target="_BLANK"
-					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100"
+					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100 flex items-center no-wrap"
 				>
-					{{ option.label }}
+					<div class="q-mr-8">
+						{{ option.label }}
+					</div>
+					<q-icon :name="resolveIcon('external', 10, 10)" size="11px"></q-icon>
 				</a>
 				<q-icon
 					v-if="option.icon"

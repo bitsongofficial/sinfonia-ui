@@ -5,6 +5,10 @@ import SideMenu from "@/components/navigation/SideMenu.vue"
 import WalletAddress from "@/components/WalletAddress.vue"
 import useBootstrap from "@/hooks/useBootstrap"
 import { externalWebsites } from "./configs/config"
+import { useQuasar } from 'quasar'
+
+const $q = useQuasar()
+$q.dark.set(true)
 
 const { bootstrap } = useBootstrap()
 
@@ -16,7 +20,7 @@ bootstrap()
 		<div class="container">
 			<div class="column col-grow">
 				<Header></Header>
-				<div class="no-pointer-events full-width">
+				<div class="no-pointer-events full-width flex">
 					<div
 						class="full-width !w-xs-1/3 q-px-xs-0 !w-sm-1/4 !w-md-1/6 self-end fixed-xs z-10 left-0 bottom-0"
 					>
@@ -36,7 +40,7 @@ bootstrap()
 							</div>
 						</div>
 					</div>
-					<div class="q-ml-auto w-xs-2/3 w-sm-3/4 w-md-5/6 q-pt-74 all-pointer-events">
+					<div class="full-width q-ml-auto !w-xs-2/3 !w-sm-3/4 !w-md-5/6 q-pt-74 all-pointer-events">
 						<RouterView></RouterView>
 					</div>
 				</div>

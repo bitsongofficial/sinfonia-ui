@@ -33,15 +33,15 @@ const onSwapClick = () => {
 		<div class="col-4 q-ml--12">
 			<div class="row justify-between no-wrap">
 				<div>
-					<p class="fs-12 opacity-40 text-weight-medium q-mb-8">
+					<p class="fs-12 opacity-40 text-weight-medium q-mb-10 light:text-primary light:opacity-100">
 						Pool {{ pool.id }}
 					</p>
 					<template v-for="(coin, index) in pool.coins" :key="index">
-						<p class="fs-16 font-weight-bold w-fit">
+						<p class="fs-16 text-weight-bold w-fit">
 							{{ coin.token.symbol }}
 						</p>
 						<div
-							class="separator q-my-4"
+							class="separator q-mt-4 q-mb-6"
 							v-if="index !== pool.coins.length - 1"
 						></div>
 					</template>

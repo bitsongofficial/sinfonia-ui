@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { resolveIcon } from "@/common/resolvers"
+import { useQuasar } from "quasar";
 import { computed } from "vue"
 
 const props = defineProps<{
@@ -13,11 +14,25 @@ const props = defineProps<{
 	imageSize?: string
 	altStyle?: boolean
 }>()
-const actualColor = props.color
-	? props.color
-	: props.negative && !props.altStyle
-	? "white"
-	: "primary"
+
+const $q = useQuasar()
+
+let actualColor = props.negative && !props.altStyle ? "white" : "primary"
+if(props.color)
+{
+	actualColor = props.color
+}
+let trackColor = props.altStyle ? 'dark-lighter' : 'white'
+if(!props.full)
+{
+	trackColor = 'transparent'
+}
+console.log(!$q.dark.isActive, props.full, props.altStyle)
+if(!$q.dark.isActive && props.full && props.altStyle)
+{
+	trackColor = 'light:white'
+}
+console.log(trackColor)
 const angle = props.negative ? 360 * (1 - props.value / 100) : 0
 const actualSize = computed(() => {
 	return props.size ? props.size : "32px"
@@ -35,7 +50,7 @@ const actualImageSize = computed(() => {
 		:size="actualSize"
 		:thickness="0.15"
 		:color="actualColor"
-		:track-color="full ? (altStyle ? 'dark-lighter' : 'white') : 'transparent'"
+		:track-color="trackColor"
 	>
 		<q-avatar :size="actualImageSize" v-if="image">
 			<img :src="image" />

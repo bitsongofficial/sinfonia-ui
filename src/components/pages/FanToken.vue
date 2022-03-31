@@ -103,11 +103,15 @@ const tabs = [
 	// 	icon: { name: "info", width: 15, height: 15 },
 	// },
 	{ label: "Whitepaper", url: "https://bitsong.io/fantokens/adam-clay" },
-	{ name: "pools", label: "Pools" },
 	{ name: "analytics", label: "Analytics" },
 	{ label: "Airdrop", url: "https://bitsong.io/airdrop/" },
 	{ name: "social", label: "Social" },
 ]
+
+if(poolsStore.myPools.length > 0)
+{
+	tabs.splice(1, 0, { name: "pools", label: "Pools" })
+}
 
 const stats = ["Price", "Gain"]
 const selectedStat = ref(stats[0])
@@ -168,12 +172,14 @@ const poolsColumns: TableColumn[] = [
 		format: (val: any) => `${balancedCurrency(val)} $`,
 	},
 ]
-
-const topImageStyle = computed(() => {
-	return `background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
+const topImageStyle =
+	`background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
 		fantoken.value?.media?.hero ?? ""
 	});`
-})
+const topImageStyleLight =
+	`background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 176.73%), url(${
+		fantoken.value?.media?.hero ?? ""
+	});`
 
 const compositionGraphStyle = ref({ width: "0" })
 const heightRef = ref<HTMLElement | null>(null)
@@ -203,10 +209,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<div class="text-white font-weight-500" v-if="fantoken">
+	<div class="text-white text-weight-medium" v-if="fantoken">
 		<div
 			class="absolute-top full-width -z-1 hv-3/5 !bg-cover"
-			:style="topImageStyle"
+			:style="$q.dark.isActive ? topImageStyle : topImageStyleLight"
 		></div>
 		<div class="row q-mb-70">
 			<div class="col-8 col-md-4">
@@ -262,7 +268,7 @@ onUnmounted(() => {
 			<template v-slot:analytics>
 				<p class="fs-16 opacity-30 q-mb-12">Token</p>
 				<div class="flex justify-between items-center q-mb-30">
-					<p class="fs-32 font-weight-bold">
+					<p class="fs-32 text-weight-bold">
 						{{ fantoken.symbol }}
 					</p>
 					<div class="flex items-center">
@@ -273,7 +279,7 @@ onUnmounted(() => {
 						></StandardSelect>
 						<q-btn-group
 							rounded
-							class="bg-dark-light fs-12 opacity-40 text-lowercase"
+							class="bg-dark-light light:bg-none light:before:fill light:before:bg-dark-light light:before:opacity-5 fs-12 opacity-40 text-lowercase"
 						>
 							<q-btn label="daily" class="opacity-100q-px-10 q-pl-12 q-py-8" />
 							<q-btn label="weekly" class="q-px-10" />
@@ -346,12 +352,12 @@ onUnmounted(() => {
 				<div class="q-mb-52">
 					<p class="fs-16 opacity-30 q-mb-24">Tokenomics</p>
 					<div class="row q-col-gutter-xl">
-						<div class="col-8 col-md-4 col-lg-2">
+						<div class="col-8 col-md-4 col-lg-2 overflow-down">
 							<InfoCard :header="`$${fantoken.symbol} CIRCULATING`" class="q-py-34">
 								{{ balancedCurrency(balance?.circulatingSupply ?? "0") }}
 							</InfoCard>
 						</div>
-						<div class="col-8 col-md-4 col-lg-2">
+						<div class="col-8 col-md-4 col-lg-2 overflow-down">
 							<InfoCard header="MARKET CAP" class="q-py-34">
 								{{ balancedCurrency(balance?.marketCap ?? "0") }}
 							</InfoCard>
@@ -503,7 +509,10 @@ onUnmounted(() => {
                     </template>
                 </Sections>
             </template> -->
-			<template v-slot:pools>
+			<template
+				v-slot:pools
+				v-if="poolsStore.myPools.length > 0">
+			>
 				<LightTable
 					:rows="fantokenPools"
 					:columns="poolsColumns"
@@ -556,7 +565,7 @@ onUnmounted(() => {
 						<q-checkbox
 							v-model="newsletter"
 							label="I agree to receive Bitsong Newsletter"
-							class="fs-12 font-weight-regular q-mb-54"
+							class="fs-12 text-weight-regular q-mb-54"
 						/>
 						<Socials :socials="socials"></Socials>
 					</div>

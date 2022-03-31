@@ -79,7 +79,7 @@ const checkboxModel = computed({
 				<q-checkbox
 					v-model="checkboxModel"
 					label="I understand the risks and would like to proceed."
-					class="fs-12 font-weight-regular q-mb-40"
+					class="fs-12 text-weight-regular q-mb-40"
 				/>
 			</div>
 			<div class="flex justify-center">
