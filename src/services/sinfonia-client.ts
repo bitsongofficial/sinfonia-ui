@@ -251,8 +251,8 @@ export default class SinfoniaClient {
 
 				return {
 					osmosisBalance: osmosisResponse.data.balances,
-					bitsongBalance: bitsongResponse.data.balances.filter(
-						(el) => !this.allowedFantokenDenom.includes(el.denom)
+					bitsongBalance: bitsongResponse.data.balances.filter((el) =>
+						this.allowedFantokenDenom.includes(el.denom)
 					),
 					fantokensBalance: bitsongResponse.data.balances.filter((el) =>
 						this.allowedFantokenDenom.includes(el.denom)
@@ -302,6 +302,14 @@ export default class SinfoniaClient {
 
 		if (assetListsConfig) {
 			const denoms: string[] = []
+
+			const bitsongLookup = assetListsConfig.bitsongToken.coinLookup.find(
+				(coin) => coin.viewDenom === assetListsConfig.bitsongToken.symbol
+			)
+
+			if (bitsongLookup) {
+				denoms.push(bitsongLookup.chainDenom)
+			}
 
 			for (const fantoken of assetListsConfig.fantokens) {
 				const coinLookup = fantoken.coinLookup.find(

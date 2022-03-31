@@ -39,7 +39,7 @@ const useTransactionManager = defineStore("transactionManager", {
 			recipientAddress: string,
 			from: Token,
 			to: Token,
-			amount: string
+			transferAmount?: Coin
 		) {
 			try {
 				this.loading = true
@@ -47,15 +47,12 @@ const useTransactionManager = defineStore("transactionManager", {
 				if (window.keplr) {
 					const signer = await window.keplr.getOfflineSignerOnlyAmino(from.chainID)
 					const manager = new TransactionManager(signer, from)
-					let transferAmount: Coin | undefined = undefined
 					let sourceChannel = ""
 
 					if (from.ibcEnabled) {
 						sourceChannel = from.ibc.osmosis.destChannelId
-						transferAmount = amountFromCoin(amount, from)
 					} else {
 						sourceChannel = to.ibc.osmosis.sourceChannelId
-						transferAmount = amountIBCFromCoin(amount, to)
 					}
 
 					if (transferAmount) {
