@@ -1,4 +1,4 @@
-import { SignerMessage, Token } from "@/types"
+import { OsmosisRoute, SignerMessage, Token } from "@/types"
 import {
 	Coin,
 	coins,
@@ -13,6 +13,7 @@ import {
 	JoinPool,
 	JoinSwapExternAmountIn,
 	ExitPool,
+	SwapExactAmountIn,
 } from "./messages"
 import {
 	assertIsDeliverTxSuccess,
@@ -173,6 +174,28 @@ export class TransactionManager {
 
 		return this.createSignBroadcast(
 			"ExitPool",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public swapExactAmountIn(
+		senderAddress: string, // Owner
+		routes: OsmosisRoute[],
+		tokenIn: Coin,
+		tokenOutMinAmount: string,
+		memo?: string
+	) {
+		const message = SwapExactAmountIn(
+			senderAddress,
+			routes,
+			tokenIn,
+			tokenOutMinAmount
+		)
+
+		return this.createSignBroadcast(
+			"SwapExactAmountIn",
 			[message],
 			senderAddress,
 			memo ?? ""

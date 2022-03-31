@@ -220,6 +220,35 @@ const useBank = defineStore("bank", {
 							.length > 0 && lockedLonger.duration === duration
 				)
 		},
+		allSwappableBalances(): TokenBalance[] {
+			const configStore = useConfig()
+
+			if (configStore.assetsConfig) {
+				const allowedDenoms = Object.keys(configStore.assetsConfig.routes)
+
+				return this.balances.filter((token) => {
+					if (token.ibcEnabled) {
+						return allowedDenoms.includes(token.ibc.osmosis.destDenom)
+					}
+
+					const coinLookup = token.coinLookup.find(
+						(coin) => coin.viewDenom === token.symbol
+					)
+
+					if (coinLookup) {
+						return allowedDenoms.includes(coinLookup.chainDenom)
+					}
+
+					return false
+				})
+			}
+
+			return []
+		},
+		balanceBySymbol() {
+			return (symbol: string) =>
+				this.balances.find((balance) => balance.symbol === symbol)
+		},
 		osmosisAvailableBalances() {
 			return (denoms: string[]) =>
 				this.balances.filter((balance) => {

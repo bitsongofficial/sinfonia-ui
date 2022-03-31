@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const emit = defineEmits<{
+defineEmits<{
 	(e: "osmosis"): void
 	(e: "liquidity"): void
 	(e: "swap"): void
@@ -15,9 +15,9 @@ const emit = defineEmits<{
 		self="center end"
 	>
 		<q-list style="min-width: 130px">
-			<q-item clickable :hoverable="false" v-close-popup>
+			<!-- <q-item clickable :hoverable="false" v-close-popup>
 				<q-item-section @click="$emit('osmosis')">View on Osmosis</q-item-section>
-			</q-item>
+			</q-item> -->
 			<q-item clickable :hoverable="false" v-close-popup>
 				<q-item-section @click="$emit('liquidity')"
 					>Manage Liquidity</q-item-section

@@ -56,7 +56,9 @@ const onSubmit = () => {
 							<p
 								:class="
 									'fs-15 text-center ' +
-									(up.apr == chosenUnbonding.apr ? 'text-primary-dark-700' : 'text-dark')
+									(up.duration == chosenUnbonding.duration
+										? 'text-primary-dark-700'
+										: 'text-dark')
 								"
 							>
 								{{ percentage(up.apr) }} %

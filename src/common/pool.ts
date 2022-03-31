@@ -83,12 +83,15 @@ export const tokenToPoolAsset = (
 					symbol: token.symbol,
 					logos: token.logos,
 					coinLookup,
+					coinDenom: rawCoin.token.denom,
 					amount: toViewDenom(
 						totalTokenGamm.toString(),
 						coinLookup.chainToViewConversionFactor
 					),
 					denom: token.ibcEnabled
-						? token.ibc.osmosis.sourceDenom
+						? token.fantoken && coinLookup.fantokenDenom
+							? coinLookup.fantokenDenom
+							: token.ibc.osmosis.sourceDenom
 						: coinLookup.chainDenom,
 					userTotalAmount: gammToPoolAmount(
 						userTotalGamm,

@@ -233,7 +233,7 @@ const useLiquidityModal = (
 						amount: tokenOutAmount
 							.multipliedBy(new BigNumber(1).minus(coinsConfig.exitPoolSlippage))
 							.toFixed(0),
-						denom: coin.token.denom,
+						denom: coin.token.coinDenom,
 					}
 				}
 			})

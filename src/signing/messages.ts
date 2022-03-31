@@ -1,8 +1,7 @@
 import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx"
 import { Height } from "cosmjs-types/ibc/core/client/v1/client"
-import { SignerMessage } from "@/types"
+import { OsmosisRoute, SignerMessage } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
-import { osmosis } from "./proto"
 import Long from "long"
 
 export type messageTimestamp = string | number | Long.Long | undefined
@@ -106,15 +105,6 @@ export const ExitPool = (
 	shareInAmount: string,
 	tokenOutMins: Coin[]
 ): SignerMessage<any> => {
-	console.log({
-		typeUrl: "/osmosis.gamm.v1beta1.MsgExitPool",
-		value: {
-			sender: senderAddress,
-			poolId: Long.fromString(poolId),
-			shareInAmount,
-			tokenOutMins,
-		},
-	})
 	return {
 		typeUrl: "/osmosis.gamm.v1beta1.MsgExitPool",
 		value: {
@@ -122,6 +112,26 @@ export const ExitPool = (
 			poolId: Long.fromString(poolId),
 			shareInAmount,
 			tokenOutMins,
+		},
+	}
+}
+
+export const SwapExactAmountIn = (
+	senderAddress: string, // Owner
+	routes: OsmosisRoute[],
+	tokenIn: Coin,
+	tokenOutMinAmount: string
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn",
+		value: {
+			sender: senderAddress,
+			routes: routes.map((route) => ({
+				...route,
+				poolId: Long.fromString(route.poolId),
+			})),
+			tokenIn,
+			tokenOutMinAmount,
 		},
 	}
 }

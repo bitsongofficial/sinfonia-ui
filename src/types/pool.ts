@@ -21,6 +21,7 @@ export interface PoolToken extends BaseToken {
 	availableAmount: string
 	bondedAmount: string
 	coinLookup: CoinLookup
+	coinDenom: string
 }
 
 export interface PoolAsset {
@@ -38,4 +39,9 @@ export interface Pool extends OsmosisPool {
 	bonded: string
 	availableLPTokens: string
 	availableLPBalances: Coin[]
+}
+
+export interface SwapPool {
+	pool: Pool
+	out: string
 }

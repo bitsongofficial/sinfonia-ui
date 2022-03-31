@@ -1,35 +1,100 @@
 <script setup lang="ts">
-import { newCoin } from "@/common/mockups"
-import { balancedCurrency, percentage, smallNumber } from "@/common/numbers"
-import { onMounted, onUnmounted, ref } from "vue"
-import OutlineButton from "../buttons/OutlineButton.vue"
-import StandardButton from "../buttons/StandardButton.vue"
-import StandardSelect from "../inputs/StandardSelect.vue"
-import Tabs from "../Tabs.vue"
-import Progress from "../Progress.vue"
+import {
+	balancedCurrency,
+	percentage,
+	percentageRange,
+	smallNumber,
+} from "@/common/numbers"
+import { computed, onMounted, onUnmounted, ref } from "vue"
 import { resolveIcon } from "@/common/resolvers"
-import InfoCard from "../cards/InfoCard.vue"
-import Card from "../cards/Card.vue"
-import CardWithHeader from "../cards/CardWithHeader.vue"
-import PercentageWithImage from "../infographics/PercentageWithImage.vue"
-import Sections from "../Sections.vue"
-import LargeButton from "../buttons/LargeButton.vue"
-import Socials from "../Socials.vue"
-import LightTable from "../LightTable.vue"
 import { TableColumn } from "@/types/table"
-import ImagePair from "../ImagePair.vue"
-import usePools from "@/store/pools"
 import { Pool } from "@/types"
 import { useRoute } from "vue-router"
-import WorkInProgress from "../WorkInProgress.vue"
+import StandardSelect from "@/components/inputs/StandardSelect.vue"
+import Tabs from "@/components/Tabs.vue"
+import Progress from "@/components/Progress.vue"
+import ImagePair from "@/components/ImagePair.vue"
+import InfoCard from "@/components/cards/InfoCard.vue"
+import CardWithHeader from "@/components/cards/CardWithHeader.vue"
+import PercentageWithImage from "@/components/infographics/PercentageWithImage.vue"
+import LargeButton from "@/components/buttons/LargeButton.vue"
+import Socials from "@/components/Socials.vue"
+import LightTable from "@/components/LightTable.vue"
+import WorkInProgress from "@/components/WorkInProgress.vue"
+import usePools from "@/store/pools"
+import useConfig from "@/store/config"
+import useBank from "@/store/bank"
+import BigNumber from "bignumber.js"
 
 const poolsStore = usePools()
+const bankStore = useBank()
+const configStore = useConfig()
 const route = useRoute()
 const id = route.params["id"] as string
 
-const coin = newCoin("$CLAY", "Adam Clay")
-const timeOptions = ["Today", "Tomorrow", "Toyota"]
-const selected = ref(timeOptions[0])
+const fantoken = computed(() => configStore.findFantokenByDenom(id))
+
+const balance = computed(() => {
+	if (fantoken.value) {
+		return bankStore.balanceBySymbol(fantoken.value.symbol)
+	}
+
+	return undefined
+})
+
+const fantokenPools = computed(() => {
+	if (fantoken.value) {
+		return poolsStore.poolsBySymbol(fantoken.value.symbol)
+	}
+
+	return []
+})
+
+const poolsStats = computed(() => {
+	const stats = {
+		liquidity: "0",
+		maxApr: "0",
+		avgApr: "0",
+		bonded: "0",
+		bondedFiat: "0",
+		avgWeight: "0",
+	}
+
+	for (const fantokenPool of fantokenPools.value) {
+		stats.liquidity = new BigNumber(stats.liquidity)
+			.plus(fantokenPool.liquidity)
+			.toString()
+		stats.maxApr = BigNumber.max(fantokenPool.APR, stats.maxApr).toString()
+		stats.avgApr = new BigNumber(stats.avgApr).plus(fantokenPool.APR).toString()
+
+		for (const coin of fantokenPool.coins) {
+			stats.bonded = new BigNumber(stats.bonded).plus(coin.token.amount).toString()
+			const bondendFiat = new BigNumber(stats.bonded).multipliedBy(
+				fantoken.value?.price ?? 0
+			)
+			stats.bondedFiat = new BigNumber(stats.bondedFiat)
+				.plus(bondendFiat)
+				.toString()
+		}
+	}
+
+	stats.avgApr = new BigNumber(stats.avgApr)
+		.div(fantokenPools.value.length)
+		.toString()
+
+	return stats
+})
+
+const bondedPercentage = computed(() => {
+	if (balance.value) {
+		return new BigNumber(poolsStats.value.bonded)
+			.div(balance.value.circulatingSupply ?? "1")
+			.multipliedBy(100)
+			.toNumber()
+	}
+
+	return 0
+})
 
 const tabs = [
 	// {
@@ -42,22 +107,18 @@ const tabs = [
 	{ label: "Airdrop", url: "https://bitsong.io/airdrop/" },
 	{ name: "social", label: "Social" },
 ]
+
 if(poolsStore.myPools.length > 0)
 {
 	tabs.splice(1, 0, { name: "pools", label: "Pools" })
 }
 
-
 const stats = ["Price", "Gain"]
 const selectedStat = ref(stats[0])
 
-const sections = [
-	{ anchor: "bio", label: "BIO" },
-	{ anchor: "altro", label: "Other" },
-]
-
 const email = ref("")
 const newsletter = ref(false)
+
 const socials = {
 	facebook: "https://www.facebook.com/adamclaymusic",
 	instagram: "https://www.instagram.com/adamclayreal/?hl=en",
@@ -78,7 +139,7 @@ const poolsColumns: TableColumn[] = [
 	{
 		name: "tokenPair",
 		align: "left",
-		label: coin.symbol + " Pools",
+		label: fantoken.value?.symbol + " Pools",
 		field: "name",
 		sortable: true,
 	},
@@ -111,15 +172,14 @@ const poolsColumns: TableColumn[] = [
 		format: (val: any) => `${balancedCurrency(val)} $`,
 	},
 ]
-const image = "https://i.scdn.co/image/ab6761610000e5eb608e188abbae6409698b8f5a"
 const topImageStyle =
-	"background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(" +
-	image +
-	");"
+	`background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
+		fantoken.value?.media?.hero ?? ""
+	});`
 const topImageStyleLight =
-	"background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 176.73%), url(" +
-	image +
-	");"
+	`background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 176.73%), url(${
+		fantoken.value?.media?.hero ?? ""
+	});`
 
 const compositionGraphStyle = ref({ width: "0" })
 const heightRef = ref<HTMLElement | null>(null)
@@ -149,7 +209,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<div class="text-white text-weight-medium">
+	<div class="text-white text-weight-medium" v-if="fantoken">
 		<div
 			class="absolute-top full-width -z-1 hv-3/5 !bg-cover"
 			:style="$q.dark.isActive ? topImageStyle : topImageStyleLight"
@@ -158,17 +218,15 @@ onUnmounted(() => {
 			<div class="col-8 col-md-4">
 				<div class="flex q-mb-60 items-start">
 					<q-avatar size="120px" class="q-mr-40">
-						<img :src="coin.iconUrl" alt="" />
+						<img :src="fantoken.logos.default" :alt="fantoken.name" />
 					</q-avatar>
 					<div>
 						<p class="text-dark q-mb-18 fs-21">
-							{{ coin.name }}
+							{{ fantoken.name }}
 						</p>
-						<p class="fs-60 q-mb-20">
-							{{ coin.symbol }}
-						</p>
+						<p class="fs-60 q-mb-20">${{ fantoken.symbol }}</p>
 						<p class="text-dark fs-16 text-uppercase q-mb-16">Price</p>
-						<p class="fs-32">$ {{ smallNumber(coin.price) }}</p>
+						<p class="fs-32">$ {{ smallNumber(fantoken.price ?? "0") }}</p>
 					</div>
 				</div>
 			</div>
@@ -184,11 +242,18 @@ onUnmounted(() => {
 				</div> -->
 				<div class="flex">
 					<div class="column items-end">
-						<p class="fs-16 text-dark q-mb-12 text-uppercase text-right">
-							{{ coin.symbol }}
+						<p
+							class="fs-16 text-dark q-mb-12 text-uppercase text-right"
+							v-if="balance"
+						>
+							${{ fantoken.symbol }}
 						</p>
-						<p class="fs-44 q-mb-12">100,345.34</p>
-						<p class="fs-21 text-dark text-right q-mb-33">9,234.29 $</p>
+						<p class="fs-44 q-mb-12" v-if="balance">
+							{{ balancedCurrency(balance.available ?? "0") }}
+						</p>
+						<p class="fs-21 text-dark text-right q-mb-33" v-if="balance">
+							{{ balancedCurrency(balance.availableFiat ?? "0") }} $
+						</p>
 						<LargeButton fit>Swap Tokens</LargeButton>
 					</div>
 					<!-- <div>
@@ -204,7 +269,7 @@ onUnmounted(() => {
 				<p class="fs-16 opacity-30 q-mb-12">Token</p>
 				<div class="flex justify-between items-center q-mb-30">
 					<p class="fs-32 text-weight-bold">
-						{{ coin.symbol }}
+						{{ fantoken.symbol }}
 					</p>
 					<div class="flex items-center">
 						<StandardSelect
@@ -217,9 +282,9 @@ onUnmounted(() => {
 							class="bg-dark-light light:bg-none light:before:fill light:before:bg-dark-light light:before:opacity-5 fs-12 opacity-40 text-lowercase"
 						>
 							<q-btn label="daily" class="opacity-100q-px-10 q-pl-12 q-py-8" />
-							<q-btn label="weekly" class="q-px-10 " />
-							<q-btn label="monthly" class="q-px-10 " />
-							<q-btn label="ytd" class="q-px-10 " />
+							<q-btn label="weekly" class="q-px-10" />
+							<q-btn label="monthly" class="q-px-10" />
+							<q-btn label="ytd" class="q-px-10" />
 							<q-btn label="all" class="q-px-10 q-pr-12 q-py-8" />
 						</q-btn-group>
 					</div>
@@ -236,35 +301,35 @@ onUnmounted(() => {
 						<div class="flex justify-between q-mb-24">
 							<div>
 								<p class="fs-10 q-mb-12 text-uppercase opacity-60">min</p>
-								<p class="fs-18">{{ smallNumber(coin.price) }} $</p>
+								<p class="fs-18">{{ smallNumber(fantoken.price ?? "0") }} $</p>
 							</div>
 							<div>
 								<p class="fs-10 q-mb-12 text-uppercase opacity-60 text-right">max</p>
-								<p class="fs-18">{{ smallNumber(coin.price) }} $</p>
+								<p class="fs-18">{{ smallNumber(fantoken.price ?? "0") }} $</p>
 							</div>
 						</div>
 						<Progress :percentage="50" class="q-mb-34"></Progress>
 						<div class="flex justify-between items-center q-mb-20">
 							<p class="opacity-60 text-uppercase">volume</p>
-							<p class="fs-16">{{ balancedCurrency(coin.volumeLastDay) }}</p>
+							<p class="fs-16">{{ balancedCurrency(0) }}</p>
 						</div>
 						<div class="flex justify-between items-center q-mb-20">
 							<p class="opacity-60 text-uppercase">volume</p>
-							<p class="fs-16">{{ balancedCurrency(coin.volumeLastDay) }}</p>
+							<p class="fs-16">{{ balancedCurrency(0) }}</p>
 						</div>
 						<div class="flex justify-between items-center q-mb-20">
 							<p class="opacity-60 text-uppercase">volume</p>
-							<p class="fs-16">{{ balancedCurrency(coin.volumeLastDay) }}</p>
+							<p class="fs-16">{{ balancedCurrency(0) }}</p>
 						</div>
 						<div class="flex justify-between items-center">
 							<p class="opacity-60 text-uppercase">volume</p>
-							<p class="fs-16">{{ balancedCurrency(coin.volumeLastDay) }}</p>
+							<p class="fs-16">{{ balancedCurrency(0) }}</p>
 						</div>
 						<div class="separator-light q-my-28"></div>
 						<div class="flex justify-between items-center q-mb-10">
 							<p class="opacity-60">volume</p>
 							<div class="flex items-center">
-								<p class="fs-16 q-mr-18">{{ smallNumber(coin.lastDayGain) }}</p>
+								<p class="fs-16 q-mr-18">{{ smallNumber(0) }}</p>
 								<q-icon
 									class="fs-12 opacity-30"
 									:name="resolveIcon('arrow-up', 14, 14)"
@@ -274,24 +339,27 @@ onUnmounted(() => {
 						<div class="flex justify-between items-center">
 							<p class="opacity-60">volume</p>
 							<div class="flex items-center">
-								<p class="fs-16 q-mr-18">{{ smallNumber(coin.lastDayGain) }}</p>
+								<p class="fs-16 q-mr-18">{{ smallNumber(0) }}</p>
 								<q-icon
 									class="rotate-180 fs-12 opacity-30"
 									:name="resolveIcon('arrow-up', 14, 14)"
 								></q-icon>
 							</div>
 						</div>
-						<WorkInProgress>
-							Price Data will be provided soon.
-						</WorkInProgress>
+						<WorkInProgress> Price Data will be provided soon. </WorkInProgress>
 					</div>
 				</div>
 				<div class="q-mb-52">
 					<p class="fs-16 opacity-30 q-mb-24">Tokenomics</p>
 					<div class="row q-col-gutter-xl">
-						<div v-for="n in 4" class="col-8 col-md-4 col-lg-2 overflow-down">
-							<InfoCard header="$CLAY CIRCULATING " class="q-py-34">
-								{{ balancedCurrency(21600000) }}
+						<div class="col-8 col-md-4 col-lg-2 overflow-down">
+							<InfoCard :header="`$${fantoken.symbol} CIRCULATING`" class="q-py-34">
+								{{ balancedCurrency(balance?.circulatingSupply ?? "0") }}
+							</InfoCard>
+						</div>
+						<div class="col-8 col-md-4 col-lg-2 overflow-down">
+							<InfoCard header="MARKET CAP" class="q-py-34">
+								{{ balancedCurrency(balance?.marketCap ?? "0") }}
 							</InfoCard>
 						</div>
 					</div>
@@ -312,9 +380,19 @@ onUnmounted(() => {
 								</div>
 							</Card>
 						</div> -->
-						<div v-for="n in 3" class="col-8 col-md-4 col-lg-2">
-							<InfoCard header="$CLAY CIRCULATING " class="q-py-34">
-								{{ balancedCurrency(21600000) }}
+						<div class="col-8 col-md-4 col-lg-2">
+							<InfoCard header="LIQUIDITY" class="q-py-34">
+								{{ balancedCurrency(poolsStats.liquidity) }} $
+							</InfoCard>
+						</div>
+						<div class="col-8 col-md-4 col-lg-2">
+							<InfoCard header="MAX APR" class="q-py-34">
+								{{ percentageRange(poolsStats.maxApr) }} %
+							</InfoCard>
+						</div>
+						<div class="col-8 col-md-4 col-lg-2">
+							<InfoCard header="AVG APR" class="q-py-34">
+								{{ percentageRange(poolsStats.avgApr) }} %
 							</InfoCard>
 						</div>
 					</div>
@@ -328,27 +406,27 @@ onUnmounted(() => {
 									<CardWithHeader header="bonded tokens" class="q-py-34">
 										<div class="flex justify-between items-center text-center q-mb-20">
 											<p class="fs-18">
-												{{ balancedCurrency(coin.marketCap) }}
+												{{ balancedCurrency(poolsStats.bonded) }}
 											</p>
 											<p class="fs-10 opacity-50">
-												{{ coin.symbol }}
+												{{ fantoken.symbol }}
 											</p>
 										</div>
 										<div class="flex justify-between items-center text-center q-mb-26">
-											<p class="fs-18">{{ balancedCurrency(coin.marketCap) }} $</p>
+											<p class="fs-18">{{ balancedCurrency(poolsStats.bondedFiat) }} $</p>
 											<p class="fs-10 opacity-50">
-												{{ coin.symbol }}
+												{{ fantoken.symbol }}
 											</p>
 										</div>
 										<div class="flex">
 											<PercentageWithImage
-												:value="50"
-												:image="coin.iconUrl"
+												:value="bondedPercentage"
+												:image="fantoken.logos.default"
 												class="q-mr-20"
 											></PercentageWithImage>
 											<div class="text-weight-medium">
 												<p class="fs-12 text-uppercase q-mb-10 opacity-50">% bonded</p>
-												<p class="fs-18">50%</p>
+												<p class="fs-18">{{ percentageRange(bondedPercentage) }}%</p>
 											</div>
 										</div>
 									</CardWithHeader>
@@ -363,8 +441,8 @@ onUnmounted(() => {
 										class="full-width full-height--15"
 										imageSize="48px"
 										:thickness="0.35"
-										:image="coin.iconUrl"
-										:value="50"
+										:image="fantoken.logos.default"
+										:value="bondedPercentage"
 									>
 									</PercentageWithImage>
 								</div>
@@ -436,7 +514,7 @@ onUnmounted(() => {
 				v-if="poolsStore.myPools.length > 0">
 			>
 				<LightTable
-					:rows="poolsStore.myPools"
+					:rows="fantokenPools"
 					:columns="poolsColumns"
 					no-background
 					class="q-px-0 q-py-0 table-no-padding"

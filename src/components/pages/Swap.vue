@@ -14,8 +14,8 @@ import useConfig from "@/store/config"
 
 const configStore = useConfig()
 
-let coin1 = ref(newUserCoin("BTSG", "Bitsong"))
-let coin2 = ref(newUserCoin("CLAY", "Adam"))
+let coin1 = ref(null)
+let coin2 = ref(null)
 
 const transactions = [
 	{
@@ -92,38 +92,6 @@ const transactionColumns: TableColumn[] = [
 
 const boxesStyle = ref({ height: "0" })
 const heightRef = ref<{ element: HTMLElement } | null>(null)
-
-const swapAmount = ref("0")
-
-const swapAmountWrapper = computed<string>({
-	get() {
-		return swapAmount.value
-	},
-	set(value) {
-		swapAmount.value = value != "" && parseInt(value) > 0 ? value : "0"
-	},
-})
-
-const swapRatio = computed<number>(() => {
-	return coin1.value.coin.price / coin2.value.coin.price
-})
-
-const swapAmountNumber = computed<number>(() => {
-	return parseInt(swapAmountWrapper.value)
-})
-
-const invert = () => {
-	const tmp = coin1.value
-	coin1.value = coin2.value
-	coin2.value = tmp
-}
-
-const dex = [
-	newCoin("CLAY", "Adam Clay"),
-	newCoin("FNTY", "Fonti"),
-	newCoin("VBRN", "Vibranium"),
-	newCoin("MCX", "Mace"),
-]
 
 const setSize = () => {
 	if (heightRef.value && heightRef.value.element) {
