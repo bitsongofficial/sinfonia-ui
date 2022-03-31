@@ -3,7 +3,7 @@ import { sinfoniaClient } from "@/services"
 import { acceptHMRUpdate, defineStore } from "pinia"
 import useAuth from "@/store/auth"
 import useConfig from "@/store/config"
-import { ChainBalance, OsmosisLock, TokenBalance } from "@/types"
+import { ChainBalance, OsmosisLock, Token, TokenBalance } from "@/types"
 import { reduce } from "lodash"
 import { toViewDenom } from "@/common/numbers"
 import { BigNumber } from "bignumber.js"
@@ -226,24 +226,60 @@ const useBank = defineStore("bank", {
 			if (configStore.assetsConfig) {
 				const allowedDenoms = Object.keys(configStore.assetsConfig.routes)
 
-				return this.balances.filter((token) => {
-					if (token.ibcEnabled) {
-						return allowedDenoms.includes(token.ibc.osmosis.destDenom)
-					}
+				return this.balances
+					.map((token) => {
+						let routeDenom = ""
 
-					const coinLookup = token.coinLookup.find(
-						(coin) => coin.viewDenom === token.symbol
-					)
+						if (!token.ibcEnabled) {
+							const coinLookup = token.coinLookup.find(
+								(coin) => coin.viewDenom === token.symbol
+							)
 
-					if (coinLookup) {
-						return allowedDenoms.includes(coinLookup.chainDenom)
-					}
+							if (coinLookup) {
+								routeDenom = coinLookup.chainDenom
+							}
+						} else {
+							routeDenom = token.ibc.osmosis.destDenom
+						}
 
-					return false
-				})
+						return {
+							...token,
+							routeDenom,
+						}
+					})
+					.filter((token) => {
+						return allowedDenoms.includes(token.routeDenom)
+					})
 			}
 
 			return []
+		},
+		swappableBalancesByRouteDenom() {
+			const configStore = useConfig()
+
+			return (from: Token): TokenBalance[] => {
+				const coinLookupFrom = from.coinLookup.find(
+					(coin) => coin.viewDenom === from.symbol
+				)
+
+				const fromDenom = from.ibcEnabled
+					? from.ibc.osmosis.destDenom
+					: coinLookupFrom?.chainDenom
+
+				if (fromDenom && configStore.assetsConfig) {
+					const fromDictionary = configStore.assetsConfig.routes[fromDenom]
+
+					if (fromDictionary) {
+						const routeDenoms = Object.keys(fromDictionary)
+
+						return this.allSwappableBalances.filter((balance) =>
+							routeDenoms.includes(balance.routeDenom ?? "")
+						)
+					}
+				}
+
+				return []
+			}
 		},
 		balanceBySymbol() {
 			return (symbol: string) =>

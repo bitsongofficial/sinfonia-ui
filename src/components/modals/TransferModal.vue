@@ -9,11 +9,12 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 import Amount from "@/components/inputs/Amount.vue"
 import useConfig from "@/store/config"
 import useKeplr from "@/store/keplr"
-import { isValidAddress } from "@/common"
+import { isValidAddress, amountFromCoin, amountIBCFromCoin } from "@/common"
 import useTransactionManager from "@/store/transaction-manager"
 import useBank from "@/store/bank"
-import { Coin } from "@cosmjs/proto-signing"
 import DangerTooltip from "../tooltips/DangerTooltip.vue"
+import { compact } from "lodash"
+import { Coin } from "@cosmjs/proto-signing"
 
 const configStore = useConfig()
 const keplrStore = useKeplr()
@@ -24,128 +25,6 @@ const props = defineProps<{
 	modelValue: boolean
 	coin: Token
 }>()
-
-const fromToken = ref<TokenWithAddress | undefined>(props.coin)
-const toToken = ref<TokenWithAddress | undefined>(configStore.osmosisToken)
-const tempAddress = ref()
-const addresses = computed<string[]>(() => [
-	...keplrStore.addresses,
-	tempAddress.value,
-])
-const optionsAddresses = computed<TokenWithAddress[]>(() => {
-	return configStore.allTokens.map((token) => {
-		const address = addresses.value.find((addr) =>
-			isValidAddress(addr, token.addressPrefix)
-		)
-
-		return {
-			...token,
-			address,
-		}
-	})
-})
-
-const fromAddresses = computed<TokenWithAddress[]>(() => {
-	if (fromToken.value && !fromToken.value.ibcEnabled) {
-		return []
-	}
-
-	return optionsAddresses.value
-})
-
-const toAddresses = computed<TokenWithAddress[]>(() => {
-	if (toToken.value && !toToken.value.ibcEnabled) {
-		return []
-	}
-
-	return optionsAddresses.value
-})
-
-const setDefaultValues = (coin: Token) => {
-	fromToken.value = optionsAddresses.value.find(
-		(opt) => opt.symbol === coin.symbol
-	)
-	const osmosisToken = configStore.osmosisToken
-
-	if (osmosisToken) {
-		toToken.value = optionsAddresses.value.find(
-			(opt) => opt.symbol === osmosisToken.symbol
-		)
-	}
-}
-
-const addressLookup = async (coin?: Token) => {
-	if (coin) {
-		const account = await keplrStore.getAddress(coin.chainID)
-
-		if (account) {
-			tempAddress.value = account.address
-
-			if (fromToken.value && !fromToken.value.address) {
-				bankStore.loadBalance(account.address, fromToken.value.chainID)
-			}
-		}
-	}
-}
-
-watch<TokenWithAddress | undefined>(
-	() => toToken.value,
-	async (coin, oldCoin) => {
-		await addressLookup(coin)
-
-		if (fromToken.value) {
-			if (coin) {
-				if (coin.symbol === fromToken.value.symbol && oldCoin) {
-					fromToken.value = optionsAddresses.value.find(
-						(opt) => opt.symbol === oldCoin.symbol
-					)
-				}
-			}
-		}
-
-		if (toToken.value && !toToken.value.address) {
-			toToken.value = {
-				...toToken.value,
-				address: tempAddress.value,
-			}
-		}
-	}
-)
-
-watch<TokenWithAddress | undefined>(
-	() => fromToken.value,
-	async (coin, oldCoin) => {
-		await addressLookup(coin)
-
-		if (toToken.value) {
-			if (coin) {
-				if (coin.symbol === toToken.value.symbol && oldCoin) {
-					toToken.value = optionsAddresses.value.find(
-						(opt) => opt.symbol === oldCoin.symbol
-					)
-				}
-			}
-		}
-
-		if (fromToken.value && !fromToken.value.address) {
-			fromToken.value = {
-				...fromToken.value,
-				address: tempAddress.value,
-			}
-		}
-	}
-)
-
-watch(
-	() => props.coin,
-	async (coin) => {
-		await addressLookup(coin)
-		setDefaultValues(coin)
-	},
-	{
-		immediate: true,
-	}
-)
 
 const emit = defineEmits<{
 	(e: "update:modelValue", value: boolean): void
@@ -160,73 +39,147 @@ const model = computed({
 	},
 })
 
+watch(
+	() => props.coin,
+	(coin) => {
+		fromChain.value = configStore.allMainTokens.find(
+			(token) => token.chainID === coin.chainID
+		)
+	}
+)
+
+const fromChain = ref<TokenWithAddress | undefined>(
+	configStore.allMainTokens.find((token) => token.chainID === props.coin.chainID)
+)
+
+const toChain = ref<TokenWithAddress | undefined>(configStore.osmosisToken)
+
+watch(
+	() => fromChain.value,
+	(newChain, oldChain) => {
+		if (oldChain?.chainID !== toChain.value?.chainID) {
+			toChain.value = oldChain
+		}
+	}
+)
+
+watch(
+	() => toChain.value,
+	(newChain, oldChain) => {
+		if (oldChain?.chainID !== fromChain.value?.chainID) {
+			fromChain.value = oldChain
+		}
+	}
+)
+
+const addresses = computed<string[]>(() => [...keplrStore.addresses])
+
+const optionsAddresses = computed<TokenWithAddress[]>(() => {
+	return compact(
+		configStore.allMainTokens.map((token) => {
+			const address = addresses.value.find((addr) =>
+				isValidAddress(addr, token.addressPrefix)
+			)
+
+			if (
+				token.chainID === props.coin.chainID ||
+				(configStore.osmosisToken &&
+					configStore.osmosisToken.chainID === token.chainID)
+			) {
+				return {
+					...token,
+					address,
+				}
+			}
+		})
+	)
+})
+
+const fromAddress = computed(() => {
+	if (props.modelValue) {
+		return optionsAddresses.value.find(
+			(el) => el.chainID === fromChain.value?.chainID
+		)?.address
+	}
+})
+
+const toAddress = computed(() => {
+	if (props.modelValue) {
+		return optionsAddresses.value.find(
+			(el) => el.chainID === toChain.value?.chainID
+		)?.address
+	}
+})
+
 const title = computed(() => {
-	if (!fromToken.value) {
-		return "Transfer"
+	if (props.coin.fantoken) {
+		return "Transfer $" + props.coin.symbol
 	}
 
-	if (fromToken.value.fantoken) {
-		return "Transfer $" + fromToken.value.symbol
-	}
+	return "Transfer " + props.coin.symbol
+})
 
-	return "Transfer " + fromToken.value.symbol
+const amount = ref("0")
+
+const showBigTransferTooltip = ref(false)
+const bigTransferInternal = ref(false)
+const hasAmountError = ref<boolean>(false)
+
+const balance = computed(() => {
+	const balances = [...bankStore.allBalances]
+	const from = fromChain.value
+
+	if (from) {
+		let denom = props.coin.ibc.osmosis.destDenom
+
+		if (from.ibcEnabled) {
+			const coinLookup = props.coin.coinLookup.find(
+				(coin) => coin.viewDenom === props.coin.symbol
+			)
+
+			if (coinLookup) {
+				denom = coinLookup.fantokenDenom ?? coinLookup.chainDenom
+			}
+		}
+
+		const balance = balances.find((el) => el.denom === denom)
+
+		return balance
+	}
 })
 
 const available = computed(() => {
-	const balances = [...bankStore.allBalances]
-	let coin: Coin | undefined = undefined
-	const from = fromToken.value
-	const to = toToken.value
+	if (balance.value) {
+		const coin = amountToCoin(balance.value.amount, props.coin)
 
-	if (from && from.ibcEnabled) {
-		const coinLookup = from.coinLookup.find(
-			(coin) => coin.viewDenom === from.symbol
-		)
-
-		if (coinLookup) {
-			const balance = balances.find(
-				(el) =>
-					(!from.fantoken && el.denom === coinLookup.chainDenom) ||
-					(from.fantoken && el.denom === coinLookup.fantokenDenom)
-			)
-
-			coin = amountToCoin(balance?.amount ?? "0", from)
+		if (coin) {
+			return coin.amount
 		}
-	} else if (to && to.ibc) {
-		const balance = balances.find((el) => el.denom === to.ibc.osmosis.destDenom)
-
-		coin = amountToCoin(balance?.amount ?? "0", to)
-	}
-
-	if (coin) {
-		return coin.amount
 	}
 
 	return "0"
 })
 
-const amount = ref("0")
-
 const onSubmit = () => {
-	if (
-		fromToken.value &&
-		toToken.value &&
-		fromToken.value.address &&
-		toToken.value.address
-	) {
+	console.log("submit")
+	if (fromChain.value && toChain.value && fromAddress.value && toAddress.value) {
+		let transferAmount: Coin | undefined = undefined
+
+		if (fromChain.value.ibcEnabled) {
+			transferAmount = amountFromCoin(amount.value, props.coin)
+		} else {
+			transferAmount = amountIBCFromCoin(amount.value, props.coin)
+		}
+
 		transactionManagerStore.sendIbcTokens(
-			fromToken.value.address,
-			toToken.value.address,
-			fromToken.value,
-			toToken.value,
-			amount.value
+			fromAddress.value,
+			toAddress.value,
+			fromChain.value,
+			toChain.value,
+			transferAmount
 		)
 	}
 }
-
-const showBigTransferTooltip = ref(false)
-const bigTransferInternal = ref(false)
-const hasAmountError = ref<boolean>(false)
 
 const bigTransfer = computed({
 	get(): boolean {
@@ -251,8 +204,8 @@ const bigTransfer = computed({
 		<q-form @submit="onSubmit">
 			<div class="flex items-center no-wrap q-mb-40">
 				<AddressesSelect
-					v-model="fromToken"
-					:addresses="fromAddresses"
+					v-model="fromChain"
+					:addresses="optionsAddresses"
 					title="From"
 					class="flex-1"
 				/>
@@ -262,8 +215,8 @@ const bigTransfer = computed({
 				</div>
 
 				<AddressesSelect
-					v-model="toToken"
-					:addresses="toAddresses"
+					v-model="toChain"
+					:addresses="optionsAddresses"
 					title="To"
 					class="flex-1"
 				/>

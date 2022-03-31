@@ -35,6 +35,11 @@ const coin2Wrapper = computed<TokenBalance | null>({
 
 <template>
 	<ModalWithClose title="Swap Tokens" class="bigger-modal">
-		<Swapper v-model:coin1="coin1Wrapper" v-model:coin2="coin2Wrapper"></Swapper>
+		<Swapper
+			default-from="BTSG"
+			default-to="CLAY"
+			v-model:coin1="coin1Wrapper"
+			v-model:coin2="coin2Wrapper"
+		></Swapper>
 	</ModalWithClose>
 </template>

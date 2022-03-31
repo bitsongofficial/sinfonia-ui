@@ -5,26 +5,49 @@ import Assets from "@/components/pages/Assets.vue"
 import Swap from "@/components/pages/Swap.vue"
 import Pool from "@/components/pages/Pool.vue"
 import FanToken from "@/components/pages/FanToken.vue"
+import { RouteRecordRaw } from "vue-router"
 
-const routes = [
+const routes: RouteRecordRaw[] = [
 	{
 		path: "/fantokens",
 		component: Wrapper,
 		children: [
-			{ path: "", component: Dex },
-			{ path: ":id", component: FanToken },
+			{
+				path: "",
+				component: Dex,
+			},
+			{
+				path: ":id",
+				component: FanToken,
+			},
 		],
 	},
-	{ path: "/swap", component: Swap },
+	{
+		path: "/swap",
+		component: Swap,
+		props: (route) => ({
+			from: route.query.from ?? "BTSG",
+			to: route.query.to ?? "CLAY",
+		}),
+	},
 	{
 		path: "/pools",
 		component: Wrapper,
 		children: [
-			{ path: "", component: Pools },
-			{ path: ":id", component: Pool },
+			{
+				path: "",
+				component: Pools,
+			},
+			{
+				path: ":id",
+				component: Pool,
+			},
 		],
 	},
-	{ path: "/assets", component: Assets },
+	{
+		path: "/assets",
+		component: Assets,
+	},
 	{
 		path: "/",
 		redirect: "/fantokens",

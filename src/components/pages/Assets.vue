@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import Title from "@/components/typography/Title.vue"
-import LightTable from "@/components/LightTable.vue"
-import IconButton from "@/components/buttons/IconButton.vue"
-import InfoCard from "@/components/cards/InfoCard.vue"
-import TransferModal from "@/components/modals/TransferModal.vue"
 import { TableColumn } from "@/types/table"
 import { balancedCurrency } from "@/common/numbers"
 import { computed, ref } from "vue"
 import { TokenBalance } from "@/types"
 import { resolveIcon } from "@/common/resolvers"
+import Title from "@/components/typography/Title.vue"
+import LightTable from "@/components/LightTable.vue"
+import InfoCard from "@/components/cards/InfoCard.vue"
+import TransferModal from "@/components/modals/TransferModal.vue"
 import useBank from "@/store/bank"
 import usePrices from "@/store/prices"
 import usePools from "@/store/pools"
@@ -165,6 +164,7 @@ const openTransfer = (from: TokenBalance) => {
 						<div
 							class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right light:hover:text-primary"
 							@click="openTransfer(rowProps.row)"
+							v-if="rowProps.row.ibcEnabled"
 						>
 							<q-icon :name="resolveIcon('swap', 21, 16)"></q-icon>
 						</div>

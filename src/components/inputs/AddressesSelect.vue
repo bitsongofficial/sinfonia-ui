@@ -31,6 +31,15 @@ const value = computed<TokenWithAddress | undefined>({
 })
 
 const showTooltip = computed(() => errorMessage.value != "")
+
+const address = computed(() => {
+	if (props.modelValue) {
+		return props.addresses.find((el) => el.chainID === props.modelValue?.chainID)
+			?.address
+	}
+
+	return ""
+})
 </script>
 
 <template>
@@ -68,8 +77,8 @@ const showTooltip = computed(() => errorMessage.value != "")
 				<p class="fs-14 q-mb-2">
 					{{ opt.name }}
 				</p>
-				<p class="fs-12 text-weight-medium opacity-40" v-if="opt.address">
-					{{ shortenMiddle(opt.address, 20) }}
+				<p class="fs-12 text-weight-medium opacity-40">
+					{{ shortenMiddle(address, 20) }}
 				</p>
 			</div>
 			<DangerTooltip

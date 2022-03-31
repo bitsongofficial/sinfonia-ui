@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { balancedCurrency, smallNumberRate } from "@/common/numbers"
-import { computed, ref } from "vue"
+import { computed, ref, watch, onUnmounted, onMounted } from "vue"
 import {
 	calculateRouteSpotPrice,
 	estimateHopSwapExactAmountIn,
@@ -27,7 +27,10 @@ const bankStore = useBank()
 const poolsStore = usePools()
 const configStore = useConfig()
 const transactionManagerStore = useTransactionManager()
+
 const props = defineProps<{
+	defaultFrom: string
+	defaultTo: string
 	coin1: TokenBalance | null
 	coin2: TokenBalance | null
 }>()
@@ -55,6 +58,51 @@ const toCoin = computed<TokenBalance | null>({
 	},
 })
 
+const setDefaultValues = (balances: TokenBalance[]) => {
+	if (!fromCoin.value) {
+		fromCoin.value =
+			balances.find((balance) => balance.symbol === props.defaultFrom) ?? null
+	}
+
+	if (!toCoin.value) {
+		toCoin.value =
+			balances.find((balance) => balance.symbol === props.defaultTo) ?? null
+	}
+}
+
+const balancesWatcher = watch(
+	() => bankStore.allSwappableBalances,
+	(balances, oldBalances) => {
+		if (balances.length > oldBalances.length) {
+			setDefaultValues(balances)
+		}
+	}
+)
+
+const fromSwappableBalances = computed(() => {
+	if (toCoin.value) {
+		return bankStore.swappableBalancesByRouteDenom(toCoin.value)
+	}
+
+	return []
+})
+
+const toSwappableBalances = computed(() => {
+	if (fromCoin.value) {
+		return bankStore.swappableBalancesByRouteDenom(fromCoin.value)
+	}
+
+	return []
+})
+
+onMounted(() => {
+	setDefaultValues(bankStore.allSwappableBalances)
+})
+
+onUnmounted(() => {
+	balancesWatcher()
+})
+
 const swapRatio = computed<number>(() => {
 	if (fromCoin.value) {
 		return calculateRouteSpotPrice(fromCoin.value, swapRoutes.value)
@@ -63,17 +111,44 @@ const swapRatio = computed<number>(() => {
 	return 0
 })
 
+const swapAmount = ref("0")
+const toAmount = ref("0")
+
+const swapAmountWrapper = computed<string>({
+	get() {
+		return swapAmount.value
+	},
+	set(value) {
+		swapAmount.value = value.length > 0 ? value : "0"
+
+		toAmount.value = new BigNumber(swapAmount.value)
+			.div(swapRatio.value)
+			.toFixed(2)
+	},
+})
+
+const toAmountWrapper = computed<string>({
+	get() {
+		return toAmount.value
+	},
+	set(value) {
+		toAmount.value = value.length > 0 ? value : "0"
+
+		swapAmount.value = new BigNumber(toAmount.value)
+			.div(1 / swapRatio.value)
+			.toFixed(2)
+	},
+})
+
 const swapAmountFiat = computed<string>(() => {
 	return new Decimal(swapAmountWrapper.value)
 		.mul(fromCoin.value?.price ?? "0")
 		.toString()
 })
 
-const swapAmount = ref("0")
-
 const swapCoin = computed(() => {
 	if (fromCoin.value) {
-		return amountIBCFromCoin(swapAmount.value, fromCoin.value)
+		return amountIBCFromCoin(swapAmountWrapper.value, fromCoin.value)
 	}
 
 	return undefined
@@ -97,24 +172,6 @@ const slippage = computed(() => {
 	}
 
 	return "0"
-})
-
-const swapAmountWrapper = computed<string>({
-	get() {
-		return swapAmount.value
-	},
-	set(value) {
-		swapAmount.value = value != "" && parseInt(value) > 0 ? value : "0"
-	},
-})
-
-const toAmount = computed({
-	get():string {
-		return balancedCurrency(parseFloat(swapAmount.value) * swapAmountNumber.value)
-	},
-	set(value:string):void {
-
-	},
 })
 
 const invert = () => {
@@ -146,14 +203,6 @@ const swapRoutes = computed(() => {
 	return []
 })
 
-const onAmountChange = () => {
-	if (fromCoin.value && toCoin.value) {
-		console.log(
-			new BigNumber(swapAmountWrapper.value).div(swapRatio.value).toString()
-		)
-	}
-}
-
 const available = computed(() => {
 	const osmosisToken = configStore.osmosisToken
 
@@ -163,7 +212,7 @@ const available = computed(() => {
 		)
 
 		if (chain) {
-			return balancedCurrency(chain.available ?? "0")
+			return chain.available ? new BigNumber(chain.available).toFixed(2) : "0"
 		}
 	}
 
@@ -171,13 +220,16 @@ const available = computed(() => {
 })
 
 const setMaxAmount = () => {
-	if (props.coin1) {
-		swapAmount.value = available.value
-	}
+	swapAmountWrapper.value = available.value
 }
 
 const onSubmit = () => {
-	if (swapCoin.value && estimatedHopSwap.value) {
+	if (
+		swapCoin.value &&
+		estimatedHopSwap.value &&
+		fromCoin.value &&
+		toCoin.value
+	) {
 		let tokenOutMinAmount = "1"
 		const maxSlippageDec = new Decimal(maxSlippage.value).div(100)
 
@@ -192,7 +244,11 @@ const onSubmit = () => {
 		transactionManagerStore.swapExactAmountIn(
 			swapRoutes.value,
 			swapCoin.value,
-			tokenOutMinAmount
+			tokenOutMinAmount,
+			fromCoin.value,
+			swapAmount.value,
+			toCoin.value,
+			toAmount.value
 		)
 	}
 }
@@ -207,7 +263,6 @@ const onSubmit = () => {
 					<q-input
 						borderless
 						v-model="swapAmountWrapper"
-						@update:model-value="onAmountChange"
 						class="fs-24 q-mb-0 text-white"
 					/>
 					<p v-if="coin1" class="fs-12 text-dark">
@@ -221,8 +276,8 @@ const onSubmit = () => {
 			<div class="vertical-separator q-mx-28"></div>
 			<div class="flex-1">
 				<CoinSelect
-					v-model="coin1"
-					:options="bankStore.allSwappableBalances"
+					v-model="fromCoin"
+					:options="fromSwappableBalances"
 					class="q-mx--30"
 				></CoinSelect>
 			</div>
@@ -243,7 +298,7 @@ const onSubmit = () => {
 				<div class="q-mr-24">
 					<q-input
 						borderless
-						v-model="toAmount"
+						v-model="toAmountWrapper"
 						class="fs-24 q-mb-0 text-white"
 						v-if="coin1 && coin2"
 					/>
@@ -252,8 +307,8 @@ const onSubmit = () => {
 			<div class="vertical-separator q-mx-28"></div>
 			<div class="flex-1">
 				<CoinSelect
-					v-model="coin2"
-					:options="bankStore.allSwappableBalances"
+					v-model="toCoin"
+					:options="toSwappableBalances"
 					class="q-mx--30"
 				></CoinSelect>
 			</div>

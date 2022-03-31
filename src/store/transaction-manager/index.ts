@@ -8,10 +8,10 @@ import {
 	LockableDurationWithApr,
 	OsmosisRoute,
 	SwapPool,
-	SwapRoute,
 	Token,
 	Transaction,
 	TransactionStatus,
+	TransactionType,
 } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
 import { acceptHMRUpdate, defineStore } from "pinia"
@@ -39,7 +39,7 @@ const useTransactionManager = defineStore("transactionManager", {
 			recipientAddress: string,
 			from: Token,
 			to: Token,
-			amount: string
+			transferAmount?: Coin
 		) {
 			try {
 				this.loading = true
@@ -47,15 +47,12 @@ const useTransactionManager = defineStore("transactionManager", {
 				if (window.keplr) {
 					const signer = await window.keplr.getOfflineSignerOnlyAmino(from.chainID)
 					const manager = new TransactionManager(signer, from)
-					let transferAmount: Coin | undefined = undefined
 					let sourceChannel = ""
 
 					if (from.ibcEnabled) {
 						sourceChannel = from.ibc.osmosis.destChannelId
-						transferAmount = amountFromCoin(amount, from)
 					} else {
 						sourceChannel = to.ibc.osmosis.sourceChannelId
-						transferAmount = amountIBCFromCoin(amount, to)
 					}
 
 					if (transferAmount) {
@@ -66,7 +63,7 @@ const useTransactionManager = defineStore("transactionManager", {
 							sourceChannel
 						)
 
-						this.addPendingTx(tsx, from)
+						this.addPendingTx(tsx, from, TransactionType.SEND_IBC_TOKENS)
 					}
 				}
 			} catch (error) {
@@ -96,7 +93,11 @@ const useTransactionManager = defineStore("transactionManager", {
 						coins
 					)
 
-					this.addPendingTx(tsx, configStore.osmosisToken)
+					this.addPendingTx(
+						tsx,
+						configStore.osmosisToken,
+						TransactionType.LOCK_TOKENS
+					)
 				}
 			} catch (error) {
 				console.error(error)
@@ -126,7 +127,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						tokenInMaxs
 					)
 
-					this.addPendingTx(tsx, configStore.osmosisToken)
+					this.addPendingTx(tsx, configStore.osmosisToken, TransactionType.JOIN_POOL)
 				}
 			} catch (error) {
 				console.error(error)
@@ -160,7 +161,11 @@ const useTransactionManager = defineStore("transactionManager", {
 						shareOutMinAmount
 					)
 
-					this.addPendingTx(tsx, configStore.osmosisToken)
+					this.addPendingTx(
+						tsx,
+						configStore.osmosisToken,
+						TransactionType.JOIN_SWAP_EXTERN_AMOUNT_IN
+					)
 				}
 			} catch (error) {
 				console.error(error)
@@ -190,7 +195,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						tokenOutMins
 					)
 
-					this.addPendingTx(tsx, configStore.osmosisToken)
+					this.addPendingTx(tsx, configStore.osmosisToken, TransactionType.EXIT_POOL)
 				}
 			} catch (error) {
 				console.error(error)
@@ -203,7 +208,11 @@ const useTransactionManager = defineStore("transactionManager", {
 		async swapExactAmountIn(
 			routes: SwapPool[],
 			tokenIn: Coin,
-			tokenOutMinAmount: string
+			tokenOutMinAmount: string,
+			from: Token,
+			fromAmount: string,
+			to: Token,
+			toAmount: string
 		) {
 			const authStore = useAuth()
 			const configStore = useConfig()
@@ -230,7 +239,15 @@ const useTransactionManager = defineStore("transactionManager", {
 						tokenOutMinAmount
 					)
 
-					this.addPendingTx(tsx, configStore.osmosisToken)
+					this.addPendingTx(
+						tsx,
+						configStore.osmosisToken,
+						TransactionType.SWAP_EXACT_AMOUNT_IN,
+						from,
+						fromAmount,
+						to,
+						toAmount
+					)
 				}
 			} catch (error) {
 				console.error(error)
@@ -255,7 +272,11 @@ const useTransactionManager = defineStore("transactionManager", {
 
 					const tsx = await manager.beginUnlocking(authStore.osmosisAddress, id)
 
-					this.addPendingTx(tsx, configStore.osmosisToken)
+					this.addPendingTx(
+						tsx,
+						configStore.osmosisToken,
+						TransactionType.BEGIN_UNLOCKING
+					)
 				}
 			} catch (error) {
 				console.error(error)
@@ -265,12 +286,30 @@ const useTransactionManager = defineStore("transactionManager", {
 				this.loading = false
 			}
 		},
-		addPendingTx(tsx: DeliverTxResponse, from: Token) {
-			this.transactions.push({
+		addPendingTx(
+			tsx: DeliverTxResponse,
+			from: Token,
+			type: TransactionType,
+			fromSwap?: Token,
+			fromAmount?: string,
+			toSwap?: Token,
+			toAmount?: string
+		) {
+			const transactions = [...this.transactions]
+
+			transactions.unshift({
 				tx: tsx,
 				from,
 				status: TransactionStatus.PENDING,
+				type,
+				fromSwap,
+				fromAmount,
+				toSwap,
+				toAmount,
+				time: new Date().getTime(),
 			})
+
+			this.transactions = transactions.slice(0, 10)
 
 			this.clearSubscription()
 			this.subscribe()
@@ -334,6 +373,13 @@ const useTransactionManager = defineStore("transactionManager", {
 		},
 		clearSubscription() {
 			clearInterval(subscription)
+		},
+	},
+	getters: {
+		swapTransactions: ({ transactions }) => {
+			return transactions.filter(
+				(transaction) => transaction.type === TransactionType.SWAP_EXACT_AMOUNT_IN
+			)
 		},
 	},
 	persistedState: {

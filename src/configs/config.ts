@@ -4,6 +4,7 @@ export const endpoints = {
 
 export const externalWebsites = {
 	coingecko: "https://www.coingecko.com/",
+	mintscan: "https://www.mintscan.io/",
 }
 
 export const coinsConfig = {

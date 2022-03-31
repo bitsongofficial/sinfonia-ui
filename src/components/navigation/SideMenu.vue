@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { resolveIcon } from "@/common/resolvers"
+import { externalWebsites } from "@/configs/config"
 import MenuItem from "@/components/navigation/MenuItem.vue"
 </script>
 <template>
@@ -37,7 +38,7 @@ import MenuItem from "@/components/navigation/MenuItem.vue"
 		<MenuItem
 			is-link
 			:icon="{ name: 'swap', width: 21, height: 16 }"
-			url="https://www.mintscan.io/bitsong/txs"
+			:url="`${externalWebsites.mintscan}bitsong/txs`"
 		>
 			<div class="flex no-wrap items-center">
 				<p class="q-mr-8">Transactions</p>
