@@ -38,7 +38,7 @@ const onSubmit = () => {
 				<p class="fs-14 q-mr-10">Select Unbonding Period</p>
 				<q-icon :name="resolveIcon('info', 15, 15)" size="10px"></q-icon>
 			</div>
-			<div class="row row-cols-3 q-col-gutter-md q-mb-27">
+			<div class="row row-cols-3 row-cols-xs-1 column-xs q-col-gutter-md q-mb-27">
 				<div v-for="up in pool.lockableDurationApr" class="col">
 					<div
 						@click="chosenUnbonding = up"

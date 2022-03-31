@@ -249,7 +249,7 @@ onUnmounted(() => {
 		</div>
 		<div class="row q-mb-42">
 			<div class="col-3">
-				<h3 class="fs-21 q-mb-20">Liquidity Mining</h3>
+				<h3 class="fs-21 q-mb-20 q-mt-0">Liquidity Mining</h3>
 				<p class="fs-16 opacity-40">
 					BitSong Launchpad is the platform where you can buy and mint your favorite
 					Artist Fantoken.

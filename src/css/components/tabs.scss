@@ -50,3 +50,16 @@
         font-size: inherit;
     }
 }
+
+@media screen and (max-width: $breakpoint-xs) {
+    .q-panel.scroll {
+        margin-left: 0;
+        margin-right: 0;
+
+        .q-tab-panel {
+            padding: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}

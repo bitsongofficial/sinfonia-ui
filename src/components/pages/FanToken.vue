@@ -216,11 +216,11 @@ onUnmounted(() => {
 		></div>
 		<div class="row q-mb-70">
 			<div class="col-8 col-md-4">
-				<div class="flex q-mb-60 items-start">
-					<q-avatar size="120px" class="q-mr-40">
+				<div class="flex q-mb-60 items-start items-center-xs column-xs">
+					<q-avatar size="120px" class="q-mr-40 q-mr-xs-0 q-mb-xs-14">
 						<img :src="fantoken.logos.default" :alt="fantoken.name" />
 					</q-avatar>
-					<div>
+					<div class="text-center-xs">
 						<p class="text-dark q-mb-18 fs-21">
 							{{ fantoken.name }}
 						</p>
@@ -230,7 +230,7 @@ onUnmounted(() => {
 					</div>
 				</div>
 			</div>
-			<div class="col-8 col-md-4 column items-end">
+			<div class="col-8 col-md-4 column items-end items-center-xs">
 				<!-- <div class="flex items-center q-mb-42">
 					<StandardSelect
 						color="dark"
@@ -241,7 +241,7 @@ onUnmounted(() => {
 					<p class="fs-24">{{ percentage(coin.lastDayGain) }} %</p>
 				</div> -->
 				<div class="flex">
-					<div class="column items-end">
+					<div class="column items-end items-center-xs">
 						<p
 							class="fs-16 text-dark q-mb-12 text-uppercase text-right"
 							v-if="balance"
@@ -298,52 +298,54 @@ onUnmounted(() => {
 						/>
 					</div>
 					<div class="col-8 col-md-4 col-lg-2 relative-position q-pr-10 q-pb-10">
-						<div class="flex justify-between q-mb-24">
-							<div>
-								<p class="fs-10 q-mb-12 text-uppercase opacity-60">min</p>
-								<p class="fs-18">{{ smallNumber(fantoken.price ?? "0") }} $</p>
+						<div class="q-px-8">
+							<div class="flex justify-between q-mb-24">
+								<div>
+									<p class="fs-10 q-mb-12 text-uppercase opacity-60">min</p>
+									<p class="fs-18">{{ smallNumber(fantoken.price ?? "0") }} $</p>
+								</div>
+								<div>
+									<p class="fs-10 q-mb-12 text-uppercase opacity-60 text-right">max</p>
+									<p class="fs-18">{{ smallNumber(fantoken.price ?? "0") }} $</p>
+								</div>
 							</div>
-							<div>
-								<p class="fs-10 q-mb-12 text-uppercase opacity-60 text-right">max</p>
-								<p class="fs-18">{{ smallNumber(fantoken.price ?? "0") }} $</p>
+							<Progress :percentage="50" class="q-mb-34"></Progress>
+							<div class="flex justify-between items-center q-mb-20">
+								<p class="opacity-60 text-uppercase">volume</p>
+								<p class="fs-16">{{ balancedCurrency(0) }}</p>
 							</div>
-						</div>
-						<Progress :percentage="50" class="q-mb-34"></Progress>
-						<div class="flex justify-between items-center q-mb-20">
-							<p class="opacity-60 text-uppercase">volume</p>
-							<p class="fs-16">{{ balancedCurrency(0) }}</p>
-						</div>
-						<div class="flex justify-between items-center q-mb-20">
-							<p class="opacity-60 text-uppercase">volume</p>
-							<p class="fs-16">{{ balancedCurrency(0) }}</p>
-						</div>
-						<div class="flex justify-between items-center q-mb-20">
-							<p class="opacity-60 text-uppercase">volume</p>
-							<p class="fs-16">{{ balancedCurrency(0) }}</p>
-						</div>
-						<div class="flex justify-between items-center">
-							<p class="opacity-60 text-uppercase">volume</p>
-							<p class="fs-16">{{ balancedCurrency(0) }}</p>
-						</div>
-						<div class="separator-light q-my-28"></div>
-						<div class="flex justify-between items-center q-mb-10">
-							<p class="opacity-60">volume</p>
-							<div class="flex items-center">
-								<p class="fs-16 q-mr-18">{{ smallNumber(0) }}</p>
-								<q-icon
-									class="fs-12 opacity-30"
-									:name="resolveIcon('arrow-up', 14, 14)"
-								></q-icon>
+							<div class="flex justify-between items-center q-mb-20">
+								<p class="opacity-60 text-uppercase">volume</p>
+								<p class="fs-16">{{ balancedCurrency(0) }}</p>
 							</div>
-						</div>
-						<div class="flex justify-between items-center">
-							<p class="opacity-60">volume</p>
-							<div class="flex items-center">
-								<p class="fs-16 q-mr-18">{{ smallNumber(0) }}</p>
-								<q-icon
-									class="rotate-180 fs-12 opacity-30"
-									:name="resolveIcon('arrow-up', 14, 14)"
-								></q-icon>
+							<div class="flex justify-between items-center q-mb-20">
+								<p class="opacity-60 text-uppercase">volume</p>
+								<p class="fs-16">{{ balancedCurrency(0) }}</p>
+							</div>
+							<div class="flex justify-between items-center">
+								<p class="opacity-60 text-uppercase">volume</p>
+								<p class="fs-16">{{ balancedCurrency(0) }}</p>
+							</div>
+							<div class="separator-light q-my-28"></div>
+							<div class="flex justify-between items-center q-mb-10">
+								<p class="opacity-60">volume</p>
+								<div class="flex items-center">
+									<p class="fs-16 q-mr-18">{{ smallNumber(0) }}</p>
+									<q-icon
+										class="fs-12 opacity-30"
+										:name="resolveIcon('arrow-up', 14, 14)"
+									></q-icon>
+								</div>
+							</div>
+							<div class="flex justify-between items-center">
+								<p class="opacity-60">volume</p>
+								<div class="flex items-center">
+									<p class="fs-16 q-mr-18">{{ smallNumber(0) }}</p>
+									<q-icon
+										class="rotate-180 fs-12 opacity-30"
+										:name="resolveIcon('arrow-up', 14, 14)"
+									></q-icon>
+								</div>
 							</div>
 						</div>
 						<WorkInProgress> Price Data will be provided soon. </WorkInProgress>

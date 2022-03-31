@@ -65,11 +65,11 @@ const {
 			<div v-if="add">
 				<template v-for="(coin, index) of pool.coins">
 					<div class="q-mb-21" v-if="!single || (single && index === currentSingle)">
-						<div class="flex items-center no-wrap q-mb-9">
+						<div class="flex column-xs items-center items-end-xs no-wrap q-mb-9">
 							<Amount
 								v-model="coinsAmounts[coin.token.symbol]"
 								:max="balances[coin.token.symbol]"
-								class="q-mr-24"
+								class="q-mr-24 q-mr-xs-0"
 								@update:model-value="
 									(value) => onAmountChange(coin.token.symbol, value)
 								"
@@ -88,7 +88,7 @@ const {
 								/>
 							</div>
 						</div>
-						<p class="fs-12 text-dark q-ml-20">
+						<p class="fs-12 text-dark q-ml-20 text-end-xs">
 							Available
 							<span class="text-white">{{ balances[coin.token.symbol] }}</span>
 							{{ coin.token.symbol }}
@@ -105,8 +105,8 @@ const {
 					></div>
 					<p class="text-center fs-12 q-pa-12 text-weight-medium">Change token</p>
 				</div>
-				<div class="flex justify-between no-wrap">
-					<div class="column q-mr-20">
+				<div class="flex column-xs justify-between no-wrap">
+					<div class="column q-mr-20 items-center-xs q-mb-xs-14">
 						<div v-if="single" class="flex fs-13 q-mb-14">
 							<p class="q-mr-6">&nbsp;</p>
 							<p>&nbsp;</p>
@@ -151,16 +151,16 @@ const {
 					></div>
 					<div
 						v-for="rm in removeValues"
-						class="col-2 rounded-20 q-px-32 q-py-18 relative-position cursor-pointer"
+						class="col-2 rounded-20 q-px-32 q-px-xs-10 q-py-18 relative-position cursor-pointer"
 						@click="removePercent = rm"
 					>
 						<template v-if="rm == removePercent">
 							<div
 								class="absolute-full bg-primary-dark opacity-50 rounded-20 -z-1"
 							></div>
-							<p>{{ rm * 100 }}%</p>
+							<p class="text-center">{{ rm * 100 }}%</p>
 						</template>
-						<p v-else="rm == removePercent" class="text-dark opacity-50">
+						<p v-else="rm == removePercent" class="text-dark opacity-50 text-center">
 							{{ rm * 100 }}%
 						</p>
 					</div>

@@ -162,7 +162,7 @@ const onTxClick = (tx: Transaction) => {
             />
 					</div>
 					<Card
-						class="q-py-10 q-px-none q-mb-51 scroll-container"
+						class="q-py-10 q-px-none q-mb-51 overflow-hidden"
 						:padding="0"
 						:transparency="5"
 						:style="boxesStyle"
@@ -187,7 +187,7 @@ const onTxClick = (tx: Transaction) => {
 						>
 						</CryptoTable>
 					</Card>
-					<div class="flex justify-between items-center q-mb-30">
+					<div class="flex justify-between items-center q-mb-30 overflow-hidden">
 						<p class="fs-18">Transactions</p>
 						<q-btn
               v-if="authStore.osmosisAddress"
