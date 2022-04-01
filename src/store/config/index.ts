@@ -119,7 +119,11 @@ const useConfig = defineStore("config", {
 					let price = "0"
 
 					if (pricesStore.coinGeckoPrices) {
-						price = pricesStore.coinGeckoPrices[el.coinGeckoId]["usd"]
+						const priceMap = pricesStore.coinGeckoPrices[el.coinGeckoId]
+
+						if (priceMap) {
+							price = priceMap["usd"]
+						}
 					}
 
 					return {

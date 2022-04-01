@@ -60,15 +60,25 @@ const toCoin = computed<TokenBalance | null>({
 	},
 })
 
-const setDefaultValues = (balances: TokenBalance[]) => {
+const setDefaultValues = (newBalances: TokenBalance[]) => {
+	const balances = [...newBalances]
+
 	if (!fromCoin.value) {
 		fromCoin.value =
 			balances.find((balance) => balance.symbol === props.defaultFrom) ?? null
+
+		if (!fromCoin.value) {
+			fromCoin.value = balances.shift() ?? null
+		}
 	}
 
 	if (!toCoin.value) {
 		toCoin.value =
 			balances.find((balance) => balance.symbol === props.defaultTo) ?? null
+
+		if (!toCoin.value) {
+			toCoin.value = balances.pop() ?? null
+		}
 	}
 }
 
