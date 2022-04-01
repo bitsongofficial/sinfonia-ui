@@ -18,7 +18,7 @@ const poolsStore = usePools()
 				class="col-8 col-md-4 col-lg-2"
 			>
 				<RouterLink :to="'/pools/' + userPool.id" class="block">
-					<Card class="full-width cursor-pointer hover:bg-white-15">
+					<Card class="full-width text-white cursor-pointer hover:bg-white-15">
 						<PoolHeader :pool="userPool" />
 						<div class="separator-light q-my-20"></div>
 						<div class="row">
@@ -46,7 +46,7 @@ const poolsStore = usePools()
 	<div class="row q-col-gutter-x-xl q-col-gutter-y-md">
 		<div v-for="pool in poolsStore.pools" class="col-8 col-md-4 col-lg-2">
 			<RouterLink :to="'/pools/' + pool.id" class="block">
-				<Card class="full-width cursor-pointer hover:bg-white-15">
+				<Card class="full-width text-white cursor-pointer hover:bg-white-15">
 					<PoolHeader :pool="pool" />
 				</Card>
 			</RouterLink>

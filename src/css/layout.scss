@@ -218,6 +218,14 @@
     }
 }
 
+.\!absolute-full {
+    position: absolute !important;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
 @for $border from 0 to 10 {
     $val: $border * 5;
 

@@ -45,8 +45,8 @@ const onSubmit = () => {
 						:class="
 							'rounded-20 q-py-16 q-px-16 flex justify-center items-center full-height cursor-pointer ' +
 							(up.duration == chosenUnbonding.duration
-								? 'bg-gradient'
-								: 'border-primary-darker hover:bg-white-5')
+								? 'bg-gradient light:text-white'
+								: 'border-primary-darker light:border-gradient-primary light:border-none hover:bg-white-5')
 						"
 					>
 						<div>
@@ -57,7 +57,7 @@ const onSubmit = () => {
 								:class="
 									'fs-15 text-center ' +
 									(up.duration == chosenUnbonding.duration
-										? 'text-primary-dark-700'
+										? 'text-primary-dark-700 light:text-white'
 										: 'text-dark')
 								"
 							>
