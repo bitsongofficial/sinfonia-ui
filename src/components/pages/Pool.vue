@@ -4,13 +4,18 @@ import OutlineButton from "@/components/buttons/OutlineButton.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import CardWithHeader from "@/components/cards/CardWithHeader.vue"
 import PercentageWithImage from "@/components/infographics/PercentageWithImage.vue"
-import { balancedCurrency, percentage, toDecimalGamm } from "@/common/numbers"
+import {
+	balancedCurrency,
+	percentage,
+	toDecimalGamm,
+	balancedGamm,
+} from "@/common/numbers"
 import InfoCard from "@/components/cards/InfoCard.vue"
 import ExpandableCard from "@/components/cards/ExpandableCard.vue"
 import Progress from "@/components/Progress.vue"
 import LightTable from "@/components/LightTable.vue"
 import BondModal from "@/components/modals/BondModal.vue"
-import { TableColumn, LockableDurationWithApr } from "@/types"
+import { TableColumn, LockableDurationWithApr, LockCoin } from "@/types"
 import usePools from "@/store/pools"
 import { useRoute, useRouter } from "vue-router"
 import { computed, onMounted, onUnmounted, ref } from "vue"
@@ -20,6 +25,7 @@ import { Coin } from "@cosmjs/proto-signing"
 import { formatEpochDate, unboundingEndTimeStart, fromNow } from "@/common"
 import useTransactionManager from "@/store/transaction-manager"
 import LiquidityModal from "../modals/LiquidityModal.vue"
+import { coinsConfig } from "@/configs/config"
 
 const transactionManagerStore = useTransactionManager()
 const poolsStore = usePools()
@@ -29,6 +35,7 @@ const openBondModal = ref(false)
 const openAddRemoveModal = ref(false)
 
 const pool = computed(() => poolsStore.poolById(id))
+
 const lpLiquidity = computed(() => {
 	if (pool.value) {
 		return new BigNumber(pool.value.userLiquidity)
@@ -37,6 +44,18 @@ const lpLiquidity = computed(() => {
 	}
 
 	return "0"
+})
+
+const unbondedCoins = computed(() => {
+	let coins: LockCoin[] = []
+
+	if (pool.value) {
+		pool.value.lockableDurationApr.forEach((lockableDuration) => {
+			coins = [...coins, ...lockableDuration.unbondedCoins]
+		})
+	}
+
+	return coins
 })
 
 const poolTokensName = computed(() =>
@@ -65,18 +84,25 @@ const bondingsColumn: TableColumn[] = [
 		name: "total",
 		align: "right",
 		label: "amount",
-		field: (row: LockableDurationWithApr) =>
-			row.lockedLonger
-				? reduce<Coin, BigNumber>(
-						row.lockedLonger.coins,
+		field: (row: LockableDurationWithApr) => {
+			let total = new BigNumber("0")
+
+			if (row.bondedCoin) {
+				total = total.plus(
+					reduce<Coin, BigNumber>(
+						row.bondedCoin.coins,
 						(all, coin) => {
 							return all.plus(coin.amount)
 						},
 						new BigNumber("0")
-				  )
-				: "0",
+					)
+				)
+			}
+
+			return total.toString()
+		},
 		format: (val: string) =>
-			`${balancedCurrency(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
+			`${balancedGamm(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
 		sortable: true,
 	},
 	{
@@ -94,7 +120,7 @@ const unbondingsColumn: TableColumn[] = [
 		required: true,
 		label: "unbonding duration",
 		align: "left",
-		field: (row: LockableDurationWithApr) => row.readableDuration,
+		field: (row: LockCoin) => row.durationMap.readableDuration,
 		format: (duration: string) => `${duration} unbonding`,
 		sortable: false,
 	},
@@ -102,7 +128,7 @@ const unbondingsColumn: TableColumn[] = [
 		name: "empty",
 		align: "right",
 		label: "",
-		field: (row: LockableDurationWithApr) => "",
+		field: (row: LockCoin) => "",
 		format: (duration: string) => `53.`,
 		style: "visibility: hidden;",
 		sortable: false,
@@ -111,18 +137,23 @@ const unbondingsColumn: TableColumn[] = [
 		name: "total",
 		align: "right",
 		label: "amount",
-		field: (row: LockableDurationWithApr) =>
-			row.lockedLonger
-				? reduce<Coin, BigNumber>(
-						row.lockedLonger.coins,
-						(all, coin) => {
-							return all.plus(coin.amount)
-						},
-						new BigNumber("0")
-				  )
-				: "0",
+		field: (row: LockCoin) => {
+			let total = new BigNumber("0")
+
+			total = total.plus(
+				reduce<Coin, BigNumber>(
+					row.coins,
+					(all, coin) => {
+						return all.plus(coin.amount)
+					},
+					new BigNumber("0")
+				)
+			)
+
+			return total.toString()
+		},
 		format: (val: string) =>
-			`${balancedCurrency(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
+			`${balancedGamm(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
 		sortable: true,
 	},
 	{
@@ -370,16 +401,12 @@ onUnmounted(() => {
 		>
 			<template v-slot:body-cell-unbond="props">
 				<q-td :props="props">
-					<template v-if="props.row.lockedLonger">
+					<template v-if="props.row.bondedCoin">
 						<span
 							class="text-primary text-weight-medium cursor-pointer"
-							v-if="!unboundingEndTimeStart(props.row.lockedLonger.end_time)"
-							@click="beginUnlocking(props.row.lockedLonger.ID)"
+							@click="beginUnlocking(props.row.bondedCoin.ID)"
 						>
 							Unbond all
-						</span>
-						<span class="text-white opacity-20 text-weight-medium" v-else>
-							{{ fromNow(props.row.lockedLonger.end_time) }}
 						</span>
 					</template>
 					<span class="text-white opacity-20 text-weight-medium" v-else>
@@ -389,10 +416,12 @@ onUnmounted(() => {
 			</template>
 		</LightTable>
 		<p class="fs-18 q-mb-30">My Unbondings</p>
-		<LightTable :rows="pool.lockableDurationApr" :columns="unbondingsColumn">
+		<LightTable :rows="unbondedCoins" :columns="unbondingsColumn">
 			<template v-slot:body-cell-time="props">
 				<q-td :props="props">
-					<span class="text-weight-medium opacity-40"> 23 hours </span>
+					<span class="text-weight-medium opacity-40">
+						{{ fromNow(props.row.end_time) }}
+					</span>
 				</q-td>
 			</template>
 		</LightTable>

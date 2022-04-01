@@ -5,6 +5,7 @@ import {
 	GaugeToken,
 	LockableDuration,
 	LockableDurationWithApr,
+	LockCoin,
 	OsmosisPool,
 	OsmosisPoolAsset,
 	Pool,
@@ -21,6 +22,7 @@ import { mapLockableDuration } from "./duration"
 import { compact, max } from "lodash"
 import { add, parseISO } from "date-fns"
 import { Coin } from "@cosmjs/proto-signing"
+import { unboundingEndTimeStart } from "./date"
 
 export const gammToPoolAmount = (
 	currentAmount: BigNumber,
@@ -162,6 +164,18 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 					pool.id,
 					duration.rawDuration
 				)
+
+				const bondedCoin = lockedLonger.find(
+					(locked) => !unboundingEndTimeStart(locked.end_time)
+				)
+
+				const unbondedCoins: LockCoin[] = lockedLonger
+					.filter((locked) => unboundingEndTimeStart(locked.end_time))
+					.map((lockCoin) => ({
+						...lockCoin,
+						durationMap: mapLockableDuration(lockCoin.duration),
+					}))
+
 				const extraGauge = poolsStore.extraGaugeByPoolIdAndDuration(
 					pool.id,
 					duration.rawDuration
@@ -170,7 +184,8 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 
 				return {
 					...duration,
-					lockedLonger,
+					bondedCoin,
+					unbondedCoins,
 					extraGagues,
 					apr: calculateTotalApr(pool, duration, liquidity.toString()),
 				}

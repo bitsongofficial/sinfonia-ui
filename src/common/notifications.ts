@@ -21,7 +21,7 @@ function notify(
 		spinner: success === undefined ? Spinner : false,
 		icon: success ? resolveIcon("success", 32, 32) : resolveIcon("error", 30, 30),
 		position,
-		timeout: 2500,
+		timeout: 20500,
 		actions: [{ label: "" }],
 	})
 }

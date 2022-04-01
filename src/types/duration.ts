@@ -1,4 +1,5 @@
 import { GaugeToken, OsmosisLock } from "./osmosis"
+
 export interface LockableDuration {
 	rawDuration: string
 	duration: number
@@ -6,8 +7,13 @@ export interface LockableDuration {
 	readableDuration: string
 }
 
+export interface LockCoin extends OsmosisLock {
+	durationMap: LockableDuration
+}
+
 export interface LockableDurationWithApr extends LockableDuration {
-	lockedLonger?: OsmosisLock
+	bondedCoin?: OsmosisLock
+	unbondedCoins: LockCoin[]
 	extraGagues: GaugeToken[]
 	apr: string
 }
