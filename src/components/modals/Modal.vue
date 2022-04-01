@@ -21,7 +21,7 @@ const model = computed({
 <template>
 	<q-dialog v-model="model">
 		<div
-			class="text-white !rounded-20 bg-dark-lighter shadow-20-alt blur-60 q-px-34 q-py-30"
+			class="text-white !rounded-20 bg-dark-lighter light:bg-white/80 shadow-20-alt blur-60 q-px-34 q-py-30"
 			@click="$emit('click')"
 		>
 			<slot></slot>

@@ -336,7 +336,7 @@ const onSubmit = () => {
 			v-if="slippageExpanded"
 			class="flex justify-between items-center q-mt-20"
 		>
-			<div class="flex items-center text-dark">
+			<div class="flex items-center text-dark q-mb-xs-14">
 				<p class="fs-13 text-weight-medium q-mr-9 light:text-primary-complementary">Slippage Tolerance</p>
 				<q-icon
 					size="12px"
@@ -389,7 +389,7 @@ const onSubmit = () => {
 	</div>
 	<div class="flex items-center q-col-gutter-x-xl">
 		<div class="flex-1 flex justify-between" v-if="fromCoin && toCoin">
-			<p class="fs-16">Rates</p>
+			<p class="fs-16 q-mb-xs-14">Rates</p>
 			<div class="fs-12">
 				<p class="q-mb-6">
 					<span class="opacity-40">{{ fromCoin.symbol }} =</span>

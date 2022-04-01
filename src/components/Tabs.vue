@@ -78,7 +78,7 @@ const isTab = (name): boolean => {
 	<q-tab-panels
 		v-model="tab"
 		animated
-		class="bg-white-5 rounded-30 q-py-52 q-px-60"
+		class="bg-white-5 rounded-30 q-py-52 q-px-60 q-px-xs-20"
 	>
 		<template v-for="(_, slot) of $slots">
 			<template v-if="isTab(slot)">

@@ -26,7 +26,7 @@ const model = computed({
 		<div
 			class="q-pt-8 q-pb-44 flex justify-between text-weight-medium items-center"
 		>
-			<p class="fs-24 q-mr-120">{{ title }}</p>
+			<p class="fs-24 q-mr-120 q-mr-xs-10 light:opacity-90">{{ title }}</p>
 			<div
 				class="flex opacity-40 hover:opacity-100 cursor-pointer"
 				@click="model = false"

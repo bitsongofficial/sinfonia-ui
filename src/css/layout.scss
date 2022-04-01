@@ -197,7 +197,7 @@
     bottom: 0;
 }
 
-.q-px-select-20 .q-field__control{
+.q-px-select-20 .q-field__control {
     padding-left: 20px;
     padding-right: 20px;
 }
@@ -211,6 +211,7 @@
 }
 
 .overflow-down {
+
     &,
     * {
         overflow: visible;
@@ -219,23 +220,28 @@
 
 @for $border from 0 to 10 {
     $val: $border * 5;
+
     .rounded-#{$val} {
         border-radius: #{$val}px;
     }
+
     .\!rounded-#{$val} {
         border-radius: #{$val}px !important;
     }
 }
 
-@each $k, $s in $custom-sizes {
+@each $k,
+$s in $custom-sizes {
     .s-#{$k} {
         width: $s;
         height: $s;
     }
+
     .min-s-#{$k} {
         min-width: $s;
         min-height: $s;
     }
+
     .h-#{$k} {
         height: $s;
     }
@@ -303,6 +309,16 @@
         padding-right: 0;
     }
 
+    .q-px-xs-10 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .q-px-xs-20 {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
     .q-px-xs-28 {
         padding-left: 28px;
         padding-right: 28px;
@@ -315,6 +331,14 @@
 
     .q-mb-xs-0 {
         margin-bottom: 0 !important;
+    }
+
+    .q-mr-xs-0 {
+        margin-right: 0 !important;
+    }
+
+    .q-mr-xs-10 {
+        margin-right: 10px !important;
     }
 
     .q-mb-xs-14 {
@@ -336,8 +360,31 @@
     .jsutify-center-xs {
         justify-content: center !important;
     }
+
     .fs-xs-24 {
         font-size: 24px;
+    }
+
+    .text-center-xs {
+        text-align: center;
+    }
+
+    .text-end-xs {
+        text-align: end;
+    }
+
+    .column-xs {
+        flex-direction: column !important;
+    }
+
+    .items-end-xs {
+        align-items: flex-end;
+    }
+
+    .row-cols-xs-1 {
+        .col {
+            width: 100% !important;
+        }
     }
 }
 
@@ -355,16 +402,17 @@
     }
 }
 
-@media screen and (max-width: $breakpoint-md) {
-}
+@media screen and (max-width: $breakpoint-md) {}
 
 @media screen and (min-width: $breakpoint-xs) {
     .w-xs-1\/3 {
         width: 1/3 * 100%;
     }
+
     .\!w-xs-1\/3 {
         width: 1/3 * 100% !important;
     }
+
     .\!w-xs-2\/3 {
         width: 2/3 * 100% !important;
     }
@@ -374,15 +422,19 @@
     .w-sm-1\/3 {
         width: 33%;
     }
+
     .w-sm-2\/3 {
         width: 66%;
     }
+
     .w-sm-1\/4 {
         width: 1/4 * 100%;
     }
+
     .\!w-sm-1\/4 {
         width: 1/4 * 100% !important;
     }
+
     .\!w-sm-3\/4 {
         width: 3/4 * 100% !important;
     }
@@ -392,9 +444,11 @@
     .\!w-md-1\/6 {
         width: 17% !important;
     }
+
     .\!w-md-5\/6 {
         width: 83% !important;
     }
+
     .\!w-md-1\/3 {
         width: 33.33% !important;
     }
@@ -404,9 +458,11 @@
     .w-lg-1\/6 {
         width: 17%;
     }
+
     .w-lg-5\/6 {
         width: 83%;
     }
+
     .\!w-lg-1\/3 {
         width: 33.33% !important;
     }
