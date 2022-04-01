@@ -26,9 +26,11 @@ import { formatEpochDate, unboundingEndTimeStart, fromNow } from "@/common"
 import useTransactionManager from "@/store/transaction-manager"
 import LiquidityModal from "../modals/LiquidityModal.vue"
 import { coinsConfig } from "@/configs/config"
+import useAuth from "@/store/auth"
 
 const transactionManagerStore = useTransactionManager()
 const poolsStore = usePools()
+const authStore = useAuth()
 const route = useRoute()
 const id = route.params["id"] as string
 const openBondModal = ref(false)
@@ -209,7 +211,10 @@ onUnmounted(() => {
 			</div>
 			<div class="flex items-center">
 				<OutlineButton class="q-mr-12" to="/swap">Swap Tokens</OutlineButton>
-				<StandardButton @click="openAddRemoveModal = true">
+				<StandardButton
+					@click="openAddRemoveModal = true"
+					:disable="!authStore.session"
+				>
 					Add/Remove Liquidity
 				</StandardButton>
 			</div>
@@ -289,7 +294,7 @@ onUnmounted(() => {
 			<div class="col-5 column items-end">
 				<p class="fs-12 opacity-40 q-mb-8">Available LP Tokens</p>
 				<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
-				<StandardButton @click="openBondModal = true">
+				<StandardButton @click="openBondModal = true" :disable="!authStore.session">
 					Start Earning
 				</StandardButton>
 			</div>
@@ -415,16 +420,18 @@ onUnmounted(() => {
 				</q-td>
 			</template>
 		</LightTable>
-		<p class="fs-18 q-mb-30">My Unbondings</p>
-		<LightTable :rows="unbondedCoins" :columns="unbondingsColumn">
-			<template v-slot:body-cell-time="props">
-				<q-td :props="props">
-					<span class="text-weight-medium opacity-40">
-						{{ fromNow(props.row.end_time) }}
-					</span>
-				</q-td>
-			</template>
-		</LightTable>
+		<template v-if="unbondedCoins.length > 0">
+			<p class="fs-18 q-mb-30">My Unbondings</p>
+			<LightTable :rows="unbondedCoins" :columns="unbondingsColumn">
+				<template v-slot:body-cell-time="props">
+					<q-td :props="props">
+						<span class="text-weight-medium opacity-40">
+							{{ fromNow(props.row.end_time) }}
+						</span>
+					</q-td>
+				</template>
+			</LightTable>
+		</template>
 
 		<BondModal v-model="openBondModal" :pool="pool" />
 		<LiquidityModal v-model="openAddRemoveModal" :pool="pool" />

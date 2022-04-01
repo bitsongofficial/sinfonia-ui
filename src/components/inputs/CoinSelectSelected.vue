@@ -23,7 +23,7 @@ const available = computed(() => {
 		}
 	}
 
-	return "-"
+	return "0"
 })
 </script>
 
