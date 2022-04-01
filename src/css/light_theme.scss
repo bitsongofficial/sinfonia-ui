@@ -125,6 +125,10 @@ body.body--light {
       border-color: $primary !important;
     }
 
+    &text-gradient {
+      @include text-gradient();
+    }
+
     &text-primary-complementary {
       color: $primary-complementary;
     }
@@ -141,8 +145,24 @@ body.body--light {
       color: $secondary-390;
     }
 
+    &text-secondary {
+      color: $secondary !important;
+    }
+
     &text-dark {
       color: $dark;
+    }
+
+    &shadow-none {
+      box-shadow: none !important;
+    }
+
+    &inner\:shadow-none {
+
+      .q-toggle__inner,
+      .q-toggle__track {
+        box-shadow: none !important;
+      }
     }
 
     &opacity- {
@@ -150,14 +170,34 @@ body.body--light {
         opacity: 0.05;
       }
 
+      &50 {
+        opacity: 0.5;
+      }
+
+      &90 {
+        opacity: 0.9;
+      }
+
       &100 {
         opacity: 1;
       }
     }
 
+    &bg-white {
+      background-color: white !important;
+    }
+
     &bg-white\/ {
       &50 {
         background: rgba(255, 255, 255, 0.5) !important;
+      }
+
+      &80 {
+        background: rgba(255, 255, 255, 0.8) !important;
+      }
+
+      &90 {
+        background: rgba(255, 255, 255, 0.9) !important;
       }
     }
 
@@ -262,4 +302,8 @@ body.body--light {
   // .shadow-20 {
   //   box-shadow: 0px 0px 15px rgba(20, 20, 46, 0.04);
   // }
+
+  .q-linear-progress__track {
+    background-color: white !important;
+  }
 }

@@ -8,7 +8,7 @@ import { externalWebsites } from "./configs/config"
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
-$q.dark.set(true)
+$q.dark.set(false)
 
 const { bootstrap } = useBootstrap()
 

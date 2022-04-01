@@ -44,7 +44,7 @@ const value = computed({
 		>
 			<div
 				:class="
-					'absolute-full rounded-20 bg-primary-darker opacity-50' +
+					'absolute-full rounded-20 bg-primary-darker light:bg-white opacity-50' +
 					(hasError ? ' border-primary' : '')
 				"
 			></div>

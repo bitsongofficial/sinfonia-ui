@@ -27,12 +27,14 @@ if(!props.full)
 {
 	trackColor = 'transparent'
 }
-console.log(!$q.dark.isActive, props.full, props.altStyle)
-if(!$q.dark.isActive && props.full && props.altStyle)
+if(!$q.dark.isActive && props.full)
 {
 	trackColor = 'light:white'
 }
-console.log(trackColor)
+// if(!$q.dark.isActive && props.negative)
+// {
+// 	actualColor = 'light:white'
+// }
 const angle = props.negative ? 360 * (1 - props.value / 100) : 0
 const actualSize = computed(() => {
 	return props.size ? props.size : "32px"

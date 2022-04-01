@@ -50,13 +50,13 @@ const {
 		<q-form @submit="onSubmit">
 			<div class="flex fs-15 q-mb-22">
 				<p
-					:class="(add ? '' : 'text-dark') + ' cursor-pointer q-mr-27'"
+					:class="(add ? 'light:text-gradient' : 'text-dark light:text-secondary light:opacity-50') + ' cursor-pointer q-mr-27'"
 					@click="add = true"
 				>
 					Add Liquidity
 				</p>
 				<p
-					:class="(add ? 'text-dark' : '') + ' cursor-pointer'"
+					:class="(add ? 'text-dark light:text-secondary light:opacity-50' : 'light:text-gradient') + ' cursor-pointer'"
 					@click="add = false"
 				>
 					Remove Liquidity
@@ -112,7 +112,7 @@ const {
 							<p>&nbsp;</p>
 						</div>
 						<div class="flex no-wrap items-center">
-							<q-toggle v-model="single" color="white" class="q-mr-8" />
+							<q-toggle v-model="single" color="white" class="q-mr-8 light:shadow-none light:inner:shadow-none" />
 							<p class="fs-12 text-weight-medium q-mr-12">Single Asset LP</p>
 							<q-icon
 								:name="resolveIcon('info', 15, 15)"
@@ -144,7 +144,7 @@ const {
 				>
 					<div
 						:class="
-							'absolute-full bg-primary-dark rounded-20 opacity-30 w-' +
+							'absolute-full bg-primary-dark light:bg-white/90 rounded-20 opacity-30 w-' +
 							(removeValues.indexOf(removePercent) + 1) +
 							'/4'
 						"
@@ -156,7 +156,7 @@ const {
 					>
 						<template v-if="rm == removePercent">
 							<div
-								class="absolute-full bg-primary-dark opacity-50 rounded-20 -z-1"
+								class="absolute-full bg-primary-dark light:bg-white opacity-50 rounded-20 -z-1"
 							></div>
 							<p class="text-center">{{ rm * 100 }}%</p>
 						</template>
