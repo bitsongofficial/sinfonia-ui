@@ -14,6 +14,6 @@ export interface LockCoin extends OsmosisLock {
 export interface LockableDurationWithApr extends LockableDuration {
 	bondedCoin?: OsmosisLock
 	unbondedCoins: LockCoin[]
-	extraGagues: GaugeToken[]
+	extraGauges: GaugeToken[]
 	apr: string
 }

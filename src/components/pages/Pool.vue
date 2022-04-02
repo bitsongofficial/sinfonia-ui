@@ -303,18 +303,18 @@ onUnmounted(() => {
 			<div class="col-8 !w-md-1/3" v-for="unbonding in pool.lockableDurationApr">
 				<ExpandableCard
 					transparency="5"
-					:expandable="unbonding.extraGagues.length > 0"
+					:expandable="unbonding.extraGauges.length > 0"
 				>
 					<p class="fs-12 opacity-30 q-mb-16 text-uppercase">
 						{{ unbonding.readableDuration }} unbonding
 					</p>
 					<div class="q-mb-20">
 						<p class="fs-36 q-mb-8">{{ percentage(unbonding.apr) }} %</p>
-						<div class="flex items-center" v-if="unbonding.extraGagues.length > 0">
+						<div class="flex items-center" v-if="unbonding.extraGauges.length > 0">
 							<p class="text-primary fs-14 q-mr-16 text-weight-medium">
 								External Incentives Pool
 							</p>
-							<template v-for="gauge in unbonding.extraGagues">
+							<template v-for="gauge in unbonding.extraGauges">
 								<q-avatar
 									class="q-mr-9"
 									size="24px"
@@ -328,36 +328,36 @@ onUnmounted(() => {
 					</div>
 					<p
 						class="fs-12 opacity-40 text-weight-regular q-mb-20"
-						v-if="unbonding.extraGagues.length > 0"
+						v-if="unbonding.extraGauges.length > 0"
 					>
 						BitSong Launchpad is the platform where you can buy and. Incentives for
-						{{ unbonding.extraGagues[0].leftEpochs }}
+						{{ unbonding.extraGauges[0].leftEpochs }}
 						epochs.
 					</p>
 					<div
 						class="flex no-wrap items-center text-weight-medium"
-						v-if="unbonding.extraGagues.length > 0"
+						v-if="unbonding.extraGauges.length > 0"
 					>
 						<div class="q-mr-21">
 							<p class="fs-12 text-uppercase opacity-50 q-mb-8">Start</p>
 							<p class="fs-18 text-no-wrap">
-								{{ formatEpochDate(unbonding.extraGagues[0].start_time) }}
+								{{ formatEpochDate(unbonding.extraGauges[0].start_time) }}
 							</p>
 						</div>
 						<Progress
 							:height="12"
-							:value="unbonding.extraGagues[0].filledEpochs"
-							:max="unbonding.extraGagues[0].numEpochsPaidOver"
+							:value="unbonding.extraGauges[0].filledEpochs"
+							:max="unbonding.extraGauges[0].numEpochsPaidOver"
 						></Progress>
 						<div class="q-ml-21">
 							<p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">End</p>
 							<p class="fs-18 text-no-wrap">
-								{{ formatEpochDate(unbonding.extraGagues[0].endTime) }}
+								{{ formatEpochDate(unbonding.extraGauges[0].endTime) }}
 							</p>
 						</div>
 					</div>
 					<template #extra>
-						<div v-for="gauge in unbonding.extraGagues" :key="gauge.id">
+						<div v-for="gauge in unbonding.extraGauges" :key="gauge.id">
 							<div
 								v-for="(coin, index) in gauge.coins"
 								:key="index"
@@ -386,10 +386,10 @@ onUnmounted(() => {
 											<span class="text-white">{{ balancedCurrency(coin.amount) }}</span>
 											{{ coin.token?.symbol }}
 										</p>
-										<!-- <div class="flex">
-														<p class="q-mr-12 opacity-30">APR</p>
-														<p>{{percentage(81.9)}} %</p>
-													</div> -->
+										<div class="flex">
+											<p class="q-mr-12 opacity-30">PPR</p>
+											<p>{{ percentage(gauge.apr) }} %</p>
+										</div>
 									</div>
 								</div>
 							</div>

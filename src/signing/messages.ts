@@ -2,6 +2,7 @@ import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx"
 import { Height } from "cosmjs-types/ibc/core/client/v1/client"
 import { OsmosisRoute, SignerMessage } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
+import { osmosis } from "./proto"
 import Long from "long"
 
 export type messageTimestamp = string | number | Long.Long | undefined
@@ -73,12 +74,12 @@ export const JoinPool = (
 ): SignerMessage<any> => {
 	return {
 		typeUrl: "/osmosis.gamm.v1beta1.MsgJoinPool",
-		value: {
+		value: osmosis.gamm.v1beta1.MsgJoinPool.fromObject({
 			sender: senderAddress,
 			poolId: Long.fromString(poolId),
 			shareOutAmount,
 			tokenInMaxs,
-		},
+		}),
 	}
 }
 
@@ -90,12 +91,12 @@ export const JoinSwapExternAmountIn = (
 ): SignerMessage<any> => {
 	return {
 		typeUrl: "/osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn",
-		value: {
+		value: osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn.fromObject({
 			sender: senderAddress,
 			poolId: Long.fromString(poolId),
 			tokenIn,
 			shareOutMinAmount,
-		},
+		}),
 	}
 }
 
