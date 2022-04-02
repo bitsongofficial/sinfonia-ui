@@ -2,7 +2,6 @@ import useBank from "@/store/bank"
 import usePools from "@/store/pools"
 import useConfig from "@/store/config"
 import useAuth from "@/store/auth"
-import { amountIBCFromCoin, amountFromCoin } from "@/common/numbers"
 import { TransactionManager } from "@/signing/transaction-manager"
 import {
 	LockableDurationWithApr,
@@ -16,7 +15,7 @@ import {
 import { Coin } from "@cosmjs/proto-signing"
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { DeliverTxResponse } from "@cosmjs/stargate"
-import { notifyError, notifySuccess } from "@/common"
+import { notifyError, notifySuccess, notifyLoading } from "@/common"
 import ChainClient from "@/services/chain-client"
 
 export interface TransactionManagerState {
@@ -41,9 +40,14 @@ const useTransactionManager = defineStore("transactionManager", {
 			to: Token,
 			transferAmount?: Coin
 		) {
-			try {
-				this.loading = true
+			this.loading = true
 
+			const loader = notifyLoading(
+				"Transaction Broadcasting",
+				"Waiting for transaction to be included in the block"
+			)
+
+			try {
 				if (window.keplr) {
 					const signer = await window.keplr.getOfflineSignerOnlyAmino(from.chainID)
 					const manager = new TransactionManager(signer, from)
@@ -63,11 +67,12 @@ const useTransactionManager = defineStore("transactionManager", {
 							sourceChannel
 						)
 
-						this.addPendingTx(tsx, from, TransactionType.SEND_IBC_TOKENS)
+						this.addPendingTx(tsx, from, TransactionType.SEND_IBC_TOKENS, loader)
 					}
 				}
 			} catch (error) {
 				console.error(error)
+				loader()
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -77,6 +82,11 @@ const useTransactionManager = defineStore("transactionManager", {
 		async lockTokens(duration: LockableDurationWithApr, coins: Coin[]) {
 			const authStore = useAuth()
 			const configStore = useConfig()
+
+			const loader = notifyLoading(
+				"Transaction Broadcasting",
+				"Waiting for transaction to be included in the block"
+			)
 
 			try {
 				this.loading = true
@@ -96,11 +106,13 @@ const useTransactionManager = defineStore("transactionManager", {
 					this.addPendingTx(
 						tsx,
 						configStore.osmosisToken,
-						TransactionType.LOCK_TOKENS
+						TransactionType.LOCK_TOKENS,
+						loader
 					)
 				}
 			} catch (error) {
 				console.error(error)
+				loader()
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -110,6 +122,11 @@ const useTransactionManager = defineStore("transactionManager", {
 		async joinPool(poolId: string, shareOutAmount: string, tokenInMaxs: Coin[]) {
 			const authStore = useAuth()
 			const configStore = useConfig()
+
+			const loader = notifyLoading(
+				"Transaction Broadcasting",
+				"Waiting for transaction to be included in the block"
+			)
 
 			try {
 				this.loading = true
@@ -127,10 +144,16 @@ const useTransactionManager = defineStore("transactionManager", {
 						tokenInMaxs
 					)
 
-					this.addPendingTx(tsx, configStore.osmosisToken, TransactionType.JOIN_POOL)
+					this.addPendingTx(
+						tsx,
+						configStore.osmosisToken,
+						TransactionType.JOIN_POOL,
+						loader
+					)
 				}
 			} catch (error) {
 				console.error(error)
+				loader()
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -144,6 +167,11 @@ const useTransactionManager = defineStore("transactionManager", {
 		) {
 			const authStore = useAuth()
 			const configStore = useConfig()
+
+			const loader = notifyLoading(
+				"Transaction Broadcasting",
+				"Waiting for transaction to be included in the block"
+			)
 
 			try {
 				this.loading = true
@@ -164,11 +192,13 @@ const useTransactionManager = defineStore("transactionManager", {
 					this.addPendingTx(
 						tsx,
 						configStore.osmosisToken,
-						TransactionType.JOIN_SWAP_EXTERN_AMOUNT_IN
+						TransactionType.JOIN_SWAP_EXTERN_AMOUNT_IN,
+						loader
 					)
 				}
 			} catch (error) {
 				console.error(error)
+				loader()
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -178,6 +208,11 @@ const useTransactionManager = defineStore("transactionManager", {
 		async exitPool(poolId: string, shareInAmount: string, tokenOutMins: Coin[]) {
 			const authStore = useAuth()
 			const configStore = useConfig()
+
+			const loader = notifyLoading(
+				"Transaction Broadcasting",
+				"Waiting for transaction to be included in the block"
+			)
 
 			try {
 				this.loading = true
@@ -195,10 +230,16 @@ const useTransactionManager = defineStore("transactionManager", {
 						tokenOutMins
 					)
 
-					this.addPendingTx(tsx, configStore.osmosisToken, TransactionType.EXIT_POOL)
+					this.addPendingTx(
+						tsx,
+						configStore.osmosisToken,
+						TransactionType.EXIT_POOL,
+						loader
+					)
 				}
 			} catch (error) {
 				console.error(error)
+				loader()
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -216,6 +257,11 @@ const useTransactionManager = defineStore("transactionManager", {
 		) {
 			const authStore = useAuth()
 			const configStore = useConfig()
+
+			const loader = notifyLoading(
+				"Transaction Broadcasting",
+				"Waiting for transaction to be included in the block"
+			)
 
 			try {
 				this.loading = true
@@ -243,6 +289,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						tsx,
 						configStore.osmosisToken,
 						TransactionType.SWAP_EXACT_AMOUNT_IN,
+						loader,
 						from,
 						fromAmount,
 						to,
@@ -251,6 +298,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				}
 			} catch (error) {
 				console.error(error)
+				loader()
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -260,6 +308,11 @@ const useTransactionManager = defineStore("transactionManager", {
 		async beginUnlocking(id: string) {
 			const authStore = useAuth()
 			const configStore = useConfig()
+
+			const loader = notifyLoading(
+				"Transaction Broadcasting",
+				"Waiting for transaction to be included in the block"
+			)
 
 			try {
 				this.loading = true
@@ -275,11 +328,13 @@ const useTransactionManager = defineStore("transactionManager", {
 					this.addPendingTx(
 						tsx,
 						configStore.osmosisToken,
-						TransactionType.BEGIN_UNLOCKING
+						TransactionType.BEGIN_UNLOCKING,
+						loader
 					)
 				}
 			} catch (error) {
 				console.error(error)
+				loader()
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -290,6 +345,7 @@ const useTransactionManager = defineStore("transactionManager", {
 			tsx: DeliverTxResponse,
 			from: Token,
 			type: TransactionType,
+			notify: () => void,
 			fromSwap?: Token,
 			fromAmount?: string,
 			toSwap?: Token,
@@ -306,6 +362,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				fromAmount,
 				toSwap,
 				toAmount,
+				notify,
 				time: new Date().getTime(),
 			})
 
@@ -339,6 +396,10 @@ const useTransactionManager = defineStore("transactionManager", {
 						let status = TransactionStatus.SUCCESS
 
 						if (response) {
+							if (transaction.notify) {
+								transaction.notify()
+							}
+
 							if (response.code === 404) {
 								status = TransactionStatus.FAILED
 

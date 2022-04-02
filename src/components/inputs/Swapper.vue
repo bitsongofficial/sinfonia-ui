@@ -22,10 +22,12 @@ import BigNumber from "bignumber.js"
 import Decimal from "decimal.js"
 import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
+import useAuth from "@/store/auth"
 
 const bankStore = useBank()
 const poolsStore = usePools()
 const configStore = useConfig()
+const authStore = useAuth()
 const transactionManagerStore = useTransactionManager()
 
 const props = defineProps<{
@@ -58,15 +60,25 @@ const toCoin = computed<TokenBalance | null>({
 	},
 })
 
-const setDefaultValues = (balances: TokenBalance[]) => {
+const setDefaultValues = (newBalances: TokenBalance[]) => {
+	const balances = [...newBalances]
+
 	if (!fromCoin.value) {
 		fromCoin.value =
 			balances.find((balance) => balance.symbol === props.defaultFrom) ?? null
+
+		if (!fromCoin.value) {
+			fromCoin.value = balances.shift() ?? null
+		}
 	}
 
 	if (!toCoin.value) {
 		toCoin.value =
 			balances.find((balance) => balance.symbol === props.defaultTo) ?? null
+
+		if (!toCoin.value) {
+			toCoin.value = balances.pop() ?? null
+		}
 	}
 }
 
@@ -337,17 +349,17 @@ const onSubmit = () => {
 			class="flex justify-between items-center q-mt-20"
 		>
 			<div class="flex items-center text-dark q-mb-xs-14">
-				<p class="fs-13 text-weight-medium q-mr-9 light:text-primary-complementary">Slippage Tolerance</p>
+				<p class="fs-13 text-weight-medium q-mr-9 light:text-primary-complementary">
+					Slippage Tolerance
+				</p>
 				<q-icon
 					size="12px"
 					:name="resolveIcon('info', 15, 15)"
 					class="light:text-primary-complementary"
 				>
-					<InformativeTooltip
-						anchor="center right"
-						self="center left"
-					>
-						Your transaction will revert if the price changes unfavorably by more than this percentage.
+					<InformativeTooltip anchor="center right" self="center left">
+						Your transaction will revert if the price changes unfavorably by more than
+						this percentage.
 					</InformativeTooltip>
 				</q-icon>
 			</div>
@@ -357,7 +369,9 @@ const onSubmit = () => {
 					@click="setSlippage(i)"
 					:class="
 						'rounded-30 border-dark light:border-primary-complementary light:text-primary-complementary q-px-18 q-py-6 q-mr-6 cursor-pointer' +
-						(maxSlippage == i && !customSelected ? ' bg-dark light:bg-gradient light:border-none light:text-white' : '')
+						(maxSlippage == i && !customSelected
+							? ' bg-dark light:bg-gradient light:border-none light:text-white'
+							: '')
 					"
 					:key="i"
 				>
@@ -367,7 +381,9 @@ const onSubmit = () => {
 					@click="customSelected = true"
 					:class="
 						'flex rounded-30 border-dark light:border-primary-complementary light:text-white q-px-18 q-py-6 q-mr-6 cursor-pointer ' +
-						(customSelected ? 'bg-dark light:bg-gradient light:border-none' : 'bg-primary-darker light:bg-primary-complementary opacity-50')
+						(customSelected
+							? 'bg-dark light:bg-gradient light:border-none'
+							: 'bg-primary-darker light:bg-primary-complementary opacity-50')
 					"
 				>
 					<div class="flex">
@@ -404,7 +420,9 @@ const onSubmit = () => {
 			</div>
 		</div>
 		<div class="flex-1">
-			<LargeButton @click="onSubmit">Swap Tokens</LargeButton>
+			<LargeButton @click="onSubmit" :disable="!authStore.session"
+				>Swap Tokens</LargeButton
+			>
 		</div>
 	</div>
 </template>

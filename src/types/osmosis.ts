@@ -74,6 +74,7 @@ export interface GaugeToken extends Gauge {
 	filledEpochs: number
 	leftEpochs: number
 	endTime: string
+	apr: string
 }
 
 export interface DistributionProportions {

@@ -161,7 +161,6 @@ const available = computed(() => {
 })
 
 const onSubmit = () => {
-	console.log("submit")
 	if (fromChain.value && toChain.value && fromAddress.value && toAddress.value) {
 		let transferAmount: Coin | undefined = undefined
 
