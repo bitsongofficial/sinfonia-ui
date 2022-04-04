@@ -108,8 +108,7 @@ const tabs = [
 	{ name: "social", label: "Social" },
 ]
 
-if(poolsStore.myPools.length > 0)
-{
+if (poolsStore.myPools.length > 0) {
 	tabs.splice(1, 0, { name: "pools", label: "Pools" })
 }
 
@@ -172,14 +171,12 @@ const poolsColumns: TableColumn[] = [
 		format: (val: any) => `${balancedCurrency(val)} $`,
 	},
 ]
-const topImageStyle =
-	`background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
-		fantoken.value?.media?.hero ?? ""
-	});`
-const topImageStyleLight =
-	`background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 176.73%), url(${
-		fantoken.value?.media?.hero ?? ""
-	});`
+const topImageStyle = `background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
+	fantoken.value?.media?.hero ?? ""
+});`
+const topImageStyleLight = `background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 176.73%), url(${
+	fantoken.value?.media?.hero ?? ""
+});`
 
 const compositionGraphStyle = ref({ width: "0" })
 const heightRef = ref<HTMLElement | null>(null)
@@ -254,7 +251,7 @@ onUnmounted(() => {
 						<p class="fs-21 text-dark text-right q-mb-33" v-if="balance">
 							{{ balancedCurrency(balance.availableFiat ?? "0") }} $
 						</p>
-						<LargeButton fit>Swap Tokens</LargeButton>
+						<LargeButton to="/swap" fit>Swap Tokens</LargeButton>
 					</div>
 					<!-- <div>
 						<p class="fs-12 text-dark q-mb-10 text-uppercase text-right">Backers</p>
@@ -511,10 +508,8 @@ onUnmounted(() => {
                     </template>
                 </Sections>
             </template> -->
-			<template
-				v-slot:pools
-				v-if="poolsStore.myPools.length > 0">
-			>
+			<template v-slot:pools v-if="poolsStore.myPools.length > 0">
+				>
 				<LightTable
 					:rows="fantokenPools"
 					:columns="poolsColumns"

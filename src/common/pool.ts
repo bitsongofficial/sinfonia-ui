@@ -5,12 +5,13 @@ import {
 	GaugeToken,
 	LockableDuration,
 	LockableDurationWithApr,
+	LockCoin,
 	OsmosisPool,
 	OsmosisPoolAsset,
 	Pool,
 	PoolAsset,
 } from "@/types"
-import { toDecimalGamm, toViewDenom } from "./numbers"
+import { amountToCoin, toDecimalGamm, toViewDenom } from "./numbers"
 import { BigNumber } from "bignumber.js"
 import { toMilliseconds } from "duration-fns"
 import useBank from "@/store/bank"
@@ -21,6 +22,7 @@ import { mapLockableDuration } from "./duration"
 import { compact, max } from "lodash"
 import { add, parseISO } from "date-fns"
 import { Coin } from "@cosmjs/proto-signing"
+import { unboundingEndTimeStart } from "./date"
 
 export const gammToPoolAmount = (
 	currentAmount: BigNumber,
@@ -162,16 +164,31 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 					pool.id,
 					duration.rawDuration
 				)
+
+				const bondedCoin = lockedLonger.find(
+					(locked) => !unboundingEndTimeStart(locked.end_time)
+				)
+
+				const unbondedCoins: LockCoin[] = lockedLonger
+					.filter((locked) => unboundingEndTimeStart(locked.end_time))
+					.map((lockCoin) => ({
+						...lockCoin,
+						durationMap: mapLockableDuration(lockCoin.duration),
+					}))
+
 				const extraGauge = poolsStore.extraGaugeByPoolIdAndDuration(
 					pool.id,
 					duration.rawDuration
 				)
-				const extraGagues = extraGauge.map((gauge) => gaugeToGaugeToken(gauge))
+				const extraGauges = extraGauge.map((gauge) =>
+					gaugeToGaugeToken(gauge, liquidity.toString())
+				)
 
 				return {
 					...duration,
-					lockedLonger,
-					extraGagues,
+					bondedCoin,
+					unbondedCoins,
+					extraGauges,
 					apr: calculateTotalApr(pool, duration, liquidity.toString()),
 				}
 			})
@@ -194,7 +211,10 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 	})
 }
 
-export const gaugeToGaugeToken = (gauge: Gauge): GaugeToken => {
+export const gaugeToGaugeToken = (
+	gauge: Gauge,
+	liquidityPool: string
+): GaugeToken => {
 	const configStore = useConfig()
 
 	const coins: CoinToken[] = gauge.coins.map((coin) => {
@@ -232,6 +252,7 @@ export const gaugeToGaugeToken = (gauge: Gauge): GaugeToken => {
 		leftEpochs,
 		coins,
 		endTime,
+		apr: getExternalPoolApr(gauge, liquidityPool),
 	}
 }
 
@@ -335,6 +356,37 @@ export const getPoolApr = (
 				}
 			}
 		}
+	}
+
+	return "0"
+}
+
+export const getExternalPoolApr = (
+	gauge: Gauge,
+	liquidityPool: string
+): string => {
+	const configStore = useConfig()
+	const poolTVL = new BigNumber(liquidityPool)
+
+	if (poolTVL.gt(0)) {
+		let totalReward = new BigNumber("0")
+
+		for (const coin of gauge.coins) {
+			const token = configStore.findTokenByIBCDenom(coin.denom)
+
+			if (token) {
+				const amount = new BigNumber(coin.amount)
+				const viewCoin = amountToCoin(amount.toString(), token)
+
+				if (viewCoin) {
+					totalReward = totalReward.plus(
+						new BigNumber(viewCoin.amount.toString()).multipliedBy(token.price ?? "0")
+					)
+				}
+			}
+		}
+
+		return totalReward.div(poolTVL).toString()
 	}
 
 	return "0"

@@ -213,8 +213,8 @@ const useBank = defineStore("bank", {
 			return [...bitsongBalance, ...osmosisBalance, ...otherBalance]
 		},
 		lockedLongerByPoolIdAndDuration({ lockedLongerDuration }) {
-			return (poolID: string, duration: string): OsmosisLock | undefined =>
-				lockedLongerDuration.find(
+			return (poolID: string, duration: string): OsmosisLock[] =>
+				lockedLongerDuration.filter(
 					(lockedLonger) =>
 						lockedLonger.coins.filter((coin) => coin.denom === `gamm/pool/${poolID}`)
 							.length > 0 && lockedLonger.duration === duration

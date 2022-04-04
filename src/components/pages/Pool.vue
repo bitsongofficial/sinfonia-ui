@@ -4,13 +4,18 @@ import OutlineButton from "@/components/buttons/OutlineButton.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import CardWithHeader from "@/components/cards/CardWithHeader.vue"
 import PercentageWithImage from "@/components/infographics/PercentageWithImage.vue"
-import { balancedCurrency, percentage, toDecimalGamm } from "@/common/numbers"
+import {
+	balancedCurrency,
+	percentage,
+	toDecimalGamm,
+	balancedGamm,
+} from "@/common/numbers"
 import InfoCard from "@/components/cards/InfoCard.vue"
 import ExpandableCard from "@/components/cards/ExpandableCard.vue"
 import Progress from "@/components/Progress.vue"
 import LightTable from "@/components/LightTable.vue"
 import BondModal from "@/components/modals/BondModal.vue"
-import { TableColumn, LockableDurationWithApr } from "@/types"
+import { TableColumn, LockableDurationWithApr, LockCoin } from "@/types"
 import usePools from "@/store/pools"
 import { useRoute, useRouter } from "vue-router"
 import { computed, onMounted, onUnmounted, ref } from "vue"
@@ -20,15 +25,19 @@ import { Coin } from "@cosmjs/proto-signing"
 import { formatEpochDate, unboundingEndTimeStart, fromNow } from "@/common"
 import useTransactionManager from "@/store/transaction-manager"
 import LiquidityModal from "../modals/LiquidityModal.vue"
+import { coinsConfig } from "@/configs/config"
+import useAuth from "@/store/auth"
 
 const transactionManagerStore = useTransactionManager()
 const poolsStore = usePools()
+const authStore = useAuth()
 const route = useRoute()
 const id = route.params["id"] as string
 const openBondModal = ref(false)
 const openAddRemoveModal = ref(false)
 
 const pool = computed(() => poolsStore.poolById(id))
+
 const lpLiquidity = computed(() => {
 	if (pool.value) {
 		return new BigNumber(pool.value.userLiquidity)
@@ -37,6 +46,18 @@ const lpLiquidity = computed(() => {
 	}
 
 	return "0"
+})
+
+const unbondedCoins = computed(() => {
+	let coins: LockCoin[] = []
+
+	if (pool.value) {
+		pool.value.lockableDurationApr.forEach((lockableDuration) => {
+			coins = [...coins, ...lockableDuration.unbondedCoins]
+		})
+	}
+
+	return coins
 })
 
 const poolTokensName = computed(() =>
@@ -65,18 +86,25 @@ const bondingsColumn: TableColumn[] = [
 		name: "total",
 		align: "right",
 		label: "amount",
-		field: (row: LockableDurationWithApr) =>
-			row.lockedLonger
-				? reduce<Coin, BigNumber>(
-						row.lockedLonger.coins,
+		field: (row: LockableDurationWithApr) => {
+			let total = new BigNumber("0")
+
+			if (row.bondedCoin) {
+				total = total.plus(
+					reduce<Coin, BigNumber>(
+						row.bondedCoin.coins,
 						(all, coin) => {
 							return all.plus(coin.amount)
 						},
 						new BigNumber("0")
-				  )
-				: "0",
+					)
+				)
+			}
+
+			return total.toString()
+		},
 		format: (val: string) =>
-			`${balancedCurrency(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
+			`${balancedGamm(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
 		sortable: true,
 	},
 	{
@@ -94,7 +122,7 @@ const unbondingsColumn: TableColumn[] = [
 		required: true,
 		label: "unbonding duration",
 		align: "left",
-		field: (row: LockableDurationWithApr) => row.readableDuration,
+		field: (row: LockCoin) => row.durationMap.readableDuration,
 		format: (duration: string) => `${duration} unbonding`,
 		sortable: false,
 	},
@@ -102,7 +130,7 @@ const unbondingsColumn: TableColumn[] = [
 		name: "empty",
 		align: "right",
 		label: "",
-		field: (row: LockableDurationWithApr) => "",
+		field: (row: LockCoin) => "",
 		format: (duration: string) => `53.`,
 		style: "visibility: hidden;",
 		sortable: false,
@@ -111,18 +139,23 @@ const unbondingsColumn: TableColumn[] = [
 		name: "total",
 		align: "right",
 		label: "amount",
-		field: (row: LockableDurationWithApr) =>
-			row.lockedLonger
-				? reduce<Coin, BigNumber>(
-						row.lockedLonger.coins,
-						(all, coin) => {
-							return all.plus(coin.amount)
-						},
-						new BigNumber("0")
-				  )
-				: "0",
+		field: (row: LockCoin) => {
+			let total = new BigNumber("0")
+
+			total = total.plus(
+				reduce<Coin, BigNumber>(
+					row.coins,
+					(all, coin) => {
+						return all.plus(coin.amount)
+					},
+					new BigNumber("0")
+				)
+			)
+
+			return total.toString()
+		},
 		format: (val: string) =>
-			`${balancedCurrency(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
+			`${balancedGamm(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
 		sortable: true,
 	},
 	{
@@ -178,7 +211,10 @@ onUnmounted(() => {
 			</div>
 			<div class="flex items-center">
 				<OutlineButton class="q-mr-12" to="/swap">Swap Tokens</OutlineButton>
-				<StandardButton @click="openAddRemoveModal = true">
+				<StandardButton
+					@click="openAddRemoveModal = true"
+					:disable="!authStore.session"
+				>
 					Add/Remove Liquidity
 				</StandardButton>
 			</div>
@@ -258,7 +294,7 @@ onUnmounted(() => {
 			<div class="col-5 column items-end">
 				<p class="fs-12 opacity-40 q-mb-8">Available LP Tokens</p>
 				<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
-				<StandardButton @click="openBondModal = true">
+				<StandardButton @click="openBondModal = true" :disable="!authStore.session">
 					Start Earning
 				</StandardButton>
 			</div>
@@ -267,18 +303,18 @@ onUnmounted(() => {
 			<div class="col-8 !w-md-1/3" v-for="unbonding in pool.lockableDurationApr">
 				<ExpandableCard
 					transparency="5"
-					:expandable="unbonding.extraGagues.length > 0"
+					:expandable="unbonding.extraGauges.length > 0"
 				>
 					<p class="fs-12 opacity-30 q-mb-16 text-uppercase">
 						{{ unbonding.readableDuration }} unbonding
 					</p>
 					<div class="q-mb-20">
 						<p class="fs-36 q-mb-8">{{ percentage(unbonding.apr) }} %</p>
-						<div class="flex items-center" v-if="unbonding.extraGagues.length > 0">
+						<div class="flex items-center" v-if="unbonding.extraGauges.length > 0">
 							<p class="text-primary fs-14 q-mr-16 text-weight-medium">
 								External Incentives Pool
 							</p>
-							<template v-for="gauge in unbonding.extraGagues">
+							<template v-for="gauge in unbonding.extraGauges">
 								<q-avatar
 									class="q-mr-9"
 									size="24px"
@@ -292,36 +328,36 @@ onUnmounted(() => {
 					</div>
 					<p
 						class="fs-12 opacity-40 text-weight-regular q-mb-20"
-						v-if="unbonding.extraGagues.length > 0"
+						v-if="unbonding.extraGauges.length > 0"
 					>
 						BitSong Launchpad is the platform where you can buy and. Incentives for
-						{{ unbonding.extraGagues[0].leftEpochs }}
+						{{ unbonding.extraGauges[0].leftEpochs }}
 						epochs.
 					</p>
 					<div
 						class="flex no-wrap items-center text-weight-medium"
-						v-if="unbonding.extraGagues.length > 0"
+						v-if="unbonding.extraGauges.length > 0"
 					>
 						<div class="q-mr-21">
 							<p class="fs-12 text-uppercase opacity-50 q-mb-8">Start</p>
 							<p class="fs-18 text-no-wrap">
-								{{ formatEpochDate(unbonding.extraGagues[0].start_time) }}
+								{{ formatEpochDate(unbonding.extraGauges[0].start_time) }}
 							</p>
 						</div>
 						<Progress
 							:height="12"
-							:value="unbonding.extraGagues[0].filledEpochs"
-							:max="unbonding.extraGagues[0].numEpochsPaidOver"
+							:value="unbonding.extraGauges[0].filledEpochs"
+							:max="unbonding.extraGauges[0].numEpochsPaidOver"
 						></Progress>
 						<div class="q-ml-21">
 							<p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">End</p>
 							<p class="fs-18 text-no-wrap">
-								{{ formatEpochDate(unbonding.extraGagues[0].endTime) }}
+								{{ formatEpochDate(unbonding.extraGauges[0].endTime) }}
 							</p>
 						</div>
 					</div>
 					<template #extra>
-						<div v-for="gauge in unbonding.extraGagues" :key="gauge.id">
+						<div v-for="gauge in unbonding.extraGauges" :key="gauge.id">
 							<div
 								v-for="(coin, index) in gauge.coins"
 								:key="index"
@@ -350,10 +386,10 @@ onUnmounted(() => {
 											<span class="text-white">{{ balancedCurrency(coin.amount) }}</span>
 											{{ coin.token?.symbol }}
 										</p>
-										<!-- <div class="flex">
-														<p class="q-mr-12 opacity-30">APR</p>
-														<p>{{percentage(81.9)}} %</p>
-													</div> -->
+										<div class="flex">
+											<p class="q-mr-12 opacity-30">PPR</p>
+											<p>{{ percentage(gauge.apr) }} %</p>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -370,16 +406,12 @@ onUnmounted(() => {
 		>
 			<template v-slot:body-cell-unbond="props">
 				<q-td :props="props">
-					<template v-if="props.row.lockedLonger">
+					<template v-if="props.row.bondedCoin">
 						<span
 							class="text-primary text-weight-medium cursor-pointer"
-							v-if="!unboundingEndTimeStart(props.row.lockedLonger.end_time)"
-							@click="beginUnlocking(props.row.lockedLonger.ID)"
+							@click="beginUnlocking(props.row.bondedCoin.ID)"
 						>
 							Unbond all
-						</span>
-						<span class="text-white opacity-20 text-weight-medium" v-else>
-							{{ fromNow(props.row.lockedLonger.end_time) }}
 						</span>
 					</template>
 					<span class="text-white opacity-20 text-weight-medium" v-else>
@@ -388,14 +420,18 @@ onUnmounted(() => {
 				</q-td>
 			</template>
 		</LightTable>
-		<p class="fs-18 q-mb-30">My Unbondings</p>
-		<LightTable :rows="pool.lockableDurationApr" :columns="unbondingsColumn">
-			<template v-slot:body-cell-time="props">
-				<q-td :props="props">
-					<span class="text-weight-medium opacity-40"> 23 hours </span>
-				</q-td>
-			</template>
-		</LightTable>
+		<template v-if="unbondedCoins.length > 0">
+			<p class="fs-18 q-mb-30">My Unbondings</p>
+			<LightTable :rows="unbondedCoins" :columns="unbondingsColumn">
+				<template v-slot:body-cell-time="props">
+					<q-td :props="props">
+						<span class="text-weight-medium opacity-40">
+							{{ fromNow(props.row.end_time) }}
+						</span>
+					</q-td>
+				</template>
+			</LightTable>
+		</template>
 
 		<BondModal v-model="openBondModal" :pool="pool" />
 		<LiquidityModal v-model="openAddRemoveModal" :pool="pool" />

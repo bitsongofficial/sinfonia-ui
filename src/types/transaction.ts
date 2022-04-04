@@ -25,6 +25,7 @@ export interface Transaction {
 	fromAmount?: string
 	toSwap?: Token
 	toAmount?: string
+	notify?: () => void
 	status: TransactionStatus
 	type: TransactionType
 }

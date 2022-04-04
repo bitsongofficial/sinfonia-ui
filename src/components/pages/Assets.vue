@@ -11,10 +11,12 @@ import TransferModal from "@/components/modals/TransferModal.vue"
 import useBank from "@/store/bank"
 import usePrices from "@/store/prices"
 import usePools from "@/store/pools"
+import useAuth from "@/store/auth"
 
 const bankStore = useBank()
 const pricesStore = usePrices()
 const poolsStore = usePools()
+const authStore = useAuth()
 const openTransferDialog = ref(false)
 const transferFrom = ref<TokenBalance>()
 
@@ -164,7 +166,7 @@ const openTransfer = (from: TokenBalance) => {
 						<div
 							class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right light:hover:text-primary"
 							@click="openTransfer(rowProps.row)"
-							v-if="rowProps.row.ibcEnabled"
+							v-if="rowProps.row.ibcEnabled && authStore.session"
 						>
 							<q-icon :name="resolveIcon('swap', 21, 16)"></q-icon>
 						</div>

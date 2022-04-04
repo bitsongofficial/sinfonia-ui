@@ -17,10 +17,9 @@ $dark-lighter: #322142;
 $gray-light: #E9E6EC;
 $gray-600: #B0A9B8;
 $gray-700: #C0BAC6;
-$notification-background: rgba(122, 110, 124, 0.15);
+$notification-background: $dark-lighter;
 $white-780: #ECE9EE;
 $white-800: #F7F5F8;
-
 $thumbSize: 8px;
 $padding: 11px;
 $scrollbarSize: $padding * 2+$thumbSize;
