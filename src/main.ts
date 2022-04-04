@@ -34,8 +34,6 @@ app.use(Quasar, {
 			cssAddon: true,
 		},
 		notify: {
-			classes:
-				"bg-notification-background rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440",
 			iconSize: "28px",
 			html: true,
 		},

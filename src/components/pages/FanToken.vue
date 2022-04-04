@@ -508,13 +508,17 @@ onUnmounted(() => {
                     </template>
                 </Sections>
             </template> -->
-			<template v-slot:pools v-if="poolsStore.myPools.length > 0">
-				>
+			<template v-slot:pools v-if="fantokenPools.length > 0">
 				<LightTable
 					:rows="fantokenPools"
 					:columns="poolsColumns"
 					no-background
 					class="q-px-0 q-py-0 table-no-padding"
+					@row-click="
+						(_, row) => {
+							$router.push(`/pools/${row.id}`)
+						}
+					"
 				>
 					<template v-slot:body-cell-index="slotProps">
 						<q-td :props="slotProps">

@@ -1,18 +1,24 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router"
+import { externalWebsites } from "./configs/config"
+import { useQuasar } from "quasar"
+import { onBeforeMount } from "vue"
 import Header from "@/components/navigation/Header.vue"
 import SideMenu from "@/components/navigation/SideMenu.vue"
 import WalletAddress from "@/components/WalletAddress.vue"
 import useBootstrap from "@/hooks/useBootstrap"
-import { externalWebsites } from "./configs/config"
-import { useQuasar } from 'quasar'
+import useSettings from "@/store/settings"
 
+const settingsStore = useSettings()
 const $q = useQuasar()
-$q.dark.set(true)
 
 const { bootstrap } = useBootstrap()
 
 bootstrap()
+
+onBeforeMount(() => {
+	$q.dark.set(settingsStore.darkMode)
+})
 </script>
 
 <template>
@@ -33,16 +39,19 @@ bootstrap()
 							<div
 								class="vertical-sm-fixed full-width flex-xs jsutify-center-xs relative-xs no-pointer-events bottom-0 q-mb-40 q-mb-xs-14 q-pt-lg w-fit"
 							>
-								<a :href="externalWebsites.coingecko" class="q-pl-24 block w-fit q-mb-14 all-pointer-events text-center fs-12 text-weight-medium opacity-30">
-									<span class="text-white">
-										Price Data by CoinGecko
-									</span>
+								<a
+									:href="externalWebsites.coingecko"
+									class="q-pl-24 block w-fit q-mb-14 all-pointer-events text-center fs-12 text-weight-medium opacity-30"
+								>
+									<span class="text-white"> Price Data by CoinGecko </span>
 								</a>
 								<WalletAddress class="all-pointer-events gt-xs"></WalletAddress>
 							</div>
 						</div>
 					</div>
-					<div class="full-width q-ml-auto !w-xs-2/3 !w-sm-3/4 !w-md-5/6 q-pt-74 all-pointer-events">
+					<div
+						class="full-width q-ml-auto !w-xs-2/3 !w-sm-3/4 !w-md-5/6 q-pt-74 all-pointer-events"
+					>
 						<RouterView></RouterView>
 					</div>
 				</div>

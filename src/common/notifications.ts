@@ -1,4 +1,4 @@
-import { Notify } from "quasar"
+import { Notify, Dark } from "quasar"
 import { resolveIcon } from "./resolvers"
 import Spinner from "@/components/Spinner"
 import { NotificationPosition } from "@/types"
@@ -10,8 +10,13 @@ function notify(
 	position: NotificationPosition = "top",
 	timeout = 10000
 ) {
+	const background = !Dark.isActive
+		? "bg-notification-background-light light"
+		: "bg-notification-background"
+
 	return Notify.create({
 		group: false,
+		classes: `${background} rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440`,
 		message:
 			'<div class="q-mr-15"><p class="fs-16 text-weight-medium' +
 			(secondaryMessage ? " q-mb-10" : "") +

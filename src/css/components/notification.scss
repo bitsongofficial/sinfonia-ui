@@ -54,4 +54,16 @@
             }
         }
     }
+
+    &.light {
+        .q-notification__actions {
+            button {
+                .q-btn__content {
+                    &::after {
+                        background-image: url("@/assets/images/icons/close-light.svg");
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
-import Logo from "@/components/Logo.vue"
-import IconButton from "../buttons/IconButton.vue"
+import { computed } from "vue"
 import { RouterLink } from "vue-router"
 import { useQuasar } from "quasar"
-const first = ref(false)
+import Logo from "@/components/Logo.vue"
+import useSettings from "@/store/settings"
+
 const $q = useQuasar()
+const settingsStore = useSettings()
 
 const lightMode = computed({
-    get() {
-        return !$q.dark.isActive
-    },
-    set(value: boolean) {
-        $q.dark.set(!value)
-    },
+	get() {
+		return !$q.dark.isActive
+	},
+	set(value: boolean) {
+		$q.dark.set(!value)
+		settingsStore.setDarkMode(!value)
+	},
 })
 </script>
 <template>
@@ -22,14 +24,14 @@ const lightMode = computed({
 			<Logo></Logo>
 		</RouterLink>
 		<div class="row items-center">
-            <!-- <IconButton class="q-mr-20" icon="setting" width="20" height="20" size="sm"></IconButton> -->
-            <div class="settings">
-                <q-toggle
-                    v-model="lightMode"
-                    color="white"
-                    class="dark-mode-toggle light:inner:shadow-none"
-                />
-            </div>
-        </div>
+			<!-- <IconButton class="q-mr-20" icon="setting" width="20" height="20" size="sm"></IconButton> -->
+			<div class="settings">
+				<q-toggle
+					v-model="lightMode"
+					color="white"
+					class="dark-mode-toggle light:inner:shadow-none"
+				/>
+			</div>
+		</div>
 	</div>
 </template>
