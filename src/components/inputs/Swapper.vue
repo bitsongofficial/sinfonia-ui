@@ -62,23 +62,45 @@ const toCoin = computed<TokenBalance | null>({
 
 const setDefaultValues = (newBalances: TokenBalance[]) => {
 	const balances = [...newBalances]
+	const fromCoinTemp =
+		balances.find((balance) => balance.symbol === props.defaultFrom) ?? null
 
-	if (!fromCoin.value) {
-		fromCoin.value =
-			balances.find((balance) => balance.symbol === props.defaultFrom) ?? null
+	const toCoinTemp =
+		balances.find((balance) => balance.symbol === props.defaultTo) ?? null
 
-		if (!fromCoin.value) {
+	if (toCoinTemp && fromCoinTemp) {
+		const swappableBalances = bankStore.swappableBalancesByRouteDenom(toCoinTemp)
+		const allowedFrom = swappableBalances.find(
+			(balance) => balance.symbol === fromCoinTemp.symbol
+		)
+
+		if (allowedFrom) {
+			fromCoin.value = allowedFrom !== undefined ? allowedFrom : null
+		} else {
 			fromCoin.value = balances.shift() ?? null
 		}
 	}
 
-	if (!toCoin.value) {
-		toCoin.value =
-			balances.find((balance) => balance.symbol === props.defaultTo) ?? null
+	if (!fromCoinTemp) {
+		fromCoin.value = balances.shift() ?? null
+	}
 
-		if (!toCoin.value) {
+	if (toCoinTemp && fromCoinTemp) {
+		const swappableBalances =
+			bankStore.swappableBalancesByRouteDenom(fromCoinTemp)
+		const allowedTo = swappableBalances.find(
+			(balance) => balance.symbol === toCoinTemp.symbol
+		)
+
+		if (allowedTo) {
+			toCoin.value = allowedTo !== undefined ? allowedTo : null
+		} else {
 			toCoin.value = balances.pop() ?? null
 		}
+	}
+
+	if (!toCoinTemp) {
+		toCoin.value = balances.pop() ?? null
 	}
 }
 

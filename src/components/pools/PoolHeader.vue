@@ -11,7 +11,7 @@ import LiquidityModal from "../modals/LiquidityModal.vue"
 
 const router = useRouter()
 
-defineProps<{
+const props = defineProps<{
 	pool: Pool
 }>()
 
@@ -19,7 +19,13 @@ const show = ref(false)
 const openAddRemoveModal = ref(false)
 
 const onSwapClick = () => {
-	router.push("/swap")
+	const coins = [...props.pool.coins]
+	const fromCoin = coins.shift()
+	const toCoin = coins.shift()
+
+	if (fromCoin && toCoin) {
+		router.push(`/swap?from=${fromCoin.token.symbol}&to=${toCoin.token.symbol}`)
+	}
 }
 </script>
 
@@ -33,7 +39,9 @@ const onSwapClick = () => {
 		<div class="col-4 q-ml--12">
 			<div class="row justify-between no-wrap">
 				<div>
-					<p class="fs-12 opacity-40 text-weight-medium q-mb-10 light:text-primary light:opacity-100">
+					<p
+						class="fs-12 opacity-40 text-weight-medium q-mb-10 light:text-primary light:opacity-100"
+					>
 						Pool {{ pool.id }}
 					</p>
 					<template v-for="(coin, index) in pool.coins" :key="index">
