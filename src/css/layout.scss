@@ -202,6 +202,14 @@
     padding-right: 20px;
 }
 
+.object-top {
+    object-position: top;
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
 .bg-cover {
     background-size: cover;
 }
