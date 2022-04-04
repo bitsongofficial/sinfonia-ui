@@ -1,11 +1,14 @@
+$shadowPadding: 20px;
+
 .q-panel.scroll {
-    margin-left: -15px;
-    margin-right: -15px;
+    margin-left: -$shadowPadding;
+    margin-right: -$shadowPadding;
 
     .q-tab-panel {
         padding: 0;
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: $shadowPadding;
+        padding-right: $shadowPadding;
+        padding-bottom: $shadowPadding;
     }
 }
 
