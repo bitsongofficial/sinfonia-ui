@@ -6,11 +6,11 @@ import { NotificationPosition } from "@/types"
 export function notify(
 	message: string,
 	secondaryMessage: string | undefined,
-	link: {
+	link?: {
 		text: string,
 		url: string,
-	} | undefined,
-	success: boolean | undefined,
+	},
+	success?: boolean,
 	position: NotificationPosition = "top",
 	timeout = 10000
 ) {
@@ -42,7 +42,7 @@ export function notify(
 export function notifySuccess(
 	message: string,
 	secondaryMessage = "",
-	link: { text: string, url: string } | undefined,
+	link?: { text: string, url: string },
 	position: NotificationPosition = "top"
 ) {
 	return notify(message, secondaryMessage, link, true, position)
@@ -51,7 +51,7 @@ export function notifySuccess(
 export function notifyError(
 	message: string,
 	secondaryMessage = "",
-	link: { text: string, url: string } | undefined,
+	link?: { text: string, url: string },
 	position: NotificationPosition = "top",
 ) {
 	return notify(message, secondaryMessage, link, false, position)
@@ -60,7 +60,7 @@ export function notifyError(
 export function notifyLoading(
 	message: string,
 	secondaryMessage = "",
-	link: { text: string, url: string } | undefined,
+	link?: { text: string, url: string },
 	position: NotificationPosition = "top",
 	timeout = 0,
 ) {
