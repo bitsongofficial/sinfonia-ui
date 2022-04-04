@@ -211,6 +211,7 @@ const onTxClick = (tx: Transaction) => {
 							:columns="transactionColumns"
 							no-background
 							hide-header
+							no-data-label="No transactions yet."
 							class="full-height"
 							@row-click="
 								(_, row) => {
