@@ -84,7 +84,7 @@ const {
 								<PercentageWithImage
 									:value="coin.weightPercentage * 100"
 									:image="coin.token.logos.default"
-									negative
+									:negative="index == 1"
 								/>
 							</div>
 						</div>
@@ -144,7 +144,7 @@ const {
 				>
 					<div
 						:class="
-							'absolute-full bg-primary-dark light:bg-white/90 rounded-20 opacity-30 w-' +
+							'absolute-full bg-primary-dark light:bg-white-780 light:opacity-100 rounded-20 opacity-30 w-' +
 							(removeValues.indexOf(removePercent) + 1) +
 							'/4'
 						"
@@ -156,11 +156,14 @@ const {
 					>
 						<template v-if="rm == removePercent">
 							<div
-								class="absolute-full bg-primary-dark light:bg-white opacity-50 rounded-20 -z-1"
-							></div>
-							<p class="text-center">{{ rm * 100 }}%</p>
+								class="!absolute-full"
+							>
+								<div class="!absolute-full bg-primary-dark light:bg-white opacity-50 rounded-20 ">								</div>
+								<div class="!absolute-full light:border-gradient-primary"></div>
+							</div>
+							<p class="text-center relative-position z-1">{{ rm * 100 }}%</p>
 						</template>
-						<p v-else="rm == removePercent" class="text-dark opacity-50 text-center">
+						<p v-else="rm == removePercent" class="text-dark light:text-primary-darker opacity-50 text-center">
 							{{ rm * 100 }}%
 						</p>
 					</div>

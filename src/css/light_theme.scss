@@ -93,6 +93,10 @@ body.body--light {
       color: $secondary-320 !important;
     }
 
+    &border-secondary-350 {
+      border-color: $secondary-350 !important;
+    }
+
     &bg-secondary-320 {
       background: $secondary-320 !important;
     }
@@ -113,6 +117,10 @@ body.body--light {
       border: none !important;
     }
 
+    &text-primary-darker {
+      color: $primary-darker !important;
+    }
+
     &text-primary {
       color: $primary;
     }
@@ -123,6 +131,10 @@ body.body--light {
 
     &border-primary {
       border-color: $primary !important;
+    }
+
+    &border-gray-700 {
+      border-color: $gray-700 !important;
     }
 
     &text-gradient {
@@ -181,6 +193,14 @@ body.body--light {
       &100 {
         opacity: 1;
       }
+    }
+
+    &bg-white-780 {
+      background-color: $white-780 !important;
+    }
+
+    &bg-white-800 {
+      background-color: $white-800 !important;
     }
 
     &bg-white {
@@ -262,6 +282,11 @@ body.body--light {
       background: linear-gradient(147.07deg, $primary-complementary 21.78%, $primary 79.22%) !important;
       border-radius: 30px;
     }
+
+    &border-gradient-primary::before {
+      background: linear-gradient(to right, $primary-complementary, $primary) !important;
+      border-radius: 20px;
+    }
   }
 
   .bg-rounded-translucent {
@@ -297,6 +322,10 @@ body.body--light {
 
   .text-light\:white {
     color: white !important;
+  }
+
+  .text-light\:gray-600 {
+    color: $gray-600 !important;
   }
 
   // .shadow-20 {

@@ -27,9 +27,20 @@ if(!props.full)
 {
 	trackColor = 'transparent'
 }
-if(!$q.dark.isActive && props.full)
+if(!$q.dark.isActive)
 {
-	trackColor = 'light:white'
+	if(props.negative)
+	{
+		actualColor = 'light:gray-600'
+		if(props.altStyle)
+		{
+			actualColor = 'primary'
+		}
+	}
+	if(props.full)
+	{
+		trackColor = 'light:white'
+	}
 }
 // if(!$q.dark.isActive && props.negative)
 // {
