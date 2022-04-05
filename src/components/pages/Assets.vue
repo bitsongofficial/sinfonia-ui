@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TableColumn } from "@/types/table"
 import { balancedCurrency } from "@/common/numbers"
-import { computed, ref } from "vue"
+import { computed, ref, watch, onUnmounted } from "vue"
 import { TokenBalance } from "@/types"
 import { resolveIcon } from "@/common/resolvers"
 import Title from "@/components/typography/Title.vue"
@@ -12,13 +12,28 @@ import useBank from "@/store/bank"
 import usePrices from "@/store/prices"
 import usePools from "@/store/pools"
 import useAuth from "@/store/auth"
+import useTransactionManager from "@/store/transaction-manager"
 
 const bankStore = useBank()
 const pricesStore = usePrices()
 const poolsStore = usePools()
+const transactionManagerStore = useTransactionManager()
 const authStore = useAuth()
 const openTransferDialog = ref(false)
 const transferFrom = ref<TokenBalance>()
+
+const broadcastingWatcher = watch(
+	() => transactionManagerStore.loadingBroadcasting,
+	(oldLoading, newLoading) => {
+		if (oldLoading !== newLoading) {
+			openTransferDialog.value = false
+		}
+	}
+)
+
+onUnmounted(() => {
+	broadcastingWatcher()
+})
 
 const columns: TableColumn[] = [
 	{
