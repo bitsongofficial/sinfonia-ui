@@ -10,6 +10,9 @@
 		"lint": "eslint --ext .js,.ts --ignore-path .gitignore --ignore-path .eslintignore --fix src",
 		"format": "prettier --ignore-path .prettierignore --write ."
 	},
+	"engines": {
+		"node": ">=16.14.0"
+	},
 	"precommit": [
 		"type-check",
 		"lint"
