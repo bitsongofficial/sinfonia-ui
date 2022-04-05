@@ -223,7 +223,7 @@ onUnmounted(() => {
 						<p class="text-dark q-mb-18 fs-21">
 							{{ fantoken.name }}
 						</p>
-						<p class="fs-60 q-mb-20">${{ fantoken.symbol }}</p>
+						<p class="fs-60 q-mb-20 text-weight-bold">${{ fantoken.symbol }}</p>
 						<p class="text-dark fs-16 text-uppercase q-mb-16">Price</p>
 						<p class="fs-32">$ {{ smallNumber(fantoken.price ?? "0") }}</p>
 					</div>
