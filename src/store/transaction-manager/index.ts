@@ -42,10 +42,7 @@ const useTransactionManager = defineStore("transactionManager", {
 		) {
 			this.loading = true
 
-			const loader = notifyLoading(
-				"Transaction Broadcasting",
-				"Waiting for transaction to be included in the block"
-			)
+			let loader
 
 			try {
 				if (window.keplr) {
@@ -60,19 +57,50 @@ const useTransactionManager = defineStore("transactionManager", {
 					}
 
 					if (transferAmount) {
-						const tsx = await manager.sendIbcTokens(
+						let txId
+
+						manager.on("ontxsigned", () => {
+							loader = notifyLoading(
+								"Transaction Broadcasting",
+								"Waiting for transaction to be included in the block"
+							)
+
+							txId = this.addBroadcastingTx(
+								from,
+								TransactionType.SEND_IBC_TOKENS,
+								loader
+							)
+						})
+
+						manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+							if (txId) {
+								this.updateTx(txId, txs)
+							}
+						})
+
+						manager.on("onerror", (error: any) => {
+							if (loader) {
+								loader()
+							}
+
+							notifyError("Transaction Failed", (error as Error).message)
+						})
+
+						manager.sendIbcTokens(
 							senderAddress,
 							recipientAddress,
 							transferAmount,
 							sourceChannel
 						)
-
-						this.addPendingTx(tsx, from, TransactionType.SEND_IBC_TOKENS, loader)
 					}
 				}
 			} catch (error) {
 				console.error(error)
-				loader()
+
+				if (loader) {
+					loader()
+				}
+
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -83,36 +111,56 @@ const useTransactionManager = defineStore("transactionManager", {
 			const authStore = useAuth()
 			const configStore = useConfig()
 
-			const loader = notifyLoading(
-				"Transaction Broadcasting",
-				"Waiting for transaction to be included in the block"
-			)
+			let loader
 
 			try {
 				this.loading = true
+				const osmosisToken = configStore.osmosisToken
 
-				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
 					const signer = await window.keplr.getOfflineSignerAuto(
-						configStore.osmosisToken.chainID
-					)
-					const manager = new TransactionManager(signer, configStore.osmosisToken)
-
-					const tsx = await manager.lockTokens(
-						authStore.osmosisAddress,
-						duration.duration,
-						coins
+						osmosisToken.chainID
 					)
 
-					this.addPendingTx(
-						tsx,
-						configStore.osmosisToken,
-						TransactionType.LOCK_TOKENS,
-						loader
-					)
+					const manager = new TransactionManager(signer, osmosisToken)
+					let txId
+
+					manager.on("ontxsigned", () => {
+						loader = notifyLoading(
+							"Transaction Broadcasting",
+							"Waiting for transaction to be included in the block"
+						)
+
+						txId = this.addBroadcastingTx(
+							osmosisToken,
+							TransactionType.LOCK_TOKENS,
+							loader
+						)
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+						}
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+					})
+
+					manager.lockTokens(authStore.osmosisAddress, duration.duration, coins)
 				}
 			} catch (error) {
 				console.error(error)
-				loader()
+
+				if (loader) {
+					loader()
+				}
+
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -122,38 +170,63 @@ const useTransactionManager = defineStore("transactionManager", {
 		async joinPool(poolId: string, shareOutAmount: string, tokenInMaxs: Coin[]) {
 			const authStore = useAuth()
 			const configStore = useConfig()
+			const osmosisToken = configStore.osmosisToken
 
-			const loader = notifyLoading(
-				"Transaction Broadcasting",
-				"Waiting for transaction to be included in the block"
-			)
+			let loader
 
 			try {
 				this.loading = true
 
-				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
 					const signer = await window.keplr.getOfflineSignerAuto(
-						configStore.osmosisToken.chainID
+						osmosisToken.chainID
 					)
-					const manager = new TransactionManager(signer, configStore.osmosisToken)
 
-					const tsx = await manager.joinPool(
+					const manager = new TransactionManager(signer, osmosisToken)
+
+					let txId
+
+					manager.on("ontxsigned", () => {
+						loader = notifyLoading(
+							"Transaction Broadcasting",
+							"Waiting for transaction to be included in the block"
+						)
+
+						txId = this.addBroadcastingTx(
+							osmosisToken,
+							TransactionType.JOIN_POOL,
+							loader
+						)
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+						}
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+					})
+
+					manager.joinPool(
 						authStore.osmosisAddress,
 						poolId,
 						shareOutAmount,
 						tokenInMaxs
 					)
-
-					this.addPendingTx(
-						tsx,
-						configStore.osmosisToken,
-						TransactionType.JOIN_POOL,
-						loader
-					)
 				}
 			} catch (error) {
 				console.error(error)
-				loader()
+
+				if (loader) {
+					loader()
+				}
+
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -168,37 +241,62 @@ const useTransactionManager = defineStore("transactionManager", {
 			const authStore = useAuth()
 			const configStore = useConfig()
 
-			const loader = notifyLoading(
-				"Transaction Broadcasting",
-				"Waiting for transaction to be included in the block"
-			)
+			let loader
 
 			try {
 				this.loading = true
+				const osmosisToken = configStore.osmosisToken
 
-				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
 					const signer = await window.keplr.getOfflineSignerAuto(
-						configStore.osmosisToken.chainID
+						osmosisToken.chainID
 					)
-					const manager = new TransactionManager(signer, configStore.osmosisToken)
 
-					const tsx = await manager.joinSwapExternAmountIn(
+					const manager = new TransactionManager(signer, osmosisToken)
+
+					let txId
+
+					manager.on("ontxsigned", () => {
+						loader = notifyLoading(
+							"Transaction Broadcasting",
+							"Waiting for transaction to be included in the block"
+						)
+
+						txId = this.addBroadcastingTx(
+							osmosisToken,
+							TransactionType.JOIN_SWAP_EXTERN_AMOUNT_IN,
+							loader
+						)
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+						}
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+					})
+
+					manager.joinSwapExternAmountIn(
 						authStore.osmosisAddress,
 						poolId,
 						tokenIn,
 						shareOutMinAmount
 					)
-
-					this.addPendingTx(
-						tsx,
-						configStore.osmosisToken,
-						TransactionType.JOIN_SWAP_EXTERN_AMOUNT_IN,
-						loader
-					)
 				}
 			} catch (error) {
 				console.error(error)
-				loader()
+
+				if (loader) {
+					loader()
+				}
+
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -209,37 +307,62 @@ const useTransactionManager = defineStore("transactionManager", {
 			const authStore = useAuth()
 			const configStore = useConfig()
 
-			const loader = notifyLoading(
-				"Transaction Broadcasting",
-				"Waiting for transaction to be included in the block"
-			)
+			let loader
 
 			try {
 				this.loading = true
+				const osmosisToken = configStore.osmosisToken
 
-				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
 					const signer = await window.keplr.getOfflineSignerAuto(
-						configStore.osmosisToken.chainID
+						osmosisToken.chainID
 					)
-					const manager = new TransactionManager(signer, configStore.osmosisToken)
 
-					const tsx = await manager.exitPool(
+					const manager = new TransactionManager(signer, osmosisToken)
+
+					let txId
+
+					manager.on("ontxsigned", () => {
+						loader = notifyLoading(
+							"Transaction Broadcasting",
+							"Waiting for transaction to be included in the block"
+						)
+
+						txId = this.addBroadcastingTx(
+							osmosisToken,
+							TransactionType.EXIT_POOL,
+							loader
+						)
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+						}
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+					})
+
+					manager.exitPool(
 						authStore.osmosisAddress,
 						poolId,
 						shareInAmount,
 						tokenOutMins
 					)
-
-					this.addPendingTx(
-						tsx,
-						configStore.osmosisToken,
-						TransactionType.EXIT_POOL,
-						loader
-					)
 				}
 			} catch (error) {
 				console.error(error)
-				loader()
+
+				if (loader) {
+					loader()
+				}
+
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -258,47 +381,71 @@ const useTransactionManager = defineStore("transactionManager", {
 			const authStore = useAuth()
 			const configStore = useConfig()
 
-			const loader = notifyLoading(
-				"Transaction Broadcasting",
-				"Waiting for transaction to be included in the block"
-			)
+			let loader
 
 			try {
 				this.loading = true
+				const osmosisToken = configStore.osmosisToken
 
-				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
 					const signer = await window.keplr.getOfflineSignerAuto(
-						configStore.osmosisToken.chainID
+						osmosisToken.chainID
 					)
 
-					const manager = new TransactionManager(signer, configStore.osmosisToken)
+					const manager = new TransactionManager(signer, osmosisToken)
 
 					const osmosisRoutes: OsmosisRoute[] = routes.map((route) => ({
 						poolId: route.pool.id,
 						tokenOutDenom: route.out,
 					}))
 
-					const tsx = await manager.swapExactAmountIn(
+					let txId
+
+					manager.on("ontxsigned", () => {
+						loader = notifyLoading(
+							"Transaction Broadcasting",
+							"Waiting for transaction to be included in the block"
+						)
+
+						txId = this.addBroadcastingTx(
+							osmosisToken,
+							TransactionType.SWAP_EXACT_AMOUNT_IN,
+							loader,
+							from,
+							fromAmount,
+							to,
+							toAmount
+						)
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+						}
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+					})
+
+					manager.swapExactAmountIn(
 						authStore.osmosisAddress,
 						osmosisRoutes,
 						tokenIn,
 						tokenOutMinAmount
 					)
-
-					this.addPendingTx(
-						tsx,
-						configStore.osmosisToken,
-						TransactionType.SWAP_EXACT_AMOUNT_IN,
-						loader,
-						from,
-						fromAmount,
-						to,
-						toAmount
-					)
 				}
 			} catch (error) {
 				console.error(error)
-				loader()
+
+				if (loader) {
+					loader()
+				}
+
 				notifyError("Transaction Failed", (error as Error).message)
 				throw error
 			} finally {
@@ -309,28 +456,49 @@ const useTransactionManager = defineStore("transactionManager", {
 			const authStore = useAuth()
 			const configStore = useConfig()
 
-			const loader = notifyLoading(
-				"Transaction Broadcasting",
-				"Waiting for transaction to be included in the block"
-			)
+			let loader
 
 			try {
 				this.loading = true
+				const osmosisToken = configStore.osmosisToken
 
-				if (window.keplr && configStore.osmosisToken && authStore.osmosisAddress) {
+				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
 					const signer = await window.keplr.getOfflineSignerAuto(
-						configStore.osmosisToken.chainID
+						osmosisToken.chainID
 					)
-					const manager = new TransactionManager(signer, configStore.osmosisToken)
 
-					const tsx = await manager.beginUnlocking(authStore.osmosisAddress, id)
+					const manager = new TransactionManager(signer, osmosisToken)
 
-					this.addPendingTx(
-						tsx,
-						configStore.osmosisToken,
-						TransactionType.BEGIN_UNLOCKING,
-						loader
-					)
+					let txId
+
+					manager.on("ontxsigned", () => {
+						loader = notifyLoading(
+							"Transaction Broadcasting",
+							"Waiting for transaction to be included in the block"
+						)
+
+						txId = this.addBroadcastingTx(
+							osmosisToken,
+							TransactionType.BEGIN_UNLOCKING,
+							loader
+						)
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+						}
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+					})
+
+					manager.beginUnlocking(authStore.osmosisAddress, id)
 				}
 			} catch (error) {
 				console.error(error)
@@ -341,8 +509,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				this.loading = false
 			}
 		},
-		addPendingTx(
-			tsx: DeliverTxResponse,
+		addBroadcastingTx(
 			from: Token,
 			type: TransactionType,
 			notify: () => void,
@@ -351,12 +518,13 @@ const useTransactionManager = defineStore("transactionManager", {
 			toSwap?: Token,
 			toAmount?: string
 		) {
+			const id = `tx-${Date.now()}-${Math.random()}`
 			const transactions = [...this.transactions]
 
 			transactions.unshift({
-				tx: tsx,
+				id,
 				from,
-				status: TransactionStatus.PENDING,
+				status: TransactionStatus.BROADCASTING,
 				type,
 				fromSwap,
 				fromAmount,
@@ -367,6 +535,29 @@ const useTransactionManager = defineStore("transactionManager", {
 			})
 
 			this.transactions = transactions.slice(0, 10)
+
+			this.clearSubscription()
+
+			return id
+		},
+		updateTx(
+			id: string,
+			tx: DeliverTxResponse,
+			status = TransactionStatus.PENDING
+		) {
+			const transactions = [...this.transactions].map((transaction) => {
+				if (transaction.id === id) {
+					return {
+						...transaction,
+						tx,
+						status,
+					}
+				}
+
+				return transaction
+			})
+
+			this.transactions = transactions
 
 			this.clearSubscription()
 			this.subscribe()
@@ -384,40 +575,46 @@ const useTransactionManager = defineStore("transactionManager", {
 					for (const transaction of pendingTransactions) {
 						const chainClient = new ChainClient(transaction.from.apiURL)
 
-						requests.push(chainClient.tx(transaction.tx.transactionHash))
+						if (transaction.tx) {
+							requests.push(chainClient.tx(transaction.tx.transactionHash))
+						}
 					}
 
 					const responses = await Promise.all(requests)
 
 					transactions = transactions.map((transaction) => {
-						const response = responses.find(
-							(el) => el.transactionHash === transaction.tx.transactionHash
-						)
-						let status = TransactionStatus.SUCCESS
+						const tx = transaction.tx
 
-						if (response) {
-							if (transaction.notify) {
-								transaction.notify()
-							}
+						if (tx) {
+							const response = responses.find(
+								(el) => el.transactionHash === tx.transactionHash
+							)
+							let status = TransactionStatus.SUCCESS
 
-							if (response.code === 404) {
-								status = TransactionStatus.FAILED
+							if (response) {
+								if (transaction.notify) {
+									transaction.notify()
+								}
 
-								notifyError("Transaction Failed", "Request Rejected, try later.")
-							} else {
-								notifySuccess("Transaction Successful", "View Explorer")
-								const poolsStore = usePools()
-								const bankStore = useBank()
+								if (response.code === 404) {
+									status = TransactionStatus.FAILED
 
-								setTimeout(() => {
-									poolsStore.init()
-									bankStore.loadBalances()
-								}, 500)
-							}
+									notifyError("Transaction Failed", "Request Rejected, try later.")
+								} else {
+									notifySuccess("Transaction Successful", "View Explorer")
+									const poolsStore = usePools()
+									const bankStore = useBank()
 
-							return {
-								...transaction,
-								status,
+									setTimeout(() => {
+										poolsStore.init()
+										bankStore.loadBalances()
+									}, 500)
+								}
+
+								return {
+									...transaction,
+									status,
+								}
 							}
 						}
 
