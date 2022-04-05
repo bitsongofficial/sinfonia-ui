@@ -551,15 +551,15 @@ onUnmounted(() => {
 				</LightTable>
 			</template>
 			<template v-slot:social>
-				<div class="row q-pt-18">
-					<div class="col-8 col-lg-2 column justify-between">
+				<div class="row q-pt-18 q-col-gutter-x-md">
+					<div class="col-8 col-md-2 column justify-between">
 						<p class="fs-24 q-mb-24">
 							Be the first on <br />
 							every new drop.
 						</p>
-						<p class="fs-18 opacity-50 gt-md">Follow me on socials</p>
+						<p class="fs-18 opacity-50 gt-sm">Follow me on socials</p>
 					</div>
-					<div class="col-8 col-lg-4">
+					<div class="col-8 col-md-4">
 						<q-input
 							v-model="email"
 							label="Type your email address"
@@ -568,16 +568,16 @@ onUnmounted(() => {
 						<q-checkbox
 							v-model="newsletter"
 							label="I agree to receive Bitsong Newsletter"
-							class="fs-12 text-weight-regular q-mb-54 q-mb-xs-14"
+							class="fs-12 text-weight-regular q-mb-54 q-mb-sm-14"
 						/>
-						<div class="lt-lg q-mb-20 flex justify-center">
+						<div class="lt-md q-mb-20 flex justify-center">
 							<LargeButton fit>Get notified</LargeButton>
 						</div>
-						<p class="fs-18 opacity-50 lt-lg q-mb-8">Follow me on socials</p>
+						<p class="fs-18 opacity-50 lt-md q-mb-8">Follow me on socials</p>
 						<Socials :socials="socials"></Socials>
 					</div>
-					<div class="col-8 col-lg-2 flex justify-end">
-						<div class="gt-md">
+					<div class="col-8 col-md-2 flex justify-end">
+						<div class="gt-sm">
 							<LargeButton fit>Get notified</LargeButton>
 						</div>
 					</div>

@@ -43,7 +43,7 @@ $row-padding-x: 30px;
             }
 
             .q-table__sort-icon {
-                margin-top: -3px;
+                margin-top: -4px;
             }
         }
 
@@ -124,8 +124,8 @@ $row-padding-x: 30px;
 
         .q-table__sort-icon {
             font-size: 0 !important;
-            width: 10px !important;
-            height: 5px !important;
+            width: 6px !important;
+            height: 8px !important;
             opacity: 0;
             background: url('@/assets/images/icons/sortarrow.svg') no-repeat center;
             background-size: contain;
