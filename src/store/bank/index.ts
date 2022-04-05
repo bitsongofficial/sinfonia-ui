@@ -107,6 +107,7 @@ const useBank = defineStore("bank", {
 					await getFaucet({ address: authStore.bitsongAddress })
 					loader()
 					notifySuccess("Faucet Claim Successful", "Check your balance")
+					this.loadBalances()
 				}
 			} catch (error) {
 				this.loadingFaucet = false
