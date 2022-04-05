@@ -66,13 +66,6 @@ const columns: TableColumn[] = [
 		sortable: false,
 		format: (val: string) => `${balancedCurrency(val)} $`,
 	},
-	{
-		name: "chain",
-		align: "center",
-		label: "Chain",
-		field: "chains",
-		sortable: false,
-	},
 	{ name: "available", label: "Available", field: "total", sortable: true },
 	{ name: "quantity", label: "QTY", field: "bonded", sortable: true },
 	{ name: "arrows", label: "", field: "", sortable: false },
@@ -88,6 +81,13 @@ const columnsWrapper = computed(() => {
 	const cols = [...columns]
 
 	if (haveMultiChainBalances.value) {
+		cols.splice(4, 0, {
+			name: "chain",
+			align: "center",
+			label: "Chain",
+			field: "chains",
+			sortable: false,
+		})
 		cols.push({ name: "expandIcon", label: "", field: "", sortable: false })
 	}
 
@@ -154,7 +154,7 @@ const openTransfer = (from: TokenBalance) => {
 							{{ balancedCurrency(rowProps.row.price) }} $
 						</p>
 					</q-td>
-					<q-td>
+					<q-td v-if="haveMultiChainBalances">
 						<div class="flex justify-center">
 							<q-avatar
 								v-for="(chain, i) in rowProps.row.chains"
@@ -213,9 +213,9 @@ const openTransfer = (from: TokenBalance) => {
 				</q-tr>
 				<q-tr
 					v-for="chain in rowProps.row.chains"
-					v-show="rowProps.expand"
 					:props="rowProps"
 					no-hover
+					:style="rowProps.expand ? {} : { visibility: 'collapse', height: '0' }"
 				>
 					<q-td> </q-td>
 					<q-td>
@@ -230,6 +230,7 @@ const openTransfer = (from: TokenBalance) => {
 							</div>
 						</div>
 					</q-td>
+					<q-td> </q-td>
 					<q-td> </q-td>
 					<q-td> </q-td>
 					<q-td>

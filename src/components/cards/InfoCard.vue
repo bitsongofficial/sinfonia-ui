@@ -7,8 +7,8 @@ const props = defineProps<{
 </script>
 
 <template>
-	<WideCardWithHeader :header="header">
-		<p class="fs-30">
+	<WideCardWithHeader :header="header" class="full-height !flex column justify-between no-wrap">
+		<p class="fs-30 word-break-all">
 			<slot></slot>
 		</p>
 	</WideCardWithHeader>

@@ -27,6 +27,7 @@
             opacity: 1;
             background: linear-gradient(147.07deg, #9C589C 21.78%, #FF005C 79.22%);
         }
+
         .q-toggle__thumb {
             left: 1em !important;
         }
@@ -81,15 +82,25 @@
     height: fit-content;
 }
 
+.clean-input {
+    height: unset !important;
+    min-height: unset !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
 [class*="fs-"] {
+
     .q-field__control,
-    .q-field__native {
+    .q-field__native,
+    .q-field {
         font-size: inherit;
         line-height: inherit;
     }
 }
 
 [class*="text-"] {
+
     .q-field__control,
     .q-field__native,
     .q-field__label {
@@ -132,8 +143,8 @@
     }
 
     &.q-checkbox__inner--truthy {
-        color: $primary;
-        opacity: 1;
+        color: $primary !important;
+        opacity: 1 !important;
     }
 }
 
@@ -167,9 +178,11 @@ label:not(.q-field--with-bottom) {
 
     .title-with-error {
         color: $primary;
+
         p {
             opacity: 1;
         }
+
         .q-icon {
             pointer-events: all;
             visibility: visible;

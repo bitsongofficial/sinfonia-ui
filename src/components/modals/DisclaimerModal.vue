@@ -33,7 +33,7 @@ const checkboxModel = computed({
 <template>
 	<Modal v-model="model" no-esc-dismiss no-backdrop-dismiss no-route-dismiss>
 		<div class="pt-10 full-height column no-wrap">
-			<p class="fs-24 q-mb-40">Before you enter Sinfonia DEX</p>
+			<p class="fs-24 q-mb-40">Before you enter Sinfonia DEx</p>
 			<div
 				class="bg-white-5 rounded-10 relative-position q-mb-22 overflow-auto max-h-360 grow-1"
 			>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Pool } from "@/types"
 import { toRef, computed } from "vue"
-import { percentage } from "@/common"
+import { gtnZero, percentage } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import ModalWithClose from "@/components/modals/ModalWithClose.vue"
 import Amount from "@/components/inputs/Amount.vue"
@@ -43,6 +43,25 @@ const {
 	onSubmit,
 	changeToken,
 } = useLiquidityModal(currentPool, model)
+
+const removePercentOverAHundred = computed<string>({
+	get() {
+		const rpp = parseFloat((removePercent.value * 100).toPrecision(4))
+		return (rpp % 1 == 0 ? rpp.toFixed(0) : rpp.toFixed(2))
+	},
+	set(value: string) {
+		if (value && !isNaN(Number(value))) {
+			removePercent.value = Math.max(0 , Math.min(1, Number(value) / 100))
+		}
+	},
+})
+
+const removePercentInputRules = [
+	(val) => !!val || "Required field",
+	(val) => !isNaN(val) || "Amount must be a decimal value",
+	(val) => gtnZero(val) || "Amount must be a greater then zero",
+	(val) => Number(val) <= 100 || "Amount must be less then 100",
+]
 </script>
 
 <template>
@@ -135,7 +154,21 @@ const {
 			<div v-else>
 				<div class="flex justify-center q-mb-28">
 					<div class="rounded-100 border-gradient-primary w-fit q-px-42 q-py-20">
-						<p class="fs-44">{{ removePercent * 100 }} %</p>
+						<div class="flex justify-center items-baseline fs-44 text-white no-wrap">
+							<q-input
+								borderless
+								v-model="removePercentOverAHundred"
+								type="text"
+								class="q-mb-0"
+								no-error-icon
+								hide-bottom-space
+								input-class="text-center s-80"
+								size="3"
+								:rules="removePercentInputRules"
+							>
+							</q-input>
+							<p class="q-mb-0">%</p>
+						</div>
 					</div>
 				</div>
 				<Progress :progress="removePercent" class="q-mb-16"></Progress>

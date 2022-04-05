@@ -1,14 +1,3 @@
-.q-panel.scroll {
-    margin-left: -15px;
-    margin-right: -15px;
-
-    .q-tab-panel {
-        padding: 0;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-}
-
 .q-tab {
     text-transform: none;
 
@@ -51,15 +40,4 @@
     }
 }
 
-@media screen and (max-width: $breakpoint-xs) {
-    .q-panel.scroll {
-        margin-left: 0;
-        margin-right: 0;
-
-        .q-tab-panel {
-            padding: 0;
-            padding-left: 0;
-            padding-right: 0;
-        }
-    }
-}
+@media screen and (max-width: $breakpoint-xs) {}

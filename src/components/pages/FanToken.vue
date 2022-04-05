@@ -102,10 +102,10 @@ const tabs = [
 	// 		"Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.",
 	// 	icon: { name: "info", width: 15, height: 15 },
 	// },
-	{ label: "Whitepaper", url: "https://bitsong.io/fantokens/adam-clay" },
 	{ name: "analytics", label: "Analytics" },
 	{ label: "Airdrop", url: "https://bitsong.io/airdrop/" },
-	{ name: "social", label: "Social" },
+	{ label: "Whitepaper", url: "https://bitsong.io/fantokens/adam-clay" },
+	{ label: "Social", name: "social" },
 ]
 
 if (poolsStore.myPools.length > 0) {
@@ -174,7 +174,7 @@ const poolsColumns: TableColumn[] = [
 const topImageStyle = `background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
 	fantoken.value?.media?.hero ?? ""
 });`
-const topImageStyleLight = `background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 176.73%), url(${
+const topImageStyleLight = `background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 100.73%), url(${
 	fantoken.value?.media?.hero ?? ""
 });`
 
@@ -210,7 +210,9 @@ onUnmounted(() => {
 		<div
 			class="absolute-top full-width -z-1 hv-3/5 !bg-cover"
 			:style="$q.dark.isActive ? topImageStyle : topImageStyleLight"
-		></div>
+		>
+			<div class="absolute left-0 top-98 full-width full-height main-page-background-helper"></div>
+		</div>
 		<div class="row q-mb-70">
 			<div class="col-8 col-md-4">
 				<div class="flex q-mb-60 items-start items-center-xs column-xs">
@@ -221,7 +223,7 @@ onUnmounted(() => {
 						<p class="text-dark q-mb-18 fs-21">
 							{{ fantoken.name }}
 						</p>
-						<p class="fs-60 q-mb-20">${{ fantoken.symbol }}</p>
+						<p class="fs-60 q-mb-20 text-weight-bold">${{ fantoken.symbol }}</p>
 						<p class="text-dark fs-16 text-uppercase q-mb-16">Price</p>
 						<p class="fs-32">$ {{ smallNumber(fantoken.price ?? "0") }}</p>
 					</div>
@@ -549,15 +551,15 @@ onUnmounted(() => {
 				</LightTable>
 			</template>
 			<template v-slot:social>
-				<div class="row q-pt-18">
-					<div class="col-2 column justify-between">
+				<div class="row q-pt-18 q-col-gutter-x-md">
+					<div class="col-8 col-md-2 column justify-between">
 						<p class="fs-24 q-mb-24">
 							Be the first on <br />
 							every new drop.
 						</p>
-						<p class="fs-18 opacity-50">Follow me on socials</p>
+						<p class="fs-18 opacity-50 gt-sm">Follow me on socials</p>
 					</div>
-					<div class="col-4">
+					<div class="col-8 col-md-4">
 						<q-input
 							v-model="email"
 							label="Type your email address"
@@ -566,12 +568,16 @@ onUnmounted(() => {
 						<q-checkbox
 							v-model="newsletter"
 							label="I agree to receive Bitsong Newsletter"
-							class="fs-12 text-weight-regular q-mb-54"
+							class="fs-12 text-weight-regular q-mb-54 q-mb-sm-14"
 						/>
+						<div class="lt-md q-mb-20 flex justify-center">
+							<LargeButton fit>Get notified</LargeButton>
+						</div>
+						<p class="fs-18 opacity-50 lt-md q-mb-8">Follow me on socials</p>
 						<Socials :socials="socials"></Socials>
 					</div>
-					<div class="col-2 flex justify-end">
-						<div>
+					<div class="col-8 col-md-2 flex justify-end">
+						<div class="gt-sm">
 							<LargeButton fit>Get notified</LargeButton>
 						</div>
 					</div>

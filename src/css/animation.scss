@@ -1,0 +1,15 @@
+.\!transition-none {
+  transition: none !important;
+}
+
+.\!transition-none-recursive {
+
+  &,
+  * {
+    transition: none !important;
+  }
+}
+
+.quasar-transition-duration-0 {
+  --q-transition-duration: 0ms;
+}

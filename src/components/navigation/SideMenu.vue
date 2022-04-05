@@ -12,7 +12,7 @@ import MenuItem from "@/components/navigation/MenuItem.vue"
 			class="q-mb-lg q-mb-xs-0 q-mr-xs-24"
 			url="/fantokens"
 		>
-			DEX
+			DEx
 		</MenuItem>
 		<MenuItem
 			:icon="{ name: 'refresh', width: 21, height: 17 }"

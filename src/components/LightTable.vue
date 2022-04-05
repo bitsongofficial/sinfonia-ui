@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { TableColumn } from "@/types/table"
-defineProps<{
-	rows: any[]
-	columns: TableColumn[]
-	noBackground?: boolean
-}>()
+	import { TableColumn } from "@/types/table"
+	defineProps<{
+		rows: any[]
+		columns: TableColumn[]
+		noBackground?: boolean
+	}>()
 </script>
+
 <template>
 	<q-table
 		row-key="name"
@@ -28,5 +29,12 @@ defineProps<{
 		<template v-for="(_, slot) of $slots" v-slot:[slot]="scope">
 			<slot :name="slot" v-bind="scope"></slot>
 		</template>
+		<template v-slot:no-data="{ message }">
+		<div class="absolute-full q-py-16 q-pr-16 q-pl-10 flex justify-center items-center fs-18 opacity-40">
+			<p>
+				{{message ?? "No data"}}
+			</p>
+		</div>
+    </template>
 	</q-table>
 </template>

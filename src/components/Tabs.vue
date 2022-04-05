@@ -35,26 +35,28 @@ const isTab = (name): boolean => {
 			indicator-color="primary"
 			align="justify"
 			narrow-indicator
-			class="w-max"
+			class="w-max !transition-none"
 		>
 			<template v-for="option in options">
 				<q-tab
 					v-if="option.name && !option.url"
 					:name="option.name"
 					:label="option.label"
-					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0"
-					content-class="q-py-0"
+					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0 !transition-none"
+					content-class="q-py-0 !transition-none"
 				/>
 				<a
 					v-if="option.url"
 					:href="option.url"
 					target="_BLANK"
-					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100 flex items-center no-wrap"
+					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100"
 				>
-					<div class="q-mr-8 text-white">
-						{{ option.label }}
+					<div class="text-white flex items-center no-wrap">
+						<div class="q-mr-8 text-white">
+							{{ option.label }}
+						</div>
+						<q-icon :name="resolveIcon('external', 10, 10)" size="11px"></q-icon>
 					</div>
-					<q-icon :name="resolveIcon('external', 10, 10)" size="11px"></q-icon>
 				</a>
 				<q-icon
 					v-if="option.icon"
@@ -77,12 +79,11 @@ const isTab = (name): boolean => {
 	</div>
 	<q-tab-panels
 		v-model="tab"
-		animated
-		class="bg-white-5 rounded-30 q-py-52 q-px-60 q-px-xs-20"
+		class="bg-white-5 rounded-30 q-py-52 full-width"
 	>
 		<template v-for="(_, slot) of $slots">
 			<template v-if="isTab(slot)">
-				<q-tab-panel :name="slot">
+				<q-tab-panel :name="slot" class="q-px-40 q-px-xs-20">
 					<slot :name="slot"></slot>
 				</q-tab-panel>
 			</template>

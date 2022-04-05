@@ -118,7 +118,7 @@ const bondingsColumn: TableColumn[] = [
 			return total.toString()
 		},
 		format: (val: string) =>
-			`${balancedGamm(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
+			`${balancedGamm(toDecimalGamm(val))} SINF/${pool.value?.id ?? "0"}`,
 		sortable: true,
 	},
 	{
@@ -169,7 +169,7 @@ const unbondingsColumn: TableColumn[] = [
 			return total.toString()
 		},
 		format: (val: string) =>
-			`${balancedGamm(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
+			`${balancedGamm(toDecimalGamm(val))} SINF/${pool.value?.id ?? "0"}`,
 		sortable: true,
 	},
 	{
@@ -233,7 +233,7 @@ onUnmounted(() => {
 				</StandardButton>
 			</div>
 		</div>
-		<div class="row q-col-gutter-xl q-col-gutter-y-lg q-mb-72">
+		<div class="row no-wrap q-col-gutter-xl q-col-gutter-y-lg q-mb-72">
 			<div class="col-8 col-md-4 col-xl-2 flex justify-center">
 				<div :style="compositionGraphStyle">
 					<PercentageWithImage
@@ -300,7 +300,7 @@ onUnmounted(() => {
 		<div class="row q-mb-42">
 			<div class="col-3">
 				<h3 class="fs-21 q-mb-20 q-mt-0">Liquidity Mining</h3>
-				<p class="fs-16 opacity-40">
+				<p class="fs-16 opacity-40 !leading-20">
 					BitSong Launchpad is the platform where you can buy and mint your favorite
 					Artist Fantoken.
 				</p>
@@ -341,7 +341,7 @@ onUnmounted(() => {
 						</div>
 					</div>
 					<p
-						class="fs-12 opacity-40 text-weight-regular q-mb-20"
+						class="fs-12 opacity-40 text-weight-regular q-mb-20  !leading-20"
 						v-if="unbonding.extraGauges.length > 0"
 					>
 						BitSong Launchpad is the platform where you can buy and. Incentives for

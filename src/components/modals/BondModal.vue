@@ -73,7 +73,7 @@ const onSubmit = () => {
 					<p class="q-mr-8">Available</p>
 					<p>
 						<span class="text-white">{{ balancedGamm(pool.availableLPTokens) }}</span>
-						GAMM/{{ pool.id }}
+						SINF/{{ pool.id }}
 					</p>
 				</div>
 			</div>

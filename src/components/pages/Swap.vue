@@ -151,15 +151,15 @@ const onTxClick = (tx: Transaction) => {
 			<div class="col-8 col-lg-4 col-xl-3">
 				<div class="max-w-582 q-mx-auto">
 					<div class="flex justify-between items-center q-mb-30">
-						<p class="fs-18">DEX</p>
+						<p class="fs-18">DEx</p>
 						<q-btn
-							outline
-							rounded
-							to="/fantokens"
-							color="white"
-							label="View all"
-							class="q-px-22 text-secondry-390 light:before:border-2 light:hover:helper-white"
-						/>
+              outline
+              rounded
+              to="/fantokens"
+              color="white"
+              label="View all"
+              class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
+            />
 					</div>
 					<Card
 						class="q-py-10 q-px-none q-mb-51 overflow-hidden"
@@ -196,9 +196,11 @@ const onTxClick = (tx: Transaction) => {
 							color="white"
 							:href="`${externalWebsites.mintscan}osmosis/account/${authStore.osmosisAddress}`"
 							target="_blank"
-							label="View all"
-							class="q-px-22 text-secondry-390 light:before:border-2 light:hover:helper-white"
-						/>
+              label="View all"
+							:disabled="transactionManagerStore.swapTransactions.length === 0"
+							@click="(e) => {if(transactionManagerStore.swapTransactions.length === 0) e.preventDefault()}"
+              class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
+            />
 					</div>
 					<Card
 						class="q-py-10 q-px-none overflow-auto items-center"
@@ -211,6 +213,7 @@ const onTxClick = (tx: Transaction) => {
 							:columns="transactionColumns"
 							no-background
 							hide-header
+							no-data-label="No transactions yet."
 							class="full-height"
 							@row-click="
 								(_, row) => {
