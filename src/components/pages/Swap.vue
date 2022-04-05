@@ -120,7 +120,7 @@ const swapperTokenChange = () => {
 }
 
 const onTxClick = (tx: Transaction) => {
-	if (tx.fromSwap) {
+	if (tx.fromSwap && tx.tx) {
 		window.open(
 			`${externalWebsites.mintscan}${tx.from.coinGeckoId}/txs/${tx.tx.transactionHash}`,
 			"_blank"

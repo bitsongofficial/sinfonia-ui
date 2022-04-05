@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { balancedCurrency, smallNumberRate } from "@/common/numbers"
+import {
+	balancedCurrency,
+	smallNumberRate,
+	gtnZero,
+	isNaN,
+	compareBalance,
+} from "@/common/numbers"
 import { computed, ref, watch, onUnmounted, onMounted } from "vue"
 import {
 	calculateRouteSpotPrice,
@@ -153,11 +159,15 @@ const swapAmountWrapper = computed<string>({
 		return swapAmount.value
 	},
 	set(value) {
-		swapAmount.value = value.length > 0 ? value : ""
-		const amount = new BigNumber(swapAmount.value)
+		const amount = new BigNumber(value)
 
-		if (!amount.isNaN()) {
-			toAmount.value = amount.div(swapRatio.value).toFixed(6)
+		if (value.length > 0) {
+			if (!amount.isNaN()) {
+				swapAmount.value = value
+				toAmount.value = amount.div(swapRatio.value).toFixed(6)
+			}
+		} else {
+			swapAmount.value = ""
 		}
 	},
 })
@@ -167,23 +177,31 @@ const toAmountWrapper = computed<string>({
 		return toAmount.value
 	},
 	set(value) {
-		toAmount.value = value.length > 0 ? value : ""
-		const amount = new BigNumber(toAmount.value)
+		const amount = new BigNumber(value)
 
-		if (!amount.isNaN()) {
-			swapAmount.value = amount.div(1 / swapRatio.value).toFixed(6)
+		if (value.length > 0) {
+			if (!amount.isNaN()) {
+				toAmount.value = value
+				swapAmount.value = amount.div(1 / swapRatio.value).toFixed(6)
+			}
+		} else {
+			toAmount.value = ""
 		}
 	},
 })
 
 const swapAmountFiat = computed<string>(() => {
-	return new Decimal(swapAmountWrapper.value)
-		.mul(fromCoin.value?.price ?? "0")
-		.toString()
+	if (swapAmountWrapper.value.length > 0) {
+		return new Decimal(swapAmountWrapper.value)
+			.mul(fromCoin.value?.price ?? "0")
+			.toString()
+	}
+
+	return "0"
 })
 
 const swapCoin = computed(() => {
-	if (fromCoin.value) {
+	if (fromCoin.value && swapAmountWrapper.value.length > 0) {
 		return amountIBCFromCoin(swapAmountWrapper.value, fromCoin.value)
 	}
 
@@ -300,6 +318,13 @@ const onSubmit = () => {
 						borderless
 						v-model="swapAmountWrapper"
 						class="fs-24 q-mb-0 text-white"
+						:rules="[
+							(val) => !!val || 'Required field',
+							(val) => !isNaN(val) || 'Amount must be a decimal value',
+							(val) => gtnZero(val) || 'Amount must be a greater then zero',
+							(val) =>
+								compareBalance(val, available) || 'You don\'t have enough coins',
+						]"
 					/>
 					<p v-if="coin1" class="fs-12 text-dark">
 						{{ balancedCurrency(swapAmountFiat) }} $
@@ -337,6 +362,11 @@ const onSubmit = () => {
 						v-model="toAmountWrapper"
 						class="fs-24 q-mb-0 text-white"
 						v-if="coin1 && coin2"
+						:rules="[
+							(val) => !!val || 'Required field',
+							(val) => !isNaN(val) || 'Amount must be a decimal value',
+							(val) => gtnZero(val) || 'Amount must be a greater then zero',
+						]"
 					/>
 				</div>
 			</div>
