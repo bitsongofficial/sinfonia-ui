@@ -187,7 +187,7 @@ export const mapPools = (
 				)
 
 				const extraGauges = extraGauge.map((gauge) =>
-					gaugeToGaugeToken(gauge, liquidity.toString(), tokens)
+					gaugeToGaugeToken(pool, duration, gauge, liquidity.toString(), tokens)
 				)
 
 				let totalApr = reduce<GaugeToken, BigNumber>(
@@ -233,6 +233,8 @@ export const mapPools = (
 }
 
 export const gaugeToGaugeToken = (
+	pool: OsmosisPool,
+	lockableDuration: LockableDuration,
 	gauge: Gauge,
 	liquidityPool: string,
 	tokens: TokenBalance[]
@@ -272,7 +274,13 @@ export const gaugeToGaugeToken = (
 		leftEpochs,
 		coins,
 		endTime,
-		apr: getExternalPoolApr(gauge, liquidityPool, tokens),
+		apr: calculateTotalExternalApr(
+			pool,
+			gauge,
+			lockableDuration,
+			liquidityPool,
+			tokens
+		),
 	}
 }
 
@@ -379,6 +387,46 @@ export const getPoolApr = (
 	}
 
 	return "0"
+}
+
+export const calculateTotalExternalApr = (
+	pool: OsmosisPool,
+	gauge: Gauge,
+	duration: LockableDuration,
+	liquidityPool: string,
+	tokens: TokenBalance[]
+) => {
+	const poolsStore = usePools()
+
+	const extraGauge = poolsStore.extraGaugeByPoolIdAndDurationAndCoins(
+		pool.id,
+		duration.rawDuration,
+		gauge.coins
+	)
+
+	let apr = new BigNumber("0")
+
+	if (extraGauge) {
+		apr = new BigNumber(getExternalPoolApr(extraGauge, liquidityPool, tokens))
+
+		for (const lockableDuration of poolsStore.lockableDuration) {
+			if (lockableDuration.milliseconds >= duration.milliseconds) {
+				break
+			}
+
+			const otherGauge = poolsStore.extraGaugeByPoolIdAndDurationAndCoins(
+				pool.id,
+				lockableDuration.rawDuration,
+				gauge.coins
+			)
+
+			if (otherGauge) {
+				apr = apr.plus(getExternalPoolApr(otherGauge, liquidityPool, tokens))
+			}
+		}
+	}
+
+	return apr.toString()
 }
 
 export const getExternalPoolApr = (
