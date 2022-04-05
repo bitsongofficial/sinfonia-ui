@@ -2,6 +2,7 @@ import { DeliverTxResponse } from "@cosmjs/stargate"
 import { Token } from "./config"
 
 export enum TransactionStatus {
+	BROADCASTING = "broadcasting",
 	PENDING = "pending",
 	SUCCESS = "success",
 	FAILED = "failed",
@@ -18,7 +19,8 @@ export enum TransactionType {
 }
 
 export interface Transaction {
-	tx: DeliverTxResponse
+	id: string
+	tx?: DeliverTxResponse
 	from: Token
 	time: number
 	fromSwap?: Token

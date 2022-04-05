@@ -8,8 +8,8 @@ declare module "*.vue" {
 }
 
 interface ImportMetaEnv {
-	readonly VITE_OSMOSIS_API_URL: string
 	readonly VITE_BITSONG_CONFIG_URL: string
+	readonly VITE_BITSONG_FAUCET_URL: string
 }
 
 interface ImportMeta {
