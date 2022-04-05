@@ -157,7 +157,7 @@ const swapAmountWrapper = computed<string>({
 
 		toAmount.value = new BigNumber(swapAmount.value)
 			.div(swapRatio.value)
-			.toFixed(2)
+			.toFixed(6)
 	},
 })
 
@@ -170,7 +170,7 @@ const toAmountWrapper = computed<string>({
 
 		swapAmount.value = new BigNumber(toAmount.value)
 			.div(1 / swapRatio.value)
-			.toFixed(2)
+			.toFixed(6)
 	},
 })
 
