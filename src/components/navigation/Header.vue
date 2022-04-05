@@ -6,9 +6,13 @@ import Logo from "@/components/Logo.vue"
 import useSettings from "@/store/settings"
 import { resolveIcon } from "@/common/resolvers"
 import StandardButton from "../buttons/StandardButton.vue"
+import useBank from "@/store/bank"
 
 const $q = useQuasar()
 const settingsStore = useSettings()
+const bankStore = useBank()
+
+const isProduction = import.meta.env.VITE_MODE
 
 const lightMode = computed({
 	get() {
@@ -34,7 +38,14 @@ const lightMode = computed({
 					class="dark-mode-toggle q-mr-20 light:inner:shadow-none"
 				/>
 				<div>
-					<StandardButton with-icon :icon="resolveIcon('coin', 24, 24)" class="bg-gradient-primary-pink fs-14">
+					<StandardButton
+						v-if="isProduction === 'testnet'"
+						:disabled="bankStore.loadingFaucet"
+						@click="bankStore.getFaucet"
+						with-icon
+						:icon="resolveIcon('coin', 24, 24)"
+						class="bg-gradient-primary-pink fs-14"
+					>
 						Get BTSG
 					</StandardButton>
 				</div>
