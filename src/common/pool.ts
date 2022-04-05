@@ -10,6 +10,7 @@ import {
 	OsmosisPoolAsset,
 	Pool,
 	PoolAsset,
+	TokenBalance,
 } from "@/types"
 import { amountToCoin, toDecimalGamm, toViewDenom } from "./numbers"
 import { BigNumber } from "bignumber.js"
@@ -23,6 +24,7 @@ import { compact, max, reduce } from "lodash"
 import { add, parseISO } from "date-fns"
 import { Coin } from "@cosmjs/proto-signing"
 import { unboundingEndTimeStart } from "./date"
+import { findTokenByIBCDenom } from "./token"
 
 export const gammToPoolAmount = (
 	currentAmount: BigNumber,
@@ -39,11 +41,11 @@ export const gammToPoolAmount = (
 
 export const tokenToPoolAsset = (
 	pool: OsmosisPool,
-	rawCoin: OsmosisPoolAsset
+	rawCoin: OsmosisPoolAsset,
+	tokens: TokenBalance[]
 ): PoolAsset | undefined => {
-	const configStore = useConfig()
 	const bankStore = useBank()
-	const token = configStore.findTokenByIBCDenom(rawCoin.token.denom)
+	const token = findTokenByIBCDenom(tokens, rawCoin.token.denom)
 	const totalPoolGamm = new BigNumber(pool.totalShares.amount)
 	const totalTokenGamm = new BigNumber(rawCoin.token.amount) // For example, total BTSG inside the pool
 	const weightPercentage = new BigNumber(rawCoin.weight)
@@ -121,7 +123,10 @@ export const tokenToPoolAsset = (
 	}
 }
 
-export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
+export const mapPools = (
+	rawPools: OsmosisPool[],
+	tokens: TokenBalance[]
+): Pool[] => {
 	const poolsStore = usePools()
 	const bankStore = useBank()
 
@@ -132,7 +137,7 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 		let bonded = new BigNumber("0")
 
 		const coins = poolAssets.map((asset) => {
-			const coin = tokenToPoolAsset(pool, asset)
+			const coin = tokenToPoolAsset(pool, asset, tokens)
 
 			if (coin) {
 				const coinLiquidity = new BigNumber(coin.token.amount)
@@ -182,7 +187,7 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 				)
 
 				const extraGauges = extraGauge.map((gauge) =>
-					gaugeToGaugeToken(gauge, liquidity.toString())
+					gaugeToGaugeToken(gauge, liquidity.toString(), tokens)
 				)
 
 				let totalApr = reduce<GaugeToken, BigNumber>(
@@ -229,12 +234,11 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 
 export const gaugeToGaugeToken = (
 	gauge: Gauge,
-	liquidityPool: string
+	liquidityPool: string,
+	tokens: TokenBalance[]
 ): GaugeToken => {
-	const configStore = useConfig()
-
 	const coins: CoinToken[] = gauge.coins.map((coin) => {
-		const token = configStore.findTokenByIBCDenom(coin.denom)
+		const token = findTokenByIBCDenom(tokens, coin.denom)
 		let amount = coin.amount
 
 		if (token) {
@@ -268,7 +272,7 @@ export const gaugeToGaugeToken = (
 		leftEpochs,
 		coins,
 		endTime,
-		apr: getExternalPoolApr(gauge, liquidityPool),
+		apr: getExternalPoolApr(gauge, liquidityPool, tokens),
 	}
 }
 
@@ -379,24 +383,28 @@ export const getPoolApr = (
 
 export const getExternalPoolApr = (
 	gauge: Gauge,
-	liquidityPool: string
+	liquidityPool: string,
+	tokens: TokenBalance[]
 ): string => {
-	const configStore = useConfig()
 	const poolTVL = new BigNumber(liquidityPool)
 
 	if (poolTVL.gt(0)) {
 		let totalReward = new BigNumber("0")
 
 		for (const coin of gauge.coins) {
-			const token = configStore.findTokenByIBCDenom(coin.denom)
+			const token = findTokenByIBCDenom(tokens, coin.denom)
 
 			if (token) {
 				const amount = new BigNumber(coin.amount)
 				const viewCoin = amountToCoin(amount.toString(), token)
 
 				if (viewCoin) {
+					const yearAmount = new BigNumber(365)
+						.multipliedBy(viewCoin.amount)
+						.div(gauge.filled_epochs)
+
 					totalReward = totalReward.plus(
-						new BigNumber(viewCoin.amount.toString()).multipliedBy(token.price ?? "0")
+						new BigNumber(yearAmount.toString()).multipliedBy(token.price ?? "0")
 					)
 				}
 			}
@@ -404,8 +412,6 @@ export const getExternalPoolApr = (
 
 		return totalReward.div(poolTVL).toString()
 	}
-
-	console.log(poolTVL)
 
 	return "0"
 }

@@ -130,24 +130,6 @@ const useConfig = defineStore("config", {
 				}
 			)
 		},
-		findTokenByIBCDenom() {
-			return (denom: string) =>
-				unionBy(this.allMainTokens, this.fantokens, "symbol").find((token) => {
-					if (!token.ibcEnabled) {
-						const coinLookup = token.coinLookup.find(
-							(coin) => coin.viewDenom === token.symbol
-						)
-
-						if (coinLookup) {
-							return coinLookup.chainDenom === denom
-						}
-
-						return undefined
-					}
-
-					return token.ibc.osmosis.destDenom === denom
-				})
-		},
 		findFantokenByDenom() {
 			return (denom: string) =>
 				this.fantokens.find((token) => {

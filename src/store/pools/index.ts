@@ -1,4 +1,4 @@
-import { compact, reduce } from "lodash"
+import { compact, reduce, unionBy } from "lodash"
 import { sinfoniaClient } from "@/services"
 import { defineStore } from "pinia"
 import {
@@ -100,7 +100,14 @@ const usePools = defineStore("pools", {
 	},
 	getters: {
 		pools({ rawPools }): Pool[] {
-			return compact(mapPools(rawPools))
+			const configStore = useConfig()
+			const tokens = unionBy(
+				configStore.allMainTokens,
+				configStore.fantokens,
+				"symbol"
+			)
+
+			return compact(mapPools(rawPools, tokens))
 		},
 		myPools(): Pool[] {
 			const bankStore = useBank()
