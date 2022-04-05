@@ -104,7 +104,7 @@ const bondingsColumn: TableColumn[] = [
 			return total.toString()
 		},
 		format: (val: string) =>
-			`${balancedGamm(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
+			`${balancedGamm(toDecimalGamm(val))} SINF/${pool.value?.id ?? "0"}`,
 		sortable: true,
 	},
 	{
@@ -155,7 +155,7 @@ const unbondingsColumn: TableColumn[] = [
 			return total.toString()
 		},
 		format: (val: string) =>
-			`${balancedGamm(toDecimalGamm(val))} GAMM/${pool.value?.id ?? "0"}`,
+			`${balancedGamm(toDecimalGamm(val))} SINF/${pool.value?.id ?? "0"}`,
 		sortable: true,
 	},
 	{
