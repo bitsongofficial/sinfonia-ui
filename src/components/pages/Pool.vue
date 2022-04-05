@@ -387,7 +387,7 @@ onUnmounted(() => {
 											{{ coin.token?.symbol }}
 										</p>
 										<div class="flex">
-											<p class="q-mr-12 opacity-30">PPR</p>
+											<p class="q-mr-12 opacity-30">APR</p>
 											<p>{{ percentage(gauge.apr) }} %</p>
 										</div>
 									</div>

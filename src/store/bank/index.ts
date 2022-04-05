@@ -4,7 +4,7 @@ import { acceptHMRUpdate, defineStore } from "pinia"
 import useAuth from "@/store/auth"
 import useConfig from "@/store/config"
 import { ChainBalance, OsmosisLock, Token, TokenBalance } from "@/types"
-import { reduce } from "lodash"
+import { reduce, unionBy } from "lodash"
 import { toViewDenom } from "@/common/numbers"
 import { BigNumber } from "bignumber.js"
 
@@ -49,7 +49,11 @@ const useBank = defineStore("bank", {
 		async loadBalance(address: string, chainID: string) {
 			try {
 				const configStore = useConfig()
-				const token = configStore.allTokens.find((el) => el.chainID === chainID)
+				const token = unionBy(
+					configStore.allMainTokens,
+					configStore.fantokens,
+					"symbol"
+				).find((el) => el.chainID === chainID)
 				this.loading = true
 
 				if (token) {
@@ -92,7 +96,11 @@ const useBank = defineStore("bank", {
 		balances(): TokenBalance[] {
 			const configStore = useConfig()
 
-			return configStore.allTokens.map((token) => {
+			return unionBy(
+				configStore.allMainTokens,
+				configStore.fantokens,
+				"symbol"
+			).map((token) => {
 				const price = new BigNumber(token.price ?? "0")
 				let osmosisChain: ChainBalance | undefined = undefined
 				let bitsongChain: ChainBalance | undefined = undefined

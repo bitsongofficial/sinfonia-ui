@@ -101,6 +101,7 @@ const usePrices = defineStore("prices", {
 			}
 		},
 		getFantokenPriceById() {
+			console.log(this.getFantokensPrices)
 			return (denom: string) => {
 				if (this.getFantokensPrices) {
 					const fantokenPrice = this.getFantokensPrices.find(

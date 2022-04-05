@@ -30,7 +30,7 @@ const onSwapClick = () => {
 </script>
 
 <template>
-	<div class="row q-mb-34">
+	<div class="row q-mb-34 q-col-gutter-x-sm">
 		<div class="col-4">
 			<div class="q-pr-24">
 				<ImagePair :coins="pool.coins"> </ImagePair>
@@ -68,14 +68,16 @@ const onSwapClick = () => {
 			</div>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row q-col-gutter-x-sm">
 		<div class="col-4">
 			<p class="fs-12 text-weight-medium opacity-40 q-pb-10">APR</p>
-			<p class="fs-16 text-weight-medium">{{ percentage(pool.APR) }} %</p>
+			<p class="fs-16 text-weight-medium work-break-all">
+				{{ percentage(pool.APR) }} %
+			</p>
 		</div>
 		<div class="col-4">
 			<p class="fs-12 text-weight-medium opacity-40 q-pb-10">Liquidity</p>
-			<p class="fs-16 text-weight-medium text-no-wrap">
+			<p class="fs-16 text-weight-medium work-break-all">
 				{{ balancedCurrency(pool.liquidity) }} $
 			</p>
 		</div>
