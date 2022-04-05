@@ -18,7 +18,7 @@ import BondModal from "@/components/modals/BondModal.vue"
 import { TableColumn, LockableDurationWithApr, LockCoin } from "@/types"
 import usePools from "@/store/pools"
 import { useRoute, useRouter } from "vue-router"
-import { computed, onMounted, onUnmounted, ref } from "vue"
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { BigNumber } from "bignumber.js"
 import { reduce } from "lodash"
 import { Coin } from "@cosmjs/proto-signing"
@@ -37,6 +37,20 @@ const openBondModal = ref(false)
 const openAddRemoveModal = ref(false)
 
 const pool = computed(() => poolsStore.poolById(id))
+
+const broadcastingWatcher = watch(
+	() => transactionManagerStore.loadingBroadcasting,
+	(oldLoading, newLoading) => {
+		if (oldLoading !== newLoading) {
+			openAddRemoveModal.value = false
+			openBondModal.value = false
+		}
+	}
+)
+
+onUnmounted(() => {
+	broadcastingWatcher()
+})
 
 const lpLiquidity = computed(() => {
 	if (pool.value) {

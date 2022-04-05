@@ -2,14 +2,16 @@
 import { Pool } from "@/types/pool"
 import { balancedCurrency, percentage } from "@/common/numbers"
 import { resolveIcon } from "@/common/resolvers"
-import { ref } from "vue"
+import { ref, watch, onUnmounted } from "vue"
 import { useRouter } from "vue-router"
 
 import PoolContextMenu from "@/components/navigation/PoolContextMenu.vue"
 import ImagePair from "@/components/ImagePair.vue"
 import LiquidityModal from "../modals/LiquidityModal.vue"
+import useTransactionManager from "@/store/transaction-manager"
 
 const router = useRouter()
+const transactionManagerStore = useTransactionManager()
 
 const props = defineProps<{
 	pool: Pool
@@ -17,6 +19,19 @@ const props = defineProps<{
 
 const show = ref(false)
 const openAddRemoveModal = ref(false)
+
+const broadcastingWatcher = watch(
+	() => transactionManagerStore.loadingBroadcasting,
+	(oldLoading, newLoading) => {
+		if (oldLoading !== newLoading) {
+			openAddRemoveModal.value = false
+		}
+	}
+)
+
+onUnmounted(() => {
+	broadcastingWatcher()
+})
 
 const onSwapClick = () => {
 	const coins = [...props.pool.coins]
