@@ -309,7 +309,7 @@ onUnmounted(() => {
 						{{ unbonding.readableDuration }} unbonding
 					</p>
 					<div class="q-mb-20">
-						<p class="fs-36 q-mb-8">{{ percentage(unbonding.apr) }} %</p>
+						<p class="fs-36 q-mb-8">{{ percentage(unbonding.totalApr) }} %</p>
 						<div class="flex items-center" v-if="unbonding.extraGauges.length > 0">
 							<p class="text-primary fs-14 q-mr-16 text-weight-medium">
 								External Incentives Pool
@@ -387,7 +387,7 @@ onUnmounted(() => {
 											{{ coin.token?.symbol }}
 										</p>
 										<div class="flex">
-											<p class="q-mr-12 opacity-30">PPR</p>
+											<p class="q-mr-12 opacity-30">APR</p>
 											<p>{{ percentage(gauge.apr) }} %</p>
 										</div>
 									</div>

@@ -21,12 +21,14 @@ import {
 } from "@cosmjs/stargate"
 import { osmosisRegistry } from "./registry"
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx"
+import SignerEventEmitter from "./events"
 
-export class TransactionManager {
+export class TransactionManager extends SignerEventEmitter {
 	signer: OfflineSigner | OfflineDirectSigner
 	network: Token
 
 	constructor(signer: OfflineSigner | OfflineDirectSigner, network: Token) {
+		super()
 		this.signer = signer
 		this.network = network
 	}
@@ -218,38 +220,49 @@ export class TransactionManager {
 		senderAddress: string,
 		memo: string
 	) => {
-		const feeData = this.getFees(messageType)
+		try {
+			const feeData = this.getFees(messageType)
 
-		const transactionData = {
-			...feeData,
-			memo,
-			chainId: this.network.chainID,
-		}
-
-		const stdFee = {
-			amount: coins(
-				Number(transactionData.fee ? transactionData.fee[0].amount : 0),
-				transactionData.fee ? transactionData.fee[0].denom : this.network.symbol
-			),
-			gas: transactionData.gasEstimate || "350000",
-		}
-
-		const client = await SigningStargateClient.connectWithSigner(
-			this.network.rpcURL,
-			this.signer,
-			{
-				registry: osmosisRegistry(),
+			const transactionData = {
+				...feeData,
+				memo,
+				chainId: this.network.chainID,
 			}
-		)
 
-		const raw = await client.sign(senderAddress, messages, stdFee, memo || "")
+			const stdFee = {
+				amount: coins(
+					Number(transactionData.fee ? transactionData.fee[0].amount : 0),
+					transactionData.fee ? transactionData.fee[0].denom : this.network.symbol
+				),
+				gas: transactionData.gasEstimate || "350000",
+			}
 
-		const txResult = await client.broadcastTx(
-			Uint8Array.from(TxRaw.encode(raw).finish())
-		)
+			const client = await SigningStargateClient.connectWithSigner(
+				this.network.rpcURL,
+				this.signer,
+				{
+					registry: osmosisRegistry(),
+				}
+			)
 
-		assertIsDeliverTxSuccess(txResult)
+			this.emit("onsignerconnected", client)
 
-		return txResult
+			const raw = await client.sign(senderAddress, messages, stdFee, memo || "")
+
+			this.emit("ontxsigned", raw)
+
+			const txResult = await client.broadcastTx(
+				Uint8Array.from(TxRaw.encode(raw).finish())
+			)
+
+			assertIsDeliverTxSuccess(txResult)
+
+			this.emit("ontxbroadcasted", txResult)
+
+			return txResult
+		} catch (error) {
+			this.emit("onerror", error)
+			throw error
+		}
 	}
 }

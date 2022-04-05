@@ -8,7 +8,7 @@ import {
 } from "@/types"
 import { defineStore } from "pinia"
 import { BigNumber } from "bignumber.js"
-import { compact, reduce } from "lodash"
+import { compact, reduce, unionBy } from "lodash"
 import useBank from "@/store/bank"
 import { Coin } from "@cosmjs/proto-signing"
 import usePrices from "@/store/prices"
@@ -68,7 +68,7 @@ const useConfig = defineStore("config", {
 
 				if (coinLookup) {
 					price = pricesStore.getFantokenPriceById(
-						coinLookup.fantokenDenom ?? coinLookup.viewDenom
+						coinLookup.fantokenDenom ? coinLookup.fantokenDenom : coinLookup.viewDenom
 					)
 
 					const totalBurnedFantokens = bankStore.totalBurnedFantokens.filter(
@@ -109,9 +109,6 @@ const useConfig = defineStore("config", {
 			})
 		},
 		tokens: ({ assetsConfig }) => (assetsConfig ? assetsConfig.tokens : []),
-		allTokens(): TokenBalance[] {
-			return compact([...this.allMainTokens, ...this.fantokens])
-		},
 		allMainTokens(): TokenBalance[] {
 			return compact([this.bitsongToken, this.osmosisToken, ...this.tokens]).map(
 				(el) => {
@@ -133,24 +130,6 @@ const useConfig = defineStore("config", {
 				}
 			)
 		},
-		findTokenByIBCDenom() {
-			return (denom: string) =>
-				this.allTokens.find((token) => {
-					if (!token.ibcEnabled) {
-						const coinLookup = token.coinLookup.find(
-							(coin) => coin.viewDenom === token.symbol
-						)
-
-						if (coinLookup) {
-							return coinLookup.chainDenom === denom
-						}
-
-						return undefined
-					}
-
-					return token.ibc.osmosis.destDenom === denom
-				})
-		},
 		findFantokenByDenom() {
 			return (denom: string) =>
 				this.fantokens.find((token) => {
@@ -165,7 +144,9 @@ const useConfig = defineStore("config", {
 		},
 		findTokenBySymbol() {
 			return (symbol: string) =>
-				this.allTokens.find((token) => token.symbol === symbol)
+				unionBy(this.allMainTokens, this.fantokens, "symbol").find(
+					(token) => token.symbol === symbol
+				)
 		},
 		extraGaugeIds({ extraGauges, assetsConfig }) {
 			let gaugeIds: ExtraGauge[] = []
