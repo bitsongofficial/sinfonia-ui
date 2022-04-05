@@ -37,6 +37,10 @@ $v in $font-sizes {
         line-height: $v * 1px;
     }
 
+    .\!leading-#{$k} {
+        line-height: $v * 1px !important;
+    }
+
     .\!fs-#{$k} {
         font-size: $v * 1px !important;
         line-height: $v * 1px !important;
