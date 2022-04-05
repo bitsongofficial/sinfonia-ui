@@ -51,7 +51,7 @@ const removePercentOverAHundred = computed<string>({
 	},
 	set(value: string) {
 		if (value && !isNaN(Number(value))) {
-			removePercent.value = Number(value) / 100
+			removePercent.value = Math.max(0 , Math.min(1, Number(value) / 100))
 		}
 	},
 })
