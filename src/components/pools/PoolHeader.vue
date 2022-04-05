@@ -46,10 +46,10 @@ const onSwapClick = () => {
 						></div>
 					</template>
 				</div>
-				<div class="q-mr--12" @click.native.prevent="show = true">
+				<div class="q-mr--4" @click.native.prevent="show = true">
 					<q-icon
 						:name="resolveIcon('vertical-dots', 4, 16)"
-						class="fs-14 s-28 q-mr--12 opacity-30 hover:opacity-100"
+						class="fs-14 s-28 q-mr--4 opacity-30 hover:opacity-100"
 					></q-icon>
 					<PoolContextMenu
 						v-model="show"
