@@ -8,14 +8,6 @@ $row-padding-x: 30px;
     border: none;
     box-shadow: none;
 
-    .q-table__middle.scroll {
-        padding-left: 15px;
-        padding-right: 15px;
-        padding-bottom: 15px;
-        margin-left: -15px;
-        margin-right: -15px;
-    }
-
     .q-table {
         border-collapse: separate !important;
         flex-direction: column;
