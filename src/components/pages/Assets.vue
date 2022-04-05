@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TableColumn } from "@/types/table"
 import { balancedCurrency } from "@/common/numbers"
-import { computed, ref } from "vue"
+import { computed, ref, watch, onUnmounted } from "vue"
 import { TokenBalance } from "@/types"
 import { resolveIcon } from "@/common/resolvers"
 import Title from "@/components/typography/Title.vue"
@@ -12,13 +12,28 @@ import useBank from "@/store/bank"
 import usePrices from "@/store/prices"
 import usePools from "@/store/pools"
 import useAuth from "@/store/auth"
+import useTransactionManager from "@/store/transaction-manager"
 
 const bankStore = useBank()
 const pricesStore = usePrices()
 const poolsStore = usePools()
+const transactionManagerStore = useTransactionManager()
 const authStore = useAuth()
 const openTransferDialog = ref(false)
 const transferFrom = ref<TokenBalance>()
+
+const broadcastingWatcher = watch(
+	() => transactionManagerStore.loadingBroadcasting,
+	(oldLoading, newLoading) => {
+		if (oldLoading !== newLoading) {
+			openTransferDialog.value = false
+		}
+	}
+)
+
+onUnmounted(() => {
+	broadcastingWatcher()
+})
 
 const columns: TableColumn[] = [
 	{
@@ -39,9 +54,17 @@ const columns: TableColumn[] = [
 		name: "symbol",
 		align: "center",
 		label: "Symbol",
-		field: (row: any) => row.coin.symbol,
+		field: (row: TokenBalance) => row.symbol,
 		sortable: false,
 		format: (val: any) => `${val}`,
+	},
+	{
+		name: "price",
+		align: "center",
+		label: "Price",
+		field: (row: TokenBalance) => row.price,
+		sortable: false,
+		format: (val: string) => `${balancedCurrency(val)} $`,
 	},
 	{
 		name: "chain",
@@ -124,6 +147,11 @@ const openTransfer = (from: TokenBalance) => {
 					<q-td>
 						<p class="text-white text-center">
 							{{ rowProps.row.fantoken ? "$" : "" }}{{ rowProps.row.symbol }}
+						</p>
+					</q-td>
+					<q-td>
+						<p class="text-white text-center">
+							{{ balancedCurrency(rowProps.row.price) }} $
 						</p>
 					</q-td>
 					<q-td>

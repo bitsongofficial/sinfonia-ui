@@ -21,10 +21,10 @@ const poolsStore = usePools()
 					<Card class="full-width text-white cursor-pointer hover:bg-white-15 full-height !flex column justify-between no-wrap">
 						<PoolHeader :pool="userPool" />
 						<div class="separator-light q-my-20"></div>
-						<div class="row">
+						<div class="row q-col-gutter-x-sm">
 							<div class="col-4">
 								<p class="fs-10 text-weight-medium opacity-40 q-pb-10">My Liquidity</p>
-								<p class="fs-16 text-weight-medium text-no-wrap">
+								<p class="fs-16 text-weight-medium work-break-all">
 									{{ balancedCurrency(userPool.userLiquidity) }} $
 								</p>
 							</div>
@@ -32,7 +32,7 @@ const poolsStore = usePools()
 								<p class="fs-10 text-weight-medium opacity-40 q-pb-10">
 									My Bonded Tokens
 								</p>
-								<p class="fs-16 text-weight-medium text-no-wrap">
+								<p class="fs-16 text-weight-medium work-break-all">
 									{{ balancedCurrency(userPool.bonded) }} $
 								</p>
 							</div>

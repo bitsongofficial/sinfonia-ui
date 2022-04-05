@@ -2,29 +2,50 @@
 import { Pool } from "@/types/pool"
 import { balancedCurrency, percentage } from "@/common/numbers"
 import { resolveIcon } from "@/common/resolvers"
-import { ref } from "vue"
+import { ref, watch, onUnmounted } from "vue"
 import { useRouter } from "vue-router"
 
 import PoolContextMenu from "@/components/navigation/PoolContextMenu.vue"
 import ImagePair from "@/components/ImagePair.vue"
 import LiquidityModal from "../modals/LiquidityModal.vue"
+import useTransactionManager from "@/store/transaction-manager"
 
 const router = useRouter()
+const transactionManagerStore = useTransactionManager()
 
-defineProps<{
+const props = defineProps<{
 	pool: Pool
 }>()
 
 const show = ref(false)
 const openAddRemoveModal = ref(false)
 
+const broadcastingWatcher = watch(
+	() => transactionManagerStore.loadingBroadcasting,
+	(oldLoading, newLoading) => {
+		if (oldLoading !== newLoading) {
+			openAddRemoveModal.value = false
+		}
+	}
+)
+
+onUnmounted(() => {
+	broadcastingWatcher()
+})
+
 const onSwapClick = () => {
-	router.push("/swap")
+	const coins = [...props.pool.coins]
+	const fromCoin = coins.shift()
+	const toCoin = coins.shift()
+
+	if (fromCoin && toCoin) {
+		router.push(`/swap?from=${fromCoin.token.symbol}&to=${toCoin.token.symbol}`)
+	}
 }
 </script>
 
 <template>
-	<div class="row q-mb-34">
+	<div class="row q-mb-34 q-col-gutter-x-sm">
 		<div class="col-4">
 			<div class="q-pr-24">
 				<ImagePair :coins="pool.coins"> </ImagePair>
@@ -33,7 +54,9 @@ const onSwapClick = () => {
 		<div class="col-4">
 			<div class="row justify-between no-wrap">
 				<div>
-					<p class="fs-12 opacity-40 text-weight-medium q-mb-10 light:text-primary light:opacity-100">
+					<p
+						class="fs-12 opacity-40 text-weight-medium q-mb-10 light:text-primary light:opacity-100"
+					>
 						Pool {{ pool.id }}
 					</p>
 					<template v-for="(coin, index) in pool.coins" :key="index">
@@ -60,14 +83,16 @@ const onSwapClick = () => {
 			</div>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row q-col-gutter-x-sm">
 		<div class="col-4">
 			<p class="fs-12 text-weight-medium opacity-40 q-pb-10">APR</p>
-			<p class="fs-16 text-weight-medium">{{ percentage(pool.APR) }} %</p>
+			<p class="fs-16 text-weight-medium work-break-all">
+				{{ percentage(pool.APR) }} %
+			</p>
 		</div>
 		<div class="col-4">
 			<p class="fs-12 text-weight-medium opacity-40 q-pb-10">Liquidity</p>
-			<p class="fs-16 text-weight-medium text-no-wrap">
+			<p class="fs-16 text-weight-medium work-break-all">
 				{{ balancedCurrency(pool.liquidity) }} $
 			</p>
 		</div>

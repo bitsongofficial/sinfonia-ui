@@ -16,4 +16,5 @@ export interface LockableDurationWithApr extends LockableDuration {
 	unbondedCoins: LockCoin[]
 	extraGauges: GaugeToken[]
 	apr: string
+	totalApr: string
 }

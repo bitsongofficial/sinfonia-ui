@@ -4,12 +4,15 @@ import { acceptHMRUpdate, defineStore } from "pinia"
 import useAuth from "@/store/auth"
 import useConfig from "@/store/config"
 import { ChainBalance, OsmosisLock, Token, TokenBalance } from "@/types"
-import { reduce } from "lodash"
+import { reduce, unionBy } from "lodash"
 import { toViewDenom } from "@/common/numbers"
 import { BigNumber } from "bignumber.js"
+import { getFaucet } from "@/services/faucet-client"
+import { notifyError, notifyLoading, notifySuccess } from "@/common"
 
 export interface BankState {
 	loading: boolean
+	loadingFaucet: boolean
 	otherBalance: Coin[]
 	osmosisBalance: Coin[]
 	bitsongBalance: Coin[]
@@ -23,6 +26,7 @@ export interface BankState {
 const useBank = defineStore("bank", {
 	state: (): BankState => ({
 		loading: false,
+		loadingFaucet: false,
 		otherBalance: [],
 		osmosisBalance: [],
 		bitsongBalance: [],
@@ -49,7 +53,11 @@ const useBank = defineStore("bank", {
 		async loadBalance(address: string, chainID: string) {
 			try {
 				const configStore = useConfig()
-				const token = configStore.allTokens.find((el) => el.chainID === chainID)
+				const token = unionBy(
+					configStore.allMainTokens,
+					configStore.fantokens,
+					"symbol"
+				).find((el) => el.chainID === chainID)
 				this.loading = true
 
 				if (token) {
@@ -87,12 +95,39 @@ const useBank = defineStore("bank", {
 				this.loading = false
 			}
 		},
+		async getFaucet() {
+			const authStore = useAuth()
+
+			const loader = notifyLoading("Faucet Loading", "Waiting for faucet")
+
+			try {
+				this.loadingFaucet = true
+
+				if (authStore.bitsongAddress) {
+					await getFaucet({ address: authStore.bitsongAddress })
+					loader()
+					notifySuccess("Faucet Claim Successful", "Check your balance")
+					this.loadBalances()
+				}
+			} catch (error) {
+				this.loadingFaucet = false
+
+				loader()
+				notifyError("Fauce Claim Failed", "Try it later")
+
+				throw error
+			}
+		},
 	},
 	getters: {
 		balances(): TokenBalance[] {
 			const configStore = useConfig()
 
-			return configStore.allTokens.map((token) => {
+			return unionBy(
+				configStore.allMainTokens,
+				configStore.fantokens,
+				"symbol"
+			).map((token) => {
 				const price = new BigNumber(token.price ?? "0")
 				let osmosisChain: ChainBalance | undefined = undefined
 				let bitsongChain: ChainBalance | undefined = undefined

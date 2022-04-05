@@ -541,8 +541,8 @@ onUnmounted(() => {
 								/>
 								<p class="fs-14 text-weight-medium">
 									<template v-for="(coin, index) of slotProps.row.coins" :key="index">
-										{{ coin.token.symbol }}
-										{{ index === slotProps.row.coins.length - 1 ? "" : "/" }}
+										{{ coin.token.symbol
+										}}{{ index === slotProps.row.coins.length - 1 ? "" : "/" }}
 									</template>
 								</p>
 							</div>

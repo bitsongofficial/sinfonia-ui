@@ -18,7 +18,7 @@ import BondModal from "@/components/modals/BondModal.vue"
 import { TableColumn, LockableDurationWithApr, LockCoin } from "@/types"
 import usePools from "@/store/pools"
 import { useRoute, useRouter } from "vue-router"
-import { computed, onMounted, onUnmounted, ref } from "vue"
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { BigNumber } from "bignumber.js"
 import { reduce } from "lodash"
 import { Coin } from "@cosmjs/proto-signing"
@@ -37,6 +37,20 @@ const openBondModal = ref(false)
 const openAddRemoveModal = ref(false)
 
 const pool = computed(() => poolsStore.poolById(id))
+
+const broadcastingWatcher = watch(
+	() => transactionManagerStore.loadingBroadcasting,
+	(oldLoading, newLoading) => {
+		if (oldLoading !== newLoading) {
+			openAddRemoveModal.value = false
+			openBondModal.value = false
+		}
+	}
+)
+
+onUnmounted(() => {
+	broadcastingWatcher()
+})
 
 const lpLiquidity = computed(() => {
 	if (pool.value) {
@@ -309,7 +323,7 @@ onUnmounted(() => {
 						{{ unbonding.readableDuration }} unbonding
 					</p>
 					<div class="q-mb-20">
-						<p class="fs-36 q-mb-8">{{ percentage(unbonding.apr) }} %</p>
+						<p class="fs-36 q-mb-8">{{ percentage(unbonding.totalApr) }} %</p>
 						<div class="flex items-center" v-if="unbonding.extraGauges.length > 0">
 							<p class="text-primary fs-14 q-mr-16 text-weight-medium">
 								External Incentives Pool
@@ -387,7 +401,7 @@ onUnmounted(() => {
 											{{ coin.token?.symbol }}
 										</p>
 										<div class="flex">
-											<p class="q-mr-12 opacity-30">PPR</p>
+											<p class="q-mr-12 opacity-30">APR</p>
 											<p>{{ percentage(gauge.apr) }} %</p>
 										</div>
 									</div>
