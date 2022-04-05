@@ -62,14 +62,20 @@ export const percentageRange = (
 	}
 
 	if (amount.gt(0.001)) {
-		return new BigNumber(amount.toString()).toFixed(decimals, 3)
+		return new Intl.NumberFormat("en-US", {
+			maximumFractionDigits: decimals,
+			minimumFractionDigits: decimals,
+		}).format(amount.toNumber())
 	}
 
 	return "< 0.001"
 }
 
 export const percentage = (number: number | string, decimals = 2): string => {
-	return new BigNumber(number).multipliedBy(100).toFixed(decimals)
+	return new Intl.NumberFormat("en-US", {
+		maximumFractionDigits: decimals,
+		minimumFractionDigits: decimals,
+	}).format(new BigNumber(number).multipliedBy(100).toNumber())
 }
 
 export const toFiatValue = (value: string | number, fiat: string | number) => {

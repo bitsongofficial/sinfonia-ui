@@ -19,7 +19,7 @@ import useConfig from "@/store/config"
 import usePools from "@/store/pools"
 import usePrices from "@/store/prices"
 import { mapLockableDuration } from "./duration"
-import { compact, max } from "lodash"
+import { compact, max, reduce } from "lodash"
 import { add, parseISO } from "date-fns"
 import { Coin } from "@cosmjs/proto-signing"
 import { unboundingEndTimeStart } from "./date"
@@ -180,9 +180,22 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 					pool.id,
 					duration.rawDuration
 				)
+
 				const extraGauges = extraGauge.map((gauge) =>
 					gaugeToGaugeToken(gauge, liquidity.toString())
 				)
+
+				let totalApr = reduce<GaugeToken, BigNumber>(
+					extraGauges,
+					(all, lockableDuration) => {
+						return all.plus(lockableDuration.apr)
+					},
+					new BigNumber("0")
+				)
+
+				const osmosisApr = calculateTotalApr(pool, duration, liquidity.toString())
+
+				totalApr = totalApr.plus(osmosisApr)
 
 				return {
 					...duration,
@@ -190,11 +203,14 @@ export const mapPools = (rawPools: OsmosisPool[]): Pool[] => {
 					unbondedCoins,
 					extraGauges,
 					apr: calculateTotalApr(pool, duration, liquidity.toString()),
+					totalApr: totalApr.toString(),
 				}
 			})
 
 		const maxIncentivizedApr = max(
-			lockableDurationApr.map((duration) => new BigNumber(duration.apr).toNumber())
+			lockableDurationApr.map((duration) =>
+				new BigNumber(duration.totalApr).toNumber()
+			)
 		)
 
 		return {
@@ -388,6 +404,8 @@ export const getExternalPoolApr = (
 
 		return totalReward.div(poolTVL).toString()
 	}
+
+	console.log(poolTVL)
 
 	return "0"
 }
