@@ -143,8 +143,8 @@
     }
 
     &.q-checkbox__inner--truthy {
-        color: $primary;
-        opacity: 1;
+        color: $primary !important;
+        opacity: 1 !important;
     }
 }
 

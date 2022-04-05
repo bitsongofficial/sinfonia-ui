@@ -11,9 +11,11 @@ const props = defineProps<{
 			<a
 				:href="url"
 				target="_BLANK"
-				class="fs-24 opacity-30 hover:opacity-100 text-white"
+				class="fs-24 opacity-30 hover:opacity-100"
 			>
-				<q-icon :name="resolveIcon(social, 30, 30)"></q-icon>
+				<div class="text-white light:text-gray-600">
+					<q-icon :name="resolveIcon(social, 30, 30)"></q-icon>
+				</div>
 			</a>
 		</div>
 	</div>
