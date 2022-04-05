@@ -295,4 +295,11 @@
     <path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 14.9984C2.5 14.4039 2.98199 13.9219 3.57656 13.9219H26.4234C27.018 13.9219 27.5 14.4039 27.5 14.9984C27.5 15.593 27.018 16.075 26.4234 16.075H3.57656C2.98199 16.075 2.5 15.593 2.5 14.9984Z" fill="currentColor"/>
     <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5088 15.0011C11.5878 18.5566 12.8196 21.9787 15.0014 24.7599C17.1832 21.9787 18.415 18.5566 18.494 15.0011C18.415 11.4455 17.1832 8.02346 15.0014 5.24224C12.8196 8.02346 11.5878 11.4455 11.5088 15.0011ZM15.0014 3.57762L14.2065 2.85156C11.1732 6.17238 9.44938 10.482 9.3557 14.9786C9.35539 14.9936 9.35539 15.0085 9.3557 15.0235C9.44938 19.5202 11.1732 23.8297 14.2065 27.1506C14.4105 27.3739 14.699 27.5011 15.0014 27.5011C15.3038 27.5011 15.5923 27.3739 15.7963 27.1506C18.8296 23.8297 20.5534 19.5202 20.6471 15.0235C20.6474 15.0085 20.6474 14.9936 20.6471 14.9786C20.5534 10.482 18.8296 6.17238 15.7963 2.85156L15.0014 3.57762Z" fill="currentColor"/>
   </symbol>
+  <symbol id="coin" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 14.25C17.3848 14.25 21.75 12.2353 21.75 9.75C21.75 7.26472 17.3848 5.25 12 5.25C6.61522 5.25 2.25 7.26472 2.25 9.75C2.25 12.2353 6.61522 14.25 12 14.25Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 14.25V18.75" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2.25 9.75V14.25C2.25 16.5 6 18.75 12 18.75C18 18.75 21.75 16.5 21.75 14.25V9.75" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 13.3203V17.8203" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6 13.3203V17.8203" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
 </svg>

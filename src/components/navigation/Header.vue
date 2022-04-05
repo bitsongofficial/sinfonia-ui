@@ -34,7 +34,7 @@ const lightMode = computed({
 					class="dark-mode-toggle q-mr-20 light:inner:shadow-none"
 				/>
 				<div>
-					<StandardButton with-icon :icon="resolveIcon('external', 10, 10)" class="bg-gradient-primary-pink fs-14">
+					<StandardButton with-icon :icon="resolveIcon('coin', 24, 24)" class="bg-gradient-primary-pink fs-14">
 						Get BTSG
 					</StandardButton>
 				</div>
