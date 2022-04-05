@@ -58,8 +58,12 @@ const usePrices = defineStore("prices", {
 						(coin) => coin.viewDenom === fantoken.symbol
 					)
 
-					if (fantoken.routes) {
-						const pool = poolsStore.poolById(fantoken.routes.poolID)
+					const routes = fantoken.routes
+
+					if (routes) {
+						const pool = poolsStore.rawPools.find(
+							(rawPool) => rawPool.id === routes.poolID
+						)
 
 						if (pool) {
 							const btsgAsset = pool.poolAssets.find(
