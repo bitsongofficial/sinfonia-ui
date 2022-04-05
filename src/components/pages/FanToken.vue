@@ -102,10 +102,10 @@ const tabs = [
 	// 		"Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.",
 	// 	icon: { name: "info", width: 15, height: 15 },
 	// },
-	{ label: "Whitepaper", url: "https://bitsong.io/fantokens/adam-clay" },
-	{ name: "analytics", label: "Analytics" },
+	{ name: "Analytics", label: "Analytics" },
 	{ label: "Airdrop", url: "https://bitsong.io/airdrop/" },
-	{ name: "social", label: "Social" },
+	{ label: "Whitepaper", url: "https://bitsong.io/fantokens/adam-clay" },
+	{ label: "Social", name: "social" },
 ]
 
 if (poolsStore.myPools.length > 0) {
