@@ -335,4 +335,10 @@ body.body--light {
   .q-linear-progress__track {
     background-color: white !important;
   }
+
+  .main-page-background-helper {
+    background: #EAE7ED;
+    filter: blur(30px);
+    backdrop-filter: blur(100px);
+  }
 }

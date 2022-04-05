@@ -165,6 +165,16 @@
     position: relative;
 }
 
+.main-page-background-helper {
+    background: $secondary;
+    filter: blur(200px);
+    backdrop-filter: blur(100px);
+}
+
+.complementary-main-page-background {
+    background: linear-gradient(304.1deg, #220D32, rgba(26, 11, 47, 1) 27.13%, rgba(21, 10, 52, 0) 64.84%, #220D32 100%);
+}
+
 @for $i from 1 through 8 {
     $name: $i*5;
     $val: -(1 - $i/20);

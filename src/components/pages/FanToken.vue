@@ -174,7 +174,7 @@ const poolsColumns: TableColumn[] = [
 const topImageStyle = `background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
 	fantoken.value?.media?.hero ?? ""
 });`
-const topImageStyleLight = `background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 176.73%), url(${
+const topImageStyleLight = `background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 100.73%), url(${
 	fantoken.value?.media?.hero ?? ""
 });`
 
@@ -210,7 +210,9 @@ onUnmounted(() => {
 		<div
 			class="absolute-top full-width -z-1 hv-3/5 !bg-cover"
 			:style="$q.dark.isActive ? topImageStyle : topImageStyleLight"
-		></div>
+		>
+			<div class="absolute left-0 top-98 full-width full-height main-page-background-helper"></div>
+		</div>
 		<div class="row q-mb-70">
 			<div class="col-8 col-md-4">
 				<div class="flex q-mb-60 items-start items-center-xs column-xs">

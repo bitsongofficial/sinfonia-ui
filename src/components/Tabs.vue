@@ -35,15 +35,15 @@ const isTab = (name): boolean => {
 			indicator-color="primary"
 			align="justify"
 			narrow-indicator
-			class="w-max"
+			class="w-max !transition-none"
 		>
 			<template v-for="option in options">
 				<q-tab
 					v-if="option.name && !option.url"
 					:name="option.name"
 					:label="option.label"
-					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0"
-					content-class="q-py-0"
+					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0 !transition-none"
+					content-class="q-py-0 !transition-none"
 				/>
 				<a
 					v-if="option.url"
