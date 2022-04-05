@@ -7,9 +7,12 @@ import { ChainBalance, OsmosisLock, Token, TokenBalance } from "@/types"
 import { reduce, unionBy } from "lodash"
 import { toViewDenom } from "@/common/numbers"
 import { BigNumber } from "bignumber.js"
+import { getFaucet } from "@/services/faucet-client"
+import { notifyError, notifyLoading, notifySuccess } from "@/common"
 
 export interface BankState {
 	loading: boolean
+	loadingFaucet: boolean
 	otherBalance: Coin[]
 	osmosisBalance: Coin[]
 	bitsongBalance: Coin[]
@@ -23,6 +26,7 @@ export interface BankState {
 const useBank = defineStore("bank", {
 	state: (): BankState => ({
 		loading: false,
+		loadingFaucet: false,
 		otherBalance: [],
 		osmosisBalance: [],
 		bitsongBalance: [],
@@ -89,6 +93,28 @@ const useBank = defineStore("bank", {
 				throw error
 			} finally {
 				this.loading = false
+			}
+		},
+		async getFaucet() {
+			const authStore = useAuth()
+
+			const loader = notifyLoading("Faucet Loading", "Waiting for faucet")
+
+			try {
+				this.loadingFaucet = true
+
+				if (authStore.bitsongAddress) {
+					await getFaucet({ address: authStore.bitsongAddress })
+					loader()
+					notifySuccess("Faucet Claim Successful", "Check your balance")
+				}
+			} catch (error) {
+				this.loadingFaucet = false
+
+				loader()
+				notifyError("Fauce Claim Failed", "Try it later")
+
+				throw error
 			}
 		},
 	},
