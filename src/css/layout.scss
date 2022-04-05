@@ -238,6 +238,10 @@
     bottom: 0;
 }
 
+.\!flex {
+    display: flex !important;
+}
+
 @for $border from 0 to 10 {
     $val: $border * 5;
 
