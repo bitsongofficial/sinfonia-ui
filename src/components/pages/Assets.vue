@@ -39,9 +39,17 @@ const columns: TableColumn[] = [
 		name: "symbol",
 		align: "center",
 		label: "Symbol",
-		field: (row: any) => row.coin.symbol,
+		field: (row: TokenBalance) => row.symbol,
 		sortable: false,
 		format: (val: any) => `${val}`,
+	},
+	{
+		name: "price",
+		align: "center",
+		label: "Price",
+		field: (row: TokenBalance) => row.price,
+		sortable: false,
+		format: (val: string) => `${balancedCurrency(val)} $`,
 	},
 	{
 		name: "chain",
@@ -124,6 +132,11 @@ const openTransfer = (from: TokenBalance) => {
 					<q-td>
 						<p class="text-white text-center">
 							{{ rowProps.row.fantoken ? "$" : "" }}{{ rowProps.row.symbol }}
+						</p>
+					</q-td>
+					<q-td>
+						<p class="text-white text-center">
+							{{ balancedCurrency(rowProps.row.price) }} $
 						</p>
 					</q-td>
 					<q-td>
