@@ -153,11 +153,11 @@ const swapAmountWrapper = computed<string>({
 		return swapAmount.value
 	},
 	set(value) {
-		swapAmount.value = value.length > 0 ? value : "0"
+		const amount = new BigNumber(value)
 
-		toAmount.value = new BigNumber(swapAmount.value)
-			.div(swapRatio.value)
-			.toFixed(6)
+		if (!amount.isNaN()) {
+			toAmount.value = amount.div(swapRatio.value).toFixed(6)
+		}
 	},
 })
 
@@ -166,11 +166,11 @@ const toAmountWrapper = computed<string>({
 		return toAmount.value
 	},
 	set(value) {
-		toAmount.value = value.length > 0 ? value : "0"
+		const amount = new BigNumber(value)
 
-		swapAmount.value = new BigNumber(toAmount.value)
-			.div(1 / swapRatio.value)
-			.toFixed(6)
+		if (!amount.isNaN()) {
+			swapAmount.value = amount.div(1 / swapRatio.value).toFixed(6)
+		}
 	},
 })
 
