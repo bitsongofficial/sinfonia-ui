@@ -30,3 +30,39 @@
         display: none;
     }
 }
+
+.btn-outline-minimal {
+    &.q-btn--outline {
+        &::before {
+            border-width: 2px;
+            opacity: 0.4 !important;
+        }
+
+        &:hover {
+            &::before {
+                opacity: 1 !important;
+            }
+        }
+
+        &[disabled] {
+
+            &,
+            &:hover &:focus,
+            &:active {
+                &::before {
+                    opacity: 0.25 !important;
+                }
+
+                opacity: 0.4 !important;
+            }
+
+            .q-focus-helper {
+                display: none;
+            }
+
+            .q-ripple {
+                display: none;
+            }
+        }
+    }
+}

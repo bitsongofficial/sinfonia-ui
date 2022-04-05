@@ -158,7 +158,7 @@ const onTxClick = (tx: Transaction) => {
               to="/fantokens"
               color="white"
               label="View all"
-              class="q-px-22 text-secondry-390 light:before:border-2 light:hover:helper-white"
+              class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
             />
 					</div>
 					<Card
@@ -197,7 +197,9 @@ const onTxClick = (tx: Transaction) => {
               :href="`${externalWebsites.mintscan}osmosis/account/${authStore.osmosisAddress}`"
 							target="_blank"
               label="View all"
-              class="q-px-22 text-secondry-390 light:before:border-2 light:hover:helper-white"
+							:disabled="transactionManagerStore.swapTransactions.length === 0"
+							@click="(e) => {if(transactionManagerStore.swapTransactions.length === 0) e.preventDefault()}"
+              class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
             />
 					</div>
 					<Card
