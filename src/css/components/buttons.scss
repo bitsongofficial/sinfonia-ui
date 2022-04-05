@@ -25,6 +25,13 @@
     }
 }
 
+.q-btn__content {
+    >.q-icon {
+        margin-right: 20px;
+        font-size: 24px !important;
+    }
+}
+
 .q-btn.no-hover {
     .q-focus-helper {
         display: none;

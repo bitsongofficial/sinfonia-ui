@@ -175,6 +175,10 @@
     background: linear-gradient(304.1deg, #220D32, rgba(26, 11, 47, 1) 27.13%, rgba(21, 10, 52, 0) 64.84%, #220D32 100%);
 }
 
+.bg-gradient-primary-pink {
+    background: linear-gradient(0deg, rgba(0, 224, 255, 0.4), rgba(0, 224, 255, 0.4)), $primary;
+}
+
 @for $i from 1 through 8 {
     $name: $i*5;
     $val: -(1 - $i/20);
