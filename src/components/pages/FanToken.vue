@@ -102,7 +102,7 @@ const tabs = [
 	// 		"Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.",
 	// 	icon: { name: "info", width: 15, height: 15 },
 	// },
-	{ name: "Analytics", label: "Analytics" },
+	{ name: "analytics", label: "Analytics" },
 	{ label: "Airdrop", url: "https://bitsong.io/airdrop/" },
 	{ label: "Whitepaper", url: "https://bitsong.io/fantokens/adam-clay" },
 	{ label: "Social", name: "social" },
