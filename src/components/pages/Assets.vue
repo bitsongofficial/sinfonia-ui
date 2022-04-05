@@ -185,9 +185,9 @@ const openTransfer = (from: TokenBalance) => {
 				</q-tr>
 				<q-tr
 					v-for="chain in rowProps.row.chains"
-					v-show="rowProps.expand"
 					:props="rowProps"
 					no-hover
+					:style="rowProps.expand ? {} : { visibility: 'collapse', height: '0' }"
 				>
 					<q-td> </q-td>
 					<q-td>
