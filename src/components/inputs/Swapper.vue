@@ -29,6 +29,7 @@ import Decimal from "decimal.js"
 import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
+import { validateRules } from "@/common/inputs"
 
 const bankStore = useBank()
 const poolsStore = usePools()
@@ -154,12 +155,23 @@ const swapRatio = computed<number>(() => {
 const swapAmount = ref("0")
 const toAmount = ref("0")
 
+const rule1 = [
+							(val) => !!val || 'Required field',
+							(val) => !isNaN(val) || 'Amount must be a decimal value',
+							(val) => gtnZero(val) || 'Amount must be a greater then zero',
+							(val) =>
+								compareBalance(val, available.value) || 'You don\'t have enough coins',
+						]
+const error1 = ref("")
+const hasFirstError = ref(false)
+
 const swapAmountWrapper = computed<string>({
 	get() {
 		return swapAmount.value
 	},
 	set(value) {
 		const amount = new BigNumber(value)
+		hasFirstError.value = validateRules(rule1, value, error1)
 
 		if (value.length > 0) {
 			if (!amount.isNaN()) {
@@ -172,12 +184,22 @@ const swapAmountWrapper = computed<string>({
 	},
 })
 
+const rule2 = [
+							(val) => !!val || 'Required field',
+							(val) => !isNaN(val) || 'Amount must be a decimal value',
+							(val) => gtnZero(val) || 'Amount must be a greater then zero',
+						]
+
+const error2 = ref("")
+const hasSecondError = ref(false)
+
 const toAmountWrapper = computed<string>({
 	get() {
 		return toAmount.value
 	},
 	set(value) {
 		const amount = new BigNumber(value)
+		hasSecondError.value = validateRules(rule2, value, error2)
 
 		if (value.length > 0) {
 			if (!amount.isNaN()) {
@@ -304,29 +326,24 @@ const onSubmit = () => {
 			toCoin.value,
 			toAmount.value
 		)
-	}
+	} 
 }
 </script>
 
 <template>
 	<p class="fs-14 q-mb-20 opacity-30">Swap from</p>
-	<CardDark class="light:bg-white/50 light:shadow-none">
+	<CardDark :class="(hasFirstError ? 'border-primary ' : '' ) + 'light:bg-white/50 light:shadow-none'">
 		<div class="flex justify-between no-wrap">
 			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
 				<div class="q-mr-24">
 					<q-input
 						borderless
 						v-model="swapAmountWrapper"
-						class="fs-24 q-mb-0 text-white"
-						:rules="[
-							(val) => !!val || 'Required field',
-							(val) => !isNaN(val) || 'Amount must be a decimal value',
-							(val) => gtnZero(val) || 'Amount must be a greater then zero',
-							(val) =>
-								compareBalance(val, available) || 'You don\'t have enough coins',
-						]"
+						hide-bottom-space
+						class="fs-24 q-mb-0 text-white move-error-to-bottom"
+						:rules="rule1"
 					/>
-					<p v-if="coin1" class="fs-12 text-dark">
+					<p v-if="coin1" class="fs-12 text-dark text-no-wrap">
 						{{ balancedCurrency(swapAmountFiat) }} $
 					</p>
 				</div>
@@ -353,20 +370,16 @@ const onSubmit = () => {
 			</span>
 		</InlineButton>
 	</div>
-	<CardDark class="q-mb-24 light:bg-white/50 light:shadow-none">
+	<CardDark :class="(hasSecondError ? 'border-primary ' : '' ) + 'q-mb-24 light:bg-white/50 light:shadow-none'">
 		<div class="flex justify-between no-wrap">
 			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
 				<div class="q-mr-24">
 					<q-input
 						borderless
 						v-model="toAmountWrapper"
-						class="fs-24 q-mb-0 text-white"
+						class="fs-24 q-mb-0 text-white move-error-to-bottom-low"
 						v-if="coin1 && coin2"
-						:rules="[
-							(val) => !!val || 'Required field',
-							(val) => !isNaN(val) || 'Amount must be a decimal value',
-							(val) => gtnZero(val) || 'Amount must be a greater then zero',
-						]"
+						:rules="rule2"
 					/>
 				</div>
 			</div>

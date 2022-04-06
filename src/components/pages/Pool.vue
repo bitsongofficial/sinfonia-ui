@@ -282,13 +282,13 @@ onUnmounted(() => {
 					</CardWithHeader>
 				</div>
 			</div>
-			<div class="col-8 col-md-4 col-xl-2">
+			<div class="col-8 col-md-4 col-xl-2 column no-wrap">
 				<InfoCard header="Pool liquidity" class="q-mb-27">
 					{{ balancedCurrency(pool.liquidity) }} $
 				</InfoCard>
 				<InfoCard header="Bonded"> {{ balancedCurrency(pool.bonded) }} $ </InfoCard>
 			</div>
-			<div class="col-8 col-md-4 col-xl-2">
+			<div class="col-8 col-md-4 col-xl-2 column no-wrap">
 				<InfoCard header="My liquidity" class="q-mb-27">
 					{{ balancedCurrency(pool.userLiquidity) }} $
 				</InfoCard>
