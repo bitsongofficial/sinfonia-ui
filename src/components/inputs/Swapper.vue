@@ -331,7 +331,15 @@ const onSubmit = () => {
 </script>
 
 <template>
-	<p class="fs-14 q-mb-20 opacity-30">Swap from</p>
+	<div class="flex justify-between items-center q-mb-20">
+		<p class="fs-14 opacity-30">Swap from</p>
+		<InlineButton @click="invert" class="lt-sm">
+			<p class="fs-12 q-mr-12">Invert tokens</p>
+			<span class="fs-10 text-primary">
+				<q-icon :name="resolveIcon('swap', 21, 16)" />
+			</span>
+		</InlineButton>
+	</div>
 	<SwapperField
 		:coin="fromCoin"
 		v-model="swapAmountWrapper"
@@ -344,7 +352,7 @@ const onSubmit = () => {
 	</SwapperField>
 	<div class="flex justify-between q-mt-20 q-mb-16 items-center">
 		<p class="fs-14 opacity-30">Swap to</p>
-		<InlineButton @click="invert">
+		<InlineButton @click="invert" class=" gt-xs">
 			<p class="fs-12 q-mr-12">Invert tokens</p>
 			<span class="fs-10 text-primary">
 				<q-icon :name="resolveIcon('swap', 21, 16)" />
