@@ -136,7 +136,7 @@ const onTxClick = (tx: Transaction) => {
 			>
 				<div class="max-w-582">
 					<Title class="q-mb-36">Swap Tokens</Title>
-					<Card ref="heightRef" class="q-pa-36" transparency="5">
+					<Card ref="heightRef" :padding="0" class="q-px-12 q-pt-32 q-pb-20 q-pa-sm-20 q-pa-md-36" transparency="5">
 						<Swapper
 							:default-from="from"
 							:default-to="to"

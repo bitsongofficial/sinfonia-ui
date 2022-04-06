@@ -11,7 +11,7 @@ const paddingClasses = computed(() => {
 		"q-px-" +
 		(props.paddingX != null ? props.paddingX : 32) +
 		" q-py-" +
-		(props.paddingY ? props.paddingY : 22)
+		(props.paddingY != null ? props.paddingY : 22)
 	)
 })
 </script>

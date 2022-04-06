@@ -216,4 +216,8 @@
     .text-xs-secondary {
         color: $secondary !important;
     }
+
+    .bg-xs-white {
+        background-color: adjust-color($color: #FFFFFF);
+    }
 }

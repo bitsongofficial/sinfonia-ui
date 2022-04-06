@@ -37,7 +37,7 @@ onBeforeMount(() => {
 								<SideMenu class="all-pointer-events"></SideMenu>
 							</div>
 							<div
-								class="vertical-sm-fixed full-width flex-xs jsutify-center-xs relative-xs no-pointer-events bottom-0 q-mb-40 q-mb-xs-14 q-pt-lg w-fit"
+								class="vertical-sm-fixed full-width flex-xs justify-center-xs relative-xs no-pointer-events bottom-0 q-mb-40 q-mb-xs-14 q-pt-lg w-fit"
 							>
 								<a
 									:href="externalWebsites.coingecko"
