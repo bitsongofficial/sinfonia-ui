@@ -309,9 +309,17 @@ const onSubmit = () => {
 </script>
 
 <template>
-	<p class="fs-14 q-mb-20 opacity-30">Swap from</p>
+	<div class="flex justify-between items-center q-mb-20">
+		<p class="fs-14 opacity-30">Swap from</p>
+		<InlineButton @click="invert" class="lt-sm">
+			<p class="fs-12 q-mr-12">Invert tokens</p>
+			<span class="fs-10 text-primary">
+				<q-icon :name="resolveIcon('swap', 21, 16)" />
+			</span>
+		</InlineButton>
+	</div>
 	<CardDark class="light:bg-white/50 light:shadow-none">
-		<div class="flex justify-between no-wrap">
+		<div class="flex justify-between column-sm no-wrap">
 			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
 				<div class="q-mr-24">
 					<q-input
@@ -334,7 +342,7 @@ const onSubmit = () => {
 					<SmallButton label="MAX" @click="setMaxAmount"></SmallButton>
 				</div>
 			</div>
-			<div class="vertical-separator q-mx-28"></div>
+			<div class="vertical-separator q-mx-28 gt-sm"></div>
 			<div class="flex-1">
 				<CoinSelect
 					v-model="fromCoin"
@@ -346,7 +354,7 @@ const onSubmit = () => {
 	</CardDark>
 	<div class="flex justify-between q-my-20 items-center">
 		<p class="fs-14 opacity-30">Swap to</p>
-		<InlineButton @click="invert">
+		<InlineButton @click="invert" class=" gt-xs">
 			<p class="fs-12 q-mr-12">Invert tokens</p>
 			<span class="fs-10 text-primary">
 				<q-icon :name="resolveIcon('swap', 21, 16)" />
@@ -354,7 +362,7 @@ const onSubmit = () => {
 		</InlineButton>
 	</div>
 	<CardDark class="q-mb-24 light:bg-white/50 light:shadow-none">
-		<div class="flex justify-between no-wrap">
+		<div class="flex justify-between column-sm no-wrap">
 			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
 				<div class="q-mr-24">
 					<q-input
@@ -370,7 +378,7 @@ const onSubmit = () => {
 					/>
 				</div>
 			</div>
-			<div class="vertical-separator q-mx-28"></div>
+			<div class="vertical-separator q-mx-28 gt-sm"></div>
 			<div class="flex-1">
 				<CoinSelect
 					v-model="toCoin"

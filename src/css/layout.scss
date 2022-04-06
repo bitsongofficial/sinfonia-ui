@@ -432,6 +432,10 @@ $s in $custom-sizes {
     .justify-sm-center {
         justify-content: center;
     }
+
+    .column-sm {
+        flex-direction: column;
+    }
 }
 
 @media screen and (max-width: $breakpoint-md) {}
