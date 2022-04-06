@@ -7,7 +7,7 @@
 		"build": "vue-tsc --noEmit && vite build",
 		"preview": "vite preview",
 		"type-check": "vue-tsc --noEmit",
-		"lint": "eslint --ext .js,.ts --ignore-path .gitignore --ignore-path .eslintignore --fix src",
+		"lint": "eslint --ext .js,.ts --ignore-path .gitignore --ignore-path .eslintignore --fix $(git diff --name-only HEAD | xargs)",
 		"format": "prettier --ignore-path .prettierignore --write ."
 	},
 	"engines": {
