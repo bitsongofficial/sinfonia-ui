@@ -116,6 +116,8 @@ const useBank = defineStore("bank", {
 				notifyError("Fauce Claim Failed", "Try it later")
 
 				throw error
+			} finally {
+				this.loadingFaucet = false
 			}
 		},
 	},

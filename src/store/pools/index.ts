@@ -1,4 +1,4 @@
-import { compact, reduce, unionBy } from "lodash"
+import { compact, differenceWith, isEmpty, reduce, unionBy } from "lodash"
 import { sinfoniaClient } from "@/services"
 import { defineStore } from "pinia"
 import {
@@ -16,6 +16,7 @@ import { mapPools, mapLockableDuration } from "@/common"
 import useBank from "@/store/bank"
 import useConfig from "@/store/config"
 import BigNumber from "bignumber.js"
+import { Coin } from "@cosmjs/proto-signing"
 
 export interface PoolsState {
 	loading: boolean
@@ -172,6 +173,22 @@ const usePools = defineStore("pools", {
 						gauge.distribute_to.denom === `gamm/pool/${id}` &&
 						gauge.distribute_to.duration === duration
 				)
+		},
+		extraGaugeByPoolIdAndDurationAndCoins({ extraGauges }) {
+			return (id: string, duration: string, coins: Coin[]): Gauge | undefined =>
+				extraGauges.find((gauge) => {
+					const equal = isEmpty(
+						differenceWith(gauge.coins, coins, (left, right) => {
+							return left.denom === right.denom
+						})
+					)
+
+					return (
+						gauge.distribute_to.denom === `gamm/pool/${id}` &&
+						gauge.distribute_to.duration === duration &&
+						equal
+					)
+				})
 		},
 		routesPoolByDenom() {
 			const configStore = useConfig()
