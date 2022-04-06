@@ -30,6 +30,7 @@ import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 import { validateRules } from "@/common/inputs"
+import SwapperField from "./SwapperField.vue"
 
 const bankStore = useBank()
 const poolsStore = usePools()
@@ -144,6 +145,9 @@ onUnmounted(() => {
 	balancesWatcher()
 })
 
+const field1 = ref()
+const field2 = ref()
+
 const swapRatio = computed<number>(() => {
 	if (fromCoin.value) {
 		return calculateRouteSpotPrice(fromCoin.value, swapRoutes.value)
@@ -162,8 +166,6 @@ const rule1 = [
 							(val) =>
 								compareBalance(val, available.value) || 'You don\'t have enough coins',
 						]
-const error1 = ref("")
-const hasFirstError = ref(false)
 
 const swapAmountWrapper = computed<string>({
 	get() {
@@ -171,7 +173,6 @@ const swapAmountWrapper = computed<string>({
 	},
 	set(value) {
 		const amount = new BigNumber(value)
-		hasFirstError.value = validateRules(rule1, value, error1)
 
 		if (value.length > 0) {
 			if (!amount.isNaN()) {
@@ -181,6 +182,7 @@ const swapAmountWrapper = computed<string>({
 		} else {
 			swapAmount.value = ""
 		}
+		field2.value.validate(toAmount.value)
 	},
 })
 
@@ -190,16 +192,12 @@ const rule2 = [
 							(val) => gtnZero(val) || 'Amount must be a greater then zero',
 						]
 
-const error2 = ref("")
-const hasSecondError = ref(false)
-
 const toAmountWrapper = computed<string>({
 	get() {
 		return toAmount.value
 	},
 	set(value) {
 		const amount = new BigNumber(value)
-		hasSecondError.value = validateRules(rule2, value, error2)
 
 		if (value.length > 0) {
 			if (!amount.isNaN()) {
@@ -209,11 +207,13 @@ const toAmountWrapper = computed<string>({
 		} else {
 			toAmount.value = ""
 		}
+
+		field1.value.validate(swapAmount.value)
 	},
 })
 
 const swapAmountFiat = computed<string>(() => {
-	if (swapAmountWrapper.value.length > 0) {
+	if (swapAmountWrapper.value.length > 0 ) {
 		return new Decimal(swapAmountWrapper.value)
 			.mul(fromCoin.value?.price ?? "0")
 			.toString()
@@ -223,7 +223,7 @@ const swapAmountFiat = computed<string>(() => {
 })
 
 const swapCoin = computed(() => {
-	if (fromCoin.value && swapAmountWrapper.value.length > 0) {
+	if (fromCoin.value && swapAmountWrapper.value.length > 0 ) {
 		return amountIBCFromCoin(swapAmountWrapper.value, fromCoin.value)
 	}
 
@@ -332,36 +332,17 @@ const onSubmit = () => {
 
 <template>
 	<p class="fs-14 q-mb-20 opacity-30">Swap from</p>
-	<CardDark :class="(hasFirstError ? 'border-primary ' : '' ) + 'light:bg-white/50 light:shadow-none'">
-		<div class="flex justify-between no-wrap">
-			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
-				<div class="q-mr-24">
-					<q-input
-						borderless
-						v-model="swapAmountWrapper"
-						hide-bottom-space
-						class="fs-24 q-mb-0 text-white move-error-to-bottom"
-						:rules="rule1"
-					/>
-					<p v-if="coin1" class="fs-12 text-dark text-no-wrap">
-						{{ balancedCurrency(swapAmountFiat) }} $
-					</p>
-				</div>
-				<div>
-					<SmallButton label="MAX" @click="setMaxAmount"></SmallButton>
-				</div>
-			</div>
-			<div class="vertical-separator q-mx-28"></div>
-			<div class="flex-1">
-				<CoinSelect
-					v-model="fromCoin"
-					:options="fromSwappableBalances"
-					class="q-mx--30"
-				></CoinSelect>
-			</div>
-		</div>
-	</CardDark>
-	<div class="flex justify-between q-my-20 items-center">
+	<SwapperField
+		:coin="fromCoin"
+		v-model="swapAmountWrapper"
+		show-max
+		:swap-amount-fiat="swapAmountFiat"
+		:options="fromSwappableBalances"
+		:rules="rule1"
+		@max-click="setMaxAmount"
+		ref="field1">
+	</SwapperField>
+	<div class="flex justify-between q-mt-20 q-mb-16 items-center">
 		<p class="fs-14 opacity-30">Swap to</p>
 		<InlineButton @click="invert">
 			<p class="fs-12 q-mr-12">Invert tokens</p>
@@ -370,29 +351,14 @@ const onSubmit = () => {
 			</span>
 		</InlineButton>
 	</div>
-	<CardDark :class="(hasSecondError ? 'border-primary ' : '' ) + 'q-mb-24 light:bg-white/50 light:shadow-none'">
-		<div class="flex justify-between no-wrap">
-			<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
-				<div class="q-mr-24">
-					<q-input
-						borderless
-						v-model="toAmountWrapper"
-						class="fs-24 q-mb-0 text-white move-error-to-bottom-low"
-						v-if="coin1 && coin2"
-						:rules="rule2"
-					/>
-				</div>
-			</div>
-			<div class="vertical-separator q-mx-28"></div>
-			<div class="flex-1">
-				<CoinSelect
-					v-model="toCoin"
-					:options="toSwappableBalances"
-					class="q-mx--30"
-				></CoinSelect>
-			</div>
-		</div>
-	</CardDark>
+	<SwapperField
+		:coin="toCoin"
+		v-model="toAmountWrapper"
+		:options="toSwappableBalances"
+		:rules="rule2"
+		ref="field2"
+		class="q-mb-24">
+	</SwapperField>
 	<div
 		class="q-py-15 q-px-30 bg-white-5 light:bg-gray-light rounded-25 fs-14 q-mb-57"
 	>
@@ -402,7 +368,7 @@ const onSubmit = () => {
 		>
 			<p>Estimated slippage</p>
 			<div class="flex">
-				<p :class="'q-mr-14' + (invalidSlippage ? ' text-negative' : '')">
+				<p :class="'q-mr-14' + (invalidSlippage ? ' text-primary' : '')">
 					{{ percentageRange(slippage) }} %
 				</p>
 				<q-icon

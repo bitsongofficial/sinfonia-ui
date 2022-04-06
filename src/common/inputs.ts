@@ -22,6 +22,9 @@ export const validateRules = (
 
 		return true
 	}
+	else {
+		output.value = ""
+	}
 
 	return false
 }

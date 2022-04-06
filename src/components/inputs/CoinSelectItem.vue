@@ -12,7 +12,7 @@ defineProps<{
 			<div class="q-mr-20">
 				<p class="fs-12">{{ coin.name }}</p>
 			</div>
-			<div class="flex items-center">
+			<div class="flex items-center no-wrap">
 				<p class="fs-10 q-mr-20 q-mt-2 light:group-hover:text-primary">{{ coin.symbol }}</p>
 				<q-avatar size="24px">
 					<img :src="coin.logos.default" alt="" />
