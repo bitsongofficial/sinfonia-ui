@@ -9,6 +9,7 @@ import {
 	percentage,
 	toDecimalGamm,
 	balancedGamm,
+	gtnZero,
 } from "@/common/numbers"
 import InfoCard from "@/components/cards/InfoCard.vue"
 import ExpandableCard from "@/components/cards/ExpandableCard.vue"
@@ -27,10 +28,12 @@ import useTransactionManager from "@/store/transaction-manager"
 import LiquidityModal from "../modals/LiquidityModal.vue"
 import { coinsConfig } from "@/configs/config"
 import useAuth from "@/store/auth"
+import useConfig from "@/store/config"
 
 const transactionManagerStore = useTransactionManager()
 const poolsStore = usePools()
 const authStore = useAuth()
+const configStore = useConfig()
 const route = useRoute()
 const id = route.params["id"] as string
 const openBondModal = ref(false)
@@ -317,16 +320,21 @@ onUnmounted(() => {
 			<div class="col-8 !w-md-1/3" v-for="unbonding in pool.lockableDurationApr">
 				<ExpandableCard
 					transparency="5"
-					:expandable="unbonding.extraGauges.length > 0"
+					:expandable="
+						unbonding.extraGauges.length > 0 || gtnZero(unbonding.osmosisApr)
+					"
 				>
 					<p class="fs-12 opacity-30 q-mb-16 text-uppercase">
 						{{ unbonding.readableDuration }} unbonding
 					</p>
 					<div class="q-mb-20">
 						<p class="fs-36 q-mb-8">{{ percentage(unbonding.totalApr) }} %</p>
-						<div class="flex items-center" v-if="unbonding.extraGauges.length > 0">
+						<div
+							class="flex items-center"
+							v-if="unbonding.extraGauges.length > 0 || gtnZero(unbonding.osmosisApr)"
+						>
 							<p class="text-primary fs-14 q-mr-16 text-weight-medium">
-								External Incentives Pool
+								Pools Incentives
 							</p>
 							<template v-for="gauge in unbonding.extraGauges">
 								<q-avatar
@@ -338,15 +346,22 @@ onUnmounted(() => {
 									<img :src="coin.token?.logos.default" />
 								</q-avatar>
 							</template>
+
+							<q-avatar class="q-mr-9" size="24px" v-if="configStore.osmosisToken">
+								<img :src="configStore.osmosisToken.logos.default" />
+							</q-avatar>
 						</div>
 					</div>
 					<p
-						class="fs-12 opacity-40 text-weight-regular q-mb-20  !leading-20"
+						class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20"
 						v-if="unbonding.extraGauges.length > 0"
 					>
 						BitSong Launchpad is the platform where you can buy and. Incentives for
 						{{ unbonding.extraGauges[0].leftEpochs }}
 						epochs.
+					</p>
+					<p v-else class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20">
+						BitSong Launchpad is the platform where you can buy and.
 					</p>
 					<div
 						class="flex no-wrap items-center text-weight-medium"
@@ -362,6 +377,7 @@ onUnmounted(() => {
 							:height="12"
 							:value="unbonding.extraGauges[0].filledEpochs"
 							:max="unbonding.extraGauges[0].numEpochsPaidOver"
+							reverse
 						></Progress>
 						<div class="q-ml-21">
 							<p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">End</p>
@@ -382,27 +398,42 @@ onUnmounted(() => {
 								</q-avatar>
 								<div class="flex-1">
 									<div class="flex no-wrap items-center q-mb-10">
-										<p class="fs-14 text-weight-medium q-mr-30">
-											{{ coin.token?.symbol }}
-										</p>
-										<Progress
-											:height="6"
-											:value="gauge.filledEpochs"
-											:max="gauge.numEpochsPaidOver"
-										></Progress>
-										<p class="fs-14 text-weight-medium q-ml-22 text-no-wrap">
+										<p class="fs-14 text-weight-medium text-no-wrap">
 											{{ gauge.leftEpochs }} epochs left
 										</p>
 									</div>
-									<div class="flex justify-between items-center">
-										<p class="fs-10 text-primary text-uppercase text-weight-medium">
-											Incentive
-											<span class="text-white">{{ balancedCurrency(coin.amount) }}</span>
-											{{ coin.token?.symbol }}
+									<div class="flex row wrap justify-between items-center">
+										<p class="fs-11 text-white text-uppercase text-weight-medium">
+											<span class="opacity-40">Incentive </span>
+											{{ balancedCurrency(coin.amount) }}
+											{{ coin.token?.fantoken ? "$" : "" }}{{ coin.token?.symbol }}
 										</p>
 										<div class="flex">
-											<p class="q-mr-12 opacity-30">APR</p>
+											<p class="fs-11 q-mr-8 opacity-30">APR</p>
 											<p>{{ percentage(gauge.apr) }} %</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div>
+							<div
+								v-if="configStore.osmosisToken"
+								class="rounded-20 border-primary-light q-pa-18 flex items-center q-mb-6"
+							>
+								<q-avatar class="q-mr-18" size="25px">
+									<img :src="configStore.osmosisToken.logos.default" />
+								</q-avatar>
+								<div class="flex-1">
+									<div class="flex no-wrap items-center q-mb-10">
+										<p class="fs-14 text-weight-medium q-mr-30">
+											{{ configStore.osmosisToken.symbol }}
+										</p>
+									</div>
+									<div class="flex justify-between items-center">
+										<div class="flex">
+											<p class="q-mr-12 opacity-30">APR</p>
+											<p>{{ percentage(unbonding.osmosisApr) }} %</p>
 										</div>
 									</div>
 								</div>

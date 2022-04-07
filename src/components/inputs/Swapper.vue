@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {
-	balancedCurrency,
 	smallNumberRate,
 	gtnZero,
 	isNaN,
@@ -16,9 +15,6 @@ import {
 } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
-import CardDark from "@/components/cards/CardDark.vue"
-import SmallButton from "@/components/buttons/SmallButton.vue"
-import CoinSelect from "@/components/inputs/CoinSelect.vue"
 import InlineButton from "@/components/buttons/InlineButton.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import InformativeTooltip from "@/components/tooltips/InformativeTooltip.vue"
@@ -29,8 +25,8 @@ import Decimal from "decimal.js"
 import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
-import { validateRules } from "@/common/inputs"
 import SwapperField from "./SwapperField.vue"
+import { isEqual } from "lodash"
 
 const bankStore = useBank()
 const poolsStore = usePools()
@@ -59,6 +55,30 @@ const fromCoin = computed<TokenBalance | null>({
 	},
 })
 
+const updateFromAmount = () => {
+	const swapAmountBn = new BigNumber(swapAmount.value)
+
+	if (swapAmount.value.length > 0) {
+		if (!swapAmountBn.isNaN()) {
+			toAmount.value = swapAmountBn.div(swapRatio.value).toFixed(6)
+		}
+	}
+
+	field1.value.validate(swapAmount.value)
+}
+
+const updateToAmount = () => {
+	const toAmountBn = new BigNumber(toAmount.value)
+
+	if (toAmount.value.length > 0) {
+		if (!toAmountBn.isNaN()) {
+			swapAmount.value = toAmountBn.div(1 / swapRatio.value).toFixed(6)
+		}
+	}
+
+	field2.value.validate(toAmount.value)
+}
+
 const toCoin = computed<TokenBalance | null>({
 	get() {
 		return props.coin2
@@ -67,6 +87,23 @@ const toCoin = computed<TokenBalance | null>({
 		emit("update:coin2", value)
 	},
 })
+
+const coinsWatcher = watch(
+	() => [fromCoin.value, toCoin.value],
+	([oldFrom, oldTo], [newFrom, newTo]) => {
+		if (oldFrom && newFrom) {
+			if (oldFrom.symbol !== newFrom.symbol) {
+				updateToAmount()
+			}
+		}
+
+		if (oldTo && newTo) {
+			if (oldTo.symbol !== newTo.symbol) {
+				updateFromAmount()
+			}
+		}
+	}
+)
 
 const setDefaultValues = (newBalances: TokenBalance[]) => {
 	const balances = [...newBalances]
@@ -87,6 +124,8 @@ const setDefaultValues = (newBalances: TokenBalance[]) => {
 		} else {
 			fromCoin.value = balances.shift() ?? null
 		}
+	} else if (fromCoinTemp) {
+		fromCoin.value = fromCoinTemp
 	}
 
 	if (!fromCoinTemp) {
@@ -105,6 +144,8 @@ const setDefaultValues = (newBalances: TokenBalance[]) => {
 		} else {
 			toCoin.value = balances.pop() ?? null
 		}
+	} else if (toCoinTemp) {
+		toCoin.value = toCoinTemp
 	}
 
 	if (!toCoinTemp) {
@@ -142,6 +183,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+	coinsWatcher()
 	balancesWatcher()
 })
 
@@ -160,12 +202,11 @@ const swapAmount = ref("0")
 const toAmount = ref("0")
 
 const rule1 = [
-							(val) => !!val || 'Required field',
-							(val) => !isNaN(val) || 'Amount must be a decimal value',
-							(val) => gtnZero(val) || 'Amount must be a greater then zero',
-							(val) =>
-								compareBalance(val, available.value) || 'You don\'t have enough coins',
-						]
+	(val) => !!val || "Required field",
+	(val) => !isNaN(val) || "Amount must be a decimal value",
+	(val) => gtnZero(val) || "Amount must be a greater then zero",
+	(val) => compareBalance(val, available.value) || "You don't have enough coins",
+]
 
 const swapAmountWrapper = computed<string>({
 	get() {
@@ -187,10 +228,10 @@ const swapAmountWrapper = computed<string>({
 })
 
 const rule2 = [
-							(val) => !!val || 'Required field',
-							(val) => !isNaN(val) || 'Amount must be a decimal value',
-							(val) => gtnZero(val) || 'Amount must be a greater then zero',
-						]
+	(val) => !!val || "Required field",
+	(val) => !isNaN(val) || "Amount must be a decimal value",
+	(val) => gtnZero(val) || "Amount must be a greater then zero",
+]
 
 const toAmountWrapper = computed<string>({
 	get() {
@@ -213,7 +254,7 @@ const toAmountWrapper = computed<string>({
 })
 
 const swapAmountFiat = computed<string>(() => {
-	if (swapAmountWrapper.value.length > 0 ) {
+	if (swapAmountWrapper.value.length > 0) {
 		return new Decimal(swapAmountWrapper.value)
 			.mul(fromCoin.value?.price ?? "0")
 			.toString()
@@ -223,7 +264,7 @@ const swapAmountFiat = computed<string>(() => {
 })
 
 const swapCoin = computed(() => {
-	if (fromCoin.value && swapAmountWrapper.value.length > 0 ) {
+	if (fromCoin.value && swapAmountWrapper.value.length > 0) {
 		return amountIBCFromCoin(swapAmountWrapper.value, fromCoin.value)
 	}
 
@@ -282,8 +323,8 @@ const swapRoutes = computed(() => {
 const available = computed(() => {
 	const osmosisToken = configStore.osmosisToken
 
-	if (osmosisToken && props.coin1 && props.coin1.chains) {
-		const chain = props.coin1.chains.find(
+	if (osmosisToken && fromCoin.value && fromCoin.value.chains) {
+		const chain = fromCoin.value.chains.find(
 			(el) => el.symbol === osmosisToken.symbol
 		)
 
@@ -326,7 +367,7 @@ const onSubmit = () => {
 			toCoin.value,
 			toAmount.value
 		)
-	} 
+	}
 }
 </script>
 
@@ -341,18 +382,18 @@ const onSubmit = () => {
 		</InlineButton>
 	</div>
 	<SwapperField
-		:coin="fromCoin"
+		v-model:coin="fromCoin"
 		v-model="swapAmountWrapper"
 		show-max
 		:swap-amount-fiat="swapAmountFiat"
 		:options="fromSwappableBalances"
 		:rules="rule1"
 		@max-click="setMaxAmount"
-		ref="field1">
-	</SwapperField>
+		ref="field1"
+	/>
 	<div class="flex justify-between q-mt-20 q-mb-16 items-center">
 		<p class="fs-14 opacity-30">Swap to</p>
-		<InlineButton @click="invert" class=" gt-xs">
+		<InlineButton @click="invert" class="gt-xs">
 			<p class="fs-12 q-mr-12">Invert tokens</p>
 			<span class="fs-10 text-primary">
 				<q-icon :name="resolveIcon('swap', 21, 16)" />
@@ -360,13 +401,13 @@ const onSubmit = () => {
 		</InlineButton>
 	</div>
 	<SwapperField
-		:coin="toCoin"
+		v-model:coin="toCoin"
 		v-model="toAmountWrapper"
 		:options="toSwappableBalances"
 		:rules="rule2"
 		ref="field2"
-		class="q-mb-24">
-	</SwapperField>
+		class="q-mb-24"
+	/>
 	<div
 		class="q-py-15 q-px-30 bg-white-5 light:bg-gray-light rounded-25 fs-14 q-mb-57"
 	>
@@ -461,9 +502,9 @@ const onSubmit = () => {
 			</div>
 		</div>
 		<div class="flex-1">
-			<LargeButton @click="onSubmit" :disable="!authStore.session"
-				>Swap Tokens</LargeButton
-			>
+			<LargeButton @click="onSubmit" :disable="!authStore.session">
+				Swap Tokens
+			</LargeButton>
 		</div>
 	</div>
 </template>

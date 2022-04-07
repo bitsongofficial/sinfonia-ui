@@ -2,6 +2,7 @@ import useBank from "@/store/bank"
 import usePools from "@/store/pools"
 import useConfig from "@/store/config"
 import useAuth from "@/store/auth"
+import usePrices from "@/store/prices"
 import { TransactionManager } from "@/signing/transaction-manager"
 import {
 	LockableDurationWithApr,
@@ -631,14 +632,21 @@ const useTransactionManager = defineStore("transactionManager", {
 
 									notifyError("Transaction Failed", "Request Rejected, try later.")
 								} else {
-									notifySuccess("Transaction Successful", "View Explorer")
+									const url = `${transaction.from.explorerURL}txs/${transaction.tx?.transactionHash}`
+									notifySuccess("Transaction Successful", undefined, {
+										text: "View Explorer",
+										url,
+									})
 									const poolsStore = usePools()
 									const bankStore = useBank()
+									const pricesStore = usePrices()
 
 									setTimeout(() => {
+										pricesStore.init()
 										poolsStore.init()
+										bankStore.init()
 										bankStore.loadBalances()
-									}, 500)
+									}, 1000)
 								}
 
 								return {

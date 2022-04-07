@@ -4,10 +4,12 @@
 	"version": "0.0.0",
 	"scripts": {
 		"dev": "vite",
+		"dev:mainet": "vite --mode mainnet",
 		"build": "vue-tsc --noEmit && vite build",
+		"build:mainnet": "vue-tsc --noEmit && vite build --mode mainnet",
 		"preview": "vite preview",
 		"type-check": "vue-tsc --noEmit",
-		"lint": "eslint --ext .js,.ts --ignore-path .gitignore --ignore-path .eslintignore --fix src",
+		"lint": "eslint --ignore-path .gitignore --ignore-path .eslintignore --fix $(git diff --name-only HEAD | grep -E '\\.(js|ts)$' | xargs) --ext .js --ext .ts ",
 		"format": "prettier --ignore-path .prettierignore --write ."
 	},
 	"engines": {

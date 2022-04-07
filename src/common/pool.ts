@@ -186,8 +186,10 @@ export const mapPools = (
 					duration.rawDuration
 				)
 
-				const extraGauges = extraGauge.map((gauge) =>
-					gaugeToGaugeToken(pool, duration, gauge, liquidity.toString(), tokens)
+				const extraGauges = compact(
+					extraGauge.map((gauge) =>
+						gaugeToGaugeToken(pool, duration, gauge, liquidity.toString(), tokens)
+					)
 				)
 
 				let totalApr = reduce<GaugeToken, BigNumber>(
@@ -207,6 +209,7 @@ export const mapPools = (
 					bondedCoin,
 					unbondedCoins,
 					extraGauges,
+					osmosisApr,
 					apr: calculateTotalApr(pool, duration, liquidity.toString()),
 					totalApr: totalApr.toString(),
 				}
@@ -238,7 +241,15 @@ export const gaugeToGaugeToken = (
 	gauge: Gauge,
 	liquidityPool: string,
 	tokens: TokenBalance[]
-): GaugeToken => {
+): GaugeToken | undefined => {
+	const numEpochsPaidOver = parseInt(gauge.num_epochs_paid_over)
+	const filledEpochs = parseInt(gauge.filled_epochs)
+	const leftEpochs = numEpochsPaidOver - filledEpochs
+
+	if (leftEpochs <= 0) {
+		return
+	}
+
 	const coins: CoinToken[] = gauge.coins.map((coin) => {
 		const token = findTokenByIBCDenom(tokens, coin.denom)
 		let amount = coin.amount
@@ -260,9 +271,6 @@ export const gaugeToGaugeToken = (
 		}
 	})
 
-	const numEpochsPaidOver = parseInt(gauge.num_epochs_paid_over)
-	const filledEpochs = parseInt(gauge.filled_epochs)
-	const leftEpochs = numEpochsPaidOver - filledEpochs
 	const endTime = add(parseISO(gauge.start_time), {
 		days: numEpochsPaidOver,
 	}).toISOString()
