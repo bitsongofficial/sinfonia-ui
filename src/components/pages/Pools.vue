@@ -11,7 +11,7 @@ const poolsStore = usePools()
 
 <template>
 	<template v-if="poolsStore.myPools.length > 0">
-		<Title class="q-mb-50">Your Pools</Title>
+		<Title class="q-mb-50">My Pools</Title>
 		<div class="row q-mb-72 q-col-gutter-x-xl q-col-gutter-y-md">
 			<div
 				v-for="(userPool, index) in poolsStore.myPools"

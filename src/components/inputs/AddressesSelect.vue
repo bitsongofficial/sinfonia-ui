@@ -54,6 +54,7 @@ const address = computed(() => {
 		:menu-offset="[0, 8]"
 		:rules="rules"
 		hide-bottom-space
+		behavior="menu"
 	>
 		<template v-slot:option="{ itemProps, opt }">
 			<div v-bind="itemProps" class="text-white q-py-16 q-px-10 cursor-pointer">

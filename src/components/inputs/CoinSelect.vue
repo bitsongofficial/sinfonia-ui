@@ -63,13 +63,14 @@ onUnmounted(() => {
 		:options="options"
 		:dropdown-icon="resolveIcon('dropdown', 11, 7)"
 		borderless
-		class="text-white q-px-select-20"
+		class="text-white q-px-select-20 w-full"
 		input-class="q-px-20 q-py-20"
 		popup-content-class="rounded-20 q-px-10 q-py-0"
 		:menu-offset="[0, 30]"
 		ref="select"
 		@popup-show="setWidth"
 		:popup-content-style="popupStyle"
+		behavior="menu"
 	>
 		<template v-slot:option="{ itemProps, opt }">
 			<CoinSelectItem

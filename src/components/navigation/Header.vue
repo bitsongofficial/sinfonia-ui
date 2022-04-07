@@ -7,6 +7,7 @@ import useSettings from "@/store/settings"
 import { resolveIcon } from "@/common/resolvers"
 import StandardButton from "../buttons/StandardButton.vue"
 import useBank from "@/store/bank"
+import Drawer from "./Drawer.vue"
 
 const $q = useQuasar()
 const settingsStore = useSettings()
@@ -25,7 +26,7 @@ const lightMode = computed({
 })
 </script>
 <template>
-	<div class="row justify-between items-center">
+	<div v-if="$q.screen.gt.xs" class="row justify-between items-center">
 		<RouterLink to="/fantokens">
 			<Logo></Logo>
 		</RouterLink>
@@ -52,4 +53,5 @@ const lightMode = computed({
 			</div>
 		</div>
 	</div>
+	<Drawer v-else></Drawer>
 </template>

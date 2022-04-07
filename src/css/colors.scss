@@ -4,6 +4,10 @@
     --text-color: #fff;
 }
 
+.bg-transparent {
+    background-color: transparent;
+}
+
 .border-primary {
     border: 2px solid $primary;
 }
@@ -215,5 +219,9 @@
 @media screen and (max-width: $breakpoint-xs) {
     .text-xs-secondary {
         color: $secondary !important;
+    }
+
+    .bg-xs-white {
+        background-color: adjust-color($color: #FFFFFF);
     }
 }

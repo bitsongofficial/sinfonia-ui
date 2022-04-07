@@ -26,7 +26,7 @@ onBeforeMount(() => {
 		<div class="container">
 			<div class="column col-grow">
 				<Header></Header>
-				<div class="no-pointer-events full-width flex">
+				<div v-if="$q.screen.gt.xs" class="no-pointer-events full-width flex">
 					<div
 						class="full-width !w-xs-1/3 q-px-xs-0 !w-sm-1/4 !w-md-1/6 self-end fixed-xs z-10 left-0 bottom-0"
 					>
@@ -37,7 +37,7 @@ onBeforeMount(() => {
 								<SideMenu class="all-pointer-events"></SideMenu>
 							</div>
 							<div
-								class="vertical-sm-fixed full-width flex-xs jsutify-center-xs relative-xs no-pointer-events bottom-0 q-mb-40 q-mb-xs-14 q-pt-lg w-fit"
+								class="vertical-sm-fixed full-width flex-xs justify-center-xs relative-xs no-pointer-events bottom-0 q-mb-40 q-mb-xs-14 q-pt-lg w-fit"
 							>
 								<a
 									:href="externalWebsites.coingecko"

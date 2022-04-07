@@ -29,15 +29,16 @@ const available = computed(() => {
 
 <template>
 	<q-item class="full-width q-pa-0">
-		<div class="flex-1 flex justify-between items-center q-py-12 no-wrap">
-			<div>
-				<p class="fs-15 q-mb-4 text-white">{{ coin.name }}</p>
+		<div class="flex-1 flex justify-between items-center q-py-0 no-wrap">
+			<div class="order-xs-3 q-mr-xs-0 q-mr-20">
+				<p class="fs-15 q-mb-4 text-white gt-xs">{{ coin.name }}</p>
 				<p class="fs-12 text-dark">{{ available }} {{ coin.symbol }}</p>
 			</div>
-			<div>
-				<q-avatar size="40px" class="q-mr-22">
+			<div class="order-xs-1 flex items-center no-wrap">
+				<q-avatar size="40px" class="q-mr-8 q-mr-xs-20 !fs-xs-24 no-margin-select">
 					<img :src="coin.logos.default" alt="" />
 				</q-avatar>
+				<p class="fs-14 text-white lt-sm">{{ coin.name }}</p>
 			</div>
 		</div>
 	</q-item>

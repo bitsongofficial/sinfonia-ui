@@ -44,56 +44,46 @@ const value = computed<string | undefined>({
 	},
 })
 
-const coinWrapper = computed<TokenBalance | null>({
-	get() {
-		return props.coin
-	},
-	set(value) {
-		emit("update:coin", value)
-	},
-})
-
-defineExpose({
-	validate,
-})
+  defineExpose({
+    validate
+  })
 </script>
 <template>
-	<div>
-		<CardDark
-			:class="
-				(hasError ? 'border-primary ' : '') + 'light:bg-white/50 light:shadow-none'
-			"
-		>
-			<div class="flex justify-between no-wrap">
-				<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
-					<div class="q-mr-10">
-						<q-input
-							borderless
-							v-model="value"
-							hide-bottom-space
-							class="fs-24 q-mb-0 text-white"
-							:rules="rules"
-						/>
-						<p v-if="swapAmountFiat && coin" class="fs-12 text-dark text-no-wrap">
-							{{ balancedCurrency(swapAmountFiat) }} $
-						</p>
-					</div>
-					<div v-if="showMax">
-						<SmallButton xs label="MAX" @click="$emit('maxClick')"></SmallButton>
-					</div>
-				</div>
-				<div class="vertical-separator q-mx-28"></div>
-				<div class="flex-1">
-					<CoinSelect
-						v-model="coinWrapper"
-						:options="options"
-						class="q-mx--30"
-					></CoinSelect>
-				</div>
-			</div>
-		</CardDark>
-		<p v-if="hasError" class="text-primary q-mt-8">
-			{{ errorMessage }}
-		</p>
-	</div>
+  <div>
+    <CardDark
+      :padding-x="0"
+      :padding-y="0"
+      :class="(hasError ? 'border-primary ' : '' ) + 'light:bg-white/50 light:shadow-none q-px-22 q-py-18 q-px-md-32 q-py-md-22'">
+      <div class="flex justify-between no-wrap column-xs">
+        <div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
+          <div class="q-mr-10">
+            <q-input
+              borderless
+              v-model="value"
+              hide-bottom-space
+              class="fs-24 q-mb-0 text-white input-no-append"
+              input-class="q-py-0"
+              :rules="rules"
+            />
+            <p v-if="swapAmountFiat && coin" class="fs-12 text-dark text-no-wrap">
+              {{ balancedCurrency(swapAmountFiat) }} $
+            </p>
+          </div>
+          <div v-if="showMax">
+            <SmallButton xs label="MAX" @click="$emit('maxClick')"></SmallButton>
+          </div>
+        </div>
+        <div class="vertical-separator q-mx-28 gt-xs"></div>
+        <div class="flex-1 flex items-center">
+          <CoinSelect
+            v-model="coin"
+            :options="options"
+          ></CoinSelect>
+        </div>
+      </div>
+    </CardDark>
+    <p v-if="hasError" class="text-primary q-mt-8">
+      {{errorMessage}}
+    </p>    
+  </div>
 </template>

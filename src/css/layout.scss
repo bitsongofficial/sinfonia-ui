@@ -201,9 +201,16 @@
     bottom: 0;
 }
 
-.q-px-select-20 .q-field__control {
-    padding-left: 20px;
-    padding-right: 20px;
+.q-px-select-20 {
+
+    margin-left: -20px;
+    width: calc(100% + 40px);
+    margin-right: -20px;
+
+    .q-field__control {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
 }
 
 .object-top {
@@ -336,8 +343,8 @@ $s in $custom-sizes {
         position: sticky !important;
     }
 
-    .bg-xs-white {
-        background-color: adjust-color($color: #FFFFFF);
+    .fit-content-xs {
+        width: fit-content !important;
     }
 
     .q-px-xs-0 {
@@ -365,6 +372,11 @@ $s in $custom-sizes {
         padding-bottom: 20px;
     }
 
+    .q-px-xs-70 {
+        padding-left: 70px;
+        padding-right: 70px;
+    }
+
     .q-mb-xs-0 {
         margin-bottom: 0 !important;
     }
@@ -377,12 +389,20 @@ $s in $custom-sizes {
         margin-right: 10px !important;
     }
 
+    .q-mt-xs-10 {
+        margin-top: 10px !important;
+    }
+
     .q-mb-xs-14 {
         margin-bottom: 14px !important;
     }
 
     .q-mr-xs-24 {
         margin-right: 24px !important;
+    }
+
+    .q-mb-xs-27 {
+        margin-bottom: 27px !important;
     }
 
     .q-pb-xs-150 {
@@ -393,12 +413,16 @@ $s in $custom-sizes {
         align-items: center;
     }
 
-    .jsutify-center-xs {
+    .justify-center-xs {
         justify-content: center !important;
     }
 
     .fs-xs-24 {
         font-size: 24px;
+    }
+
+    .\!fs-xs-24 {
+        font-size: 24px !important;
     }
 
     .text-center-xs {
@@ -421,6 +445,18 @@ $s in $custom-sizes {
         .col {
             width: 100% !important;
         }
+    }
+
+    .order-xs-1 {
+        order: 1;
+    }
+
+    .order-xs-2 {
+        order: 2;
+    }
+
+    .order-xs-3 {
+        order: 3;
     }
 }
 
@@ -482,6 +518,10 @@ $s in $custom-sizes {
     .\!w-sm-3\/4 {
         width: 3/4 * 100% !important;
     }
+
+    .q-pa-sm-20 {
+        padding: 20px !important;
+    }
 }
 
 @media screen and (min-width: $breakpoint-md) {
@@ -495,6 +535,15 @@ $s in $custom-sizes {
 
     .\!w-md-1\/3 {
         width: 33.33% !important;
+    }
+
+    .q-px-md-30 {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .q-pa-md-36 {
+        padding: 36px !important;
     }
 }
 

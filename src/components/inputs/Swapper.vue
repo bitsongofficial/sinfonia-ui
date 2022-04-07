@@ -409,7 +409,7 @@ const onSubmit = () => {
 		class="q-mb-24"
 	/>
 	<div
-		class="q-py-15 q-px-30 bg-white-5 light:bg-gray-light rounded-25 fs-14 q-mb-57"
+		class="q-py-15 q-px-20 q-px-md-30 bg-white-5 light:bg-gray-light rounded-25 fs-14 q-mb-57 q-mb-xs-27"
 	>
 		<div
 			class="cursor-pointer flex justify-between items-center"
@@ -428,16 +428,16 @@ const onSubmit = () => {
 		</div>
 		<div
 			v-if="slippageExpanded"
-			class="flex justify-between items-center q-mt-20"
+			class="flex justify-between items-center q-mt-20 q-mt-xs-10"
 		>
-			<div class="flex items-center text-dark q-mb-xs-14">
+			<div class="flex items-center text-dark q-mb-xs-14 q-mr-12">
 				<p class="fs-13 text-weight-medium q-mr-9 light:text-primary-complementary">
 					Slippage Tolerance
 				</p>
 				<q-icon
 					size="12px"
 					:name="resolveIcon('info', 15, 15)"
-					class="light:text-primary-complementary"
+					class="light:text-primary-complementary gt-xs"
 				>
 					<InformativeTooltip anchor="center right" self="center left">
 						Your transaction will revert if the price changes unfavorably by more than
@@ -450,7 +450,7 @@ const onSubmit = () => {
 					v-for="i in maxSlippageOption"
 					@click="setSlippage(i)"
 					:class="
-						'rounded-30 border-dark light:border-primary-complementary light:text-primary-complementary q-px-18 q-py-6 q-mr-6 cursor-pointer' +
+						'rounded-30 border-dark light:border-primary-complementary light:text-primary-complementary q-px-14 q-py-6 q-mr-6 cursor-pointer' +
 						(maxSlippage == i && !customSelected
 							? ' bg-dark light:bg-gradient light:border-none light:text-white'
 							: '')
@@ -462,7 +462,7 @@ const onSubmit = () => {
 				<div
 					@click="customSelected = true"
 					:class="
-						'flex rounded-30 border-dark light:border-primary-complementary light:text-white q-px-18 q-py-6 q-mr-6 cursor-pointer ' +
+						'flex rounded-30 border-dark light:border-primary-complementary light:text-white q-px-14 q-py-6 q-mr-6 cursor-pointer ' +
 						(customSelected
 							? 'bg-dark light:bg-gradient light:border-none'
 							: 'bg-primary-darker light:bg-primary-complementary opacity-50')
@@ -486,7 +486,7 @@ const onSubmit = () => {
 		</div>
 	</div>
 	<div class="flex items-center q-col-gutter-x-xl">
-		<div class="flex-1 flex justify-between" v-if="fromCoin && toCoin">
+		<div class="flex-1 flex justify-between gt-xs" v-if="fromCoin && toCoin">
 			<p class="fs-16 q-mb-xs-14">Rates</p>
 			<div class="fs-12">
 				<p class="q-mb-6">
@@ -501,10 +501,15 @@ const onSubmit = () => {
 				</p>
 			</div>
 		</div>
-		<div class="flex-1">
-			<LargeButton @click="onSubmit" :disable="!authStore.session">
-				Swap Tokens
-			</LargeButton>
+		<div class="flex flex-1 justify-end justify-center-xs">
+			<LargeButton
+				fit
+				@click="onSubmit"
+				:disable="!authStore.session"
+				class="q-px-xs-70"
+			>
+        Swap Tokens
+      </LargeButton>
 		</div>
 	</div>
 </template>
