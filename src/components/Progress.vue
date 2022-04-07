@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-const props = defineProps<{
-	percentage?: number
-	progress?: number
-	value?: number
-	max?: number
-	height?: number
-}>()
+const props = withDefaults(
+	defineProps<{
+		percentage?: number
+		progress?: number
+		value?: number
+		max?: number
+		height?: number
+		reverse: boolean
+	}>(),
+	{
+		reverse: false,
+	}
+)
 
 const actualProgress = computed(() => {
 	if (props.progress) return props.progress
@@ -23,5 +29,6 @@ const heightValue = (props.height ? props.height : 8) + "px"
 		:size="heightValue"
 		:value="actualProgress"
 		class="gradient-progress rounded"
+		:reverse="reverse"
 	/>
 </template>
