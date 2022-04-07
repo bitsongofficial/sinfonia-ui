@@ -6,6 +6,7 @@ import Swap from "@/components/pages/Swap.vue"
 import Pool from "@/components/pages/Pool.vue"
 import FanToken from "@/components/pages/FanToken.vue"
 import { RouteRecordRaw } from "vue-router"
+import { externalWebsites } from "./config"
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -51,6 +52,35 @@ const routes: RouteRecordRaw[] = [
 	{
 		path: "/",
 		redirect: "/fantokens",
+	},
+]
+
+export const menuItems = [
+	{
+		icon: { name: 'list', width: 19, height: 13 },
+		label: 'DEx',
+		path: '/fantokens',
+	},
+	{
+		icon: { name: 'refresh', width: 21, height: 17 },
+		label: 'Swap',
+		path: '/swap',
+	},
+	{
+		icon: { name: 'stack', width: 17, height: 17 },
+		label: 'Pools',
+		path: '/pools',
+	},
+	{
+		icon: { name: 'suitcase', width: 18, height: 16 },
+		label: 'Assets',
+		path: '/assets',
+	},
+	{
+		icon: { name: 'swap', width: 21, height: 16 },
+		label: 'Transactions',
+		path: `${externalWebsites.mintscan}bitsong/txs`,
+		isLink: true,
 	},
 ]
 
