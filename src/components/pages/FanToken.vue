@@ -171,12 +171,22 @@ const poolsColumns: TableColumn[] = [
 		format: (val: any) => `${balancedCurrency(val)} $`,
 	},
 ]
-const topImageStyle = `background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
-	fantoken.value?.media?.hero ?? ""
-});`
-const topImageStyleLight = `background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 100.73%), url(${
-	fantoken.value?.media?.hero ?? ""
-});`
+
+console.log(fantoken.value)
+
+const topImageStyle = computed(
+	() =>
+		`background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
+			fantoken.value?.media?.hero ?? ""
+		});`
+)
+
+const topImageStyleLight = computed(
+	() =>
+		`background: linear-gradient(360deg, #F0EDF2 3.59%, rgba(240, 237, 242, 0) 100.73%), url(${
+			fantoken.value?.media?.hero ?? ""
+		});`
+)
 
 const compositionGraphStyle = ref({ width: "0" })
 const heightRef = ref<HTMLElement | null>(null)
@@ -211,7 +221,9 @@ onUnmounted(() => {
 			class="absolute-top full-width -z-1 hv-3/5 !bg-cover"
 			:style="$q.dark.isActive ? topImageStyle : topImageStyleLight"
 		>
-			<div class="absolute left-0 top-98 full-width full-height main-page-background-helper"></div>
+			<div
+				class="absolute left-0 top-98 full-width full-height main-page-background-helper"
+			></div>
 		</div>
 		<div class="row q-mb-70">
 			<div class="col-8 col-md-4">
