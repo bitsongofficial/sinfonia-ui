@@ -8,7 +8,7 @@ const props = withDefaults(
 		value?: number
 		max?: number
 		height?: number
-		reverse: boolean
+		reverse?: boolean
 	}>(),
 	{
 		reverse: false,

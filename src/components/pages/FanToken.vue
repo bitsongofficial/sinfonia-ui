@@ -172,8 +172,6 @@ const poolsColumns: TableColumn[] = [
 	},
 ]
 
-console.log(fantoken.value)
-
 const topImageStyle = computed(
 	() =>
 		`background: linear-gradient(360deg, #220D32 3.59%, rgba(34, 13, 50, 0) 176.73%), url(${
@@ -218,7 +216,7 @@ onUnmounted(() => {
 <template>
 	<div class="text-white text-weight-medium" v-if="fantoken">
 		<div
-			class="absolute-top full-width -z-1 hv-3/5 !bg-cover"
+			class="absolute-top full-width -z-1 hv-3/5 !bg-cover !bg-center"
 			:style="$q.dark.isActive ? topImageStyle : topImageStyleLight"
 		>
 			<div
