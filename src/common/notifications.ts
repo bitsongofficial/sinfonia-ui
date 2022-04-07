@@ -7,12 +7,12 @@ export function notify(
 	message: string,
 	secondaryMessage: string | undefined,
 	link?: {
-		text: string,
-		url: string,
+		text: string
+		url: string
 	},
 	success?: boolean,
 	position: NotificationPosition = "top",
-	timeout = 10000
+	timeout = 5000
 ) {
 	const background = !Dark.isActive
 		? "bg-notification-background-light light"
@@ -25,12 +25,23 @@ export function notify(
 			'<div class="q-mr-15"><p class="fs-16 text-weight-medium' +
 			(secondaryMessage != undefined || link != undefined ? " q-mb-10" : "") +
 			'">' +
-			message + '</p>' +
-			(secondaryMessage ? ('<p class="fs-14 opacity-40' + (link ? " q-mb-10" : "") + '">' +
-				secondaryMessage +
-				'</p>') : '') +
-			(link ? '<a class="opacity-40 flex items-center hover:opacity-70 fs-14" href="' + link.url + '"><span class="q-mr-6">' + link.text +
-				'</span><svg class="s-8" viewBox="0 0 10 10"><use xlink:href="icons.svg#external"></use></svg></a>' : '') + '</div>',
+			message +
+			"</p>" +
+			(secondaryMessage
+				? '<p class="fs-14 opacity-40' +
+				  (link ? " q-mb-10" : "") +
+				  '">' +
+				  secondaryMessage +
+				  "</p>"
+				: "") +
+			(link
+				? '<a class="opacity-40 flex items-center hover:opacity-70 fs-14" target="_blank" href="' +
+				  link.url +
+				  '"><span class="q-mr-6">' +
+				  link.text +
+				  '</span><svg class="s-8" viewBox="0 0 10 10"><use xlink:href="icons.svg#external"></use></svg></a>'
+				: "") +
+			"</div>",
 		spinner: success === undefined ? Spinner : false,
 		icon: success ? resolveIcon("success", 32, 32) : resolveIcon("error", 30, 30),
 		position,
@@ -42,7 +53,7 @@ export function notify(
 export function notifySuccess(
 	message: string,
 	secondaryMessage = "",
-	link?: { text: string, url: string },
+	link?: { text: string; url: string },
 	position: NotificationPosition = "top"
 ) {
 	return notify(message, secondaryMessage, link, true, position)
@@ -51,8 +62,8 @@ export function notifySuccess(
 export function notifyError(
 	message: string,
 	secondaryMessage = "",
-	link?: { text: string, url: string },
-	position: NotificationPosition = "top",
+	link?: { text: string; url: string },
+	position: NotificationPosition = "top"
 ) {
 	return notify(message, secondaryMessage, link, false, position)
 }
@@ -60,9 +71,9 @@ export function notifyError(
 export function notifyLoading(
 	message: string,
 	secondaryMessage = "",
-	link?: { text: string, url: string },
+	link?: { text: string; url: string },
 	position: NotificationPosition = "top",
-	timeout = 0,
+	timeout = 0
 ) {
 	return notify(message, secondaryMessage, link, undefined, position, timeout)
 }

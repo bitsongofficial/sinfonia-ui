@@ -225,6 +225,14 @@
     background-size: cover;
 }
 
+.bg-center {
+    background-position: center;
+}
+
+.\!bg-center {
+    background-position: center !important;
+}
+
 .\!bg-cover {
     background-size: cover !important;
 }

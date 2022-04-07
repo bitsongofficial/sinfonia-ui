@@ -5,6 +5,10 @@ import useConfig from "@/store/config"
 import usePools from "@/store/pools"
 import usePrices from "@/store/prices"
 import useTransactionManager from "@/store/transaction-manager"
+import { onUnmounted } from "vue"
+
+const pollingTime = 30000
+let subscription: NodeJS.Timeout
 
 const useBootstrap = () => {
 	const configStore = useConfig()
@@ -37,6 +41,12 @@ const useBootstrap = () => {
 			throw error
 		}
 	}
+
+	subscription = setInterval(bootstrap, pollingTime)
+
+	onUnmounted(() => {
+		clearInterval(subscription)
+	})
 
 	window.addEventListener("keplr_keystorechange", () => {
 		checkAuthState()

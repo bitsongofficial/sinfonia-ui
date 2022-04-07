@@ -1,48 +1,48 @@
 <script setup lang="ts">
-  import { balancedCurrency, gtnZero, isNaN } from '@/common'
-  import { validateRules } from '@/common/inputs'
-  import { TokenBalance } from '@/types'
-  import { ValidationRule } from 'quasar'
-  import { computed, ref } from 'vue'
-  import CardDark from '../cards/CardDark.vue'
-  import SmallButton from '../buttons/SmallButton.vue'
-  import CoinSelect from './CoinSelect.vue'
+import { balancedCurrency, gtnZero, isNaN } from "@/common"
+import { validateRules } from "@/common/inputs"
+import { TokenBalance } from "@/types"
+import { ValidationRule } from "quasar"
+import { computed, ref } from "vue"
+import CardDark from "../cards/CardDark.vue"
+import SmallButton from "../buttons/SmallButton.vue"
+import CoinSelect from "./CoinSelect.vue"
 
-  const props = defineProps<{
-    modelValue: string,
-    coin: TokenBalance | null,
-    options: TokenBalance[],
-    swapAmountFiat?: string,
-    showInput?: boolean,
-    showMax?: boolean,
-	  rules?: ValidationRule<any>[] | undefined,
-  }>()
+const props = defineProps<{
+	modelValue: string
+	coin: TokenBalance | null
+	options: TokenBalance[]
+	swapAmountFiat?: string
+	showInput?: boolean
+	showMax?: boolean
+	rules?: ValidationRule<any>[] | undefined
+}>()
 
-  const emit = defineEmits<{
-    (e: "update:modelValue", value: string | undefined): void
-    (e: "errorStatusChange", value: boolean): void
-    (e: "maxClick"): void
-  }>()
+const emit = defineEmits<{
+	(e: "update:modelValue", value: string | undefined): void
+	(e: "update:coin", value: TokenBalance | null): void
+	(e: "errorStatusChange", value: boolean): void
+	(e: "maxClick"): void
+}>()
 
-  const errorMessage = ref("")
-  const hasError = computed(() => errorMessage.value != "")
+const errorMessage = ref("")
+const hasError = computed(() => errorMessage.value != "")
 
-  const validate = (val = value.value) =>
-  {
-    validateRules(props.rules, val, errorMessage)
-  }
+const validate = (val = value.value) => {
+	validateRules(props.rules, val, errorMessage)
+}
 
-  const value = computed<string | undefined>({
-    get() {
-      return props.modelValue
-    },
-    set(value) {
-      const prevError = hasError.value
-      validate(value)
-      emit('errorStatusChange', hasError.value)
-      if(value == '' || (value && !isNaN(value) && gtnZero(value))) emit("update:modelValue", value)
-    },
-  })
+const value = computed<string | undefined>({
+	get() {
+		return props.modelValue
+	},
+	set(value) {
+		validate(value)
+		emit("errorStatusChange", hasError.value)
+		if (value == "" || (value && !isNaN(value) && gtnZero(value)))
+			emit("update:modelValue", value)
+	},
+})
 
   defineExpose({
     validate
