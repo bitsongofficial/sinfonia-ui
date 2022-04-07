@@ -44,11 +44,9 @@
     },
   })
 
-  defineExpose(
-    {
-      validate
-    }
-  )
+  defineExpose({
+    validate
+  })
 </script>
 <template>
   <div>

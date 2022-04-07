@@ -25,15 +25,24 @@ const rules = [
 const errorMessage = ref("")
 const hasError = ref(false)
 
+const validate = (value) =>
+{
+	hasError.value = validateRules(rules, value, errorMessage)
+}
+
 const value = computed({
 	get(): string {
 		return props.modelValue
 	},
 	set(value: string) {
-		hasError.value = validateRules(rules, value, errorMessage)
+		validate(value)
 		emit("errorChange", hasError.value)
 		emit("update:modelValue", value)
 	},
+})
+
+defineExpose({
+	validate
 })
 </script>
 

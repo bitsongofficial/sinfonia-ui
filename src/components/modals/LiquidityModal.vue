@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Pool } from "@/types"
-import { toRef, computed } from "vue"
+import { toRef, computed, ref, onBeforeUpdate, onUpdated } from "vue"
 import { gtnZero, percentage } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import ModalWithClose from "@/components/modals/ModalWithClose.vue"
@@ -62,6 +62,37 @@ const removePercentInputRules = [
 	(val) => gtnZero(val) || "Amount must be a greater then zero",
 	(val) => Number(val) <= 100 || "Amount must be less then 100",
 ]
+let inputReferences:any[] = []
+const setInputRef = el => {
+	if (el) {
+		inputReferences.push(el)
+	}
+}
+onBeforeUpdate(() => {
+	inputReferences = []
+})
+
+onUpdated(() => {
+	console.log(inputReferences)
+})
+
+const validateAll = () =>
+{
+	inputReferences.forEach(el => 
+	{
+		if(el)
+		{
+			const symbol = el.$el.getAttribute("data-symbol")
+			const amount = coinsAmounts.value[symbol]
+			el.validate(amount)
+		}
+	})
+}
+
+const inputChangeEvent = (coin, value) => {
+	onAmountChange(coin.token.symbol, value)
+	validateAll()
+}
 </script>
 
 <template>
@@ -82,7 +113,7 @@ const removePercentInputRules = [
 				</p>
 			</div>
 			<div v-if="add">
-				<template v-for="(coin, index) of pool.coins">
+				<template v-for="(coin, index) of pool.coins" :key="coin.token.symbol">
 					<div class="q-mb-21" v-if="!single || (single && index === currentSingle)">
 						<div class="flex column-xs items-center items-end-xs no-wrap q-mb-9">
 							<Amount
@@ -90,8 +121,10 @@ const removePercentInputRules = [
 								:max="balances[coin.token.symbol]"
 								class="q-mr-24 q-mr-xs-0"
 								@update:model-value="
-									(value) => onAmountChange(coin.token.symbol, value)
+									(value) => inputChangeEvent(coin, value)
 								"
+								:ref="setInputRef"
+								:data-symbol="coin.token.symbol"
 							/>
 							<div class="flex items-center no-wrap">
 								<div class="text-weight-medium text-right q-mr-16">
