@@ -26,6 +26,7 @@ import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 import SwapperField from "./SwapperField.vue"
+import { isEqual } from "lodash"
 
 const bankStore = useBank()
 const poolsStore = usePools()
@@ -54,6 +55,30 @@ const fromCoin = computed<TokenBalance | null>({
 	},
 })
 
+const updateFromAmount = () => {
+	const swapAmountBn = new BigNumber(swapAmount.value)
+
+	if (swapAmount.value.length > 0) {
+		if (!swapAmountBn.isNaN()) {
+			toAmount.value = swapAmountBn.div(swapRatio.value).toFixed(6)
+		}
+	}
+
+	field1.value.validate(swapAmount.value)
+}
+
+const updateToAmount = () => {
+	const toAmountBn = new BigNumber(toAmount.value)
+
+	if (toAmount.value.length > 0) {
+		if (!toAmountBn.isNaN()) {
+			swapAmount.value = toAmountBn.div(1 / swapRatio.value).toFixed(6)
+		}
+	}
+
+	field2.value.validate(toAmount.value)
+}
+
 const toCoin = computed<TokenBalance | null>({
 	get() {
 		return props.coin2
@@ -62,6 +87,23 @@ const toCoin = computed<TokenBalance | null>({
 		emit("update:coin2", value)
 	},
 })
+
+const coinsWatcher = watch(
+	() => [fromCoin.value, toCoin.value],
+	([oldFrom, oldTo], [newFrom, newTo]) => {
+		if (oldFrom && newFrom) {
+			if (oldFrom.symbol !== newFrom.symbol) {
+				updateToAmount()
+			}
+		}
+
+		if (oldTo && newTo) {
+			if (oldTo.symbol !== newTo.symbol) {
+				updateFromAmount()
+			}
+		}
+	}
+)
 
 const setDefaultValues = (newBalances: TokenBalance[]) => {
 	const balances = [...newBalances]
@@ -141,6 +183,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+	coinsWatcher()
 	balancesWatcher()
 })
 
