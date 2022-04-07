@@ -1,9 +1,12 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { computed, ref } from 'vue'
   import { RouterView, RouterLink } from "vue-router"
   import Logo from "@/components/Logo.vue"
   import { menuItems } from '@/configs/routes'
   import { resolveIcon } from '@/common/resolvers'
+import LightModeSwitch from '../inputs/LightModeSwitch.vue'
+import SideMenu from './SideMenu.vue'
+import WalletAddress from '../WalletAddress.vue'
 
   const rightDrawerOpen = ref(false)
 
@@ -11,42 +14,44 @@
   {
     rightDrawerOpen.value = !rightDrawerOpen.value
   }
+
+  const drawerWidth = computed(() =>
+  {
+    return window.innerWidth
+  })
 </script>
 
 <template>
   <q-layout view="hHh lpR fFf">
 
-    <q-header class="bg-transparent text-white container">
-      <q-toolbar class="flex justify-between q-pt-40 q-px-0">
-        <RouterLink to="/fantokens">
-          <Logo></Logo>
-        </RouterLink>
+    <q-header class="bg-transparent text-white">
+      <div class="container">
+        <q-toolbar class="flex justify-between q-pt-40 q-pb-20 q-px-0 bg-primary-dark light:bg-white">
+          <RouterLink to="/fantokens">
+            <Logo></Logo>
+          </RouterLink>
 
-        <q-btn dense flat round :icon="resolveIcon('menu', 20, 14)" @click="toggleRightDrawer" />
-      </q-toolbar>
+          <q-btn dense flat round :icon="resolveIcon('menu', 20, 14)" @click="toggleRightDrawer" />
+        </q-toolbar>
+      </div>
     </q-header>
 
-    <q-drawer v-model="rightDrawerOpen" side="right" overlay behavior="mobile" class="bg-primary-dark">
-       <q-scroll-area class="fit">
-          <q-list>
-            <template v-for="(menuItem, index) in menuItems" :key="index">
-              <q-separator :key="'sep' + index" v-if="index > 0" />
-              <RouterLink
-                v-if="!menuItem.isLink"
-                :to="menuItem.path"                 
-              >
-                <q-item clickable :active="menuItem.label === 'Outbox'" v-ripple class="flex justify-between items-center">
-                  <q-item-section>
-                    {{ menuItem.label }}
-                  </q-item-section>
-                  <q-item-section avatar class="flex justify-end">
-                    <q-icon :name="resolveIcon(menuItem.icon.name, menuItem.icon.width, menuItem.icon.height)" />
-                  </q-item-section>
-                </q-item>
-              </RouterLink>
-            </template>
-          </q-list>
-        </q-scroll-area>
+    <q-drawer :width="drawerWidth" v-model="rightDrawerOpen" side="right" overlay behavior="mobile" class="column bg-primary-dark light:bg-gray-light container">
+      <div class="column flex-1 no-wrap q-pt-40 q-pb-30">
+        <div class="flex justify-between items-center">
+          <Logo disabled></Logo>
+          <div class="flex items-center">
+            <LightModeSwitch class="q-mr-16"></LightModeSwitch>
+            <q-btn class="opacity-100" dense flat round :icon="resolveIcon('close', 12, 12)" @click="rightDrawerOpen = false" />
+          </div>
+        </div>
+        <div class="flex-1 column justify-center">
+          <SideMenu></SideMenu>
+        </div>
+        <div>
+          <WalletAddress></WalletAddress>
+        </div>
+      </div>
     </q-drawer>
     <q-page-container>
       <RouterView />
