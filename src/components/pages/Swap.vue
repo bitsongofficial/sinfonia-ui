@@ -153,13 +153,13 @@ const onTxClick = (tx: Transaction) => {
 					<div class="flex justify-between items-center q-mb-30">
 						<p class="fs-18">DEx</p>
 						<q-btn
-              outline
-              rounded
-              to="/fantokens"
-              color="white"
-              label="View all"
-              class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
-            />
+							outline
+							rounded
+							to="/fantokens"
+							color="white"
+							label="View all"
+							class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
+						/>
 					</div>
 					<Card
 						class="q-py-10 q-px-none q-mb-51 overflow-hidden"
@@ -196,11 +196,16 @@ const onTxClick = (tx: Transaction) => {
 							color="white"
 							:href="`${externalWebsites.mintscan}osmosis/account/${authStore.osmosisAddress}`"
 							target="_blank"
-              label="View all"
+							label="View all"
 							:disabled="transactionManagerStore.swapTransactions.length === 0"
-							@click="(e) => {if(transactionManagerStore.swapTransactions.length === 0) e.preventDefault()}"
-              class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
-            />
+							@click="
+								(e) => {
+									if (transactionManagerStore.swapTransactions.length === 0)
+										e.preventDefault()
+								}
+							"
+							class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
+						/>
 					</div>
 					<Card
 						class="q-py-10 q-px-none overflow-auto items-center"
@@ -235,15 +240,19 @@ const onTxClick = (tx: Transaction) => {
 								</q-td>
 							</template>
 							<template v-slot:body-cell-transaction="slotProps">
-								<q-td :props="slotProps">
-									<p class="fs-12 text-gray">
+								<q-td :props="slotProps" class="white-space-pre-line">
+									<p class="fs-12 !leading-18 text-gray row wrap">
 										You swapped
 										<span
 											class="text-white font-weight-500 q-mx-4"
 											v-if="slotProps.row.fromSwap"
 										>
 											{{ balancedCurrency(slotProps.row.fromAmount) }}
-											{{ slotProps.row.fromSwap.symbol }}
+											{{
+												slotProps.row.fromSwap.fantoken
+													? `$${slotProps.row.fromSwap.symbol}`
+													: slotProps.row.fromSwap.symbol
+											}}
 										</span>
 										in
 										<span
@@ -251,7 +260,11 @@ const onTxClick = (tx: Transaction) => {
 											v-if="slotProps.row.toSwap"
 										>
 											{{ balancedCurrency(slotProps.row.toAmount) }}
-											{{ slotProps.row.toSwap.symbol }}
+											{{
+												slotProps.row.toSwap.fantoken
+													? `$${slotProps.row.toSwap.symbol}`
+													: slotProps.row.toSwap.symbol
+											}}
 										</span>
 									</p>
 								</q-td>
