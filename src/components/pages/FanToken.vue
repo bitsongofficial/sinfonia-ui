@@ -8,7 +8,7 @@ import {
 import { computed, onMounted, onUnmounted, ref } from "vue"
 import { resolveIcon } from "@/common/resolvers"
 import { TableColumn } from "@/types/table"
-import { Pool } from "@/types"
+import { Pool, FantokenTab } from "@/types"
 import { useRoute } from "vue-router"
 import StandardSelect from "@/components/inputs/StandardSelect.vue"
 import Tabs from "@/components/Tabs.vue"
@@ -96,36 +96,36 @@ const bondedPercentage = computed(() => {
 	return 0
 })
 
-const tabs = [
-	// {
-	// 	tooltip:
-	// 		"Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.",
-	// 	icon: { name: "info", width: 15, height: 15 },
-	// },
-	{ name: "analytics", label: "Analytics" },
-	{ label: "Airdrop", url: "https://bitsong.io/airdrop/" },
-	{ label: "Whitepaper", url: "https://bitsong.io/fantokens/adam-clay" },
-	{ label: "Social", name: "social" },
-]
+const tabs = computed(() => {
+	const links: FantokenTab[] = [{ name: "analytics", label: "Analytics" }]
 
-if (poolsStore.myPools.length > 0) {
-	tabs.splice(1, 0, { name: "pools", label: "Pools" })
-}
+	if (fantokenPools.value.length > 0) {
+		links.push({ name: "pools", label: "Pools" })
+	}
+
+	if (fantoken.value) {
+		const airdrop = fantoken.value.airdrop
+		const whitepaper = fantoken.value.whitepaper
+
+		if (airdrop) {
+			links.push({ label: "Airdrop", url: airdrop.url })
+		}
+
+		if (whitepaper) {
+			links.push({ label: "Whitepaper", url: whitepaper.url })
+		}
+	}
+
+	links.push({ label: "Social", name: "social" })
+
+	return links
+})
 
 const stats = ["Price", "Gain"]
 const selectedStat = ref(stats[0])
 
 const email = ref("")
 const newsletter = ref(false)
-
-const socials = {
-	facebook: "https://www.facebook.com/adamclaymusic",
-	instagram: "https://www.instagram.com/adamclayreal/?hl=en",
-	twitter: "https://twitter.com/adamclaymusic",
-	spotify:
-		"https://open.spotify.com/artist/19jXtZ3WctjL00MMVqYrv8?si=Q_TJsXqORs6WSkQIV4F9DQ&nd=1",
-	website: "http://www.adamclay.com/",
-}
 
 const poolsColumns: TableColumn[] = [
 	{
@@ -583,8 +583,10 @@ onUnmounted(() => {
 						<div class="lt-md q-mb-20 flex justify-center">
 							<LargeButton fit>Get notified</LargeButton>
 						</div>
-						<p class="fs-18 opacity-50 lt-md q-mb-8">Follow me on socials</p>
-						<Socials :socials="socials"></Socials>
+						<template v-if="fantoken.socials">
+							<p class="fs-18 opacity-50 lt-md q-mb-8">Follow me on socials</p>
+							<Socials :socials="fantoken.socials.links"></Socials>
+						</template>
 					</div>
 					<div class="col-8 col-md-2 flex justify-end">
 						<div class="gt-sm">

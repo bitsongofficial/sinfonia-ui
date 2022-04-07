@@ -1,5 +1,10 @@
 import { Dictionary } from "lodash"
-import { FantokenMedia, FantokenSocial, FantokenWhitePaper } from "./fantoken"
+import {
+	FantokenAirdrop,
+	FantokenMedia,
+	FantokenSocial,
+	FantokenWhitePaper,
+} from "./fantoken"
 
 export type TokenLogo = "default" | "svg" | "png"
 
@@ -55,8 +60,9 @@ export interface Token extends BaseToken {
 	}
 	ibcEnabled?: boolean
 	fantoken?: boolean
-	socials?: FantokenSocial[]
+	socials?: FantokenSocial
 	media?: FantokenMedia
+	airdrop?: FantokenAirdrop
 	whitepaper?: FantokenWhitePaper
 }
 
