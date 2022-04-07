@@ -148,8 +148,10 @@ const useBank = defineStore("bank", {
 						return coin.denom === coinLookup.chainDenom
 					})
 
-					const bitsongBalance = this.bitsongBalance.find(
-						(coin) => coin.denom === coinLookup.chainDenom
+					const bitsongBalance = this.bitsongBalance.find((coin) =>
+						token.fantoken
+							? coin.denom === coinLookup.fantokenDenom
+							: coin.denom === coinLookup.chainDenom
 					)
 
 					if (osmosisBalance && configStore.osmosisToken) {
@@ -177,7 +179,7 @@ const useBank = defineStore("bank", {
 						chains.push(osmosisChain)
 					}
 
-					if (bitsongBalance) {
+					if (bitsongBalance && configStore.bitsongToken) {
 						const bitsongAvailable = toViewDenom(
 							bitsongBalance.amount,
 							coinLookup.chainToViewConversionFactor
@@ -185,10 +187,10 @@ const useBank = defineStore("bank", {
 						const bitsongTotal = new BigNumber(bitsongAvailable)
 
 						bitsongChain = {
-							name: token.name,
+							name: configStore.bitsongToken.name,
 							symbol: token.symbol,
 							denom: token.ibc.osmosis.sourceDenom,
-							logos: token.logos,
+							logos: configStore.bitsongToken.logos,
 							total: bitsongTotal.toString(),
 							available: bitsongAvailable.toString(),
 							totalFiat: price.multipliedBy(bitsongTotal.toString()).toString(),

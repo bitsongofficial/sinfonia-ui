@@ -185,7 +185,9 @@ const openTransfer = (from: TokenBalance) => {
 						>
 							{{
 								rowProps.row.available
-									? `${balancedCurrency(rowProps.row.available)} ${rowProps.row.symbol}`
+									? `${balancedCurrency(rowProps.row.available)} ${
+											rowProps.row.fantoken ? "$" : ""
+									  }${rowProps.row.symbol}`
 									: "-"
 							}}
 						</p>
