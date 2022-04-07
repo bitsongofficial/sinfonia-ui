@@ -197,7 +197,7 @@ const onTxClick = (tx: Transaction) => {
 							:href="`${externalWebsites.mintscan}osmosis/account/${authStore.osmosisAddress}`"
 							target="_blank"
               label="View all"
-							:disabled="transactionManagerStore.swapTransactions.length === 0"
+							:disabled="transactionManagerStore.swapTransactions.length === 0 ? true : undefined"
 							@click="(e) => {if(transactionManagerStore.swapTransactions.length === 0) e.preventDefault()}"
               class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
             />
