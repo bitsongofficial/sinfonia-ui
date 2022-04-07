@@ -16,10 +16,12 @@ const props = withDefaults(
 )
 
 const actualProgress = computed(() => {
-	if (props.progress) return props.progress
-	if (props.percentage) return props.percentage / 100
-	if (props.value && props.max) return props.value / props.max
-	return 0
+	let val = 0
+	if (props.progress) val = props.progress
+	if (props.percentage) val = props.percentage / 100
+	if (props.value && props.max) val = props.value / props.max
+	if(props.reverse) val = 1 - val
+	return val
 })
 const heightValue = (props.height ? props.height : 8) + "px"
 </script>
