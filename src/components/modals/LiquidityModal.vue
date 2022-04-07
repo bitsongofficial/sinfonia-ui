@@ -47,11 +47,11 @@ const {
 const removePercentOverAHundred = computed<string>({
 	get() {
 		const rpp = parseFloat((removePercent.value * 100).toPrecision(4))
-		return (rpp % 1 == 0 ? rpp.toFixed(0) : rpp.toFixed(2))
+		return rpp % 1 == 0 ? rpp.toFixed(0) : rpp.toFixed(2)
 	},
 	set(value: string) {
 		if (value && !isNaN(Number(value))) {
-			removePercent.value = Math.max(0 , Math.min(1, Number(value) / 100))
+			removePercent.value = Math.max(0, Math.min(1, Number(value) / 100))
 		}
 	},
 })
@@ -62,26 +62,20 @@ const removePercentInputRules = [
 	(val) => gtnZero(val) || "Amount must be a greater then zero",
 	(val) => Number(val) <= 100 || "Amount must be less then 100",
 ]
-let inputReferences:any[] = []
-const setInputRef = el => {
+let inputReferences: any[] = []
+const setInputRef = (el) => {
 	if (el) {
 		inputReferences.push(el)
 	}
 }
+
 onBeforeUpdate(() => {
 	inputReferences = []
 })
 
-onUpdated(() => {
-	console.log(inputReferences)
-})
-
-const validateAll = () =>
-{
-	inputReferences.forEach(el => 
-	{
-		if(el)
-		{
+const validateAll = () => {
+	inputReferences.forEach((el) => {
+		if (el) {
 			const symbol = el.$el.getAttribute("data-symbol")
 			const amount = coinsAmounts.value[symbol]
 			el.validate(amount)
@@ -100,13 +94,22 @@ const inputChangeEvent = (coin, value) => {
 		<q-form @submit="onSubmit">
 			<div class="flex fs-15 q-mb-22">
 				<p
-					:class="(add ? 'light:text-gradient' : 'text-dark light:text-secondary light:opacity-50') + ' cursor-pointer q-mr-27'"
+					:class="
+						(add
+							? 'light:text-gradient'
+							: 'text-dark light:text-secondary light:opacity-50') +
+						' cursor-pointer q-mr-27'
+					"
 					@click="add = true"
 				>
 					Add Liquidity
 				</p>
 				<p
-					:class="(add ? 'text-dark light:text-secondary light:opacity-50' : 'light:text-gradient') + ' cursor-pointer'"
+					:class="
+						(add
+							? 'text-dark light:text-secondary light:opacity-50'
+							: 'light:text-gradient') + ' cursor-pointer'
+					"
 					@click="add = false"
 				>
 					Remove Liquidity
@@ -120,9 +123,7 @@ const inputChangeEvent = (coin, value) => {
 								v-model="coinsAmounts[coin.token.symbol]"
 								:max="balances[coin.token.symbol]"
 								class="q-mr-24 q-mr-xs-0"
-								@update:model-value="
-									(value) => inputChangeEvent(coin, value)
-								"
+								@update:model-value="(value) => inputChangeEvent(coin, value)"
 								:ref="setInputRef"
 								:data-symbol="coin.token.symbol"
 							/>
@@ -164,7 +165,11 @@ const inputChangeEvent = (coin, value) => {
 							<p>&nbsp;</p>
 						</div>
 						<div class="flex no-wrap items-center">
-							<q-toggle v-model="single" color="white" class="q-mr-8 light:shadow-none light:inner:shadow-none" />
+							<q-toggle
+								v-model="single"
+								color="white"
+								class="q-mr-8 light:shadow-none light:inner:shadow-none"
+							/>
 							<p class="fs-12 text-weight-medium q-mr-12">Single Asset LP</p>
 							<q-icon
 								:name="resolveIcon('info', 15, 15)"
@@ -221,15 +226,18 @@ const inputChangeEvent = (coin, value) => {
 						@click="removePercent = rm"
 					>
 						<template v-if="rm == removePercent">
-							<div
-								class="!absolute-full"
-							>
-								<div class="!absolute-full bg-primary-dark light:bg-white opacity-50 rounded-20 ">								</div>
+							<div class="!absolute-full">
+								<div
+									class="!absolute-full bg-primary-dark light:bg-white opacity-50 rounded-20"
+								></div>
 								<div class="!absolute-full light:border-gradient-primary"></div>
 							</div>
 							<p class="text-center relative-position z-1">{{ rm * 100 }}%</p>
 						</template>
-						<p v-else="rm == removePercent" class="text-dark light:text-primary-darker opacity-50 text-center">
+						<p
+							v-else="rm == removePercent"
+							class="text-dark light:text-primary-darker opacity-50 text-center"
+						>
 							{{ rm * 100 }}%
 						</p>
 					</div>

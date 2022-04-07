@@ -508,8 +508,8 @@ const onSubmit = () => {
 				:disable="!authStore.session"
 				class="q-px-xs-70"
 			>
-        Swap Tokens
-      </LargeButton>
+				Swap Tokens
+			</LargeButton>
 		</div>
 	</div>
 </template>
