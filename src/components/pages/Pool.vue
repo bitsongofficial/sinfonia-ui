@@ -319,71 +319,74 @@ onUnmounted(() => {
 		<div class="row q-col-gutter-xl items-center q-mb-80">
 			<div class="col-8 !w-md-1/3" v-for="unbonding in pool.lockableDurationApr">
 				<ExpandableCard
+					padding="14"
 					transparency="5"
 					:expandable="
 						unbonding.extraGauges.length > 0 || gtnZero(unbonding.osmosisApr)
 					"
 				>
-					<p class="fs-12 opacity-30 q-mb-16 text-uppercase">
-						{{ unbonding.readableDuration }} unbonding
-					</p>
-					<div class="q-mb-20">
-						<p class="fs-36 q-mb-8">{{ percentage(unbonding.totalApr) }} %</p>
-						<div
-							class="flex items-center"
-							v-if="unbonding.extraGauges.length > 0 || gtnZero(unbonding.osmosisApr)"
-						>
-							<p class="text-primary fs-14 q-mr-16 text-weight-medium">
-								Pools Incentives
-							</p>
-							<template v-for="gauge in unbonding.extraGauges">
-								<q-avatar
-									class="q-mr-9"
-									size="24px"
-									v-for="(coin, index) in gauge.coins"
-									:key="index"
-								>
-									<img :src="coin.token?.logos.default" />
-								</q-avatar>
-							</template>
+					<div class="q-pa-16">
+						<p class="fs-12 opacity-30 q-mb-16 text-uppercase">
+							{{ unbonding.readableDuration }} unbonding
+						</p>
+						<div class="q-mb-20">
+							<p class="fs-36 q-mb-8">{{ percentage(unbonding.totalApr) }} %</p>
+							<div
+								class="flex items-center"
+								v-if="unbonding.extraGauges.length > 0 || gtnZero(unbonding.osmosisApr)"
+							>
+								<p class="text-primary fs-14 q-mr-16 text-weight-medium">
+									Pools Incentives
+								</p>
+								<template v-for="gauge in unbonding.extraGauges">
+									<q-avatar
+										class="q-mr-9"
+										size="24px"
+										v-for="(coin, index) in gauge.coins"
+										:key="index"
+									>
+										<img :src="coin.token?.logos.default" />
+									</q-avatar>
+								</template>
 
-							<q-avatar class="q-mr-9" size="24px" v-if="configStore.osmosisToken">
-								<img :src="configStore.osmosisToken.logos.default" />
-							</q-avatar>
+								<q-avatar class="q-mr-9" size="24px" v-if="configStore.osmosisToken">
+									<img :src="configStore.osmosisToken.logos.default" />
+								</q-avatar>
+							</div>
 						</div>
-					</div>
-					<p
-						class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20"
-						v-if="unbonding.extraGauges.length > 0"
-					>
-						BitSong Launchpad is the platform where you can buy and. Incentives for
-						{{ unbonding.extraGauges[0].leftEpochs }}
-						epochs.
-					</p>
-					<p v-else class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20">
-						BitSong Launchpad is the platform where you can buy and.
-					</p>
-					<div
-						class="flex no-wrap items-center text-weight-medium"
-						v-if="unbonding.extraGauges.length > 0"
-					>
-						<div class="q-mr-21">
-							<p class="fs-12 text-uppercase opacity-50 q-mb-8">Start</p>
-							<p class="fs-18 text-no-wrap">
-								{{ formatEpochDate(unbonding.extraGauges[0].start_time) }}
-							</p>
-						</div>
-						<Progress
-							:height="12"
-							:value="unbonding.extraGauges[0].filledEpochs"
-							:max="unbonding.extraGauges[0].numEpochsPaidOver"
-							reverse
-						></Progress>
-						<div class="q-ml-21">
-							<p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">End</p>
-							<p class="fs-18 text-no-wrap">
-								{{ formatEpochDate(unbonding.extraGauges[0].endTime) }}
-							</p>
+						<p
+							class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20"
+							v-if="unbonding.extraGauges.length > 0"
+						>
+							BitSong Launchpad is the platform where you can buy and. Incentives for
+							{{ unbonding.extraGauges[0].leftEpochs }}
+							epochs.
+						</p>
+						<p v-else class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20">
+							BitSong Launchpad is the platform where you can buy and.
+						</p>
+						<div
+							class="flex no-wrap items-center text-weight-medium"
+							v-if="unbonding.extraGauges.length > 0"
+						>
+							<div class="q-mr-21">
+								<p class="fs-12 text-uppercase opacity-50 q-mb-8">Start</p>
+								<p class="fs-18 text-no-wrap">
+									{{ formatEpochDate(unbonding.extraGauges[0].start_time) }}
+								</p>
+							</div>
+							<Progress
+								:height="12"
+								:value="unbonding.extraGauges[0].filledEpochs"
+								:max="unbonding.extraGauges[0].numEpochsPaidOver"
+								reverse
+							></Progress>
+							<div class="q-ml-21">
+								<p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">End</p>
+								<p class="fs-18 text-no-wrap">
+									{{ formatEpochDate(unbonding.extraGauges[0].endTime) }}
+								</p>
+							</div>
 						</div>
 					</div>
 					<template #extra>

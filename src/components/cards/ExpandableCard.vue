@@ -17,18 +17,18 @@ const expanded = ref(false)
 
 <template>
 	<Card>
-		<q-card-section>
+		<q-card-section class="q-pa-0">
 			<slot></slot>
 		</q-card-section>
 
 		<q-slide-transition>
 			<div v-show="expanded">
-				<q-card-section class="text-subitle2">
+				<q-card-section class="text-subitle2 q-pa-0">
 					<slot name="extra"></slot>
 				</q-card-section>
 			</div>
 		</q-slide-transition>
-		<div class="flex justify-center" v-if="expandable">
+		<div class="flex justify-center q-pa-0" v-if="expandable">
 			<q-card-actions>
 				<div
 					class="w-46 h-21 rounded shadow-20 bg-primary-dark light:opacity-20 cursor-pointer"
