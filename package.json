@@ -9,7 +9,7 @@
 		"build:mainnet": "vue-tsc --noEmit && vite build --mode mainnet",
 		"preview": "vite preview",
 		"type-check": "vue-tsc --noEmit",
-		"lint": "eslint --ignore-path .gitignore --ignore-path .eslintignore --fix $(git diff --name-only HEAD | grep -E '\\.(js|ts)$' | xargs) --ext .js --ext .ts ",
+		"lint": "eslint --ignore-path .gitignore --ignore-path .eslintignore --fix src --ext .js --ext .ts ",
 		"format": "prettier --ignore-path .prettierignore --write ."
 	},
 	"engines": {
