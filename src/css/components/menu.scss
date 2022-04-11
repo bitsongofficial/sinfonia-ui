@@ -13,7 +13,7 @@
         left: 280%;
     }
 
-    > a {
+    >a {
         opacity: 0.2;
     }
 
@@ -27,7 +27,7 @@
         }
     }
 
-    &:hover > a {
+    &:hover>a {
         @include menu-item-active-hover();
     }
 }
@@ -45,6 +45,7 @@
         padding-bottom: 8px;
         opacity: 0.5 !important;
         min-height: 0;
+
         &:hover,
         &:active,
         &:focus,
@@ -52,13 +53,23 @@
         &.q-item--active {
             opacity: 1 !important;
             color: white;
+
             .q-focus-helper {
+
                 &,
                 &::after,
                 &::before {
                     background: transparent !important;
                 }
             }
+        }
+    }
+}
+
+@media screen and (max-width: $breakpoint-xs) {
+    .menu-item {
+        .absolute {
+            display: block !important;
         }
     }
 }
