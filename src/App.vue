@@ -23,7 +23,7 @@ onBeforeMount(() => {
 
 <template>
 	<div class="min-h-window-height q-pt-70 q-pb-60 q-pb-xs-150 column">
-		<div class="container">
+		<div class="container q-px-xs-0">
 			<div class="column col-grow">
 				<Header></Header>
 				<div v-if="$q.screen.gt.xs" class="no-pointer-events full-width flex">
