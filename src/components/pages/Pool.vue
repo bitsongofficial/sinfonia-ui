@@ -85,7 +85,7 @@ const bondingsColumn: TableColumn[] = [
 	{
 		name: "title",
 		required: true,
-		label: "unbonding duration",
+		label: "Unbond Duration",
 		align: "left",
 		field: (row: LockableDurationWithApr) => row.readableDuration,
 		format: (duration: string) => `${duration} unbonding`,
@@ -137,7 +137,7 @@ const unbondingsColumn: TableColumn[] = [
 	{
 		name: "title",
 		required: true,
-		label: "unbonding duration",
+		label: "Unbond Duration",
 		align: "left",
 		field: (row: LockCoin) => row.durationMap.readableDuration,
 		format: (duration: string) => `${duration} unbonding`,
@@ -304,8 +304,7 @@ onUnmounted(() => {
 			<div class="col-3">
 				<h3 class="fs-21 q-mb-20 q-mt-0">Liquidity Mining</h3>
 				<p class="fs-16 opacity-40 !leading-20">
-					BitSong Launchpad is the platform where you can buy and mint your favorite
-					Artist Fantoken.
+					Liquidity mining is a decentralized finance mechanism wherein participants provide some of their assets into various liquidity pools, from which you are rewarded with tokens and fees.
 				</p>
 			</div>
 			<div class="col-5 column items-end">
@@ -356,14 +355,8 @@ onUnmounted(() => {
 						</div>
 						<p
 							class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20"
-							v-if="unbonding.extraGauges.length > 0"
 						>
-							BitSong Launchpad is the platform where you can buy and. Incentives for
-							{{ unbonding.extraGauges[0].leftEpochs }}
-							epochs.
-						</p>
-						<p v-else class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20">
-							BitSong Launchpad is the platform where you can buy and.
+							Bond Liquidity to earn Fan token Rewards.
 						</p>
 						<div
 							class="flex no-wrap items-center text-weight-medium"
@@ -446,7 +439,7 @@ onUnmounted(() => {
 				</ExpandableCard>
 			</div>
 		</div>
-		<p class="fs-18 q-mb-30">My Bondings</p>
+		<p class="fs-18 q-mb-30">My Bonded Assets</p>
 		<LightTable
 			class="q-mb-88"
 			:rows="pool.lockableDurationApr"
