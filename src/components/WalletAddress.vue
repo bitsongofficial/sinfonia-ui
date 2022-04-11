@@ -14,7 +14,7 @@ const keplrInstalled = window.keplr !== undefined
 <template>
 	<div
 		v-if="authStore.session"
-		class="row items-center bg-rounded-translucent q-pl-24 q-pr-18 q-py-16-5 no-wrap w-fit"
+		class="row items-center bg-rounded-translucent q-pl-24 q-pr-18 q-py-15 no-wrap w-fit"
 	>
 		<div class="q-mr-50">
 			<p class="text-uppercase text-caption fs-8 opacity-40 q-mb-3">Address</p>

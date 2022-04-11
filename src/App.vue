@@ -8,6 +8,7 @@ import SideMenu from "@/components/navigation/SideMenu.vue"
 import WalletAddress from "@/components/WalletAddress.vue"
 import useBootstrap from "@/hooks/useBootstrap"
 import useSettings from "@/store/settings"
+import LightModeSwitch from "./components/inputs/LightModeSwitch.vue"
 
 const settingsStore = useSettings()
 const $q = useQuasar()
@@ -39,13 +40,17 @@ onBeforeMount(() => {
 							<div
 								class="vertical-sm-fixed full-width flex-xs justify-center-xs relative-xs no-pointer-events bottom-0 q-mb-40 q-mb-xs-14 q-pt-lg w-fit"
 							>
-								<a
-									:href="externalWebsites.coingecko"
-									class="q-pl-24 block w-fit q-mb-14 all-pointer-events text-center fs-12 text-weight-medium opacity-30"
-								>
-									<span class="text-white"> Price Data by CoinGecko </span>
-								</a>
-								<WalletAddress class="all-pointer-events gt-xs"></WalletAddress>
+								<div class="all-pointer-events">
+									<div class="q-mb-20">
+										<LightModeSwitch class="flex q-mr-10"></LightModeSwitch>
+									</div>
+									<a
+										:href="externalWebsites.coingecko"
+										class="q-pl-12 block w-fit q-mb-14 text-center fs-12 text-weight-medium opacity-30"
+									>
+										<span class="text-white"> Price Data by CoinGecko </span>
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
