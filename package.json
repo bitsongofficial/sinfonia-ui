@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "localnet:start": "sh ./localnet/osmosis/run-localnet.sh",
+    "localnet:stop": "docker rm --force osmosis_localnet",
     "preview": "vite preview"
   },
   "dependencies": {
