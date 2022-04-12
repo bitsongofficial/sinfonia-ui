@@ -27,7 +27,7 @@ const columns: TableColumn[] = [
 		label: "Symbol",
 		field: "symbol",
 		sortable: true,
-		format: (val: string) => `$${val}`,
+		format: (val: string) => `${val}`,
 	},
 	{
 		name: "price",

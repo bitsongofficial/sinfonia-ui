@@ -12,7 +12,7 @@ defineProps<{
 	<LightTable :rows="rows" :columns="columns">
 		<template v-slot:body-cell-symbol="slotProps">
 			<q-td :props="slotProps">
-				<span class="opacity-40"> ${{ slotProps.row.symbol }} </span>
+				<span class="opacity-40"> {{ slotProps.row.symbol }} </span>
 			</q-td>
 		</template>
 		<template v-slot:body-cell-token="slotProps">

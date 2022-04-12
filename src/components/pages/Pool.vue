@@ -304,7 +304,9 @@ onUnmounted(() => {
 			<div class="col-3">
 				<h3 class="fs-21 q-mb-20 q-mt-0">Liquidity Mining</h3>
 				<p class="fs-16 opacity-40 !leading-20">
-					Liquidity mining is a decentralized finance mechanism wherein participants provide some of their assets into various liquidity pools, from which you are rewarded with tokens and fees.
+					Liquidity mining is a decentralized finance mechanism wherein participants
+					provide some of their assets into various liquidity pools, from which you
+					are rewarded with tokens and fees.
 				</p>
 			</div>
 			<div class="col-5 column items-end">
@@ -353,9 +355,7 @@ onUnmounted(() => {
 								</q-avatar>
 							</div>
 						</div>
-						<p
-							class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20"
-						>
+						<p class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20">
 							Bond Liquidity to earn Fan token Rewards.
 						</p>
 						<div
@@ -402,7 +402,7 @@ onUnmounted(() => {
 										<p class="fs-11 text-white text-uppercase text-weight-medium">
 											<span class="opacity-40">Incentive </span>
 											{{ balancedCurrency(coin.amount) }}
-											{{ coin.token?.fantoken ? "$" : "" }}{{ coin.token?.symbol }}
+											{{ coin.token?.symbol }}
 										</p>
 										<div class="flex">
 											<p class="fs-11 q-mr-8 opacity-30">APR</p>
