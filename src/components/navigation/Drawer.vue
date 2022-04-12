@@ -22,11 +22,11 @@ import WalletAddress from '../WalletAddress.vue'
 </script>
 
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="z-20">
 
     <q-header class="bg-transparent text-white">
-      <div class="container">
-        <q-toolbar class="flex justify-between q-pt-40 q-pb-20 q-px-0 bg-primary-dark light:bg-white">
+      <div class="container bg-primary-dark light:bg-white">
+        <q-toolbar class="flex justify-between q-pt-40 q-pb-20 q-px-0">
           <RouterLink to="/fantokens">
             <Logo></Logo>
           </RouterLink>
@@ -53,7 +53,7 @@ import WalletAddress from '../WalletAddress.vue'
         </div>
       </div>
     </q-drawer>
-    <q-page-container>
+    <q-page-container class="container">
       <RouterView />
     </q-page-container>
   </q-layout>

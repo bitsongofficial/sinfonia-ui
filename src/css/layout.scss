@@ -372,6 +372,10 @@ $s in $custom-sizes {
         padding-bottom: 20px;
     }
 
+    .q-pt-xs-40 {
+        padding-top: 40px;
+    }
+
     .q-px-xs-70 {
         padding-left: 70px;
         padding-right: 70px;
@@ -417,6 +421,10 @@ $s in $custom-sizes {
         justify-content: center !important;
     }
 
+    .relative-position-xs {
+        position: relative;
+    }
+
     .fs-xs-24 {
         font-size: 24px;
     }
@@ -457,6 +465,11 @@ $s in $custom-sizes {
 
     .order-xs-3 {
         order: 3;
+    }
+
+    .mobile-fit-in-container {
+        width: 100vw !important;
+        margin-left: -30px !important;
     }
 }
 

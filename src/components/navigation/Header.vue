@@ -7,6 +7,7 @@ import StandardButton from "../buttons/StandardButton.vue"
 import useBank from "@/store/bank"
 import Drawer from "./Drawer.vue"
 import LightModeSwitch from "../inputs/LightModeSwitch.vue"
+import WalletAddress from "../WalletAddress.vue"
 
 const $q = useQuasar()
 const bankStore = useBank()
@@ -21,7 +22,6 @@ const isProduction = import.meta.env.VITE_MODE
 		<div class="row items-center">
 			<!-- <IconButton class="q-mr-20" icon="setting" width="20" height="20" size="sm"></IconButton> -->
 			<div class="settings flex items-center no-wrap">
-				<LightModeSwitch></LightModeSwitch>
 				<div>
 					<StandardButton
 						v-if="isProduction === 'testnet'"
@@ -29,11 +29,12 @@ const isProduction = import.meta.env.VITE_MODE
 						@click="bankStore.getFaucet"
 						with-icon
 						:icon="resolveIcon('coin', 24, 24)"
-						class="bg-gradient-primary-pink fs-14"
+						class="bg-gradient-primary-pink fs-14 q-mr-30"
 					>
 						Get BTSG
 					</StandardButton>
 				</div>
+				<WalletAddress></WalletAddress>
 			</div>
 		</div>
 	</div>
