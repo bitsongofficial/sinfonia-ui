@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "localnet:start": "sh ./localnet/osmosis/run-localnet.sh",
-    "localnet:stop": "docker rm --force osmosis_localnet",
+    "localnet:start": "docker-compose -f ./localnet/docker-compose.yml up --build -d",
+    "localnet:stop": "docker-compose -f ./localnet/docker-compose.yml down",
     "preview": "vite preview"
   },
   "dependencies": {

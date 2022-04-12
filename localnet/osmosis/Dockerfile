@@ -97,4 +97,5 @@ RUN ./osmosisd collect-gentxs
 EXPOSE 26657
 EXPOSE 1317
 EXPOSE 9090
+COPY . .
 CMD ./osmosisd start --trace

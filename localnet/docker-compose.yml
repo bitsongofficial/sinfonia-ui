@@ -1,0 +1,18 @@
+version: '3'
+services:
+  osmosis:
+    build: ./osmosis
+    ports:
+     - "26657:26657"
+     - "1337:1337"
+     - "9090:9090"
+    volumes:
+     - .:/osmosis/osmosis/build
+  bitsong:
+    build: ./bitsong
+    ports:
+     - "36657:26657"
+     - "2337:1337"
+     - "10090:9090"
+    volumes:
+     - .:/bitsong/bitsong/build
