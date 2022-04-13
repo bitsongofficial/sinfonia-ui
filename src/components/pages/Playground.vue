@@ -65,7 +65,7 @@ import { computed, ref } from "vue";
 </script>
 
 <template>
-	<div class="row q-mb-80">
+	<div class="row q-col-gutter-x-xl q-mb-80">
 		<div class="col-8 col-md-5">
 			<Title class="q-mb-50">Playground</Title>
 			<div class="flex items-center fs-21 text-weight-medium q-mb-28">
@@ -92,8 +92,12 @@ import { computed, ref } from "vue";
 				</div>
 			</LargeButton>
 		</div>
-		<div class="col-8 col-md-3">
-
+		<div class="col-8 col-md-3 gt-sm">
+			<img
+				src="@/assets/images/icons/twitter_gradient.svg"
+				alt="twitter"
+				class="full-width full-height"
+			/>
 		</div>
 	</div>
 	<div class="flex items-center justify-between q-mb-36">
