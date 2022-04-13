@@ -14,6 +14,7 @@ const paddingXClass = "q-px-" + (props.paddingX ? props.paddingX : 40)
 
 <template>
 	<StandardButton
+		:no-padding="(paddingX || paddingY) ? true : false"
 		:type="type"
 		:class="
 			'fs-16 text-center ' +

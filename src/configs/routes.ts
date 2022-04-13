@@ -5,6 +5,7 @@ import Assets from "@/components/pages/Assets.vue"
 import Swap from "@/components/pages/Swap.vue"
 import Pool from "@/components/pages/Pool.vue"
 import FanToken from "@/components/pages/FanToken.vue"
+import Playground from "@/components/pages/Playground.vue"
 import { RouteRecordRaw } from "vue-router"
 import { externalWebsites } from "./config"
 
@@ -50,6 +51,10 @@ const routes: RouteRecordRaw[] = [
 		component: Assets,
 	},
 	{
+		path: "/playground",
+		component: Playground,
+	},
+	{
 		path: "/",
 		redirect: "/fantokens",
 	},
@@ -81,6 +86,11 @@ export const menuItems = [
 		label: 'Transactions',
 		path: `${externalWebsites.mintscan}bitsong/txs`,
 		isLink: true,
+	},
+	{
+		icon: { name: 'clubs', width: 21, height: 22 },
+		label: 'Playground',
+		path: '/playground',
 	},
 ]
 
