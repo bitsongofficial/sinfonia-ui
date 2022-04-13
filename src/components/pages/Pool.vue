@@ -311,17 +311,16 @@ onUnmounted(() => {
 				</p>
 			</div>
 			<div class="col-5 column items-end">
-				<div class="flex row items-center q-mb-8">
+				<div class="flex row items-center q-mb-8 cursor-pointer">
 					<q-icon
 						size="14px"
 						:name="resolveIcon('info', 15, 15)"
 						class="cursor-pointer q-mr-10 opacity-40"
-					>
-						<InformativeTooltip anchor="center right" self="center left">
-							LP tokens represent a crypto liquidity provider’s share of a pool.
-						</InformativeTooltip>
-					</q-icon>
+					/>
 					<p class="fs-12 opacity-40 q-mb-none">Available LP Tokens</p>
+					<InformativeTooltip anchor="center right" self="center left">
+						LP tokens represent a crypto liquidity provider’s share of a pool.
+					</InformativeTooltip>
 				</div>
 				<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
 				<StandardButton @click="openBondModal = true" :disable="!authStore.session">
@@ -404,8 +403,8 @@ onUnmounted(() => {
 								<q-avatar class="q-mr-18" size="25px">
 									<img :src="coin.token?.logos.default" alt="" />
 								</q-avatar>
-								<div class="flex-1">
-									<div class="flex no-wrap items-center q-mb-10">
+								<div class="flex-1 flex">
+									<div class="flex no-wrap items-center q-mb-10 cursor-pointer">
 										<p class="fs-14 text-weight-medium text-no-wrap">
 											{{ gauge.leftEpochs }} epochs left
 										</p>
@@ -413,14 +412,13 @@ onUnmounted(() => {
 											size="14px"
 											:name="resolveIcon('info', 15, 15)"
 											class="cursor-pointer q-ml-10 opacity-40"
-										>
-											<InformativeTooltip anchor="center right" self="center left">
-												an epoch is considered a specific period of time. On Sinfonia an
-												epoch corresponds to 24 hours.
-											</InformativeTooltip>
-										</q-icon>
+										/>
+										<InformativeTooltip anchor="center right" self="center left">
+											an epoch is considered a specific period of time. On Sinfonia an
+											epoch corresponds to 24 hours.
+										</InformativeTooltip>
 									</div>
-									<div class="flex row wrap justify-between items-center">
+									<div class="flex row wrap justify-between items-center full-width">
 										<p class="fs-11 text-white text-uppercase text-weight-medium">
 											<span class="opacity-40">Incentive </span>
 											{{ balancedCurrency(coin.amount) }}
