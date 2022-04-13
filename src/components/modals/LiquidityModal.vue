@@ -157,7 +157,9 @@ const inputChangeEvent = (coin, value) => {
 					<div
 						class="absolute-full rounded-20 bg-dark opacity-20 group-hover:opacity-40"
 					></div>
-					<p class="text-center fs-12 q-pa-12 text-weight-medium">Change token</p>
+					<p class="text-center fs-12 q-pa-12 text-weight-medium">
+						Select Another Token
+					</p>
 				</div>
 				<div class="flex column-xs justify-between no-wrap">
 					<div class="column q-mr-20 items-center-xs q-mb-xs-14">
