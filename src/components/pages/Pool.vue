@@ -367,7 +367,7 @@ onUnmounted(() => {
 							</div>
 						</div>
 						<p class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20">
-							Bond Liquidity to earn Fan token Rewards.
+							Bond Assets to earn liquidity rewards and swap fees.
 						</p>
 						<div
 							class="flex no-wrap items-center text-weight-medium"
