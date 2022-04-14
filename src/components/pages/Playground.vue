@@ -141,8 +141,15 @@ onMounted(() => {
 		<template v-slot:body-cell-user="slotProps">
 			<q-td :props="slotProps">
 				<div class="row items-center no-wrap">
-					<q-avatar size="30px" class="q-mr-22">
-						<img :src="slotProps.row.profileImageUrl" :alt="slotProps.row.name" />
+					<q-avatar size="30px" class="q-mr-22 bg-gradient">
+						<img
+							v-if="slotProps.row.profileImageUrl"
+							:src="slotProps.row.profileImageUrl"
+							:alt="slotProps.row.name[0]"
+						/>
+						<p class="text-weight-medium fs-12 text-uppercase" v-else>
+							{{ slotProps.row.name[0] }}
+						</p>
 					</q-avatar>
 					<p class="text-weight-medium fs-15">
 						{{ slotProps.row.name }}
