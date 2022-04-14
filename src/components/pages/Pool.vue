@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import ImagePair from "@/components/ImagePair.vue"
-import OutlineButton from "@/components/buttons/OutlineButton.vue"
-import StandardButton from "@/components/buttons/StandardButton.vue"
-import CardWithHeader from "@/components/cards/CardWithHeader.vue"
-import PercentageWithImage from "@/components/infographics/PercentageWithImage.vue"
 import {
 	balancedCurrency,
 	percentage,
@@ -11,24 +6,30 @@ import {
 	balancedGamm,
 	gtnZero,
 } from "@/common/numbers"
+import { TableColumn, LockableDurationWithApr, LockCoin } from "@/types"
+import { useRoute } from "vue-router"
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
+import { BigNumber } from "bignumber.js"
+import { reduce } from "lodash"
+import { Coin } from "@cosmjs/proto-signing"
+import { formatEpochDate, fromNow } from "@/common"
+import { resolveIcon } from "@/common/resolvers"
+import useTransactionManager from "@/store/transaction-manager"
+import useAuth from "@/store/auth"
+import useConfig from "@/store/config"
+import usePools from "@/store/pools"
+import InformativeTooltip from "@/components/tooltips/InformativeTooltip.vue"
+import ImagePair from "@/components/ImagePair.vue"
+import OutlineButton from "@/components/buttons/OutlineButton.vue"
+import StandardButton from "@/components/buttons/StandardButton.vue"
+import CardWithHeader from "@/components/cards/CardWithHeader.vue"
+import PercentageWithImage from "@/components/infographics/PercentageWithImage.vue"
 import InfoCard from "@/components/cards/InfoCard.vue"
 import ExpandableCard from "@/components/cards/ExpandableCard.vue"
 import Progress from "@/components/Progress.vue"
 import LightTable from "@/components/LightTable.vue"
 import BondModal from "@/components/modals/BondModal.vue"
-import { TableColumn, LockableDurationWithApr, LockCoin } from "@/types"
-import usePools from "@/store/pools"
-import { useRoute, useRouter } from "vue-router"
-import { computed, onMounted, onUnmounted, ref, watch } from "vue"
-import { BigNumber } from "bignumber.js"
-import { reduce } from "lodash"
-import { Coin } from "@cosmjs/proto-signing"
-import { formatEpochDate, unboundingEndTimeStart, fromNow } from "@/common"
-import useTransactionManager from "@/store/transaction-manager"
-import LiquidityModal from "../modals/LiquidityModal.vue"
-import { coinsConfig } from "@/configs/config"
-import useAuth from "@/store/auth"
-import useConfig from "@/store/config"
+import LiquidityModal from "@/components//modals/LiquidityModal.vue"
 
 const transactionManagerStore = useTransactionManager()
 const poolsStore = usePools()
@@ -304,11 +305,23 @@ onUnmounted(() => {
 			<div class="col-3">
 				<h3 class="fs-21 q-mb-20 q-mt-0">Liquidity Mining</h3>
 				<p class="fs-16 opacity-40 !leading-20">
-					Liquidity mining is a decentralized finance mechanism wherein participants provide some of their assets into various liquidity pools, from which you are rewarded with tokens and fees.
+					Liquidity mining is a decentralized finance mechanism wherein participants
+					provide some of their assets into various liquidity pools, from which you
+					are rewarded with tokens and fees.
 				</p>
 			</div>
 			<div class="col-5 column items-end">
-				<p class="fs-12 opacity-40 q-mb-8">Available LP Tokens</p>
+				<div class="flex row items-center q-mb-8 cursor-pointer">
+					<q-icon
+						size="14px"
+						:name="resolveIcon('info', 15, 15)"
+						class="cursor-pointer q-mr-10 opacity-40"
+					/>
+					<p class="fs-12 opacity-40 q-mb-none">Available LP Tokens</p>
+					<InformativeTooltip anchor="center right" self="center left">
+						LP tokens represent a crypto liquidity provider’s share of a pool.
+					</InformativeTooltip>
+				</div>
 				<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
 				<StandardButton @click="openBondModal = true" :disable="!authStore.session">
 					Start Earning
@@ -353,10 +366,8 @@ onUnmounted(() => {
 								</q-avatar>
 							</div>
 						</div>
-						<p
-							class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20"
-						>
-							Bond Liquidity to earn Fan token Rewards.
+						<p class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20">
+							Bond Assets to earn liquidity rewards and swap fees.
 						</p>
 						<div
 							class="flex no-wrap items-center text-weight-medium"
@@ -392,17 +403,26 @@ onUnmounted(() => {
 								<q-avatar class="q-mr-18" size="25px">
 									<img :src="coin.token?.logos.default" alt="" />
 								</q-avatar>
-								<div class="flex-1">
-									<div class="flex no-wrap items-center q-mb-10">
+								<div class="flex-1 flex">
+									<div class="flex no-wrap items-center q-mb-10 cursor-pointer">
 										<p class="fs-14 text-weight-medium text-no-wrap">
 											{{ gauge.leftEpochs }} epochs left
 										</p>
+										<q-icon
+											size="14px"
+											:name="resolveIcon('info', 15, 15)"
+											class="cursor-pointer q-ml-10 opacity-40"
+										/>
+										<InformativeTooltip anchor="center right" self="center left">
+											an epoch is considered a specific period of time. On Sinfonia an
+											epoch corresponds to 24 hours.
+										</InformativeTooltip>
 									</div>
-									<div class="flex row wrap justify-between items-center">
+									<div class="flex row wrap justify-between items-center full-width">
 										<p class="fs-11 text-white text-uppercase text-weight-medium">
 											<span class="opacity-40">Incentive </span>
 											{{ balancedCurrency(coin.amount) }}
-											{{ coin.token?.fantoken ? "$" : "" }}{{ coin.token?.symbol }}
+											{{ coin.token?.symbol }}
 										</p>
 										<div class="flex">
 											<p class="fs-11 q-mr-8 opacity-30">APR</p>

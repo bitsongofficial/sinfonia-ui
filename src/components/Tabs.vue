@@ -60,7 +60,9 @@ const isTab = (name): boolean => {
 				</a>
 				<q-icon
 					v-if="option.icon"
-					:name="resolveIcon(option.icon.name, option.icon.width, option.icon.height)"
+					:name="
+						resolveIcon(option.icon.name, option.icon.width, option.icon.height)
+					"
 					class="opacity-40 w-fit q-mr-50 !flex-0 q-px-0 hover:opacity-100"
 					content-class="q-py-0"
 				>
@@ -77,10 +79,7 @@ const isTab = (name): boolean => {
 			</template>
 		</q-tabs>
 	</div>
-	<q-tab-panels
-		v-model="tab"
-		class="bg-white-5 rounded-30 q-py-52 full-width"
-	>
+	<q-tab-panels v-model="tab" class="bg-white-5 rounded-30 q-py-52 full-width">
 		<template v-for="(_, slot) of $slots">
 			<template v-if="isTab(slot)">
 				<q-tab-panel :name="slot" class="q-px-40 q-px-xs-20">

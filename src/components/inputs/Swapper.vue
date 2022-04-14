@@ -377,7 +377,7 @@ const onSubmit = () => {
 	<div class="flex justify-between items-center q-mb-20">
 		<p class="fs-14 opacity-30">Swap from</p>
 		<InlineButton @click="invert" class="lt-sm">
-			<p class="fs-12 q-mr-12">{{swapButtonText}}</p>
+			<p class="fs-12 q-mr-12">{{ swapButtonText }}</p>
 			<span class="fs-10 text-primary">
 				<q-icon :name="resolveIcon('swap', 21, 16)" />
 			</span>
@@ -396,7 +396,7 @@ const onSubmit = () => {
 	<div class="flex justify-between q-mt-20 q-mb-16 items-center">
 		<p class="fs-14 opacity-30">Swap to</p>
 		<InlineButton @click="invert" class="gt-xs">
-			<p class="fs-12 q-mr-12">{{swapButtonText}}</p>
+			<p class="fs-12 q-mr-12">{{ swapButtonText }}</p>
 			<span class="fs-10 text-primary">
 				<q-icon :name="resolveIcon('swap', 21, 16)" />
 			</span>
@@ -419,7 +419,7 @@ const onSubmit = () => {
 		>
 			<div class="flex items-center">
 				<p class="q-mr-8">Estimated slippage</p>
-				<q-icon
+				<!-- <q-icon
 					size="12px"
 					:name="resolveIcon('info', 15, 15)"
 					class="cursor-pointer"
@@ -427,7 +427,7 @@ const onSubmit = () => {
 					<InformativeTooltip anchor="center right" self="center left">
 						slippage is the difference between a trade's expected and actual price
 					</InformativeTooltip>
-				</q-icon>
+				</q-icon> -->
 			</div>
 			<div class="flex">
 				<p :class="'q-mr-14' + (invalidSlippage ? ' text-primary' : '')">
@@ -453,8 +453,7 @@ const onSubmit = () => {
 					class="light:text-primary-complementary gt-xs"
 				>
 					<InformativeTooltip anchor="center right" self="center left">
-						Your transaction will revert if the price changes unfavorably by more than
-						this percentage.
+						slippage is the difference between a trade's expected and actual price
 					</InformativeTooltip>
 				</q-icon>
 			</div>

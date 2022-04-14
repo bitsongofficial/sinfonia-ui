@@ -112,10 +112,6 @@ const toAddress = computed(() => {
 })
 
 const title = computed(() => {
-	if (props.coin.fantoken) {
-		return "Transfer $" + props.coin.symbol
-	}
-
 	return "Transfer " + props.coin.symbol
 })
 

@@ -8,8 +8,8 @@ const props = defineProps<{
 	paddingX?: number
 	type?: string
 }>()
-const paddingYClass = "q-py-" + (props.paddingY ? props.paddingY : 20)
-const paddingXClass = "q-px-" + (props.paddingX ? props.paddingX : 40)
+const paddingYClass = "q-py-" + (props.paddingY ?? 20)
+const paddingXClass = "q-px-" + (props.paddingX ?? 40)
 </script>
 
 <template>

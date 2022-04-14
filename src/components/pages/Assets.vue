@@ -146,7 +146,7 @@ const openTransfer = (from: TokenBalance) => {
 					</q-td>
 					<q-td>
 						<p class="text-white text-center">
-							{{ rowProps.row.fantoken ? "$" : "" }}{{ rowProps.row.symbol }}
+							{{ rowProps.row.symbol }}
 						</p>
 					</q-td>
 					<q-td>
@@ -185,9 +185,7 @@ const openTransfer = (from: TokenBalance) => {
 						>
 							{{
 								rowProps.row.available
-									? `${balancedCurrency(rowProps.row.available)} ${
-											rowProps.row.fantoken ? "$" : ""
-									  }${rowProps.row.symbol}`
+									? `${balancedCurrency(rowProps.row.available)} ${rowProps.row.symbol}`
 									: "-"
 							}}
 						</p>

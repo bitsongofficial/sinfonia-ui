@@ -50,7 +50,7 @@ const columns: TableColumn[] = [
 		label: "",
 		field: "symbol",
 		sortable: false,
-		format: (val: any) => `$${val}`,
+		format: (val: any) => `${val}`,
 	},
 	{
 		name: "price",
@@ -127,6 +127,14 @@ const onTxClick = (tx: Transaction) => {
 		)
 	}
 }
+
+const onRowClick = (index: number, row: TokenBalance) => {
+	const coinLookup = row.coinLookup.find((coin) => coin.viewDenom === row.symbol)
+
+	if (coinLookup) {
+		router.push(`/fantokens/${coinLookup.fantokenDenom}`)
+	}
+}
 </script>
 <template>
 	<div class="text-weight-medium">
@@ -136,7 +144,12 @@ const onTxClick = (tx: Transaction) => {
 			>
 				<div class="max-w-582">
 					<Title class="q-mb-36">Swap Tokens</Title>
-					<Card ref="heightRef" :padding="0" class="q-px-12 q-pt-32 q-pb-20 q-pa-sm-20 q-pa-md-36" transparency="5">
+					<Card
+						ref="heightRef"
+						:padding="0"
+						class="q-px-12 q-pt-32 q-pb-20 q-pa-sm-20 q-pa-md-36"
+						transparency="5"
+					>
 						<Swapper
 							:default-from="from"
 							:default-to="to"
@@ -173,17 +186,7 @@ const onTxClick = (tx: Transaction) => {
 							no-background
 							hide-header
 							class="small-rows full-height"
-							@row-click="
-								(_, row) => {
-									const coinLookup = row.coinLookup.find(
-										(coin) => coin.viewDenom === row.symbol
-									)
-
-									if (coinLookup) {
-										$router.push(`/fantokens/${coinLookup.fantokenDenom}`)
-									}
-								}
-							"
+							@row-click="onRowClick"
 						>
 						</CryptoTable>
 					</Card>
@@ -196,11 +199,18 @@ const onTxClick = (tx: Transaction) => {
 							color="white"
 							:href="`${externalWebsites.mintscan}osmosis/account/${authStore.osmosisAddress}`"
 							target="_blank"
-              label="View all"
-							:disabled="transactionManagerStore.swapTransactions.length === 0 ? true : undefined"
-							@click="(e) => {if(transactionManagerStore.swapTransactions.length === 0) e.preventDefault()}"
-              class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
-            />
+							label="View all"
+							:disabled="
+								transactionManagerStore.swapTransactions.length === 0 ? true : undefined
+							"
+							@click="
+								(e) => {
+									if (transactionManagerStore.swapTransactions.length === 0)
+										e.preventDefault()
+								}
+							"
+							class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
+						/>
 					</div>
 					<Card
 						class="q-py-10 q-px-none overflow-auto items-center"
@@ -243,11 +253,7 @@ const onTxClick = (tx: Transaction) => {
 											v-if="slotProps.row.fromSwap"
 										>
 											{{ balancedCurrency(slotProps.row.fromAmount) }}
-											{{
-												slotProps.row.fromSwap.fantoken
-													? `$${slotProps.row.fromSwap.symbol}`
-													: slotProps.row.fromSwap.symbol
-											}}
+											{{ slotProps.row.fromSwap.symbol }}
 										</span>
 										in
 										<span
@@ -255,11 +261,7 @@ const onTxClick = (tx: Transaction) => {
 											v-if="slotProps.row.toSwap"
 										>
 											{{ balancedCurrency(slotProps.row.toAmount) }}
-											{{
-												slotProps.row.toSwap.fantoken
-													? `$${slotProps.row.toSwap.symbol}`
-													: slotProps.row.toSwap.symbol
-											}}
+											{{ slotProps.row.toSwap.symbol }}
 										</span>
 									</p>
 								</q-td>

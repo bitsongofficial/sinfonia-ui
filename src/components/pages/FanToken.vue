@@ -226,16 +226,29 @@ onUnmounted(() => {
 		<div class="row q-mb-70">
 			<div class="col-8 col-md-4">
 				<div class="flex q-mb-60 items-start items-center-xs column-xs">
-					<q-avatar size="120px" class="q-mr-40 q-mr-xs-0 q-mb-xs-14">
+					<q-avatar size="120px" class="q-mr-40 q-mr-xs-0 q-mb-14">
 						<img :src="fantoken.logos.default" :alt="fantoken.name" />
 					</q-avatar>
 					<div class="text-center-xs">
 						<p class="text-dark q-mb-18 fs-21">
 							{{ fantoken.name }}
 						</p>
-						<p class="fs-60 q-mb-20 text-weight-bold">${{ fantoken.symbol }}</p>
-						<p class="text-dark fs-16 text-uppercase q-mb-16">Price</p>
-						<p class="fs-32">$ {{ smallNumber(fantoken.price ?? "0") }}</p>
+						<p class="fs-60 q-mb-20 text-weight-bold">{{ fantoken.symbol }}</p>
+						<div class="flex column-xs row items-center-xs items-end justify-center">
+							<div class="flex column q-mb-xs-14">
+								<p class="text-dark fs-16 text-uppercase q-mb-16">Price</p>
+								<p class="fs-32">$ {{ smallNumber(fantoken.price ?? "0") }}</p>
+							</div>
+							<LargeButton
+								:padding-x="0"
+								:padding-y="18"
+								class="q-ml-xs-0 q-ml-46"
+								to="/swap"
+								fit
+							>
+								Swap Tokens
+							</LargeButton>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -252,18 +265,23 @@ onUnmounted(() => {
 				<div class="flex">
 					<div class="column items-end items-center-xs">
 						<p
-							class="fs-16 text-dark q-mb-12 text-uppercase text-right"
+							class="fs-24 text-dark text-weight-medium q-mb-14 text-capitalize text-right"
 							v-if="balance"
 						>
-							${{ fantoken.symbol }}
+							My Tokens
 						</p>
-						<p class="fs-44 q-mb-12" v-if="balance">
-							{{ balancedCurrency(balance.available ?? "0") }}
+						<p class="fs-44 q-mb-24 text-weight-medium" v-if="balance">
+							{{ balancedCurrency(balance.available ?? "0") }} {{ fantoken.symbol }}
 						</p>
-						<p class="fs-21 text-dark text-right q-mb-33" v-if="balance">
+						<p
+							class="fs-16 text-dark text-weight-medium q-mb-10 text-capitalize text-right"
+							v-if="balance"
+						>
+							value
+						</p>
+						<p class="fs-32 text-weight-medium text-right q-mb-33" v-if="balance">
 							{{ balancedCurrency(balance.availableFiat ?? "0") }} $
 						</p>
-						<LargeButton to="/swap" fit>Swap Tokens</LargeButton>
 					</div>
 					<!-- <div>
 						<p class="fs-12 text-dark q-mb-10 text-uppercase text-right">Backers</p>
@@ -364,7 +382,7 @@ onUnmounted(() => {
 					<p class="fs-16 opacity-30 q-mb-24">Tokenomics</p>
 					<div class="row q-col-gutter-xl">
 						<div class="col-8 col-md-4 col-lg-2 overflow-down">
-							<InfoCard :header="`$${fantoken.symbol} CIRCULATING`" class="q-py-34">
+							<InfoCard :header="`${fantoken.symbol} CIRCULATING`" class="q-py-34">
 								{{ balancedCurrency(balance?.circulatingSupply ?? "0") }}
 							</InfoCard>
 						</div>
@@ -475,12 +493,12 @@ onUnmounted(() => {
 						</Card>
 						<div class="row q-col-gutter-lg">
 							<div class="col-8 col-md-4">
-								<InfoCard header="$CLAY CIRCULATING " :padding="20">
+								<InfoCard header="CLAY CIRCULATING " :padding="20">
 									{{ balancedCurrency(21600000) }}
 								</InfoCard>
 							</div>
 							<div class="col-8 col-md-4">
-								<InfoCard header="$CLAY CIRCULATING " :padding="20">
+								<InfoCard header="CLAY CIRCULATING " :padding="20">
 									{{ balancedCurrency(21600000) }}
 								</InfoCard>
 							</div>
