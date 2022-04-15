@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "dev:localnet": "vite --mode mainnet",
     "build": "vue-tsc --noEmit && vite build",
+    "build:localnet": "vue-tsc --noEmit && vite build --mode mainnet",
     "localnet:start": "docker-compose -f ./localnet/docker-compose.yml up --build -d",
     "localnet:stop": "docker-compose -f ./localnet/docker-compose.yml down",
     "preview": "vite preview"
