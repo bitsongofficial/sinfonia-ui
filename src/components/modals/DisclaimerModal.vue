@@ -30,7 +30,7 @@ const submit = () => {
 	}
 }
 
-const content = `IMPORTANT DISCLAIMER:
+const content = `IMPORTANT DISCLAIMER: 
 
 No part of the content and services that we provide on Sinfonia constitutes financial advice, legal advice or any other form of advice meant for your specific reliance for any purpose, nor any dealing in (or promotion of) securities for which a licence is required from any competent Authorities. 
 
@@ -40,7 +40,8 @@ You should conduct your own research, review, analyse and verify our content and
 
 Trading is a risky activity that can lead to major losses, please therefore consult your financial advisor before making any decision. 
 
-No content on Sinfonia is meant to be a solicitation or offer.`
+Moreover, we use Google Analytics to carry out statistical analysis of page use and page interactions to evaluate and improve Sinfonia. This is known as 'digital analytics'. 
+For further information, you can send an email to legal@bitsong.io`
 </script>
 
 <template>
@@ -51,14 +52,8 @@ No content on Sinfonia is meant to be a solicitation or offer.`
 				class="bg-white-5 rounded-10 relative-position q-mb-22 overflow-overlay max-h-360 grow-1"
 			>
 				<div class="q-py-30 q-px-30">
-					<div class="fs-12 opacity-50">
+					<div class="fs-14 opacity-50">
 						<p class="q-mb-20 white-space-break-spaces">{{ content }}</p>
-						<p>
-							Moreover, we use Google Analytics to carry out statistical analysis of
-							page use and page interactions to evaluate and improve our Platform. This
-							is known as 'digital analytics'. For further information, you can send an
-							email to legal@bitsong.io
-						</p>
 					</div>
 				</div>
 				<div class="sticky-bottom rounded-10 text-overlay-gradient h-100 z-1"></div>
