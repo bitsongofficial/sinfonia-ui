@@ -7,7 +7,7 @@ import { ChainBalance, OsmosisLock, Token, TokenBalance } from "@/types"
 import { reduce, unionBy } from "lodash"
 import { toViewDenom } from "@/common/numbers"
 import { BigNumber } from "bignumber.js"
-import { getFaucet } from "@/services/faucet-client"
+import { getFaucet } from "@/services/faucet"
 import { notifyError, notifyLoading, notifySuccess } from "@/common"
 
 export interface BankState {

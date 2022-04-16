@@ -1,20 +1,25 @@
 <script setup lang="ts">
 import { Token, TokenWithAddress } from "@/types"
-import { computed, onMounted, ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { resolveIcon } from "@/common/resolvers"
 import { balancedCurrency, amountToCoin } from "@/common/numbers"
+import {
+	isValidAddress,
+	amountFromCoin,
+	amountIBCFromCoin,
+	gteComparePercentage,
+} from "@/common"
+import { compact } from "lodash"
+import { Coin } from "@cosmjs/proto-signing"
+import useConfig from "@/store/config"
+import useKeplr from "@/store/keplr"
+import useTransactionManager from "@/store/transaction-manager"
+import useBank from "@/store/bank"
 import ModalWithClose from "@/components/modals/ModalWithClose.vue"
 import AddressesSelect from "@/components/inputs/AddressesSelect.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import Amount from "@/components/inputs/Amount.vue"
-import useConfig from "@/store/config"
-import useKeplr from "@/store/keplr"
-import { isValidAddress, amountFromCoin, amountIBCFromCoin } from "@/common"
-import useTransactionManager from "@/store/transaction-manager"
-import useBank from "@/store/bank"
-import DangerTooltip from "../tooltips/DangerTooltip.vue"
-import { compact } from "lodash"
-import { Coin } from "@cosmjs/proto-signing"
+import DangerTooltip from "@/components/tooltips/DangerTooltip.vue"
 
 const configStore = useConfig()
 const keplrStore = useKeplr()
@@ -178,7 +183,7 @@ const onSubmit = () => {
 
 const bigTransfer = computed({
 	get(): boolean {
-		return bigTransferInternal.value
+		return gteComparePercentage(amount.value, available.value)
 	},
 	set(value: boolean) {
 		bigTransferInternal.value = value
@@ -238,8 +243,9 @@ const bigTransfer = computed({
 							self="center start"
 							v-model="showBigTransferTooltip"
 						>
-							Incorrect withdrawal address could result in loss of funds. Avoid
-							withdrawal to exchange deposit address.
+							You are about to transfer more than 20% of your total amount. We suggest
+							that you do not transfer more than the amount you want to trade. Proceed
+							at your own risk.
 						</DangerTooltip>
 					</q-icon>
 				</div>

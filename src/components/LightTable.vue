@@ -12,7 +12,7 @@
 		row-key="name"
 		:rows="rows"
 		:columns="columns"
-		:class="noBackground ? 'table-no-background' : ''"
+		:class="(noBackground ? 'table-no-background' : '') + ' footer-h-0'"
 	>
 		<template v-slot:header="slotProps">
 			<q-tr :props="slotProps">
@@ -30,11 +30,11 @@
 			<slot :name="slot" v-bind="scope"></slot>
 		</template>
 		<template v-slot:no-data="{ message }">
-		<div class="absolute-full q-py-16 q-pr-16 q-pl-10 flex justify-center items-center fs-18 opacity-40">
-			<p>
-				{{message ?? "No data"}}
-			</p>
-		</div>
+			<div class="absolute-full q-py-16 q-pr-16 q-pl-10 flex justify-center items-center fs-18 opacity-40">
+				<p>
+					{{message ?? "No data"}}
+				</p>
+			</div>
     </template>
 	</q-table>
 </template>

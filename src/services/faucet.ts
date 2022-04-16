@@ -1,12 +1,5 @@
 import { FaucetRequest, FaucetResponse } from "@/types"
-import axios from "axios"
-
-const externalClient = axios.create({
-	headers: {
-		"Content-Type": "application/json",
-	},
-	responseType: "json",
-})
+import { externalClient } from "./external-client"
 
 export const getFaucet = async (request: FaucetRequest) => {
 	const { data: result } = await externalClient.get<FaucetResponse>(

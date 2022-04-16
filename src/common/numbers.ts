@@ -178,6 +178,16 @@ export const gteCompare = (amount: string, compare: string): boolean => {
 	return number.gte(new BigNumber(compare))
 }
 
+export const gteComparePercentage = (
+	amount: string,
+	compare: string,
+	percentage = 0.2
+): boolean => {
+	const number = new BigNumber(amount)
+
+	return number.gte(new BigNumber(compare).multipliedBy(percentage))
+}
+
 export const calculateSpotPrice = (
 	assetIn: OsmosisPoolAsset,
 	assetOut: OsmosisPoolAsset,

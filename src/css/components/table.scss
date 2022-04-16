@@ -13,6 +13,7 @@ $row-padding-x: 30px;
         flex-direction: column;
         justify-content: space-between;
         padding: $table-padding;
+        min-height: 60px;
 
         thead {
             border: none;
@@ -164,4 +165,13 @@ $row-padding-x: 30px;
 
 .q-tr.q-tr--no-hover::after {
     display: none;
+}
+
+.footer-h-0 {
+    .q-table__bottom {
+        height: 0;
+        min-height: 0;
+        padding: 0;
+        border: none;
+    }
 }

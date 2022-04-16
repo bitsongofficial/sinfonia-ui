@@ -10,6 +10,7 @@ declare module "*.vue" {
 interface ImportMetaEnv {
 	readonly VITE_BITSONG_CONFIG_URL: string
 	readonly VITE_BITSONG_FAUCET_URL: string
+	readonly VITE_BITSONG_TWITTER_API: string
 	readonly VITE_MODE: string
 }
 

@@ -240,8 +240,8 @@ onUnmounted(() => {
 								<p class="fs-32">$ {{ smallNumber(fantoken.price ?? "0") }}</p>
 							</div>
 							<LargeButton
-								:padding-x="0"
-								:padding-y="18"
+								:padding-x="30"
+								:padding-y="14"
 								class="q-ml-xs-0 q-ml-46"
 								to="/swap"
 								fit

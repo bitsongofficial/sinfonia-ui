@@ -48,7 +48,7 @@ const address = computed(() => {
 		:options="addresses"
 		:dropdown-icon="resolveIcon('dropdown', 11, 7)"
 		borderless
-		class="rounded-20 select-border text-white q-px-select-20 light:border-gray-700"
+		class="rounded-20 select-border text-white q-px-select-0 light:border-gray-700"
 		input-class="q-px-20 q-py-20"
 		popup-content-class="rounded-20 q-px-10 q-py-0"
 		:menu-offset="[0, 8]"
