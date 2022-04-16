@@ -374,52 +374,53 @@ const onSubmit = () => {
 </script>
 
 <template>
-	<div class="flex justify-between items-center q-mb-20">
-		<p class="fs-14 opacity-30">Swap from</p>
-		<InlineButton @click="invert" class="lt-sm">
-			<p class="fs-12 q-mr-12">{{ swapButtonText }}</p>
-			<span class="fs-10 text-primary">
-				<q-icon :name="resolveIcon('swap', 21, 16)" />
-			</span>
-		</InlineButton>
-	</div>
-	<SwapperField
-		v-model:coin="fromCoin"
-		v-model="swapAmountWrapper"
-		show-max
-		:swap-amount-fiat="swapAmountFiat"
-		:options="fromSwappableBalances"
-		:rules="rule1"
-		@max-click="setMaxAmount"
-		ref="field1"
-	/>
-	<div class="flex justify-between q-mt-20 q-mb-16 items-center">
-		<p class="fs-14 opacity-30">Swap to</p>
-		<InlineButton @click="invert" class="gt-xs">
-			<p class="fs-12 q-mr-12">{{ swapButtonText }}</p>
-			<span class="fs-10 text-primary">
-				<q-icon :name="resolveIcon('swap', 21, 16)" />
-			</span>
-		</InlineButton>
-	</div>
-	<SwapperField
-		v-model:coin="toCoin"
-		v-model="toAmountWrapper"
-		:options="toSwappableBalances"
-		:rules="rule2"
-		ref="field2"
-		class="q-mb-24"
-	/>
-	<div
-		class="q-py-15 q-px-20 q-px-md-30 bg-white-5 light:bg-gray-light rounded-25 fs-14 q-mb-57 q-mb-xs-27"
-	>
+	<q-form @submit="onSubmit">
+		<div class="flex justify-between items-center q-mb-20">
+			<p class="fs-14 opacity-30">Swap from</p>
+			<InlineButton @click="invert" class="lt-sm">
+				<p class="fs-12 q-mr-12">{{ swapButtonText }}</p>
+				<span class="fs-10 text-primary">
+					<q-icon :name="resolveIcon('swap', 21, 16)" />
+				</span>
+			</InlineButton>
+		</div>
+		<SwapperField
+			v-model:coin="fromCoin"
+			v-model="swapAmountWrapper"
+			show-max
+			:swap-amount-fiat="swapAmountFiat"
+			:options="fromSwappableBalances"
+			:rules="rule1"
+			@max-click="setMaxAmount"
+			ref="field1"
+		/>
+		<div class="flex justify-between q-mt-20 q-mb-16 items-center">
+			<p class="fs-14 opacity-30">Swap to</p>
+			<InlineButton @click="invert" class="gt-xs">
+				<p class="fs-12 q-mr-12">{{ swapButtonText }}</p>
+				<span class="fs-10 text-primary">
+					<q-icon :name="resolveIcon('swap', 21, 16)" />
+				</span>
+			</InlineButton>
+		</div>
+		<SwapperField
+			v-model:coin="toCoin"
+			v-model="toAmountWrapper"
+			:options="toSwappableBalances"
+			:rules="rule2"
+			ref="field2"
+			class="q-mb-24"
+		/>
 		<div
-			class="cursor-pointer flex justify-between items-center"
-			@click="slippageExpanded = !slippageExpanded"
+			class="q-py-15 q-px-20 q-px-md-30 bg-white-5 light:bg-gray-light rounded-25 fs-14 q-mb-57 q-mb-xs-27"
 		>
-			<div class="flex items-center">
-				<p class="q-mr-8">Estimated slippage</p>
-				<!-- <q-icon
+			<div
+				class="cursor-pointer flex justify-between items-center"
+				@click="slippageExpanded = !slippageExpanded"
+			>
+				<div class="flex items-center">
+					<p class="q-mr-8">Estimated slippage</p>
+					<!-- <q-icon
 					size="12px"
 					:name="resolveIcon('info', 15, 15)"
 					class="cursor-pointer"
@@ -428,100 +429,103 @@ const onSubmit = () => {
 						slippage is the difference between a trade's expected and actual price
 					</InformativeTooltip>
 				</q-icon> -->
-			</div>
-			<div class="flex">
-				<p :class="'q-mr-14' + (invalidSlippage ? ' text-primary' : '')">
-					{{ percentageRange(slippage) }} %
-				</p>
-				<q-icon
-					:name="resolveIcon('dropdown', 11, 7)"
-					:class="slippageExpanded ? 'rotate-180' : ''"
-				></q-icon>
-			</div>
-		</div>
-		<div
-			v-if="slippageExpanded"
-			class="flex justify-between items-center q-mt-20 q-mt-xs-10"
-		>
-			<div class="flex items-center text-dark q-mb-xs-14 q-mr-12">
-				<p class="fs-13 text-weight-medium q-mr-9 light:text-primary-complementary">
-					Slippage Tolerance
-				</p>
-				<q-icon
-					size="12px"
-					:name="resolveIcon('info', 15, 15)"
-					class="light:text-primary-complementary gt-xs"
-				>
-					<InformativeTooltip anchor="center right" self="center left">
-						slippage is the difference between a trade's expected and actual price
-					</InformativeTooltip>
-				</q-icon>
-			</div>
-			<div class="flex">
-				<div
-					v-for="i in maxSlippageOption"
-					@click="setSlippage(i)"
-					:class="
-						'rounded-30 border-dark light:border-primary-complementary light:text-primary-complementary q-px-14 q-py-6 q-mr-6 cursor-pointer' +
-						(maxSlippage == i && !customSelected
-							? ' bg-dark light:bg-gradient light:border-none light:text-white'
-							: '')
-					"
-					:key="i"
-				>
-					{{ i }} %
 				</div>
-				<div
-					@click="customSelected = true"
-					:class="
-						'flex rounded-30 border-dark light:border-primary-complementary light:text-white q-px-14 q-py-6 q-mr-6 cursor-pointer ' +
-						(customSelected
-							? 'bg-dark light:bg-gradient light:border-none'
-							: 'bg-primary-darker light:bg-primary-complementary opacity-50')
-					"
-				>
-					<div class="flex">
-						<q-input
-							class="min-size-input text-right q-mr-4"
-							input-class="q-py-0"
-							hide-bottom-space
-							borderless
-							v-show="customSelected"
-							v-model="maxSlippage"
-							size="1"
-							dense
-						/>
-						<p>%</p>
+				<div class="flex">
+					<p :class="'q-mr-14' + (invalidSlippage ? ' text-primary' : '')">
+						{{ percentageRange(slippage) }} %
+					</p>
+					<q-icon
+						:name="resolveIcon('dropdown', 11, 7)"
+						:class="slippageExpanded ? 'rotate-180' : ''"
+					></q-icon>
+				</div>
+			</div>
+			<div
+				v-if="slippageExpanded"
+				class="flex justify-between items-center q-mt-20 q-mt-xs-10"
+			>
+				<div class="flex items-center text-dark q-mb-xs-14 q-mr-12">
+					<p
+						class="fs-13 text-weight-medium q-mr-9 light:text-primary-complementary"
+					>
+						Slippage Tolerance
+					</p>
+					<q-icon
+						size="12px"
+						:name="resolveIcon('info', 15, 15)"
+						class="light:text-primary-complementary gt-xs"
+					>
+						<InformativeTooltip anchor="center right" self="center left">
+							slippage is the difference between a trade's expected and actual price
+						</InformativeTooltip>
+					</q-icon>
+				</div>
+				<div class="flex">
+					<div
+						v-for="i in maxSlippageOption"
+						@click="setSlippage(i)"
+						:class="
+							'rounded-30 border-dark light:border-primary-complementary light:text-primary-complementary q-px-14 q-py-6 q-mr-6 cursor-pointer' +
+							(maxSlippage == i && !customSelected
+								? ' bg-dark light:bg-gradient light:border-none light:text-white'
+								: '')
+						"
+						:key="i"
+					>
+						{{ i }} %
+					</div>
+					<div
+						@click="customSelected = true"
+						:class="
+							'flex rounded-30 border-dark light:border-primary-complementary light:text-white q-px-14 q-py-6 q-mr-6 cursor-pointer ' +
+							(customSelected
+								? 'bg-dark light:bg-gradient light:border-none'
+								: 'bg-primary-darker light:bg-primary-complementary opacity-50')
+						"
+					>
+						<div class="flex">
+							<q-input
+								class="min-size-input text-right q-mr-4"
+								input-class="q-py-0"
+								hide-bottom-space
+								borderless
+								v-show="customSelected"
+								v-model="maxSlippage"
+								size="1"
+								dense
+							/>
+							<p>%</p>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="flex items-center q-col-gutter-x-xl">
-		<div class="flex-1 flex justify-between gt-xs" v-if="fromCoin && toCoin">
-			<p class="fs-16 q-mb-xs-14">Rates</p>
-			<div class="fs-12">
-				<p class="q-mb-6">
-					<span class="opacity-40">{{ fromCoin.symbol }} =</span>
-					{{ smallNumberRate(1 / swapRatio) }}
-					<span class="opacity-40">{{ toCoin.symbol }}</span>
-				</p>
-				<p>
-					<span class="opacity-40">{{ toCoin.symbol }} =</span>
-					{{ smallNumberRate(swapRatio) }}
-					<span class="opacity-40">{{ fromCoin.symbol }}</span>
-				</p>
+		<div class="flex items-center q-col-gutter-x-xl">
+			<div class="flex-1 flex justify-between gt-xs" v-if="fromCoin && toCoin">
+				<p class="fs-16 q-mb-xs-14">Rates</p>
+				<div class="fs-12">
+					<p class="q-mb-6">
+						<span class="opacity-40">{{ fromCoin.symbol }} =</span>
+						{{ smallNumberRate(1 / swapRatio) }}
+						<span class="opacity-40">{{ toCoin.symbol }}</span>
+					</p>
+					<p>
+						<span class="opacity-40">{{ toCoin.symbol }} =</span>
+						{{ smallNumberRate(swapRatio) }}
+						<span class="opacity-40">{{ fromCoin.symbol }}</span>
+					</p>
+				</div>
+			</div>
+			<div class="flex flex-1 justify-end justify-center-xs">
+				<LargeButton
+					fit
+					type="submit"
+					:disable="!authStore.session"
+					class="q-px-xs-70"
+				>
+					Swap Tokens
+				</LargeButton>
 			</div>
 		</div>
-		<div class="flex flex-1 justify-end justify-center-xs">
-			<LargeButton
-				fit
-				@click="onSubmit"
-				:disable="!authStore.session"
-				class="q-px-xs-70"
-			>
-				Swap Tokens
-			</LargeButton>
-		</div>
-	</div>
+	</q-form>
 </template>

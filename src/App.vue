@@ -2,16 +2,17 @@
 import { RouterView } from "vue-router"
 import { externalWebsites } from "./configs/config"
 import { useQuasar } from "quasar"
-import { onBeforeMount } from "vue"
+import { onBeforeMount, ref } from "vue"
 import Header from "@/components/navigation/Header.vue"
 import SideMenu from "@/components/navigation/SideMenu.vue"
-import WalletAddress from "@/components/WalletAddress.vue"
 import useBootstrap from "@/hooks/useBootstrap"
 import useSettings from "@/store/settings"
-import LightModeSwitch from "./components/inputs/LightModeSwitch.vue"
+import LightModeSwitch from "@/components/inputs/LightModeSwitch.vue"
+import DisclaimerModal from "@/components/modals/DisclaimerModal.vue"
 
 const settingsStore = useSettings()
 const $q = useQuasar()
+const showDisclaimer = ref(false)
 
 const { bootstrap } = useBootstrap()
 
@@ -19,7 +20,19 @@ bootstrap()
 
 onBeforeMount(() => {
 	$q.dark.set(settingsStore.darkMode)
+
+	if (!settingsStore.disclaimerApprove) {
+		showDisclaimer.value = true
+	}
 })
+
+const disclaimerUpdate = (value: boolean) => {
+	settingsStore.setDisclaimerApprove(value)
+
+	if (value) {
+		showDisclaimer.value = false
+	}
+}
 </script>
 
 <template>
@@ -62,6 +75,8 @@ onBeforeMount(() => {
 				</div>
 			</div>
 		</div>
+
+		<DisclaimerModal v-model="showDisclaimer" @submit="disclaimerUpdate" />
 	</div>
 </template>
 
