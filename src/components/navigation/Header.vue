@@ -8,9 +8,11 @@ import useBank from "@/store/bank"
 import Drawer from "./Drawer.vue"
 import LightModeSwitch from "../inputs/LightModeSwitch.vue"
 import WalletAddress from "../WalletAddress.vue"
+import useAuth from "@/store/auth"
 
 const $q = useQuasar()
 const bankStore = useBank()
+const authStore = useAuth()
 
 const isProduction = import.meta.env.VITE_MODE
 </script>
@@ -24,7 +26,7 @@ const isProduction = import.meta.env.VITE_MODE
 			<div class="settings flex items-center no-wrap">
 				<div>
 					<StandardButton
-						v-if="isProduction === 'testnet'"
+						v-if="isProduction === 'testnet' && authStore.session"
 						:disabled="bankStore.loadingFaucet"
 						@click="bankStore.getFaucet"
 						with-icon
