@@ -306,8 +306,8 @@ onUnmounted(() => {
 				<h3 class="fs-21 q-mb-20 q-mt-0">Liquidity Mining</h3>
 				<p class="fs-16 opacity-40 !leading-20">
 					Liquidity mining is a decentralized finance mechanism wherein participants
-					provide some of their assets into various liquidity pools, from which you
-					are rewarded with tokens and fees.
+					provide some of their crypto assets into various liquidity pools, from
+					which they're rewarded with tokens and fees.
 				</p>
 			</div>
 			<div class="col-5 column items-end">
