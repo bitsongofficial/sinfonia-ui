@@ -48,15 +48,19 @@ For further information, you can send an email to legal@bitsong.io`
 	<Modal v-model="model" no-esc-dismiss no-backdrop-dismiss no-route-dismiss>
 		<div class="pt-10 full-height column no-wrap">
 			<p class="fs-24 q-mb-40">Before you enter Sinfonia DEx</p>
-			<div
-				class="bg-white-5 rounded-10 relative-position q-mb-22 overflow-overlay max-h-360 grow-1"
-			>
-				<div class="q-py-30 q-px-30">
-					<div class="fs-14 opacity-50">
-						<p class="q-mb-20 white-space-break-spaces">{{ content }}</p>
+			<div class="relative-position q-mb-22">
+				<div
+					class="bg-white-5 rounded-10 relative-position overflow-overlay max-h-360 grow-1"
+				>
+					<div class="q-py-30 q-px-30">
+						<div class="fs-14 opacity-50">
+							<p class="!leading-20 q-mb-22 white-space-break-spaces">{{ content }}</p>
+						</div>
 					</div>
 				</div>
-				<div class="sticky-bottom rounded-10 text-overlay-gradient h-100 z-1"></div>
+				<div
+					class="absolute-bottom rounded-10 text-overlay-gradient h-100 z-1 no-pointer-events"
+				></div>
 			</div>
 			<div>
 				<q-checkbox
