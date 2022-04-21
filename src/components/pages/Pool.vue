@@ -331,7 +331,7 @@ onUnmounted(() => {
 		<div class="row q-col-gutter-xl items-center q-mb-80">
 			<div class="col-8 !w-md-1/3" v-for="unbonding in pool.lockableDurationApr">
 				<ExpandableCard
-					padding="14"
+					:padding="14"
 					transparency="5"
 					:expandable="
 						unbonding.extraGauges.length > 0 || gtnZero(unbonding.osmosisApr)

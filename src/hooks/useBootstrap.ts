@@ -28,21 +28,25 @@ const useBootstrap = () => {
 		}
 	}
 
-	const bootstrap = async () => {
+	const bootstrap = async (auth = true) => {
 		try {
 			await configStore.init()
 			pricesStore.init()
 			poolsStore.init()
 			bankStore.init()
 
-			checkAuthState()
+			if (auth) {
+				checkAuthState()
+			} else {
+				bankStore.loadBalances()
+			}
 		} catch (error) {
 			console.error(error)
 			throw error
 		}
 	}
 
-	subscription = setInterval(bootstrap, pollingTime)
+	subscription = setInterval(() => bootstrap(false), pollingTime)
 
 	onUnmounted(() => {
 		clearInterval(subscription)
