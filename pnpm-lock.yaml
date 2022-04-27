@@ -35,6 +35,7 @@ specifiers:
   vite: ^2.8.0
   vite-plugin-checker: ^0.4.4
   vue: ^3.2.25
+  vue-gtag: ^2.0.1
   vue-router: '4'
   vue-tsc: ^0.29.8
 
@@ -58,6 +59,7 @@ dependencies:
   pinia-plugin-persistedstate-2: 1.0.0_pinia@2.0.11
   protobufjs: 6.11.2
   vue: 3.2.31
+  vue-gtag: 2.0.1_vue@3.2.31
   vue-router: 4.0.13_vue@3.2.31
 
 devDependencies:
@@ -3236,6 +3238,14 @@ packages:
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
+    dependencies:
+      vue: 3.2.31
+    dev: false
+
+  /vue-gtag/2.0.1_vue@3.2.31:
+    resolution: {integrity: sha512-aM4A58FVL0wV2ptYi+xzAjeg+pQVRyUcfBc5UkXAwQrR4t3WBhor50Izp2I+3Oo7+l+vWJ7u78DGcNzReb8S/A==}
+    peerDependencies:
+      vue: ^3.0.0
     dependencies:
       vue: 3.2.31
     dev: false
