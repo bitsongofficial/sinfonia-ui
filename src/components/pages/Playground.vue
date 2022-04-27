@@ -63,6 +63,8 @@ const twitterLink = computed(() => {
 
 	if (authStore.bitsongAddress) {
 		messagge = messagge.concat(`\n${authStore.bitsongAddress}`)
+	} else {
+		messagge = messagge.concat(`\n[fill here with your testnet wallet address]`)
 	}
 
 	messagge = messagge.concat(`\n${import.meta.env.VITE_PLAYGROUND_TWEET_URL}`)
