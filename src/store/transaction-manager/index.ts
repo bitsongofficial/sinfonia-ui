@@ -49,7 +49,7 @@ const useTransactionManager = defineStore("transactionManager", {
 
 			try {
 				if (window.keplr) {
-					const signer = await window.keplr.getOfflineSignerOnlyAmino(from.chainID)
+					const signer = await window.keplr.getOfflineSignerAuto(from.chainID)
 					const manager = new TransactionManager(signer, from)
 					let sourceChannel = ""
 
