@@ -6,8 +6,10 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 import Title from "@/components/typography/Title.vue"
 import LightTable from "@/components/LightTable.vue"
 import useTwitter from "@/store/twitter"
+import useAuth from "@/store/auth"
 
 const twitterStore = useTwitter()
+const authStore = useAuth()
 
 const accountColumns: TableColumn[] = [
 	{
@@ -54,9 +56,31 @@ const authors = computed(() => {
 	)
 })
 
+const twitterLink = computed(() => {
+	let messagge = `👉 #smashdatestnet of #Sinfonia, the #music #FanToken App powered by @BitSongOfficial on @osmosiszone 
+ 
+🥁 Let’s play it!`
+
+	if (authStore.bitsongAddress) {
+		messagge = messagge.concat(`\n${authStore.bitsongAddress}`)
+	} else {
+		messagge = messagge.concat(`\n[fill here with your testnet wallet address]`)
+	}
+
+	messagge = messagge.concat(`\n${import.meta.env.VITE_PLAYGROUND_TWEET_URL}`)
+
+	return `https://twitter.com/intent/tweet?text=${encodeURIComponent(messagge)}`
+})
+
+const onTwitterClick = () => {
+	window.open(twitterLink.value, "_blank")
+}
+
 const focussed = (e) => {
 	searchFocussed.value = true
 }
+
+const guideUrl = import.meta.env.VITE_PLAYGROUND_GUIDE_URL
 
 onMounted(() => {
 	twitterStore.loadAuthors()
@@ -64,29 +88,46 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="row q-col-gutter-x-xl q-mb-80">
+	<div class="row q-col-gutter-x-xl q-mb-62">
 		<div class="flex column items-start col-8 col-md-5">
 			<Title class="q-mb-50">Playground</Title>
 			<div class="flex items-center fs-21 text-weight-medium q-mb-28">
-				<p class="q-mr-40">Twitter Race</p>
-				<p class="text-gradient">200,000 CLAY Airdrop</p>
+				<p>Twitter Race</p>
 			</div>
-			<p class="opacity-40 q-mb-40">
-				Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many
-				international hits, among which the best-known is undoubtedly Born Again
-				(Babylonia). Recognized as a dance music anthem worldwide, the song has been
-				played and supported for more than a decade by the greatest international.
-			</p>
-			<a href="" class="fs-18 text-weight-medium flex items-center q-mb-45">
-				<span class="q-mr-20">Read the guide</span>
-				<q-icon
-					class="text-primary"
-					size="12px"
-					:name="resolveIcon('arrow-right', 14, 14)"
-				></q-icon>
-			</a>
+			<div class="q-mb-40 flex row">
+				<p>
+					<span class="opacity-40 fs-16 !leading-24">
+						Welcome to Sinfonia incentivized Testnet! Each participant might be able
+						to get great rewards in BTSG and FanTokens simply playing with the
+						platform.
+					</span>
+					<a
+						:href="guideUrl"
+						target="_blank"
+						class="fs-18 text-weight-medium flex inline items-center q-ml-8"
+					>
+						<span class="q-mr-12">Read the official announcement</span>
+						<q-icon
+							class="text-primary"
+							size="12px"
+							:name="resolveIcon('arrow-right', 14, 14)"
+						></q-icon>
+					</a>
+				</p>
+			</div>
+			<div class="flex q-mb-42">
+				<div class="fs-16 !leading-20 text-weight-medium q-mb-none">
+					<p>Prizes</p>
+				</div>
+				<p
+					class="q-mb-none q-mt-none fs-21 !leading-28 q-ml-42 text-gradient text-weight-medium"
+				>
+					· $ 25,000 in BTSG<br />
+					· 1% of the Loyalty Program of the first batch on Sinfonia Testnet
+				</p>
+			</div>
 
-			<LargeButton fit :padding-x="32" :padding-y="18">
+			<LargeButton fit :padding-x="32" :padding-y="18" @click="onTwitterClick">
 				<div class="flex items-center">
 					<span class="q-mr-20"> Post on Twitter </span>
 					<q-icon size="20px" :name="resolveIcon('twitter', 30, 30)"></q-icon>

@@ -9,6 +9,7 @@ import { toViewDenom } from "@/common/numbers"
 import { BigNumber } from "bignumber.js"
 import { getFaucet } from "@/services/faucet"
 import { notifyError, notifyLoading, notifySuccess } from "@/common"
+import { AxiosError } from "axios"
 
 export interface BankState {
 	loading: boolean
@@ -106,14 +107,31 @@ const useBank = defineStore("bank", {
 				if (authStore.bitsongAddress) {
 					await getFaucet({ address: authStore.bitsongAddress })
 					loader()
-					notifySuccess("Faucet Claim Successful", "Check your balance")
+					notifySuccess(
+						"Request Enqueued Successfully",
+						"Your transaction is pending. It will be processed shortly."
+					)
 					this.loadBalances()
 				}
 			} catch (error) {
+				const axiosError = error as AxiosError
+
 				this.loadingFaucet = false
 
 				loader()
-				notifyError("Fauce Claim Failed", "Try it later")
+
+				if (
+					axiosError &&
+					axiosError.response &&
+					axiosError.response.status === 429
+				) {
+					notifyError(
+						"Fauce Claim Failed",
+						"You made too many requests, please try again in a while."
+					)
+				} else {
+					notifyError("Fauce Claim Failed", "Try it later")
+				}
 
 				throw error
 			} finally {

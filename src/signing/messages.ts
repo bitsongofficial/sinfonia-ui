@@ -38,15 +38,15 @@ export const LockTokens = (
 	duration: number, // Duration's unit is expected to be the second.
 	coins: Coin[]
 ): SignerMessage<any> => {
-	const msgDuration = (duration * 1_000_000_000).toString()
+	const msgDuration = duration * 1_000_000_000
 
 	return {
 		typeUrl: "/osmosis.lockup.MsgLockTokens",
 		value: {
 			owner: senderAddress,
 			duration: {
-				seconds: Long.fromNumber(Math.floor(parseInt(msgDuration) / 1_000_000_000)),
-				nanos: parseInt(msgDuration) % 1_000_000_000,
+				seconds: Long.fromNumber(Math.floor(msgDuration / 1_000_000_000)),
+				nanos: msgDuration % 1_000_000_000,
 			},
 			coins,
 		},

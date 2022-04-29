@@ -3,6 +3,7 @@ import { createPinia } from "pinia"
 import { Quasar, Notify, Dialog } from "quasar"
 import { createPersistedStatePlugin } from "pinia-plugin-persistedstate-2"
 import { createRouter, createWebHashHistory } from "vue-router"
+import VueGtag from "vue-gtag"
 
 // Import Quasar css
 import "quasar/src/css/index.sass"
@@ -23,6 +24,16 @@ const router = createRouter({
 })
 
 const app = createApp(App)
+
+app.use(
+	VueGtag,
+	{
+		appName: import.meta.env.VITE_GA_APP_NAME,
+		pageTrackerScreenviewEnabled: true,
+		config: { id: import.meta.env.VITE_GA_MEASUREMENT_ID },
+	},
+	router
+)
 
 app.use(Quasar, {
 	plugins: {

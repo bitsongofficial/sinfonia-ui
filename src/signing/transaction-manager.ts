@@ -16,10 +16,13 @@ import {
 	SwapExactAmountIn,
 } from "./messages"
 import {
+	AminoTypes,
 	assertIsDeliverTxSuccess,
+	createIbcAminoConverters,
 	SigningStargateClient,
 } from "@cosmjs/stargate"
 import { osmosisRegistry } from "./registry"
+import { createOsmosisAminoConverters } from "./amino-types"
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx"
 import SignerEventEmitter from "./events"
 
@@ -242,6 +245,10 @@ export class TransactionManager extends SignerEventEmitter {
 				this.signer,
 				{
 					registry: osmosisRegistry(),
+					aminoTypes: new AminoTypes({
+						...createIbcAminoConverters(),
+						...createOsmosisAminoConverters(),
+					}),
 				}
 			)
 
