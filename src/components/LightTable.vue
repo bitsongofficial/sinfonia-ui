@@ -1,10 +1,14 @@
 <script setup lang="ts">
-	import { TableColumn } from "@/types/table"
-	defineProps<{
-		rows: any[]
-		columns: TableColumn[]
-		noBackground?: boolean
-	}>()
+import { TableColumn } from "@/types/table"
+defineProps<{
+	rows: any[]
+	columns: TableColumn[]
+	noBackground?: boolean
+}>()
+
+const pagination = {
+	rowsPerPage: -1,
+}
 </script>
 
 <template>
@@ -12,6 +16,7 @@
 		row-key="name"
 		:rows="rows"
 		:columns="columns"
+		:pagination="pagination"
 		:class="(noBackground ? 'table-no-background' : '') + ' footer-h-0'"
 	>
 		<template v-slot:header="slotProps">
@@ -30,11 +35,13 @@
 			<slot :name="slot" v-bind="scope"></slot>
 		</template>
 		<template v-slot:no-data="{ message }">
-			<div class="absolute-full q-py-16 q-pr-16 q-pl-10 flex justify-center items-center fs-18 opacity-40">
+			<div
+				class="absolute-full q-py-16 q-pr-16 q-pl-10 flex justify-center items-center fs-18 opacity-40"
+			>
 				<p>
-					{{message ?? "No data"}}
+					{{ message ?? "No data" }}
 				</p>
 			</div>
-    </template>
+		</template>
 	</q-table>
 </template>
