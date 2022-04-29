@@ -254,9 +254,6 @@ export class TransactionManager extends SignerEventEmitter {
 
 			this.emit("onsignerconnected", client)
 
-			console.log(await client.getAccount(senderAddress))
-			console.log(await client.getSequence(senderAddress))
-
 			const raw = await client.sign(senderAddress, messages, stdFee, memo || "")
 
 			this.emit("ontxsigned", raw)
