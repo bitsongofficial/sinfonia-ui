@@ -123,7 +123,7 @@ onMounted(() => {
 					class="q-mb-none q-mt-none fs-21 !leading-28 q-ml-42 text-gradient text-weight-medium"
 				>
 					· $ 25,000 in BTSG<br />
-					· 1% of the Loyalty Program of the first batch on Sinfonia Testnet
+					· 1% of the Loyalty Program of the first 10 FanTokens
 				</p>
 			</div>
 
