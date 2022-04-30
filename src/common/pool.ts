@@ -20,7 +20,7 @@ import useConfig from "@/store/config"
 import usePools from "@/store/pools"
 import usePrices from "@/store/prices"
 import { mapLockableDuration } from "./duration"
-import { compact, max, reduce } from "lodash"
+import { compact, max, reduce, sortBy } from "lodash"
 import { add, parseISO } from "date-fns"
 import { Coin } from "@cosmjs/proto-signing"
 import { unboundingEndTimeStart } from "./date"
@@ -115,6 +115,7 @@ export const tokenToPoolAsset = (
 						totalTokenGamm,
 						coinLookup
 					),
+					fantoken: token.fantoken,
 				},
 				weightPercentage,
 				weight: rawCoin.weight,
@@ -136,23 +137,26 @@ export const mapPools = (
 		let userLiquidity = new BigNumber("0")
 		let bonded = new BigNumber("0")
 
-		const coins = poolAssets.map((asset) => {
-			const coin = tokenToPoolAsset(pool, asset, tokens)
+		const coins = sortBy(
+			poolAssets.map((asset) => {
+				const coin = tokenToPoolAsset(pool, asset, tokens)
 
-			if (coin) {
-				const coinLiquidity = new BigNumber(coin.token.amount)
-				const userTotalAmount = new BigNumber(coin.token.userTotalAmount)
-				const bondedAmount = new BigNumber(coin.token.bondedAmount)
+				if (coin) {
+					const coinLiquidity = new BigNumber(coin.token.amount)
+					const userTotalAmount = new BigNumber(coin.token.userTotalAmount)
+					const bondedAmount = new BigNumber(coin.token.bondedAmount)
 
-				liquidity = liquidity.plus(coinLiquidity.multipliedBy(coin.token.price))
-				userLiquidity = userLiquidity.plus(
-					userTotalAmount.multipliedBy(coin.token.price)
-				)
-				bonded = bonded.plus(bondedAmount.multipliedBy(coin.token.price))
-			}
+					liquidity = liquidity.plus(coinLiquidity.multipliedBy(coin.token.price))
+					userLiquidity = userLiquidity.plus(
+						userTotalAmount.multipliedBy(coin.token.price)
+					)
+					bonded = bonded.plus(bondedAmount.multipliedBy(coin.token.price))
+				}
 
-			return coin
-		})
+				return coin
+			}),
+			"token.fantoken"
+		)
 
 		let availableLPTokens = new BigNumber("0")
 		const availableBalances: Coin[] = bankStore.osmosisBalance.filter(
