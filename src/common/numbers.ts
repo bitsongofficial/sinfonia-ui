@@ -21,14 +21,17 @@ export const currency = (number: number | string, fraction = 2): string => {
 	return "< 0.01"
 }
 
-export const balancedCurrency = (number: number | string): string => {
+export const balancedCurrency = (
+	number: number | string,
+	fraction = 2
+): string => {
 	let value = new BigNumber(number)
 
 	if (value.abs().gt(1000)) {
 		value = new BigNumber(Math.floor(value.toNumber()))
 	}
 
-	return currency(value.toString())
+	return currency(value.toString(), Math.min(value.dp(), fraction))
 }
 
 export const balancedGamm = (number: number | string): string => {

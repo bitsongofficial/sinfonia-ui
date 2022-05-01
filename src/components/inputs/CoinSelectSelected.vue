@@ -19,7 +19,7 @@ const available = computed(() => {
 		)
 
 		if (chain) {
-			return balancedCurrency(chain.available ?? "0")
+			return balancedCurrency(chain.available ?? "0", 6)
 		}
 	}
 

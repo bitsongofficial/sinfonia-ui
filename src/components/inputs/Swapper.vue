@@ -26,7 +26,6 @@ import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 import SwapperField from "./SwapperField.vue"
-import { isEqual } from "lodash"
 
 const bankStore = useBank()
 const poolsStore = usePools()
@@ -331,7 +330,7 @@ const available = computed(() => {
 		)
 
 		if (chain) {
-			return chain.available ? new BigNumber(chain.available).toFixed(2) : "0"
+			return chain.available ? new BigNumber(chain.available).toFixed(6) : "0"
 		}
 	}
 
