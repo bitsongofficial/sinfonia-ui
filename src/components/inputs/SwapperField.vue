@@ -78,7 +78,10 @@ defineExpose({
 							input-class="q-py-0"
 							:rules="rules"
 						/>
-						<p v-if="swapAmountFiat && coin" class="fs-12 text-dark text-no-wrap">
+						<p
+							v-if="swapAmountFiat && coin"
+							class="balance fs-12 text-dark text-no-wrap overflow-hidden text-overflow-ellipsis"
+						>
 							{{ balancedCurrency(swapAmountFiat) }} $
 						</p>
 					</div>
@@ -97,3 +100,9 @@ defineExpose({
 		</p>
 	</div>
 </template>
+
+<style lang="scss">
+.balance {
+	max-width: 120px;
+}
+</style>

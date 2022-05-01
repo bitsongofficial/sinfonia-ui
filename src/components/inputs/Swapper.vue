@@ -265,8 +265,12 @@ const swapAmountFiat = computed<string>(() => {
 })
 
 const swapCoin = computed(() => {
-	if (fromCoin.value && swapAmountWrapper.value.length > 0) {
-		return amountIBCFromCoin(swapAmountWrapper.value, fromCoin.value)
+	try {
+		if (fromCoin.value && swapAmountWrapper.value.length > 0) {
+			return amountIBCFromCoin(swapAmountWrapper.value, fromCoin.value)
+		}
+	} catch (error) {
+		return undefined
 	}
 
 	return undefined
@@ -431,7 +435,7 @@ const onSubmit = () => {
 				</div>
 				<div class="flex">
 					<p :class="'q-mr-14' + (invalidSlippage ? ' text-primary' : '')">
-						{{ percentageRange(slippage) }} %
+						{{ estimatedHopSwap ? percentageRange(slippage) : "Inf" }} %
 					</p>
 					<q-icon
 						:name="resolveIcon('dropdown', 11, 7)"
