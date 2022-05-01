@@ -434,7 +434,7 @@ onUnmounted(() => {
 						</div>
 						<div>
 							<div
-								v-if="configStore.osmosisToken"
+								v-if="configStore.osmosisToken && gtnZero(unbonding.osmosisApr)"
 								class="rounded-20 border-primary-light q-pa-18 flex items-center q-mb-6"
 							>
 								<q-avatar class="q-mr-18" size="25px">
