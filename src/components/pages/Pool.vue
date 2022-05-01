@@ -350,18 +350,20 @@ onUnmounted(() => {
 								<p class="text-primary fs-14 q-mr-16 text-weight-medium">
 									Pools Incentives
 								</p>
-								<template v-for="gauge in unbonding.extraGauges">
-									<q-avatar
-										class="q-mr-9"
-										size="24px"
-										v-for="(coin, index) in gauge.coins"
-										:key="index"
-									>
-										<img :src="coin.token?.logos.default" />
-									</q-avatar>
-								</template>
+								<q-avatar
+									class="q-mr-9"
+									size="24px"
+									v-for="(coin, index) in unbonding.coinTokens"
+									:key="index"
+								>
+									<img :src="coin.token?.logos.default" />
+								</q-avatar>
 
-								<q-avatar class="q-mr-9" size="24px" v-if="configStore.osmosisToken">
+								<q-avatar
+									class="q-mr-9"
+									size="24px"
+									v-if="configStore.osmosisToken && gtnZero(unbonding.osmosisApr)"
+								>
 									<img :src="configStore.osmosisToken.logos.default" />
 								</q-avatar>
 							</div>

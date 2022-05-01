@@ -20,7 +20,7 @@ import useConfig from "@/store/config"
 import usePools from "@/store/pools"
 import usePrices from "@/store/prices"
 import { mapLockableDuration } from "./duration"
-import { compact, max, reduce, sortBy } from "lodash"
+import { compact, max, reduce, sortBy, uniqBy } from "lodash"
 import { add, parseISO } from "date-fns"
 import { Coin } from "@cosmjs/proto-signing"
 import { unboundingEndTimeStart } from "./date"
@@ -208,10 +208,18 @@ export const mapPools = (
 
 				totalApr = totalApr.plus(osmosisApr)
 
+				const coinTokens = uniqBy(
+					extraGauges.map((gauge) => gauge.coins).flat(),
+					"denom"
+				)
+
+				console.log(coinTokens)
+
 				return {
 					...duration,
 					bondedCoin,
 					unbondedCoins,
+					coinTokens,
 					extraGauges,
 					osmosisApr,
 					apr: calculateTotalApr(pool, duration, liquidity.toString()),
