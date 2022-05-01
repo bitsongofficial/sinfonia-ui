@@ -38,7 +38,7 @@ const fantokenWatcher = watch(
 	() => fantoken.value,
 	(previus, current) => {
 		if (current) {
-			/* document.title = `${current.symbol} | ${current.name}'s Fantoken` */
+			document.title = `${current.symbol} | ${current.name}'s Fantoken`
 		}
 	},
 	{ immediate: true }
