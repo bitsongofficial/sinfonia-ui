@@ -39,7 +39,7 @@ export function notify(
 				  link.url +
 				  '"><span class="q-mr-6">' +
 				  link.text +
-				  '</span><svg class="s-8" viewBox="0 0 10 10"><use xlink:href="icons.svg#external"></use></svg></a>'
+				  '</span><svg class="s-8" viewBox="0 0 10 10"><use xlink:href="/icons.svg#external"></use></svg></a>'
 				: "") +
 			"</div>",
 		spinner: success === undefined ? Spinner : false,

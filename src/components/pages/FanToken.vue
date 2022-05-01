@@ -5,7 +5,7 @@ import {
 	percentageRange,
 	smallNumber,
 } from "@/common/numbers"
-import { computed, onMounted, onUnmounted, ref } from "vue"
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { resolveIcon } from "@/common/resolvers"
 import { TableColumn } from "@/types/table"
 import { Pool, FantokenTab } from "@/types"
@@ -33,6 +33,16 @@ const route = useRoute()
 const id = route.params["id"] as string
 
 const fantoken = computed(() => configStore.findFantokenByDenom(id))
+
+const fantokenWatcher = watch(
+	() => fantoken.value,
+	(previus, current) => {
+		if (current) {
+			/* document.title = `${current.symbol} | ${current.name}'s Fantoken` */
+		}
+	},
+	{ immediate: true }
+)
 
 const balance = computed(() => {
 	if (fantoken.value) {
@@ -207,12 +217,11 @@ const untilSetSize = () => {
 onMounted(() => {
 	window.addEventListener("resize", setSize)
 	untilSetSize()
-
-	document.title = `${fantoken.value?.symbol} | ${fantoken.value?.name}'s Fantoken`
 })
 
 onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
+	fantokenWatcher()
 })
 </script>
 

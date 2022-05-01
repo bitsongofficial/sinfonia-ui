@@ -17,15 +17,18 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: "",
 				component: Dex,
+				name: "Fantokens Dex",
 			},
 			{
 				path: ":id",
 				component: FanToken,
+				name: "Fantoken",
 			},
 		],
 	},
 	{
 		path: "/swap",
+		name: "Swap",
 		component: Swap,
 		props: (route) => ({
 			from: route.query.from ?? "BTSG",
@@ -38,20 +41,24 @@ const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: "",
+				name: "Pools",
 				component: Pools,
 			},
 			{
 				path: ":id",
+				name: "Pool",
 				component: Pool,
 			},
 		],
 	},
 	{
 		path: "/assets",
+		name: "Assets",
 		component: Assets,
 	},
 	{
 		path: "/playground",
+		name: "Playground",
 		component: Playground,
 	},
 	{
