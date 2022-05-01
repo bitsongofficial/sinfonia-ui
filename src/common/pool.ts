@@ -12,7 +12,7 @@ import {
 	PoolAsset,
 	TokenBalance,
 } from "@/types"
-import { amountToCoin, toDecimalGamm, toViewDenom } from "./numbers"
+import { amountToCoin, gtnZero, toDecimalGamm, toViewDenom } from "./numbers"
 import { BigNumber } from "bignumber.js"
 import { toMilliseconds } from "duration-fns"
 import useBank from "@/store/bank"
@@ -461,7 +461,7 @@ export const getExternalPoolApr = (
 				if (viewCoin) {
 					const yearAmount = new BigNumber(365)
 						.multipliedBy(viewCoin.amount)
-						.div(gauge.filled_epochs)
+						.div(gtnZero(gauge.filled_epochs) ? gauge.filled_epochs : "1")
 
 					totalReward = totalReward.plus(
 						new BigNumber(yearAmount.toString()).multipliedBy(token.price ?? "0")
