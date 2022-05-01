@@ -213,8 +213,6 @@ export const mapPools = (
 					"denom"
 				)
 
-				console.log(coinTokens)
-
 				return {
 					...duration,
 					bondedCoin,
