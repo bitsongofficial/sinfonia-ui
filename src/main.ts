@@ -2,7 +2,7 @@ import { createApp } from "vue"
 import { createPinia } from "pinia"
 import { Quasar, Notify, Dialog } from "quasar"
 import { createPersistedStatePlugin } from "pinia-plugin-persistedstate-2"
-import { createRouter, createWebHashHistory } from "vue-router"
+import { createRouter, createWebHistory } from "vue-router"
 import VueGtag from "vue-gtag"
 
 // Import Quasar css
@@ -14,7 +14,7 @@ import App from "./App.vue"
 import routes from "@/configs/routes"
 
 const router = createRouter({
-	history: createWebHashHistory(),
+	history: createWebHistory(),
 	routes,
 	scrollBehavior: function (to) {
 		if (to.hash) {
