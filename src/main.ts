@@ -23,6 +23,10 @@ const router = createRouter({
 	},
 })
 
+router.beforeEach(() => {
+	document.title = "Sinfonia"
+})
+
 const app = createApp(App)
 
 app.use(

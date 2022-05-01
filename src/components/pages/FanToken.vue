@@ -196,6 +196,7 @@ const setSize = () => {
 	}
 	return false
 }
+
 const untilSetSize = () => {
 	const res = setSize()
 	if (!res) {
@@ -206,6 +207,8 @@ const untilSetSize = () => {
 onMounted(() => {
 	window.addEventListener("resize", setSize)
 	untilSetSize()
+
+	document.title = `${fantoken.value?.symbol} | ${fantoken.value?.name}'s Fantoken`
 })
 
 onUnmounted(() => {

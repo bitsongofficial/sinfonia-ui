@@ -62,35 +62,35 @@ const routes: RouteRecordRaw[] = [
 
 export const menuItems = [
 	{
-		icon: { name: 'list', width: 19, height: 13 },
-		label: 'DEx',
-		path: '/fantokens',
+		icon: { name: "list", width: 19, height: 13 },
+		label: "DEx",
+		path: "/fantokens",
 	},
 	{
-		icon: { name: 'refresh', width: 21, height: 17 },
-		label: 'Swap',
-		path: '/swap',
+		icon: { name: "refresh", width: 21, height: 17 },
+		label: "Swap",
+		path: "/swap",
 	},
 	{
-		icon: { name: 'stack', width: 17, height: 17 },
-		label: 'Pools',
-		path: '/pools',
+		icon: { name: "stack", width: 17, height: 17 },
+		label: "Pools",
+		path: "/pools",
 	},
 	{
-		icon: { name: 'suitcase', width: 18, height: 16 },
-		label: 'Assets',
-		path: '/assets',
+		icon: { name: "suitcase", width: 18, height: 16 },
+		label: "Assets",
+		path: "/assets",
 	},
 	{
-		icon: { name: 'swap', width: 21, height: 16 },
-		label: 'Transactions',
+		icon: { name: "swap", width: 21, height: 16 },
+		label: "Transactions",
 		path: `${externalWebsites.mintscan}bitsong/txs`,
 		isLink: true,
 	},
 	{
-		icon: { name: 'clubs', width: 21, height: 22 },
-		label: 'Playground',
-		path: '/playground',
+		icon: { name: "clubs", width: 21, height: 22 },
+		label: "Playground",
+		path: "/playground",
 	},
 ]
 
