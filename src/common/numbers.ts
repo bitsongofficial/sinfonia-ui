@@ -402,7 +402,9 @@ export const estimateHopSwapExactAmountIn = (
 
 		if (poolAssetIn && poolAssetOut) {
 			const estimated = estimateSwapExactAmountIn(
-				tokenIn,
+				// It is the Token In you should swap, in multihop swap,
+				// you have to update it, because you need the out of the previous iteration
+				tokenOut,
 				poolAssetIn,
 				poolAssetOut,
 				swapRoute.pool.poolParams.swapFee
