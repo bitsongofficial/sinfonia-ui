@@ -49,7 +49,7 @@ const useTransactionManager = defineStore("transactionManager", {
 
 			try {
 				if (window.keplr) {
-					const signer = await window.keplr.getOfflineSignerAuto(from.chainID)
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(from.chainID)
 					const manager = new TransactionManager(signer, from)
 					let sourceChannel = ""
 
@@ -125,7 +125,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				const osmosisToken = configStore.osmosisToken
 
 				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
 						osmosisToken.chainID
 					)
 
@@ -189,7 +189,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				this.loadingSign = true
 
 				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
 						osmosisToken.chainID
 					)
 
@@ -263,7 +263,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				const osmosisToken = configStore.osmosisToken
 
 				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
 						osmosisToken.chainID
 					)
 
@@ -333,7 +333,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				const osmosisToken = configStore.osmosisToken
 
 				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
 						osmosisToken.chainID
 					)
 
@@ -411,7 +411,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				const osmosisToken = configStore.osmosisToken
 
 				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
 						osmosisToken.chainID
 					)
 
@@ -490,7 +490,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				const osmosisToken = configStore.osmosisToken
 
 				if (window.keplr && osmosisToken && authStore.osmosisAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
 						osmosisToken.chainID
 					)
 

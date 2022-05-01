@@ -153,6 +153,7 @@ const useLiquidityModal = (
 					const outRatio = new BigNumber(1).minus(
 						new BigNumber(coinsConfig.joinPoolSlippage).div(new BigNumber(100))
 					)
+
 					const shareOutMinAmount = new BigNumber(shareOutAmount.toString())
 						.multipliedBy(outRatio)
 						.toFixed(0)
@@ -191,7 +192,7 @@ const useLiquidityModal = (
 		transactionManagerStore.joinPool(
 			pool.value.id,
 			new BigNumber(shareOutAmount.value).toFixed(0),
-			tokenInMaxs
+			tokenInMaxs.slice(0, 1)
 		)
 	}
 
@@ -241,7 +242,7 @@ const useLiquidityModal = (
 			transactionManagerStore.exitPool(
 				pool.value.id,
 				shareInAmount,
-				compact(tokenOutMins)
+				compact(tokenOutMins).slice(0, 1)
 			)
 		}
 	}
