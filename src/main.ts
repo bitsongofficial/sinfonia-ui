@@ -17,9 +17,17 @@ const router = createRouter({
 	history: createWebHistory(),
 	routes,
 	scrollBehavior: function (to) {
-		if (to.hash) {
+		if (to.hash.length > 0) {
 			return { el: to.hash }
 		}
+
+		const app = document.getElementById("app")
+
+		if (app) {
+			app.scrollTop = 0
+		}
+
+		return { left: 0, top: 0 }
 	},
 })
 

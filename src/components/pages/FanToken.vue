@@ -36,7 +36,7 @@ const fantoken = computed(() => configStore.findFantokenByDenom(id))
 
 const fantokenWatcher = watch(
 	() => fantoken.value,
-	(previus, current) => {
+	(current) => {
 		if (current) {
 			document.title = `${current.symbol} | ${current.name}'s Fantoken`
 		}
