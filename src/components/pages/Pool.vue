@@ -96,7 +96,7 @@ const bondingsColumn: TableColumn[] = [
 		name: "APR",
 		align: "right",
 		label: "APR",
-		field: (row: LockableDurationWithApr) => row.apr,
+		field: (row: LockableDurationWithApr) => row.totalApr,
 		sortable: true,
 		format: (val: string) => `${percentage(val)} %`,
 	},
