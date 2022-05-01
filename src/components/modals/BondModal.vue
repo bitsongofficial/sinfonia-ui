@@ -65,13 +65,13 @@ const onSubmit = () => {
 							</p>
 							<p
 								:class="
-									'fs-15 text-center ' +
+									'total-apr fs-15 text-center overflow-hidden text-overflow-ellipsis text-no-wrap ' +
 									(up.duration == chosenUnbonding.duration
 										? 'text-primary-dark-700 light:text-white'
 										: 'text-dark')
 								"
 							>
-								{{ percentage(up.apr) }} %
+								{{ percentage(up.totalApr) }} %
 							</p>
 						</div>
 					</div>
@@ -83,7 +83,7 @@ const onSubmit = () => {
 					<p class="q-mr-8">Available</p>
 					<p>
 						<span class="text-white">{{ balancedGamm(pool.availableLPTokens) }}</span>
-						SINF/{{ pool.id }}
+						GAMM/{{ pool.id }}
 					</p>
 				</div>
 			</div>
@@ -100,3 +100,9 @@ const onSubmit = () => {
 		</q-form>
 	</ModalWithClose>
 </template>
+
+<style>
+.total-apr {
+	max-width: 120px;
+}
+</style>
