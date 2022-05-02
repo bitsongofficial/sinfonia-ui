@@ -11,11 +11,11 @@ const router = useRouter()
 
 const columns: TableColumn[] = [
 	{
-		name: "index",
+		name: "rank",
 		required: true,
 		label: "",
 		align: "left",
-		field: "index",
+		field: "rank",
 	},
 	{
 		name: "token",
@@ -37,6 +37,9 @@ const columns: TableColumn[] = [
 		label: "Price",
 		field: "price",
 		sortable: true,
+		sort: (a, b, rowA, rowB) => {
+			return parseFloat(a) - parseFloat(b)
+		},
 		format: (val: string) => `${balancedCurrency(val)} $`,
 	},
 	{
@@ -44,9 +47,18 @@ const columns: TableColumn[] = [
 		label: "Market Cap",
 		field: "marketCap",
 		sortable: true,
+		sort: (a, b, rowA, rowB) => {
+			return parseInt(a, 10) - parseInt(b, 10)
+		},
 		format: (val: string) => `${balancedCurrency(val)} $`,
 	},
 ]
+
+const pagination = {
+	rowsPerPage: -1,
+	sortBy: "marketcap",
+	descending: true,
+}
 
 const onRowClick = (_, row: TokenBalance, index: number) => {
 	const coinLookup = row.coinLookup.find((coin) => coin.viewDenom === row.symbol)
@@ -60,7 +72,8 @@ const onRowClick = (_, row: TokenBalance, index: number) => {
 	<h3 class="q-mb-xl fs-27 light:text-weight-medium">DEx</h3>
 	<CryptoTable
 		:columns="columns"
-		:rows="configStore.fantokens"
+		:rows="configStore.fantokensRanking"
+		:pagination="pagination"
 		@row-click="onRowClick"
 	/>
 </template>

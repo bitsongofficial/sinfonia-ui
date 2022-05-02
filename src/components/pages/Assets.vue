@@ -37,13 +37,6 @@ onUnmounted(() => {
 
 const columns: TableColumn[] = [
 	{
-		name: "index",
-		required: true,
-		label: "",
-		align: "left",
-		field: "index",
-	},
-	{
 		name: "token",
 		align: "left",
 		label: "Token",
@@ -81,7 +74,7 @@ const columnsWrapper = computed(() => {
 	const cols = [...columns]
 
 	if (haveMultiChainBalances.value) {
-		cols.splice(4, 0, {
+		cols.splice(3, 0, {
 			name: "chain",
 			align: "center",
 			label: "Chain",
@@ -93,6 +86,12 @@ const columnsWrapper = computed(() => {
 
 	return cols
 })
+
+const pagination = {
+	rowsPerPage: -1,
+	sortBy: "available",
+	descending: true,
+}
 
 const openTransfer = (from: TokenBalance) => {
 	transferFrom.value = from
@@ -136,14 +135,13 @@ const openTransfer = (from: TokenBalance) => {
 	</div>
 	<p class="q-mb-21 fs-21 text-weight-medium">Tokens</p>
 	<div>
-		<LightTable :columns="columnsWrapper" :rows="bankStore.balances">
+		<LightTable
+			:pagination="pagination"
+			:columns="columnsWrapper"
+			:rows="bankStore.balances"
+		>
 			<template v-slot:body="rowProps">
 				<q-tr :props="rowProps">
-					<q-td>
-						<span class="opacity-40">
-							{{ rowProps.rowIndex + 1 }}
-						</span>
-					</q-td>
 					<q-td>
 						<div class="row items-center no-wrap">
 							<q-avatar size="sm" class="q-mr-22">
@@ -227,7 +225,6 @@ const openTransfer = (from: TokenBalance) => {
 					no-hover
 					:style="rowProps.expand ? {} : { visibility: 'collapse', height: '0' }"
 				>
-					<q-td> </q-td>
 					<q-td>
 						<div class="flex justify-start q-ml-46">
 							<div class="text-capitalize text-primary-light flex items-center">

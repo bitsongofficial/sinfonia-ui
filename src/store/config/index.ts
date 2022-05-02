@@ -1,3 +1,4 @@
+import { FantokenRank } from "./../../types/balance"
 import { sinfoniaClient } from "@/services"
 import {
 	AssetListConfig,
@@ -107,6 +108,17 @@ const useConfig = defineStore("config", {
 					totalBurnedTokens: totalBurnedTokens.toString(),
 				}
 			})
+		},
+		fantokensRanking(): FantokenRank[] {
+			return this.fantokens
+				.sort(
+					(left, right) =>
+						parseInt(right.marketCap ?? "0", 10) - parseInt(left.marketCap ?? "0", 10)
+				)
+				.map((fantoken, rank) => ({
+					...fantoken,
+					rank: rank + 1,
+				}))
 		},
 		tokens: ({ assetsConfig }) => (assetsConfig ? assetsConfig.tokens : []),
 		allMainTokens(): TokenBalance[] {

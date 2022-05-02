@@ -19,3 +19,7 @@ export interface TokenBalance extends Token, Balance {
 	chains?: ChainBalance[]
 	routeDenom?: string
 }
+
+export interface FantokenRank extends TokenBalance {
+	rank: number
+}
