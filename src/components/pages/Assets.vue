@@ -101,7 +101,17 @@ const openTransfer = (from: TokenBalance) => {
 </script>
 
 <template>
-	<Title class="q-mb-36">Assets</Title>
+	<Title class="q-mb-24">Assets</Title>
+	<div class="row">
+		<div class="col-12 col-md-6 col-lg-5">
+			<p class="fs-16 opacity-40 !leading-24 q-mb-40">
+				Sinfonia is a multi chain platform. On this app you might have assets on
+				different chains (ex. BitSong, Osmosis, Cosmos etc.) In order to be able to
+				provide liquidity on the pools, you might need to perform interchain
+				transfers.
+			</p>
+		</div>
+	</div>
 	<div class="row text-weight-medium q-col-gutter-lg q-mb-75">
 		<div class="col-8 col-md-4 col-lg-2">
 			<InfoCard header="Total assets">
