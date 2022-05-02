@@ -89,6 +89,16 @@ const focussed = (e) => {
 }
 
 const guideUrl = import.meta.env.VITE_PLAYGROUND_GUIDE_URL
+const playgroundStartTime = computed(() => {
+	if (import.meta.env.VITE_PLAYGROUND_START_DATE) {
+		const currentTime = new Date().getTime()
+		const playgroundTime = new Date(
+			import.meta.env.VITE_PLAYGROUND_START_DATE
+		).getTime()
+
+		return playgroundTime - currentTime
+	}
+})
 
 onMounted(() => {
 	twitterStore.loadAuthors()
@@ -96,9 +106,19 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="row q-col-gutter-x-xl q-mb-62">
-		<div class="flex column items-start col-8 col-md-5">
+	<div class="row q-col-gutter-x-xl q-mb-62 position-relative">
+		<div class="flex column items-start col-12">
 			<Title class="q-mb-50">Playground</Title>
+			<vue-countdown
+				v-if="playgroundStartTime"
+				:time="playgroundStartTime"
+				v-slot="{ days, hours, minutes, seconds }"
+				class="fs-60 text-gradient text-weight-medium q-mb-50"
+			>
+				{{ days }} days {{ hours }} hrs {{ minutes }} mins {{ seconds }}s
+			</vue-countdown>
+		</div>
+		<div class="flex column items-start col-8 col-md-5">
 			<div class="flex items-center fs-21 text-weight-medium q-mb-28">
 				<p>Twitter Race</p>
 			</div>
@@ -151,11 +171,13 @@ onMounted(() => {
 				</div>
 			</LargeButton>
 		</div>
-		<div class="col-8 col-md-3 gt-sm">
+		<div
+			class="twitter-image col-8 col-md-3 gt-sm absolute-center-right justify-end flex"
+		>
 			<img
 				src="@/assets/images/icons/twitter_gradient.svg"
 				alt="twitter"
-				class="full-width full-height"
+				class="full-width"
 			/>
 		</div>
 	</div>
@@ -222,3 +244,13 @@ onMounted(() => {
 		</template>
 	</LightTable>
 </template>
+
+<style lang="scss" scoped>
+.twitter-image {
+	right: 120px;
+
+	img {
+		max-width: 285px;
+	}
+}
+</style>

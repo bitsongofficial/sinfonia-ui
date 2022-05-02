@@ -4,6 +4,7 @@ import { Quasar, Notify, Dialog } from "quasar"
 import { createPersistedStatePlugin } from "pinia-plugin-persistedstate-2"
 import { createRouter, createWebHistory } from "vue-router"
 import VueGtag from "vue-gtag"
+import VueCountdown from "@chenfengyuan/vue-countdown"
 
 // Import Quasar css
 import "quasar/src/css/index.sass"
@@ -70,5 +71,7 @@ pinia.use(createPersistedStatePlugin())
 app.use(pinia)
 
 app.use(router)
+
+app.component(VueCountdown.name, VueCountdown)
 
 app.mount("#app")

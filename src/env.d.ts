@@ -13,6 +13,7 @@ interface ImportMetaEnv {
 	readonly VITE_BITSONG_TWITTER_API: string
 	readonly VITE_PLAYGROUND_TWEET_URL: string
 	readonly VITE_PLAYGROUND_GUIDE_URL: string
+	readonly VITE_PLAYGROUND_START_DATE: string
 	readonly VITE_MODE: string
 }
 
