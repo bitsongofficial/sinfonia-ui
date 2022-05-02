@@ -1,3 +1,4 @@
+import { MenuItem } from "@/types"
 import Wrapper from "@/components/pages/Wrapper.vue"
 import Dex from "@/components/pages/Dex.vue"
 import Pools from "@/components/pages/Pools.vue"
@@ -67,7 +68,7 @@ const routes: RouteRecordRaw[] = [
 	},
 ]
 
-export const menuItems = [
+export const menuItems: MenuItem[] = [
 	{
 		icon: { name: "list", width: 19, height: 13 },
 		label: "DEx",
@@ -88,12 +89,12 @@ export const menuItems = [
 		label: "Assets",
 		path: "/assets",
 	},
-	{
+	/* {
 		icon: { name: "swap", width: 21, height: 16 },
 		label: "Transactions",
 		path: `${externalWebsites.mintscan}bitsong/txs`,
 		isLink: true,
-	},
+	}, */
 	{
 		icon: { name: "clubs", width: 21, height: 22 },
 		label: "Playground",
