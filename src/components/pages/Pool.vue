@@ -423,7 +423,7 @@ onUnmounted(() => {
 										/>
 										<InformativeTooltip anchor="center right" self="center left">
 											an epoch is considered a specific period of time. On Sinfonia an
-											epoch corresponds to 24 hours.
+											epoch corresponds to one {{ poolsStore.epochIdentifier }}.
 										</InformativeTooltip>
 									</div>
 									<div class="flex row wrap justify-between items-center full-width">
