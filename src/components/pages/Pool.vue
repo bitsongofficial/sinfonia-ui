@@ -328,7 +328,7 @@ onUnmounted(() => {
 				</StandardButton>
 			</div>
 		</div>
-		<div class="row q-col-gutter-xl items-center q-mb-80">
+		<div class="row q-col-gutter-xl items-start q-mb-80">
 			<div class="col-8 !w-md-1/3" v-for="unbonding in pool.lockableDurationApr">
 				<ExpandableCard
 					:padding="14"
