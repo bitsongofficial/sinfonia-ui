@@ -57,10 +57,29 @@ const columns: TableColumn[] = [
 		label: "Price",
 		field: (row: TokenBalance) => row.price,
 		sortable: false,
+		sort: (a, b, rowA, rowB) => {
+			return parseFloat(a) - parseFloat(b)
+		},
 		format: (val: string) => `${balancedCurrency(val)} $`,
 	},
-	{ name: "available", label: "Available", field: "total", sortable: true },
-	{ name: "quantity", label: "QTY", field: "bonded", sortable: true },
+	{
+		name: "availableFiat",
+		label: "Available",
+		field: "availableFiat",
+		sortable: true,
+		sort: (a, b, rowA, rowB) => {
+			return parseFloat(a) - parseFloat(b)
+		},
+	},
+	{
+		name: "available",
+		label: "QTY",
+		field: "available",
+		sortable: true,
+		sort: (a, b, rowA, rowB) => {
+			return parseFloat(a) - parseFloat(b)
+		},
+	},
 	{ name: "arrows", label: "", field: "", sortable: false },
 ]
 

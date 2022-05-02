@@ -10,6 +10,7 @@ import { BigNumber } from "bignumber.js"
 import { getFaucet } from "@/services/faucet"
 import { notifyError, notifyLoading, notifySuccess } from "@/common"
 import { AxiosError } from "axios"
+import usePools from "@/store/pools"
 
 export interface BankState {
 	loading: boolean
@@ -242,6 +243,7 @@ const useBank = defineStore("bank", {
 			})
 		},
 		total() {
+			const poolStore = usePools()
 			const balances = this.balances as TokenBalance[]
 
 			return reduce<TokenBalance, BigNumber>(
@@ -250,7 +252,9 @@ const useBank = defineStore("bank", {
 					return all.plus(balance.totalFiat ?? "0")
 				},
 				new BigNumber("0")
-			).toString()
+			)
+				.plus(poolStore.totalBondedFiat)
+				.toString()
 		},
 		available() {
 			const balances = this.balances as TokenBalance[]
