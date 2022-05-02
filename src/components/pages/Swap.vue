@@ -164,7 +164,7 @@ const onRowClick = (index: number, row: TokenBalance) => {
 			<div class="col-8 col-lg-4 col-xl-3">
 				<div class="max-w-582 q-mx-auto">
 					<div class="flex justify-between items-center q-mb-30">
-						<p class="fs-18">DEx</p>
+						<p class="fs-18">FanTokens</p>
 						<q-btn
 							outline
 							rounded

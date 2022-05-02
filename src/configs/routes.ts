@@ -71,7 +71,7 @@ const routes: RouteRecordRaw[] = [
 export const menuItems: MenuItem[] = [
 	{
 		icon: { name: "list", width: 19, height: 13 },
-		label: "DEx",
+		label: "FanTokens",
 		path: "/fantokens",
 	},
 	{
