@@ -408,7 +408,13 @@ onUnmounted(() => {
 								<div class="flex-1 flex">
 									<div class="flex no-wrap items-center q-mb-10 cursor-pointer">
 										<p class="fs-14 text-weight-medium text-no-wrap">
-											{{ gauge.leftEpochs }} epochs left
+											{{ gauge.leftEpochs }}
+											{{
+												gauge.leftEpochs === 1
+													? poolsStore.epochIdentifier
+													: `${poolsStore.epochIdentifier}s`
+											}}
+											left
 										</p>
 										<q-icon
 											size="14px"

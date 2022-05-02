@@ -21,7 +21,8 @@ import usePools from "@/store/pools"
 import usePrices from "@/store/prices"
 import { mapLockableDuration } from "./duration"
 import { compact, max, reduce, sortBy, uniqBy } from "lodash"
-import { add, parseISO } from "date-fns"
+import { parseISO } from "date-fns"
+import { apply } from "duration-fns"
 import { Coin } from "@cosmjs/proto-signing"
 import { unboundingEndTimeStart } from "./date"
 import { findTokenByIBCDenom } from "./token"
@@ -252,6 +253,7 @@ export const gaugeToGaugeToken = (
 	liquidityPool: string,
 	tokens: TokenBalance[]
 ): GaugeToken | undefined => {
+	const poolStore = usePools()
 	const numEpochsPaidOver = parseInt(gauge.num_epochs_paid_over)
 	const filledEpochs = parseInt(gauge.filled_epochs)
 	const leftEpochs = numEpochsPaidOver - filledEpochs
@@ -281,9 +283,10 @@ export const gaugeToGaugeToken = (
 		}
 	})
 
-	const endTime = add(parseISO(gauge.start_time), {
-		days: numEpochsPaidOver,
-	}).toISOString()
+	const endTime = apply(
+		parseISO(gauge.start_time),
+		poolStore.epochDuration(numEpochsPaidOver)
+	).toISOString()
 
 	return {
 		...gauge,

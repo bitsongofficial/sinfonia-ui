@@ -12,7 +12,11 @@ import {
 	SwapPool,
 	Token,
 } from "@/types"
-import { mapPools, mapLockableDuration } from "@/common"
+import {
+	mapPools,
+	mapLockableDuration,
+	epochIdentifierToDuration,
+} from "@/common"
 import useBank from "@/store/bank"
 import useConfig from "@/store/config"
 import BigNumber from "bignumber.js"
@@ -234,6 +238,22 @@ const usePools = defineStore("pools", {
 				}
 
 				return []
+			}
+		},
+		epochIdentifier({ mintParams }) {
+			if (mintParams) {
+				return mintParams.epoch_identifier
+			}
+
+			return "day"
+		},
+		epochDuration({ mintParams }) {
+			return (epochs: string | number) => {
+				if (mintParams) {
+					return epochIdentifierToDuration(mintParams.epoch_identifier, epochs)
+				}
+
+				return epochIdentifierToDuration("day", epochs)
 			}
 		},
 	},

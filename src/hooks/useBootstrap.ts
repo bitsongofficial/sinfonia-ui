@@ -7,7 +7,7 @@ import usePrices from "@/store/prices"
 import useTransactionManager from "@/store/transaction-manager"
 import { onUnmounted } from "vue"
 
-const pollingTime = 30000
+const pollingTime = 120000
 let subscription: NodeJS.Timeout
 
 const useBootstrap = () => {
