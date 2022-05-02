@@ -6,5 +6,6 @@ export interface MenuItem {
 	}
 	label: string
 	path: string
+	disabled?: boolean
 	isLink?: boolean
 }

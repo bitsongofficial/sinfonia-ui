@@ -12,7 +12,7 @@ import "./css/main.scss"
 
 import App from "./App.vue"
 
-import routes from "@/configs/routes"
+import routes, { disabledRoutes } from "@/configs/routes"
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -32,8 +32,16 @@ const router = createRouter({
 	},
 })
 
-router.beforeEach(() => {
+router.beforeEach((to) => {
 	document.title = "Sinfonia"
+
+	if (disabledRoutes) {
+		if (to.name !== "Playground") {
+			return { name: "Playground" }
+		}
+	}
+
+	return true
 })
 
 const app = createApp(App)

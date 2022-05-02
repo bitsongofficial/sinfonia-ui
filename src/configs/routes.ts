@@ -8,7 +8,9 @@ import Pool from "@/components/pages/Pool.vue"
 import FanToken from "@/components/pages/FanToken.vue"
 import Playground from "@/components/pages/Playground.vue"
 import { RouteRecordRaw } from "vue-router"
-import { externalWebsites } from "./config"
+
+export const disabledRoutes =
+	import.meta.env.VITE_PLAYGROUND_DISABLE_ROUTES === "true"
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -73,21 +75,25 @@ export const menuItems: MenuItem[] = [
 		icon: { name: "list", width: 19, height: 13 },
 		label: "FanTokens",
 		path: "/fantokens",
+		disabled: disabledRoutes,
 	},
 	{
 		icon: { name: "refresh", width: 21, height: 17 },
 		label: "Swap",
 		path: "/swap",
+		disabled: disabledRoutes,
 	},
 	{
 		icon: { name: "stack", width: 17, height: 17 },
 		label: "Pools",
 		path: "/pools",
+		disabled: disabledRoutes,
 	},
 	{
 		icon: { name: "suitcase", width: 18, height: 16 },
 		label: "Assets",
 		path: "/assets",
+		disabled: disabledRoutes,
 	},
 	/* {
 		icon: { name: "swap", width: 21, height: 16 },

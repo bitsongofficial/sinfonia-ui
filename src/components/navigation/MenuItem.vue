@@ -6,7 +6,9 @@ const props = defineProps<{
 	icon: { name: string; width: number; height: number }
 	url: string
 	isLink?: boolean
+	disabled?: boolean
 }>()
+
 const width = props.icon.width ? props.icon.width : 20
 const height = props.icon.height ? props.icon.height : 20
 const url = props.url ? props.url : "/"
@@ -17,6 +19,7 @@ const url = props.url ? props.url : "/"
 			v-if="!isLink"
 			:to="url"
 			class="relative-position row items-center"
+			:class="{ 'no-pointer-events': disabled }"
 		>
 			<IconButton
 				:icon="icon.name"
