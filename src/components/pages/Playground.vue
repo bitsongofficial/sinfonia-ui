@@ -56,6 +56,14 @@ const authors = computed(() => {
 	)
 })
 
+const addressAlreadyRegistered = computed(() => {
+	return (
+		twitterStore.authors.find(
+			(author) => author.address === authStore.bitsongAddress
+		) !== undefined
+	)
+})
+
 const twitterLink = computed(() => {
 	let messagge = `👉 #smashdatestnet of #Sinfonia, the #music #FanToken App powered by @BitSongOfficial on @osmosiszone 
  
@@ -127,9 +135,18 @@ onMounted(() => {
 				</p>
 			</div>
 
-			<LargeButton fit :padding-x="32" :padding-y="18" @click="onTwitterClick">
+			<LargeButton
+				fit
+				:padding-x="32"
+				:padding-y="18"
+				@click="onTwitterClick"
+				:disabled="addressAlreadyRegistered"
+			>
 				<div class="flex items-center">
-					<span class="q-mr-20"> Post on Twitter </span>
+					<span class="q-mr-20" v-if="!addressAlreadyRegistered">
+						Post on Twitter
+					</span>
+					<span class="q-mr-20" v-else> Address Already Registered </span>
 					<q-icon size="20px" :name="resolveIcon('twitter', 30, 30)"></q-icon>
 				</div>
 			</LargeButton>
