@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref, toRef } from "vue"
 import { compareBalance, isNaN, gtnZero } from "@/common/numbers"
 import SmallButton from "@/components/buttons/SmallButton.vue"
 import { validateRules } from "@/common/inputs"
+import { TokenWithAddress } from "@/types"
+import { useMaxAmount } from "@/hooks/useMaxAmount"
+import useConfig from "@/store/config"
+
+const configStore = useConfig()
 
 const props = defineProps<{
 	modelValue: string
+	token?: TokenWithAddress
 	max?: string
 }>()
+
+const available = toRef(props, "max")
 
 const emit = defineEmits<{
 	(e: "update:modelValue", value: string): void
@@ -25,8 +33,15 @@ const rules = [
 const errorMessage = ref("")
 const hasError = ref(false)
 
-const validate = (value) =>
-{
+const network = computed(() => {
+	if (props.token) {
+		return props.token
+	}
+})
+
+const { getMaxAmount } = useMaxAmount(available, network)
+
+const validate = (value) => {
 	hasError.value = validateRules(rules, value, errorMessage)
 }
 
@@ -42,7 +57,7 @@ const value = computed({
 })
 
 defineExpose({
-	validate
+	validate,
 })
 </script>
 
@@ -67,7 +82,11 @@ defineExpose({
 				:rules="rules"
 			/>
 			<div v-if="max">
-				<SmallButton label="max" xs @click="value = max ?? '0'" />
+				<SmallButton
+					label="max"
+					xs
+					@click="value = network ? getMaxAmount() : max ?? '0'"
+				/>
 			</div>
 		</div>
 		<p v-if="hasError" class="fs-12 text-primary text-weight-medium">

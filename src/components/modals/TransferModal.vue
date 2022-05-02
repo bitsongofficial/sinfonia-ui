@@ -258,6 +258,7 @@ const bigTransfer = computed({
 			<Amount
 				v-model="amount"
 				:max="available"
+				:token="fromChain"
 				class="q-mb-32"
 				@error-change="(val) => (hasAmountError = val)"
 			/>

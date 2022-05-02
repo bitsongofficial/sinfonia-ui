@@ -30,9 +30,16 @@ export interface IBC {
 	sourceDenom: string // IBC Denom on Source Chain (Ex: Bitsong)
 }
 
+export enum FeeType {
+	LOW = "low",
+	AVERAGE = "average",
+	HIGH = "high",
+}
+
 export interface NetworkConfigFeeOption {
 	denom: string
 	amount: string
+	type: FeeType
 }
 
 export interface NetworkConfigFee {
