@@ -7,6 +7,7 @@ import Title from "@/components/typography/Title.vue"
 import LightTable from "@/components/LightTable.vue"
 import useTwitter from "@/store/twitter"
 import useAuth from "@/store/auth"
+import StandardButton from "../buttons/StandardButton.vue"
 
 const twitterStore = useTwitter()
 const authStore = useAuth()
@@ -35,6 +36,12 @@ const accountColumns: TableColumn[] = [
 		label: "Wallet",
 		field: "address",
 		align: "right",
+	},
+	{
+		name: "valid",
+		label: "",
+		align: "center",
+		field: "valid",
 	},
 ]
 
@@ -182,7 +189,7 @@ onMounted(() => {
 		</div>
 	</div>
 	<div class="flex items-center justify-between q-mb-36">
-		<p class="fs-18 font-weight-medium">Eligible Accounts</p>
+		<p class="fs-18 font-weight-medium">Registered Accounts</p>
 		<div
 			@click="focussed"
 			@focusout="searchFocussed = false"
@@ -240,6 +247,22 @@ onMounted(() => {
 		<template v-slot:body-cell-account="slotProps">
 			<q-td :props="slotProps">
 				<span class="opacity-40"> @{{ slotProps.row.username }} </span>
+			</q-td>
+		</template>
+		<template v-slot:body-cell-valid="slotProps">
+			<q-td :props="slotProps">
+				<div
+					class="flex justify-center q-py-12 q-px-22 fs-12 text-weight-medium bg-gradient text-capitalize light:text-white"
+					v-if="slotProps.row.valid"
+				>
+					<div class="flex items-center text-center">Eligible</div>
+				</div>
+				<div
+					class="flex justify-center q-py-12 q-px-22 fs-12 text-weight-medium bg-white-custom text-capitalize light:text-white"
+					v-else
+				>
+					<div class="flex items-center text-center">Not Eligible</div>
+				</div>
 			</q-td>
 		</template>
 	</LightTable>
