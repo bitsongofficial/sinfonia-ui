@@ -7,7 +7,6 @@ import Title from "@/components/typography/Title.vue"
 import LightTable from "@/components/LightTable.vue"
 import useTwitter from "@/store/twitter"
 import useAuth from "@/store/auth"
-import StandardButton from "../buttons/StandardButton.vue"
 
 const twitterStore = useTwitter()
 const authStore = useAuth()
@@ -35,7 +34,7 @@ const accountColumns: TableColumn[] = [
 		name: "address",
 		label: "Wallet",
 		field: "address",
-		align: "right",
+		align: "center",
 	},
 	{
 		name: "valid",
@@ -55,13 +54,23 @@ const searchActive = computed(() => {
 const authors = computed(() => {
 	const search = searchValue.value.toLocaleLowerCase()
 
-	return twitterStore.authors.filter(
-		(author) =>
-			author.name.toLowerCase().includes(search) ||
-			author.username.toLowerCase().includes(search) ||
-			author.address.toLowerCase().includes(search)
-	)
+	return twitterStore.authors
+		.map((author, index) => ({
+			...author,
+			index: index + 1,
+		}))
+		.reverse()
+		.filter(
+			(author) =>
+				author.name.toLowerCase().includes(search) ||
+				author.username.toLowerCase().includes(search) ||
+				author.address.toLowerCase().includes(search)
+		)
 })
+
+const validAuthors = computed(
+	() => authors.value.filter((author) => author.valid).length
+)
 
 const addressAlreadyRegistered = computed(() => {
 	return (
@@ -189,7 +198,16 @@ onMounted(() => {
 		</div>
 	</div>
 	<div class="flex items-center justify-between q-mb-36">
-		<p class="fs-18 font-weight-medium">Registered Accounts</p>
+		<div class="flex items-center row">
+			<p class="fs-18 font-weight-medium">Registered Accounts</p>
+			<p class="fs-18 font-weight-medium q-ml-20">
+				{{ twitterStore.totalAuthors }}
+			</p>
+			<p class="fs-18 font-weight-medium text-primary q-ml-64">Eligible</p>
+			<p class="fs-18 font-weight-medium text-primary q-ml-12">
+				{{ validAuthors }}
+			</p>
+		</div>
 		<div
 			@click="focussed"
 			@focusout="searchFocussed = false"
@@ -221,12 +239,12 @@ onMounted(() => {
 		<template v-slot:body-cell-index="props">
 			<q-td :props="props">
 				<span class="opacity-40">
-					{{ props.rowIndex + 1 }}
+					{{ props.row.index }}
 				</span>
 			</q-td>
 		</template>
 		<template v-slot:body-cell-user="slotProps">
-			<q-td :props="slotProps">
+			<q-td class="author-column" :props="slotProps">
 				<div class="row items-center no-wrap">
 					<q-avatar size="30px" class="q-mr-22 bg-gradient">
 						<img
@@ -234,11 +252,14 @@ onMounted(() => {
 							:src="slotProps.row.profileImageUrl"
 							:alt="slotProps.row.name[0]"
 						/>
-						<p class="text-weight-medium fs-12 text-uppercase" v-else>
+						<p
+							class="text-weight-medium fs-12 text-uppercase table-text-contained"
+							v-else
+						>
 							{{ slotProps.row.name[0] }}
 						</p>
 					</q-avatar>
-					<p class="text-weight-medium fs-15">
+					<p class="text-weight-medium fs-15 table-text-contained">
 						{{ slotProps.row.name }}
 					</p>
 				</div>
@@ -252,13 +273,13 @@ onMounted(() => {
 		<template v-slot:body-cell-valid="slotProps">
 			<q-td :props="slotProps">
 				<div
-					class="flex justify-center q-py-12 q-px-22 fs-12 text-weight-medium bg-gradient text-capitalize light:text-white"
+					class="flex justify-center q-py-12 q-px-16 fs-12 text-weight-medium bg-gradient text-capitalize light:text-white"
 					v-if="slotProps.row.valid"
 				>
 					<div class="flex items-center text-center">Eligible</div>
 				</div>
 				<div
-					class="flex justify-center q-py-12 q-px-22 fs-12 text-weight-medium bg-white-custom text-capitalize light:text-white"
+					class="flex justify-center q-py-12 q-px-16 fs-12 text-weight-medium bg-white-custom text-capitalize light:text-white"
 					v-else
 				>
 					<div class="flex items-center text-center">Not Eligible</div>
@@ -275,5 +296,10 @@ onMounted(() => {
 	img {
 		max-width: 285px;
 	}
+}
+
+.author-column {
+	width: 200px;
+	max-width: 200px;
 }
 </style>

@@ -5,12 +5,14 @@ import { getTweetAuthors } from "@/services/twitter"
 export interface AuthState {
 	loading: boolean
 	authors: TweetAuthor[]
+	totalAuthors: number
 }
 
 const useTwitter = defineStore("twitter", {
 	state: (): AuthState => ({
 		loading: false,
 		authors: [],
+		totalAuthors: 0,
 	}),
 	actions: {
 		async loadAuthors() {
@@ -19,6 +21,7 @@ const useTwitter = defineStore("twitter", {
 				const result = await getTweetAuthors()
 
 				this.authors = result.docs
+				this.totalAuthors = result.totalDocs
 			} catch (error) {
 				console.error(error)
 				throw error
