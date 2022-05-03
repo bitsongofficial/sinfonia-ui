@@ -65,7 +65,7 @@ const addressAlreadyRegistered = computed(() => {
 })
 
 const twitterLink = computed(() => {
-	let messagge = `👉 #smashdatestnet of #Sinfonia, the #music #FanToken App powered by @BitSongOfficial on @osmosiszone 
+	let messagge = `👉 #smashdatestnet of @sinfoniazone, the #music #FanToken App powered by @BitSongOfficial on @osmosiszone 
  
 🥁 Let’s play it!`
 
