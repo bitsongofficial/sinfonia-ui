@@ -119,6 +119,15 @@ const playgroundStartTime = computed(() => {
 onMounted(() => {
 	twitterStore.loadAuthors()
 })
+
+const pagination = ref({
+	page: 1,
+	rowsPerPage: 50,
+})
+
+const maxPages = computed(() =>
+	Math.ceil(authors.value.length / pagination.value.rowsPerPage)
+)
 </script>
 
 <template>
@@ -235,6 +244,8 @@ onMounted(() => {
 		:rows="authors"
 		hide-header
 		:loading="twitterStore.loading"
+		v-model:pagination="pagination"
+		:hide-bottom="false"
 	>
 		<template v-slot:body-cell-index="props">
 			<q-td :props="props">
@@ -285,6 +296,49 @@ onMounted(() => {
 					<div class="flex items-center text-center">Not Eligible</div>
 				</div>
 			</q-td>
+		</template>
+		<template v-slot:bottom="scope">
+			<div class="flex row full-width justify-end items-center q-mt-16 q-mb-28">
+				<q-btn
+					color="white"
+					round
+					dense
+					flat
+					:disable="scope.isFirstPage"
+					@click="scope.prevPage"
+					class="pagination-btn q-mr-4"
+				>
+					<q-icon
+						class="rotate-90 pagination-btn-icon"
+						:name="resolveIcon('keyboard-arrow-down', 10, 6)"
+					></q-icon>
+				</q-btn>
+
+				<q-pagination
+					v-model="pagination.page"
+					color="white"
+					active-color="primary-dark"
+					text-color="white"
+					:max="maxPages"
+					:max-pages="5"
+					size="sm"
+				/>
+
+				<q-btn
+					color="white"
+					round
+					dense
+					flat
+					:disable="scope.isLastPage"
+					@click="scope.nextPage"
+					class="pagination-btn q-ml-4"
+				>
+					<q-icon
+						class="rotate-270 pagination-btn-icon"
+						:name="resolveIcon('keyboard-arrow-down', 10, 6)"
+					></q-icon>
+				</q-btn>
+			</div>
 		</template>
 	</LightTable>
 </template>

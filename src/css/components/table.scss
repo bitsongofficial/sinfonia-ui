@@ -104,9 +104,9 @@ $row-padding-x: 30px;
         }
     }
 
-    .q-table__bottom:not(.q-table__bottom--nodata) {
+    /* .q-table__bottom:not(.q-table__bottom--nodata) {
         display: none;
-    }
+    } */
 
     .q-table__bottom.q-table__bottom--nodata {
         border-top: none;
