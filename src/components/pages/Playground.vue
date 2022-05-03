@@ -51,25 +51,28 @@ const searchActive = computed(() => {
 	return searchValue.value.length > 0 || searchFocussed.value
 })
 
-const authors = computed(() => {
-	const search = searchValue.value.toLocaleLowerCase()
-
-	return twitterStore.authors
+const authorsWithIndex = computed(() =>
+	twitterStore.authors
 		.map((author, index) => ({
 			...author,
 			index: index + 1,
 		}))
 		.reverse()
-		.filter(
-			(author) =>
-				author.name.toLowerCase().includes(search) ||
-				author.username.toLowerCase().includes(search) ||
-				author.address.toLowerCase().includes(search)
-		)
+)
+
+const authors = computed(() => {
+	const search = searchValue.value.toLocaleLowerCase()
+
+	return authorsWithIndex.value.filter(
+		(author) =>
+			author.name.toLowerCase().includes(search) ||
+			author.username.toLowerCase().includes(search) ||
+			author.address.toLowerCase().includes(search)
+	)
 })
 
 const validAuthors = computed(
-	() => authors.value.filter((author) => author.valid).length
+	() => authorsWithIndex.value.filter((author) => author.valid).length
 )
 
 const addressAlreadyRegistered = computed(() => {
