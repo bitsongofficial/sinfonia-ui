@@ -120,7 +120,9 @@ const onRequest = (page: string) => {
 
 const onSearch = (search: string | number | null) => {
 	currentPage.value = 1
-	twitterStore.loadAuthors(1, search ? search.toString() : "")
+	const searchStr = search ? search.toString() : ""
+
+	twitterStore.loadAuthors(1, searchStr.replaceAll("@", ""))
 }
 
 const prevPage = () => {
