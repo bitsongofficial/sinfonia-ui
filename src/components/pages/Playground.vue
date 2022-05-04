@@ -52,27 +52,10 @@ const searchActive = computed(() => {
 })
 
 const authorsWithIndex = computed(() =>
-	twitterStore.authors
-		.map((author, index) => ({
-			...author,
-			index: index + 1,
-		}))
-		.reverse()
-)
-
-const authors = computed(() => {
-	const search = searchValue.value.toLocaleLowerCase()
-
-	return authorsWithIndex.value.filter(
-		(author) =>
-			author.name.toLowerCase().includes(search) ||
-			author.username.toLowerCase().includes(search) ||
-			author.address.toLowerCase().includes(search)
-	)
-})
-
-const validAuthors = computed(
-	() => authorsWithIndex.value.filter((author) => author.valid).length
+	twitterStore.authors.map((author, index) => ({
+		...author,
+		index: twitterStore.totalAuthors - index * twitterStore.currentPage,
+	}))
 )
 
 const addressAlreadyRegistered = computed(() => {
@@ -123,14 +106,34 @@ onMounted(() => {
 	twitterStore.loadAuthors()
 })
 
-const pagination = ref({
+const pagination = computed(() => ({
 	page: 1,
+	pagesNumber: twitterStore.totalPages,
 	rowsPerPage: 50,
-})
+}))
 
-const maxPages = computed(() =>
-	Math.ceil(authors.value.length / pagination.value.rowsPerPage)
-)
+const currentPage = ref(1)
+
+const onRequest = (page: string) => {
+	twitterStore.loadAuthors(parseInt(page))
+}
+
+const onSearch = (search: string | number | null) => {
+	currentPage.value = 1
+	twitterStore.loadAuthors(1, search ? search.toString() : "")
+}
+
+const prevPage = () => {
+	currentPage.value -= 1
+
+	twitterStore.loadAuthors(currentPage.value)
+}
+
+const nextPage = () => {
+	currentPage.value += 1
+
+	twitterStore.loadAuthors(currentPage.value)
+}
 </script>
 
 <template>
@@ -213,11 +216,11 @@ const maxPages = computed(() =>
 		<div class="flex items-center row">
 			<p class="fs-18 font-weight-medium">Registered Accounts</p>
 			<p class="fs-18 font-weight-medium q-ml-20">
-				{{ twitterStore.totalAuthors }}
+				{{ twitterStore.totalAccounts }}
 			</p>
 			<p class="fs-18 font-weight-medium text-primary q-ml-64">Eligible</p>
 			<p class="fs-18 font-weight-medium text-primary q-ml-12">
-				{{ validAuthors }}
+				{{ twitterStore.totalEligibles }}
 			</p>
 		</div>
 		<div
@@ -236,6 +239,8 @@ const maxPages = computed(() =>
 					borderless
 					v-show="searchActive"
 					v-model="searchValue"
+					@update:model-value="onSearch"
+					:debounce="1000"
 					dense
 				/>
 				<q-icon size="13px" :name="resolveIcon('search', 13, 13)"></q-icon>
@@ -244,7 +249,8 @@ const maxPages = computed(() =>
 	</div>
 	<LightTable
 		:columns="accountColumns"
-		:rows="authors"
+		:rows="authorsWithIndex"
+		row-key="address"
 		hide-header
 		:loading="twitterStore.loading"
 		v-model:pagination="pagination"
@@ -300,15 +306,15 @@ const maxPages = computed(() =>
 				</div>
 			</q-td>
 		</template>
-		<template v-slot:bottom="scope">
+		<template v-slot:bottom>
 			<div class="flex row full-width justify-end items-center q-mt-16 q-mb-28">
 				<q-btn
 					color="white"
 					round
 					dense
 					flat
-					:disable="scope.isFirstPage"
-					@click="scope.prevPage"
+					:disable="!twitterStore.hasPrevPage"
+					@click="prevPage"
 					class="pagination-btn q-mr-4"
 				>
 					<q-icon
@@ -318,11 +324,12 @@ const maxPages = computed(() =>
 				</q-btn>
 
 				<q-pagination
-					v-model="pagination.page"
+					v-model="currentPage"
+					@update:model-value="onRequest"
 					color="white"
 					active-color="primary-dark"
 					text-color="white"
-					:max="maxPages"
+					:max="twitterStore.totalPages"
 					:max-pages="5"
 					size="sm"
 				/>
@@ -332,8 +339,8 @@ const maxPages = computed(() =>
 					round
 					dense
 					flat
-					:disable="scope.isLastPage"
-					@click="scope.nextPage"
+					:disable="!twitterStore.hasNextPage"
+					@click="nextPage"
 					class="pagination-btn q-ml-4"
 				>
 					<q-icon

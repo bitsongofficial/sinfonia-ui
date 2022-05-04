@@ -10,6 +10,8 @@ export interface TwitterPagination<T> {
 	hasNextPage: boolean
 	prevPage: number
 	nextPage: number
+	eligibleAccounts: number
+	totalAccounts: number
 }
 
 export interface TweetAuthor {
