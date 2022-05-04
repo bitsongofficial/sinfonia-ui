@@ -289,7 +289,13 @@ const nextPage = () => {
 		</template>
 		<template v-slot:body-cell-account="slotProps">
 			<q-td :props="slotProps">
-				<span class="opacity-40"> @{{ slotProps.row.username }} </span>
+				<a
+					class="opacity-40"
+					:href="'https://twitter.com/' + slotProps.row.username"
+					target="_blank"
+				>
+					@{{ slotProps.row.username }}
+				</a>
 			</q-td>
 		</template>
 		<template v-slot:body-cell-valid="slotProps">
