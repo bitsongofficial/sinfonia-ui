@@ -18,6 +18,7 @@ const pagination = {
 		:columns="columns"
 		:pagination="pagination"
 		:class="(noBackground ? 'table-no-background' : '') + ' footer-h-0'"
+		hide-bottom
 	>
 		<template v-slot:header="slotProps">
 			<q-tr :props="slotProps">

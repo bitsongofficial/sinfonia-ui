@@ -34,7 +34,13 @@ const accountColumns: TableColumn[] = [
 		name: "address",
 		label: "Wallet",
 		field: "address",
-		align: "right",
+		align: "center",
+	},
+	{
+		name: "valid",
+		label: "",
+		align: "center",
+		field: "valid",
 	},
 ]
 
@@ -45,16 +51,12 @@ const searchActive = computed(() => {
 	return searchValue.value.length > 0 || searchFocussed.value
 })
 
-const authors = computed(() => {
-	const search = searchValue.value.toLocaleLowerCase()
-
-	return twitterStore.authors.filter(
-		(author) =>
-			author.name.toLowerCase().includes(search) ||
-			author.username.toLowerCase().includes(search) ||
-			author.address.toLowerCase().includes(search)
-	)
-})
+const authorsWithIndex = computed(() =>
+	twitterStore.authors.map((author, index) => ({
+		...author,
+		index: twitterStore.totalAuthors - index * twitterStore.currentPage,
+	}))
+)
 
 const addressAlreadyRegistered = computed(() => {
 	return (
@@ -65,7 +67,7 @@ const addressAlreadyRegistered = computed(() => {
 })
 
 const twitterLink = computed(() => {
-	let messagge = `👉 #smashdatestnet of #Sinfonia, the #music #FanToken App powered by @BitSongOfficial on @osmosiszone 
+	let messagge = `👉 #smashdatestnet of @sinfoniazone, the #music #FanToken App powered by @BitSongOfficial on @osmosiszone 
  
 🥁 Let’s play it!`
 
@@ -103,6 +105,37 @@ const playgroundStartTime = computed(() => {
 onMounted(() => {
 	twitterStore.loadAuthors()
 })
+
+const pagination = computed(() => ({
+	page: 1,
+	pagesNumber: twitterStore.totalPages,
+	rowsPerPage: 50,
+}))
+
+const currentPage = ref(1)
+
+const onRequest = (page: string) => {
+	twitterStore.loadAuthors(parseInt(page))
+}
+
+const onSearch = (search: string | number | null) => {
+	currentPage.value = 1
+	const searchStr = search ? search.toString() : ""
+
+	twitterStore.loadAuthors(1, searchStr.replaceAll("@", ""))
+}
+
+const prevPage = () => {
+	currentPage.value -= 1
+
+	twitterStore.loadAuthors(currentPage.value)
+}
+
+const nextPage = () => {
+	currentPage.value += 1
+
+	twitterStore.loadAuthors(currentPage.value)
+}
 </script>
 
 <template>
@@ -182,7 +215,16 @@ onMounted(() => {
 		</div>
 	</div>
 	<div class="flex items-center justify-between q-mb-36">
-		<p class="fs-18 font-weight-medium">Eligible Accounts</p>
+		<div class="flex items-center row">
+			<p class="fs-18 font-weight-medium">Registered Accounts</p>
+			<p class="fs-18 font-weight-medium q-ml-20">
+				{{ twitterStore.totalAccounts }}
+			</p>
+			<p class="fs-18 font-weight-medium text-primary q-ml-64">Eligible</p>
+			<p class="fs-18 font-weight-medium text-primary q-ml-12">
+				{{ twitterStore.totalEligibles }}
+			</p>
+		</div>
 		<div
 			@click="focussed"
 			@focusout="searchFocussed = false"
@@ -199,6 +241,8 @@ onMounted(() => {
 					borderless
 					v-show="searchActive"
 					v-model="searchValue"
+					@update:model-value="onSearch"
+					:debounce="1000"
 					dense
 				/>
 				<q-icon size="13px" :name="resolveIcon('search', 13, 13)"></q-icon>
@@ -207,19 +251,22 @@ onMounted(() => {
 	</div>
 	<LightTable
 		:columns="accountColumns"
-		:rows="authors"
+		:rows="authorsWithIndex"
+		row-key="address"
 		hide-header
 		:loading="twitterStore.loading"
+		v-model:pagination="pagination"
+		:hide-bottom="false"
 	>
 		<template v-slot:body-cell-index="props">
 			<q-td :props="props">
 				<span class="opacity-40">
-					{{ props.rowIndex + 1 }}
+					{{ props.row.index }}
 				</span>
 			</q-td>
 		</template>
 		<template v-slot:body-cell-user="slotProps">
-			<q-td :props="slotProps">
+			<q-td class="author-column" :props="slotProps">
 				<div class="row items-center no-wrap">
 					<q-avatar size="30px" class="q-mr-22 bg-gradient">
 						<img
@@ -227,11 +274,14 @@ onMounted(() => {
 							:src="slotProps.row.profileImageUrl"
 							:alt="slotProps.row.name[0]"
 						/>
-						<p class="text-weight-medium fs-12 text-uppercase" v-else>
+						<p
+							class="text-weight-medium fs-12 text-uppercase table-text-contained"
+							v-else
+						>
 							{{ slotProps.row.name[0] }}
 						</p>
 					</q-avatar>
-					<p class="text-weight-medium fs-15">
+					<p class="text-weight-medium fs-15 table-text-contained">
 						{{ slotProps.row.name }}
 					</p>
 				</div>
@@ -239,8 +289,74 @@ onMounted(() => {
 		</template>
 		<template v-slot:body-cell-account="slotProps">
 			<q-td :props="slotProps">
-				<span class="opacity-40"> @{{ slotProps.row.username }} </span>
+				<a
+					class="opacity-40"
+					:href="'https://twitter.com/' + slotProps.row.username"
+					target="_blank"
+				>
+					@{{ slotProps.row.username }}
+				</a>
 			</q-td>
+		</template>
+		<template v-slot:body-cell-valid="slotProps">
+			<q-td :props="slotProps">
+				<div
+					class="flex justify-center q-py-12 q-px-16 fs-12 text-weight-medium bg-gradient text-capitalize light:text-white"
+					v-if="slotProps.row.valid"
+				>
+					<div class="flex items-center text-center">Eligible</div>
+				</div>
+				<div
+					class="flex justify-center q-py-12 q-px-16 fs-12 text-weight-medium bg-white-custom text-capitalize light:text-white"
+					v-else
+				>
+					<div class="flex items-center text-center">Not Eligible</div>
+				</div>
+			</q-td>
+		</template>
+		<template v-slot:bottom>
+			<div class="flex row full-width justify-end items-center q-mt-16 q-mb-28">
+				<q-btn
+					color="white"
+					round
+					dense
+					flat
+					:disable="!twitterStore.hasPrevPage"
+					@click="prevPage"
+					class="pagination-btn q-mr-4"
+				>
+					<q-icon
+						class="rotate-90 pagination-btn-icon"
+						:name="resolveIcon('keyboard-arrow-down', 10, 6)"
+					></q-icon>
+				</q-btn>
+
+				<q-pagination
+					v-model="currentPage"
+					@update:model-value="onRequest"
+					color="white"
+					active-color="primary-dark"
+					text-color="white"
+					:max="twitterStore.totalPages"
+					:max-pages="5"
+					size="sm"
+				/>
+
+				<q-btn
+					color="white"
+					round
+					dense
+					flat
+					:disable="!twitterStore.hasNextPage"
+					@click="nextPage"
+					class="pagination-btn q-ml-4"
+				>
+					<q-icon
+						class="rotate-270 pagination-btn-icon"
+						:name="resolveIcon('keyboard-arrow-down', 10, 6)"
+					></q-icon>
+				</q-btn>
+			</div>
 		</template>
 	</LightTable>
 </template>
@@ -252,5 +368,10 @@ onMounted(() => {
 	img {
 		max-width: 285px;
 	}
+}
+
+.author-column {
+	width: 200px;
+	max-width: 200px;
 }
 </style>

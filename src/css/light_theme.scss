@@ -369,3 +369,9 @@ body.body--light {
     background-color: color.adjust(#000000, $alpha: -0.7);
   }
 }
+
+
+.bg-white-custom {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+}
