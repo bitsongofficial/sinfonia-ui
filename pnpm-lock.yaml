@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@bitsongjs/sdk': ^1.0.0-dev-14
@@ -58,7 +58,7 @@ dependencies:
   lodash: 4.17.21
   long: 5.2.0
   path: 0.12.7
-  pinia: 2.0.11_typescript@4.6.2+vue@3.2.31
+  pinia: 2.0.11_5bgd5bbqiynntouprdo6x2bjeu
   pinia-plugin-persistedstate-2: 1.0.0_pinia@2.0.11
   protobufjs: 6.11.2
   vue: 3.2.31
@@ -68,10 +68,10 @@ dependencies:
 devDependencies:
   '@kelchy/pre-commit': 1.2.4
   '@keplr-wallet/types': 0.9.12
-  '@quasar/vite-plugin': 1.0.5_ae74a32690f930bc9da5b21100df949a
+  '@quasar/vite-plugin': 1.0.5_vz2kgjuq7eylzhnfwiiqbx4uti
   '@types/lodash': 4.14.180
-  '@typescript-eslint/eslint-plugin': 5.16.0_1cfd4865634695f241f9ce8a00c153a8
-  '@typescript-eslint/parser': 5.16.0_eslint@8.12.0+typescript@4.6.2
+  '@typescript-eslint/eslint-plugin': 5.16.0_dt6uqzldi2k7eqpzz2fabqktva
+  '@typescript-eslint/parser': 5.16.0_qfndwjbknwkswbha2khu23tpva
   '@vitejs/plugin-vue': 2.2.4_vite@2.8.6+vue@3.2.31
   eslint: 8.12.0
   eslint-config-prettier: 8.5.0_eslint@8.12.0
@@ -608,7 +608,7 @@ packages:
     resolution: {integrity: sha512-I2bj/qPVxFdd1SZmIao+moh2bSlgbqNHJAIAopzwxQL0fTMKWGaOQsOvSKrv4hmAhC1cL/SBHd4OWAUWa4dA/w==}
     dev: false
 
-  /@quasar/vite-plugin/1.0.5_ae74a32690f930bc9da5b21100df949a:
+  /@quasar/vite-plugin/1.0.5_vz2kgjuq7eylzhnfwiiqbx4uti:
     resolution: {integrity: sha512-n+LP30etV2OYqOage/rNhIiFTD5yqIBLAb3J9x09Ukl7foLOiQwUMs/xmIjp1Lm2TJVd1gee04cR5JI+wuvdiw==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -649,7 +649,7 @@ packages:
     resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
     dev: false
 
-  /@typescript-eslint/eslint-plugin/5.16.0_1cfd4865634695f241f9ce8a00c153a8:
+  /@typescript-eslint/eslint-plugin/5.16.0_dt6uqzldi2k7eqpzz2fabqktva:
     resolution: {integrity: sha512-SJoba1edXvQRMmNI505Uo4XmGbxCK9ARQpkvOd00anxzri9RNQk0DDCxD+LIl+jYhkzOJiOMMKYEHnHEODjdCw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -660,10 +660,10 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.16.0_eslint@8.12.0+typescript@4.6.2
+      '@typescript-eslint/parser': 5.16.0_qfndwjbknwkswbha2khu23tpva
       '@typescript-eslint/scope-manager': 5.16.0
-      '@typescript-eslint/type-utils': 5.16.0_eslint@8.12.0+typescript@4.6.2
-      '@typescript-eslint/utils': 5.16.0_eslint@8.12.0+typescript@4.6.2
+      '@typescript-eslint/type-utils': 5.16.0_qfndwjbknwkswbha2khu23tpva
+      '@typescript-eslint/utils': 5.16.0_qfndwjbknwkswbha2khu23tpva
       debug: 4.3.4
       eslint: 8.12.0
       functional-red-black-tree: 1.0.1
@@ -676,7 +676,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser/5.16.0_eslint@8.12.0+typescript@4.6.2:
+  /@typescript-eslint/parser/5.16.0_qfndwjbknwkswbha2khu23tpva:
     resolution: {integrity: sha512-fkDq86F0zl8FicnJtdXakFs4lnuebH6ZADDw6CYQv0UZeIjHvmEw87m9/29nk2Dv5Lmdp0zQ3zDQhiMWQf/GbA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -704,7 +704,7 @@ packages:
       '@typescript-eslint/visitor-keys': 5.16.0
     dev: true
 
-  /@typescript-eslint/type-utils/5.16.0_eslint@8.12.0+typescript@4.6.2:
+  /@typescript-eslint/type-utils/5.16.0_qfndwjbknwkswbha2khu23tpva:
     resolution: {integrity: sha512-SKygICv54CCRl1Vq5ewwQUJV/8padIWvPgCxlWPGO/OgQLCijY9G7lDu6H+mqfQtbzDNlVjzVWQmeqbLMBLEwQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -714,7 +714,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/utils': 5.16.0_eslint@8.12.0+typescript@4.6.2
+      '@typescript-eslint/utils': 5.16.0_qfndwjbknwkswbha2khu23tpva
       debug: 4.3.4
       eslint: 8.12.0
       tsutils: 3.21.0_typescript@4.6.2
@@ -749,7 +749,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/utils/5.16.0_eslint@8.12.0+typescript@4.6.2:
+  /@typescript-eslint/utils/5.16.0_qfndwjbknwkswbha2khu23tpva:
     resolution: {integrity: sha512-iYej2ER6AwmejLWMWzJIHy3nPJeGDuCqf8Jnb+jAQVoPpmWzwQOfa9hWVB8GIQE5gsCv/rfN4T+AYb/V06WseQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2466,11 +2466,11 @@ packages:
     peerDependencies:
       pinia: ^2.0.6
     dependencies:
-      pinia: 2.0.11_typescript@4.6.2+vue@3.2.31
+      pinia: 2.0.11_5bgd5bbqiynntouprdo6x2bjeu
       shvl: 2.0.3
     dev: false
 
-  /pinia/2.0.11_typescript@4.6.2+vue@3.2.31:
+  /pinia/2.0.11_5bgd5bbqiynntouprdo6x2bjeu:
     resolution: {integrity: sha512-JzcmnMqu28PNWOjDgEDK6fTrIzX8eQZKPPKvu/fpHdpXARUj1xeVdFi3YFIMOWswqaBd589cpmAMdSSTryI9iw==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
