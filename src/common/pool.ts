@@ -287,7 +287,9 @@ export const gaugeToGaugeToken = (
 	const epochDuration = poolStore.epochDuration
 
 	if (epochDuration) {
-		const duration = parse({ seconds: epochDuration.duration })
+		const duration = parse({
+			seconds: epochDuration.duration * numEpochsPaidOver,
+		})
 
 		endTime = apply(parseISO(gauge.start_time), duration).toISOString()
 	}
