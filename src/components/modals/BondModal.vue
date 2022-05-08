@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { percentage, balancedGamm, fromDecimalGamm } from "@/common/numbers"
+import {
+	balancedGamm,
+	fromDecimalGamm,
+	gtnZero,
+	compareBalance,
+} from "@/common/numbers"
 import { resolveIcon } from "@/common/resolvers"
-import { ref } from "vue"
-import { Pool } from "@/types"
+import { computed, ref } from "vue"
+import { Pool, LockableDurationWithApr } from "@/types"
 import useTransactionManager from "@/store/transaction-manager"
 import InformativeTooltip from "@/components/tooltips/InformativeTooltip.vue"
 import ModalWithClose from "@/components/modals/ModalWithClose.vue"
 import Amount from "@/components/inputs/Amount.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
+import LockableDurationRadio from "@/components/inputs/LockableDurationRadio.vue"
 
 const transactionManagerStore = useTransactionManager()
 
@@ -15,13 +21,13 @@ const props = defineProps<{
 	pool: Pool
 }>()
 
-const chosenUnbonding = ref(props.pool.lockableDurationApr[2])
+const chosenUnbonding = ref<LockableDurationWithApr | undefined>(undefined)
 const amount = ref("0")
 
 const onSubmit = () => {
 	const balance = [...props.pool.availableLPBalances].pop()
 
-	if (balance) {
+	if (balance && chosenUnbonding.value) {
 		transactionManagerStore.lockTokens(chosenUnbonding.value, [
 			{
 				amount: fromDecimalGamm(amount.value),
@@ -30,6 +36,17 @@ const onSubmit = () => {
 		])
 	}
 }
+
+const formValid = computed(() => {
+	if (!chosenUnbonding.value) {
+		return false
+	}
+
+	return (
+		gtnZero(amount.value) &&
+		compareBalance(amount.value, props.pool.availableLPTokens)
+	)
+})
 </script>
 
 <template>
@@ -50,31 +67,7 @@ const onSubmit = () => {
 			</div>
 			<div class="row row-cols-3 row-cols-xs-1 column-xs q-col-gutter-md q-mb-27">
 				<div v-for="up in pool.lockableDurationApr" class="col">
-					<div
-						@click="chosenUnbonding = up"
-						:class="
-							'rounded-20 q-py-16 q-px-16 flex justify-center items-center full-height cursor-pointer ' +
-							(up.duration == chosenUnbonding.duration
-								? 'bg-gradient light:text-white'
-								: 'border-primary-darker light:border-gradient-primary light:border-none hover:bg-white-5')
-						"
-					>
-						<div>
-							<p class="fs-18 q-mb-8 text-center">
-								{{ up.readableDuration }}
-							</p>
-							<p
-								:class="
-									'total-apr fs-15 text-center overflow-hidden text-overflow-ellipsis text-no-wrap ' +
-									(up.duration == chosenUnbonding.duration
-										? 'text-primary-dark-700 light:text-white'
-										: 'text-dark')
-								"
-							>
-								{{ percentage(up.totalApr) }} %
-							</p>
-						</div>
-					</div>
+					<LockableDurationRadio v-model="chosenUnbonding" :value="up" />
 				</div>
 			</div>
 			<div class="flex justify-between items-center q-mb-16">
@@ -87,13 +80,15 @@ const onSubmit = () => {
 					</p>
 				</div>
 			</div>
-			<Amount
-				v-model="amount"
-				:max="pool.availableLPTokens"
-				class="q-mb-22"
-			></Amount>
+			<Amount v-model="amount" :max="pool.availableLPTokens" class="q-mb-22" />
 			<div class="flex justify-center">
-				<LargeButton type="submit" fit :padding-y="16" class="q-px-66">
+				<LargeButton
+					type="submit"
+					fit
+					:padding-y="16"
+					class="q-px-66"
+					:disabled="!formValid"
+				>
 					<span class="text-uppercase"> Bond tokens </span>
 				</LargeButton>
 			</div>
