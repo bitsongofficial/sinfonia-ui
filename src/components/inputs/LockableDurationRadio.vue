@@ -44,7 +44,7 @@ const disabled = computed(() => {
 			'bg-gradient light:text-white no-border':
 				model && value.duration === model.duration,
 			'border-primary-darker light:border-gradient-primary light:border-none hover:bg-white-5':
-				model && value.duration !== model.duration && !disabled,
+				!disabled,
 			'bg-primary-darker-half light:bg-white border-transparent cursor-not-allowed':
 				disabled,
 		}"
