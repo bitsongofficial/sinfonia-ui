@@ -119,15 +119,30 @@ const openTransfer = (from: TokenBalance) => {
 </script>
 
 <template>
-	<Title class="q-mb-24">Assets</Title>
-	<div class="row">
+	<Title class="q-mb-16">Assets</Title>
+	<div class="row q-mb-46">
 		<div class="col-12 col-md-6 col-lg-5">
-			<p class="fs-16 opacity-40 !leading-24 q-mb-40">
+			<p class="fs-16 opacity-40 !leading-24 q-mb-none q-mt-16">
 				Sinfonia is a multi chain platform. On this app you might have assets on
 				different chains (ex. BitSong, Osmosis, Cosmos etc.). In order to be able to
 				provide liquidity on the pools, you might need to perform interchain
 				transfers.
 			</p>
+		</div>
+		<div class="column col-12 col-md-6 col-lg-3">
+			<p
+				class="fs-12 opacity-50 text-white !leading-24 q-mb-none text-right q-mt-xs-10 q-mt-md-10 text-left-xs text-left-md"
+			>
+				EPOCH END
+			</p>
+
+			<vue-countdown
+				:time="poolsStore.payoutTime"
+				v-slot="{ hours, minutes }"
+				class="fs-32 !leading-48 text-white text-weight-medium text-right text-left-xs text-left-md"
+			>
+				{{ hours }}h <span class="opacity-20">:</span> {{ minutes }}m
+			</vue-countdown>
 		</div>
 	</div>
 	<div class="row text-weight-medium q-col-gutter-lg q-mb-75">
