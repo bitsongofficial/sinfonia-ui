@@ -26,7 +26,7 @@ export interface TransactionManagerState {
 }
 
 const pollingTime = 5000
-let subscription: number
+let subscription
 
 const useTransactionManager = defineStore("transactionManager", {
 	state: (): TransactionManagerState => ({
