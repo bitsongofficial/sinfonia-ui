@@ -76,6 +76,7 @@ const poolsStats = computed(() => {
 		stats.liquidity = new BigNumber(stats.liquidity)
 			.plus(fantokenPool.liquidity)
 			.toString()
+
 		stats.maxApr = BigNumber.max(fantokenPool.APR, stats.maxApr).toString()
 		stats.avgApr = new BigNumber(stats.avgApr).plus(fantokenPool.APR).toString()
 

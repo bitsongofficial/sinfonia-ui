@@ -68,7 +68,7 @@ export const percentageRange = (
 		return new Intl.NumberFormat("en-US", {
 			maximumFractionDigits: decimals,
 			minimumFractionDigits: decimals,
-		}).format(amount.toNumber())
+		}).format(amount.multipliedBy(100).toNumber())
 	}
 
 	return "< 0.001"
