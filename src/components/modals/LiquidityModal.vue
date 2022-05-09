@@ -16,8 +16,6 @@ const props = defineProps<{
 	pool: Pool
 }>()
 
-console.log(props.pool.availableLPBalances)
-
 const balance = computed(() => [...props.pool.availableLPBalances].pop())
 
 const lpAvailable = computed(() => {
