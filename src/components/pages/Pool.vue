@@ -385,7 +385,6 @@ onUnmounted(() => {
 								:height="12"
 								:value="unbonding.extraGauges[0].filledEpochs"
 								:max="unbonding.extraGauges[0].numEpochsPaidOver"
-								reverse
 							></Progress>
 							<div class="q-ml-21">
 								<p class="fs-12 text-uppercase text-right opacity-50 q-mb-8">End</p>

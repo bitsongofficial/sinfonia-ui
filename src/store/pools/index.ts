@@ -12,15 +12,13 @@ import {
 	SwapPool,
 	Token,
 } from "@/types"
-import {
-	mapPools,
-	mapLockableDuration,
-	epochIdentifierToDuration,
-} from "@/common"
+import { mapPools, mapLockableDuration } from "@/common"
+import { Coin } from "@cosmjs/proto-signing"
+import { parseISO, differenceInMilliseconds } from "date-fns"
+import { apply, parse } from "duration-fns"
 import useBank from "@/store/bank"
 import useConfig from "@/store/config"
 import BigNumber from "bignumber.js"
-import { Coin } from "@cosmjs/proto-signing"
 
 export interface PoolsState {
 	loading: boolean
@@ -247,14 +245,40 @@ const usePools = defineStore("pools", {
 
 			return "day"
 		},
-		epochDuration({ mintParams }) {
-			return (epochs: string | number) => {
-				if (mintParams) {
-					return epochIdentifierToDuration(mintParams.epoch_identifier, epochs)
-				}
+		activeEpoch({ mintParams, epochs }) {
+			let activeEpoch = epochs.find((epoch) => epoch.identifier === "day")
 
-				return epochIdentifierToDuration("day", epochs)
+			if (mintParams) {
+				activeEpoch = epochs.find(
+					(epoch) => epoch.identifier === mintParams.epoch_identifier
+				)
 			}
+
+			return activeEpoch
+		},
+		epochDuration() {
+			const activeEpoch = this.activeEpoch as Epoch
+
+			if (activeEpoch) {
+				return mapLockableDuration(activeEpoch.duration)
+			}
+		},
+		payoutTime() {
+			const activeEpoch = this.activeEpoch as Epoch
+			const epochDuration = this.epochDuration
+
+			if (activeEpoch && epochDuration) {
+				const duration = parse({ seconds: epochDuration.duration })
+
+				const endTime = apply(
+					parseISO(activeEpoch.current_epoch_start_time),
+					duration
+				)
+
+				return differenceInMilliseconds(endTime, new Date())
+			}
+
+			return 0
 		},
 	},
 	persistedState: {

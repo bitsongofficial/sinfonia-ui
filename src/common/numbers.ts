@@ -169,6 +169,12 @@ export const isNaN = (amount: string): boolean => {
 	return number.isNaN()
 }
 
+export const equalZero = (amount: string): boolean => {
+	const number = new BigNumber(amount)
+
+	return number.eq(0)
+}
+
 export const gtnZero = (amount: string): boolean => {
 	const number = new BigNumber(amount)
 

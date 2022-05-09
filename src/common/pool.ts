@@ -22,7 +22,7 @@ import usePrices from "@/store/prices"
 import { mapLockableDuration } from "./duration"
 import { compact, max, reduce, sortBy, uniqBy } from "lodash"
 import { parseISO } from "date-fns"
-import { apply } from "duration-fns"
+import { apply, parse } from "duration-fns"
 import { Coin } from "@cosmjs/proto-signing"
 import { unboundingEndTimeStart } from "./date"
 import { findTokenByIBCDenom } from "./token"
@@ -283,10 +283,16 @@ export const gaugeToGaugeToken = (
 		}
 	})
 
-	const endTime = apply(
-		parseISO(gauge.start_time),
-		poolStore.epochDuration(numEpochsPaidOver)
-	).toISOString()
+	let endTime = parseISO(gauge.start_time).toISOString()
+	const epochDuration = poolStore.epochDuration
+
+	if (epochDuration) {
+		const duration = parse({
+			seconds: epochDuration.duration * numEpochsPaidOver,
+		})
+
+		endTime = apply(parseISO(gauge.start_time), duration).toISOString()
+	}
 
 	return {
 		...gauge,

@@ -6,6 +6,8 @@ import { formatDistanceToNow } from "date-fns"
 import { TokenBalance, Transaction } from "@/types"
 import { useRoute, useRouter } from "vue-router"
 import { externalWebsites } from "@/configs/config"
+import { resolveIcon } from "@/common/resolvers"
+import { disabledTransactions } from "@/configs/routes"
 import Card from "@/components/cards/Card.vue"
 import Title from "@/components/typography/Title.vue"
 import CryptoTable from "@/components/CryptoTable.vue"
@@ -143,7 +145,16 @@ const onRowClick = (index: number, row: TokenBalance) => {
 				class="col-8 col-lg-4 col-xl-5 q-mb-40 q-mb-md-none flex justify-center"
 			>
 				<div class="max-w-582">
-					<Title class="q-mb-36">Swap Tokens</Title>
+					<Title class="q-mb-24">Swap Tokens</Title>
+					<div class="flex row no-wrap items-start q-mb-24">
+						<q-icon :name="resolveIcon('info', 15, 15)" size="15px" color="primary" />
+						<p
+							class="fs-14 !leading-18 q-ml-20 q-mt-none opacity-50 text-white text-weight-regular"
+						>
+							Remember to move your funds from the BitSong chain to the Osmosis chain
+							to have them available on Sinfonia.
+						</p>
+					</div>
 					<Card
 						ref="heightRef"
 						:padding="0"
@@ -227,7 +238,9 @@ const onRowClick = (index: number, row: TokenBalance) => {
 							class="full-height"
 							@row-click="
 								(_, row) => {
-									onTxClick(row)
+									if (!disabledTransactions) {
+										onTxClick(row)
+									}
 								}
 							"
 						>

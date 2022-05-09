@@ -2,6 +2,7 @@ import { Notify, Dark } from "quasar"
 import { resolveIcon } from "./resolvers"
 import Spinner from "@/components/Spinner"
 import { NotificationPosition } from "@/types"
+import { disabledTransactions } from "@/configs/routes"
 
 export function notify(
 	message: string,
@@ -23,18 +24,20 @@ export function notify(
 		classes: `${background} rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440`,
 		message:
 			'<div class="q-mr-15"><p class="fs-16 text-weight-medium' +
-			(secondaryMessage != undefined || link != undefined ? " q-mb-10" : "") +
+			(secondaryMessage != undefined || (link && !disabledTransactions)
+				? " q-mb-10"
+				: "") +
 			'">' +
 			message +
 			"</p>" +
 			(secondaryMessage
 				? '<p class="fs-14 opacity-40' +
-				  (link ? " q-mb-10" : "") +
+				  (link && !disabledTransactions ? " q-mb-10" : "") +
 				  '">' +
 				  secondaryMessage +
 				  "</p>"
 				: "") +
-			(link
+			(link && !disabledTransactions
 				? '<a class="opacity-40 flex items-center hover:opacity-70 fs-14" target="_blank" href="' +
 				  link.url +
 				  '"><span class="q-mr-6">' +
@@ -52,7 +55,7 @@ export function notify(
 
 export function notifySuccess(
 	message: string,
-	secondaryMessage = "",
+	secondaryMessage: string | undefined = undefined,
 	link?: { text: string; url: string },
 	position: NotificationPosition = "top"
 ) {
@@ -61,7 +64,7 @@ export function notifySuccess(
 
 export function notifyError(
 	message: string,
-	secondaryMessage = "",
+	secondaryMessage: string | undefined = undefined,
 	link?: { text: string; url: string },
 	position: NotificationPosition = "top"
 ) {
@@ -70,7 +73,7 @@ export function notifyError(
 
 export function notifyLoading(
 	message: string,
-	secondaryMessage = "",
+	secondaryMessage: string | undefined = undefined,
 	link?: { text: string; url: string },
 	position: NotificationPosition = "top",
 	timeout = 0

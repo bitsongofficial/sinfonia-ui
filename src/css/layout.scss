@@ -467,6 +467,10 @@ $s in $custom-sizes {
         text-align: center;
     }
 
+    .text-left-xs {
+        text-align: left;
+    }
+
     .text-end-xs {
         text-align: end;
     }
@@ -525,7 +529,15 @@ $s in $custom-sizes {
     }
 }
 
-@media screen and (max-width: $breakpoint-md) {}
+@media screen and (max-width: $breakpoint-md) {
+    .text-left-md {
+        text-align: left;
+    }
+
+    .q-mt-md-10 {
+        margin-top: 10px !important;
+    }
+}
 
 @media screen and (min-width: $breakpoint-xs) {
     .w-xs-1\/3 {

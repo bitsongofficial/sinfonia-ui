@@ -20,12 +20,28 @@
     color: $primary-darker !important;
 }
 
+.text-primary-darker-half {
+    color: $primary-darker-half !important;
+}
+
 .bg-primary-darker {
     background: $primary-darker !important;
 }
 
+.bg-primary-darker-half {
+    background: $primary-darker-half !important;
+}
+
 .border-primary-darker {
     border: 2px solid $primary-darker;
+}
+
+.border-transparent {
+    border: 2px solid transparent;
+}
+
+.border-primary-darker-half {
+    border: 2px solid $primary-darker-half;
 }
 
 .text-primary-dark {

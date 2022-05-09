@@ -16,6 +16,8 @@ interface ImportMetaEnv {
 	readonly VITE_PLAYGROUND_GUIDE_URL: string
 	readonly VITE_PLAYGROUND_START_DATE: string
 	readonly VITE_PLAYGROUND_DISABLE_ROUTES: string
+	readonly VITE_PLAYGROUND_DISABLE: string
+	readonly VITE_TRANSACTIONS_DISABLE: string
 	readonly VITE_MODE: string
 }
 

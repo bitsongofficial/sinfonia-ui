@@ -8,11 +8,22 @@ import Pool from "@/components/pages/Pool.vue"
 import FanToken from "@/components/pages/FanToken.vue"
 import Playground from "@/components/pages/Playground.vue"
 import { RouteRecordRaw } from "vue-router"
+import { externalWebsites } from "./config"
 
 export const disabledRoutes =
 	import.meta.env.VITE_PLAYGROUND_DISABLE_ROUTES === "true"
 
+export const disabledTransactions =
+	import.meta.env.VITE_TRANSACTIONS_DISABLE === "true"
+
+export const disabledPlayground =
+	import.meta.env.VITE_PLAYGROUND_DISABLE === "true"
+
 const routes: RouteRecordRaw[] = [
+	{
+		path: "/",
+		redirect: "/fantokens",
+	},
 	{
 		path: "/fantokens",
 		component: Wrapper,
@@ -60,12 +71,7 @@ const routes: RouteRecordRaw[] = [
 		component: Assets,
 	},
 	{
-		path: "/playground",
-		name: "Playground",
-		component: Playground,
-	},
-	{
-		path: "/",
+		path: "/:pathMatch(.*)",
 		redirect: "/fantokens",
 	},
 ]
@@ -95,17 +101,29 @@ export const menuItems: MenuItem[] = [
 		path: "/assets",
 		disabled: disabledRoutes,
 	},
-	/* {
+]
+
+if (!disabledTransactions) {
+	menuItems.push({
 		icon: { name: "swap", width: 21, height: 16 },
 		label: "Transactions",
 		path: `${externalWebsites.mintscan}bitsong/txs`,
 		isLink: true,
-	}, */
-	{
+	})
+}
+
+if (!disabledPlayground) {
+	menuItems.push({
 		icon: { name: "clubs", width: 21, height: 22 },
 		label: "Playground",
 		path: "/playground",
-	},
-]
+	})
+
+	routes.push({
+		path: "/playground",
+		name: "Playground",
+		component: Playground,
+	})
+}
 
 export default routes
