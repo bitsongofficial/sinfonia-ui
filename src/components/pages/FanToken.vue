@@ -25,10 +25,12 @@ import usePools from "@/store/pools"
 import useConfig from "@/store/config"
 import useBank from "@/store/bank"
 import BigNumber from "bignumber.js"
+import useMailchimp from "@/store/mailchimp"
 
 const poolsStore = usePools()
 const bankStore = useBank()
 const configStore = useConfig()
+const mailchimpStore = useMailchimp()
 const route = useRoute()
 const id = route.params["id"] as string
 
@@ -113,20 +115,20 @@ const tabs = computed(() => {
 		links.push({ name: "pools", label: "Pools" })
 	}
 
+	links.push({ label: "Social", name: "social" })
+
 	if (fantoken.value) {
 		const airdrop = fantoken.value.airdrop
-		const whitepaper = fantoken.value.whitepaper
+		/* const whitepaper = fantoken.value.whitepaper */
 
 		if (airdrop) {
 			links.push({ label: "Airdrop", url: airdrop.url })
 		}
 
-		if (whitepaper) {
+		/* if (whitepaper) {
 			links.push({ label: "Whitepaper", url: whitepaper.url })
-		}
+		} */
 	}
-
-	links.push({ label: "Social", name: "social" })
 
 	return links
 })
@@ -223,6 +225,15 @@ onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
 	fantokenWatcher()
 })
+
+const subscribeMailchimp = () => {
+	if (fantoken.value && fantoken.value.socials) {
+		mailchimpStore.subscribeMailchimp(
+			email.value,
+			fantoken.value.socials.mailchimpID
+		)
+	}
+}
 </script>
 
 <template>
@@ -305,7 +316,7 @@ onUnmounted(() => {
 		<Tabs :options="tabs">
 			<template v-slot:info> </template>
 			<template v-slot:analytics>
-				<p class="fs-16 opacity-30 q-mb-12">Token</p>
+				<!-- <p class="fs-16 opacity-30 q-mb-12">Token</p>
 				<div class="flex justify-between items-center q-mb-30">
 					<p class="fs-32 text-weight-bold">
 						{{ fantoken.symbol }}
@@ -389,7 +400,7 @@ onUnmounted(() => {
 						</div>
 						<WorkInProgress> Price Data will be provided soon. </WorkInProgress>
 					</div>
-				</div>
+				</div> -->
 				<div class="q-mb-52">
 					<p class="fs-16 opacity-30 q-mb-24">Tokenomics</p>
 					<div class="row q-col-gutter-xl">
@@ -591,7 +602,7 @@ onUnmounted(() => {
 				</LightTable>
 			</template>
 			<template v-slot:social>
-				<div class="row q-pt-18 q-col-gutter-x-md">
+				<q-form class="row q-pt-18 q-col-gutter-x-md" @submit="subscribeMailchimp">
 					<div class="col-8 col-md-2 column justify-between">
 						<p class="fs-24 q-mb-24">
 							Be the first on <br />
@@ -602,6 +613,7 @@ onUnmounted(() => {
 					<div class="col-8 col-md-4">
 						<q-input
 							v-model="email"
+							type="email"
 							label="Type your email address"
 							class="q-field--highlighted q-mb-22 opacity-30 fs-18 input-top-attached"
 						/>
@@ -611,7 +623,13 @@ onUnmounted(() => {
 							class="fs-12 text-weight-regular q-mb-54 q-mb-sm-14"
 						/>
 						<div class="lt-md q-mb-20 flex justify-center">
-							<LargeButton fit>Get notified</LargeButton>
+							<LargeButton
+								fit
+								type="submit"
+								:disabled="mailchimpStore.loading || !newsletter"
+							>
+								Get notified
+							</LargeButton>
 						</div>
 						<template v-if="fantoken.socials">
 							<p class="fs-18 opacity-50 lt-md q-mb-8">Follow me on socials</p>
@@ -620,10 +638,15 @@ onUnmounted(() => {
 					</div>
 					<div class="col-8 col-md-2 flex justify-end">
 						<div class="gt-sm">
-							<LargeButton fit>Get notified</LargeButton>
+							<LargeButton
+								fit
+								type="submit"
+								:disable="mailchimpStore.loading || !newsletter"
+								>Get notified</LargeButton
+							>
 						</div>
 					</div>
-				</div>
+				</q-form>
 			</template>
 		</Tabs>
 	</div>
