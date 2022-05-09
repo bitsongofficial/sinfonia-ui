@@ -7,6 +7,7 @@ import { TokenBalance, Transaction } from "@/types"
 import { useRoute, useRouter } from "vue-router"
 import { externalWebsites } from "@/configs/config"
 import { resolveIcon } from "@/common/resolvers"
+import { disabledTransactions } from "@/configs/routes"
 import Card from "@/components/cards/Card.vue"
 import Title from "@/components/typography/Title.vue"
 import CryptoTable from "@/components/CryptoTable.vue"
@@ -237,7 +238,9 @@ const onRowClick = (index: number, row: TokenBalance) => {
 							class="full-height"
 							@row-click="
 								(_, row) => {
-									onTxClick(row)
+									if (!disabledTransactions) {
+										onTxClick(row)
+									}
 								}
 							"
 						>

@@ -5,3 +5,8 @@
         image-rendering: crisp-edges;
     }
 }
+
+.q-img__image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
