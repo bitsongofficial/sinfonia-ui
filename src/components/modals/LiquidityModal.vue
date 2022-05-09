@@ -16,6 +16,19 @@ const props = defineProps<{
 	pool: Pool
 }>()
 
+console.log(props.pool.availableLPBalances)
+
+const balance = computed(() => [...props.pool.availableLPBalances].pop())
+
+const lpAvailable = computed(() => {
+	console.log(balance.value)
+	if (balance.value) {
+		return gtnZero(balance.value.amount)
+	}
+
+	return false
+})
+
 const emit = defineEmits<{
 	(e: "update:modelValue", value: boolean): void
 }>()
@@ -63,6 +76,7 @@ const removePercentInputRules = [
 	(val) => gtnZero(val) || "Amount must be a greater then zero",
 	(val) => Number(val) <= 100 || "Amount must be less then 100",
 ]
+
 let inputReferences: any[] = []
 const setInputRef = (el) => {
 	if (el) {
@@ -252,7 +266,13 @@ const inputChangeEvent = (coin, value) => {
 					</div>
 				</div>
 				<div class="flex justify-center">
-					<LargeButton type="submit" fit :padding-y="14" class="q-px-52">
+					<LargeButton
+						type="submit"
+						fit
+						:padding-y="14"
+						class="q-px-52"
+						:disable="!lpAvailable"
+					>
 						<span class="text-uppercase"> Remove liquidity </span>
 					</LargeButton>
 				</div>
