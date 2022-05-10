@@ -80,7 +80,11 @@ const poolsStats = computed(() => {
 		stats.maxApr = BigNumber.max(fantokenPool.APR, stats.maxApr).toString()
 		stats.avgApr = new BigNumber(stats.avgApr).plus(fantokenPool.APR).toString()
 
-		for (const coin of fantokenPool.coins) {
+		const coins = fantokenPool.coins.filter(
+			(coin) => coin.token.coinDenom === fantoken.value?.ibc.osmosis.destDenom
+		)
+
+		for (const coin of coins) {
 			stats.bonded = new BigNumber(stats.bonded).plus(coin.token.amount).toString()
 			const bondendFiat = new BigNumber(stats.bonded).multipliedBy(
 				fantoken.value?.price ?? 0
@@ -98,16 +102,19 @@ const poolsStats = computed(() => {
 	return stats
 })
 
-const bondedPercentage = computed(() => {
+const bondedAmount = computed(() => {
 	if (balance.value) {
 		return new BigNumber(poolsStats.value.bonded)
 			.div(balance.value.circulatingSupply ?? "1")
-			.multipliedBy(100)
 			.toNumber()
 	}
 
 	return 0
 })
+
+const bondedPercentage = computed(() =>
+	new BigNumber(bondedAmount.value).multipliedBy(100).toNumber()
+)
 
 const tabs = computed(() => {
 	const links: FantokenTab[] = [{ name: "analytics", label: "Analytics" }]
@@ -467,9 +474,6 @@ const subscribeMailchimp = () => {
 										</div>
 										<div class="flex justify-between items-center text-center q-mb-26">
 											<p class="fs-18">{{ balancedCurrency(poolsStats.bondedFiat) }} $</p>
-											<p class="fs-10 opacity-50">
-												{{ fantoken.symbol }}
-											</p>
 										</div>
 										<div class="flex">
 											<PercentageWithImage
@@ -479,7 +483,7 @@ const subscribeMailchimp = () => {
 											></PercentageWithImage>
 											<div class="text-weight-medium">
 												<p class="fs-12 text-uppercase q-mb-10 opacity-50">% bonded</p>
-												<p class="fs-18">{{ percentageRange(bondedPercentage) }}%</p>
+												<p class="fs-18">{{ percentageRange(bondedAmount) }}%</p>
 											</div>
 										</div>
 									</CardWithHeader>
@@ -490,7 +494,6 @@ const subscribeMailchimp = () => {
 									<PercentageWithImage
 										alt-style
 										full
-										negative
 										class="full-width full-height--15"
 										imageSize="48px"
 										:thickness="0.35"
