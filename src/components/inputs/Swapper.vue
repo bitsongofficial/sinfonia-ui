@@ -290,7 +290,7 @@ const slippage = computed(() => {
 	if (estimatedHopSwap.value) {
 		const { slippage } = estimatedHopSwap.value
 
-		return slippage.mul(100).toString()
+		return slippage.toString()
 	}
 
 	return "0"
@@ -314,7 +314,7 @@ const setSlippage = (index: string) => {
 }
 
 const invalidSlippage = computed(() => {
-	return new BigNumber(slippage.value).gt(maxSlippage.value)
+	return new BigNumber(slippage.value).multipliedBy(100).gt(maxSlippage.value)
 })
 
 const swapRoutes = computed(() => {
