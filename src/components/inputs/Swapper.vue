@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-	smallNumberRate,
-	gtnZero,
-	isNaN,
-	compareBalance,
-} from "@/common/numbers"
+import { smallNumberRate } from "@/common/numbers"
 import { computed, ref, watch, onUnmounted, onMounted } from "vue"
 import {
 	calculateRouteSpotPrice,
@@ -15,6 +10,7 @@ import {
 } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
+import { useForm } from "vee-validate"
 import InlineButton from "@/components/buttons/InlineButton.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import InformativeTooltip from "@/components/tooltips/InformativeTooltip.vue"
@@ -25,7 +21,7 @@ import Decimal from "decimal.js"
 import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
-import SwapperField from "./SwapperField.vue"
+import SwapperField from "@/components/inputs/SwapperField.vue"
 
 const bankStore = useBank()
 const poolsStore = usePools()
@@ -45,8 +41,6 @@ const emit = defineEmits<{
 	(e: "update:coin2", value: TokenBalance | null): void
 }>()
 
-const swapButtonText = "Swap tokens"
-
 const fromCoin = computed<TokenBalance | null>({
 	get() {
 		return props.coin1
@@ -56,28 +50,63 @@ const fromCoin = computed<TokenBalance | null>({
 	},
 })
 
-const updateFromAmount = () => {
-	const swapAmountBn = new BigNumber(swapAmount.value)
+const available = computed(() => {
+	const osmosisToken = configStore.osmosisToken
 
-	if (swapAmount.value.length > 0) {
-		if (!swapAmountBn.isNaN()) {
-			toAmount.value = swapAmountBn.div(swapRatio.value).toFixed(6)
+	if (osmosisToken && fromCoin.value && fromCoin.value.chains) {
+		const chain = fromCoin.value.chains.find(
+			(el) => el.symbol === osmosisToken.symbol
+		)
+
+		if (chain) {
+			return chain.available ? new BigNumber(chain.available).toFixed(6) : "0"
 		}
 	}
 
-	field1.value.validate(swapAmount.value)
+	return "0"
+})
+
+const validationSchema = computed(() => ({
+	fromAmount: {
+		required: true,
+		isNaN: true,
+		gtnZero: true,
+		compareBalance: { compare: available.value },
+	},
+	toAmount: {
+		isNaN: true,
+		gtnZero: true,
+	},
+}))
+
+const initialValues = {
+	fromAmount: "0",
+	toAmount: "0",
+}
+
+const { handleSubmit, setFieldValue, values, meta } = useForm({
+	initialValues,
+	validationSchema,
+})
+
+const updateFromAmount = () => {
+	const swapAmountBn = new BigNumber(values.fromAmount)
+
+	if (values.fromAmount.length > 0) {
+		if (!swapAmountBn.isNaN()) {
+			setFieldValue("toAmount", swapAmountBn.div(swapRatio.value).toFixed(6))
+		}
+	}
 }
 
 const updateToAmount = () => {
-	const toAmountBn = new BigNumber(toAmount.value)
+	const toAmountBn = new BigNumber(values.toAmount)
 
-	if (toAmount.value.length > 0) {
+	if (values.toAmount.length > 0) {
 		if (!toAmountBn.isNaN()) {
-			swapAmount.value = toAmountBn.div(1 / swapRatio.value).toFixed(6)
+			setFieldValue("fromAmount", toAmountBn.div(1 / swapRatio.value).toFixed(6))
 		}
 	}
-
-	field2.value.validate(toAmount.value)
 }
 
 const toCoin = computed<TokenBalance | null>({
@@ -188,9 +217,6 @@ onUnmounted(() => {
 	balancesWatcher()
 })
 
-const field1 = ref()
-const field2 = ref()
-
 const swapRatio = computed<number>(() => {
 	if (fromCoin.value) {
 		return calculateRouteSpotPrice(fromCoin.value, swapRoutes.value)
@@ -199,64 +225,29 @@ const swapRatio = computed<number>(() => {
 	return 0
 })
 
-const swapAmount = ref("0")
-const toAmount = ref("0")
+const fromAmountChange = (value: string) => {
+	const amount = new BigNumber(value)
 
-const rule1 = [
-	(val) => !!val || "Required field",
-	(val) => !isNaN(val) || "Amount must be a decimal value",
-	(val) => gtnZero(val) || "Amount must be a greater then zero",
-	(val) => compareBalance(val, available.value) || "You don't have enough coins",
-]
-
-const swapAmountWrapper = computed<string>({
-	get() {
-		return swapAmount.value
-	},
-	set(value) {
-		const amount = new BigNumber(value)
-
-		if (value.length > 0) {
-			if (!amount.isNaN()) {
-				swapAmount.value = value
-				toAmount.value = amount.div(swapRatio.value).toFixed(6)
-			}
-		} else {
-			swapAmount.value = ""
+	if (value.length > 0) {
+		if (!amount.isNaN()) {
+			setFieldValue("toAmount", amount.div(swapRatio.value).toFixed(6))
 		}
-		field2.value.validate(toAmount.value)
-	},
-})
+	}
+}
 
-const rule2 = [
-	(val) => !!val || "Required field",
-	(val) => !isNaN(val) || "Amount must be a decimal value",
-	(val) => gtnZero(val) || "Amount must be a greater then zero",
-]
+const toAmountChange = (value: string) => {
+	const amount = new BigNumber(value)
 
-const toAmountWrapper = computed<string>({
-	get() {
-		return toAmount.value
-	},
-	set(value) {
-		const amount = new BigNumber(value)
-
-		if (value.length > 0) {
-			if (!amount.isNaN()) {
-				toAmount.value = value
-				swapAmount.value = amount.div(1 / swapRatio.value).toFixed(6)
-			}
-		} else {
-			toAmount.value = ""
+	if (value.length > 0) {
+		if (!amount.isNaN()) {
+			setFieldValue("fromAmount", amount.div(1 / swapRatio.value).toFixed(6))
 		}
-
-		field1.value.validate(swapAmount.value)
-	},
-})
+	}
+}
 
 const swapAmountFiat = computed<string>(() => {
-	if (swapAmountWrapper.value.length > 0) {
-		return new Decimal(swapAmountWrapper.value)
+	if (values.fromAmount.length > 0) {
+		return new Decimal(values.fromAmount)
 			.mul(fromCoin.value?.price ?? "0")
 			.toString()
 	}
@@ -266,8 +257,8 @@ const swapAmountFiat = computed<string>(() => {
 
 const swapCoin = computed(() => {
 	try {
-		if (fromCoin.value && swapAmountWrapper.value.length > 0) {
-			return amountIBCFromCoin(swapAmountWrapper.value, fromCoin.value)
+		if (fromCoin.value && values.fromAmount.length > 0) {
+			return amountIBCFromCoin(values.fromAmount, fromCoin.value)
 		}
 	} catch (error) {
 		return undefined
@@ -302,7 +293,6 @@ const invert = () => {
 	toCoin.value = tmp.value
 }
 
-const show = ref(false)
 const slippageExpanded = ref(false)
 const maxSlippage = ref("1")
 const maxSlippageOption = ["1", "3", "5"]
@@ -325,27 +315,11 @@ const swapRoutes = computed(() => {
 	return []
 })
 
-const available = computed(() => {
-	const osmosisToken = configStore.osmosisToken
-
-	if (osmosisToken && fromCoin.value && fromCoin.value.chains) {
-		const chain = fromCoin.value.chains.find(
-			(el) => el.symbol === osmosisToken.symbol
-		)
-
-		if (chain) {
-			return chain.available ? new BigNumber(chain.available).toFixed(6) : "0"
-		}
-	}
-
-	return "0"
-})
-
 const setMaxAmount = () => {
-	swapAmountWrapper.value = available.value
+	setFieldValue("fromAmount", available.value)
 }
 
-const onSubmit = () => {
+const onSubmit = handleSubmit(() => {
 	if (
 		swapCoin.value &&
 		estimatedHopSwap.value &&
@@ -368,51 +342,49 @@ const onSubmit = () => {
 			swapCoin.value,
 			tokenOutMinAmount,
 			fromCoin.value,
-			swapAmount.value,
+			values.fromAmount,
 			toCoin.value,
-			toAmount.value
+			values.toAmount
 		)
 	}
-}
+})
 </script>
 
 <template>
-	<q-form @submit="onSubmit">
+	<div>
 		<div class="flex justify-between items-center q-mb-20">
 			<p class="fs-14 opacity-30">Swap from</p>
 			<InlineButton @click="invert" class="lt-sm">
-				<p class="fs-12 q-mr-12">{{ swapButtonText }}</p>
+				<p class="fs-12 q-mr-12">Swap tokens</p>
 				<span class="fs-10 text-primary">
 					<q-icon :name="resolveIcon('swap', 21, 16)" />
 				</span>
 			</InlineButton>
 		</div>
 		<SwapperField
+			name="fromAmount"
 			v-model:coin="fromCoin"
-			v-model="swapAmountWrapper"
 			show-max
 			:swap-amount-fiat="swapAmountFiat"
 			:options="fromSwappableBalances"
-			:rules="rule1"
 			@max-click="setMaxAmount"
-			ref="field1"
+			@update:model-value="fromAmountChange"
 		/>
 		<div class="flex justify-between q-mt-20 q-mb-16 items-center">
 			<p class="fs-14 opacity-30">Swap to</p>
 			<InlineButton @click="invert" class="gt-xs">
-				<p class="fs-12 q-mr-12">{{ swapButtonText }}</p>
+				<p class="fs-12 q-mr-12">Swap tokens</p>
 				<span class="fs-10 text-primary">
 					<q-icon :name="resolveIcon('swap', 21, 16)" />
 				</span>
 			</InlineButton>
 		</div>
 		<SwapperField
+			name="toAmount"
 			v-model:coin="toCoin"
-			v-model="toAmountWrapper"
-			:options="toSwappableBalances"
-			:rules="rule2"
-			ref="field2"
 			class="q-mb-24"
+			:options="toSwappableBalances"
+			@update:model-value="toAmountChange"
 		/>
 		<div
 			class="q-py-15 q-px-20 q-px-md-30 bg-white-5 light:bg-gray-light rounded-25 fs-14 q-mb-57 q-mb-xs-27"
@@ -523,12 +495,13 @@ const onSubmit = () => {
 				<LargeButton
 					fit
 					type="submit"
-					:disable="!authStore.session"
+					@click="onSubmit"
+					:disable="!authStore.session || !meta.valid"
 					class="q-px-xs-70"
 				>
 					Swap Tokens
 				</LargeButton>
 			</div>
 		</div>
-	</q-form>
+	</div>
 </template>

@@ -1,48 +1,33 @@
 <script setup lang="ts">
-import { balancedCurrency, gtnZero, isNaN } from "@/common"
-import { validateRules } from "@/common/inputs"
+import { balancedCurrency } from "@/common"
 import { TokenBalance } from "@/types"
 import { ValidationRule } from "quasar"
-import { computed, ref } from "vue"
-import CardDark from "../cards/CardDark.vue"
-import SmallButton from "../buttons/SmallButton.vue"
-import CoinSelect from "./CoinSelect.vue"
+import { computed, toRef } from "vue"
+import { useField } from "vee-validate"
+import CardDark from "@/components/cards/CardDark.vue"
+import SmallButton from "@/components/buttons/SmallButton.vue"
+import CoinSelect from "@/components/inputs/CoinSelect.vue"
 
-const props = defineProps<{
-	modelValue: string
-	coin: TokenBalance | null
-	options: TokenBalance[]
-	swapAmountFiat?: string
-	showInput?: boolean
-	showMax?: boolean
-	rules?: ValidationRule<any>[] | undefined
-}>()
+const props = withDefaults(
+	defineProps<{
+		name: string
+		value?: string
+		coin: TokenBalance | null
+		options: TokenBalance[]
+		swapAmountFiat?: string
+		showInput?: boolean
+		showMax?: boolean
+	}>(),
+	{
+		value: "",
+	}
+)
 
 const emit = defineEmits<{
-	(e: "update:modelValue", value: string | undefined): void
+	(e: "update:modelValue", value: string): void
 	(e: "update:coin", value: TokenBalance | null): void
-	(e: "errorStatusChange", value: boolean): void
 	(e: "maxClick"): void
 }>()
-
-const errorMessage = ref("")
-const hasError = computed(() => errorMessage.value != "")
-
-const validate = (val = value.value) => {
-	validateRules(props.rules, val, errorMessage)
-}
-
-const value = computed<string | undefined>({
-	get() {
-		return props.modelValue
-	},
-	set(value) {
-		validate(value)
-		emit("errorStatusChange", hasError.value)
-		if (value == "" || (value && !isNaN(value) && gtnZero(value)))
-			emit("update:modelValue", value)
-	},
-})
 
 const coinWrapper = computed<TokenBalance | null>({
 	get() {
@@ -53,19 +38,30 @@ const coinWrapper = computed<TokenBalance | null>({
 	},
 })
 
-defineExpose({
-	validate,
-})
+const name = toRef(props, "name")
+
+const { value, errorMessage, handleBlur, handleChange, meta } = useField(
+	name,
+	undefined,
+	{
+		initialValue: props.value,
+	}
+)
+
+const updateModelValue = (e: unknown) => {
+	handleChange(e)
+	emit("update:modelValue", value.value)
+}
 </script>
 <template>
 	<div>
 		<CardDark
 			:padding-x="0"
 			:padding-y="0"
-			:class="
-				(hasError ? 'border-primary ' : '') +
-				'light:bg-white/50 light:shadow-none q-px-22 q-py-18 q-px-md-32 q-py-md-22'
-			"
+			class="light:bg-white/50 light:shadow-none q-px-22 q-py-18 q-px-md-32 q-py-md-22"
+			:class="{
+				'border-primary': errorMessage,
+			}"
 		>
 			<div class="flex justify-between no-wrap column-xs">
 				<div class="flex-1 flex justify-between items-center q-py-6 no-wrap">
@@ -76,7 +72,9 @@ defineExpose({
 							hide-bottom-space
 							class="fs-24 q-mb-0 text-white input-no-append"
 							input-class="q-py-0"
-							:rules="rules"
+							:error="errorMessage !== undefined"
+							@update:model-value="updateModelValue($event)"
+							@blur="handleBlur"
 						/>
 						<p
 							v-if="swapAmountFiat && coin"
@@ -95,7 +93,7 @@ defineExpose({
 				</div>
 			</div>
 		</CardDark>
-		<p v-if="hasError" class="text-primary q-mt-8">
+		<p v-if="errorMessage" class="text-primary q-mt-8">
 			{{ errorMessage }}
 		</p>
 	</div>
