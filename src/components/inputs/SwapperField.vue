@@ -11,6 +11,7 @@ import CoinSelect from "@/components/inputs/CoinSelect.vue"
 const props = withDefaults(
 	defineProps<{
 		name: string
+		placeholder?: string
 		value?: string
 		coin: TokenBalance | null
 		options: TokenBalance[]
@@ -20,6 +21,7 @@ const props = withDefaults(
 	}>(),
 	{
 		value: "",
+		placeholder: "0",
 	}
 )
 
@@ -73,6 +75,7 @@ const updateModelValue = (e: unknown) => {
 							class="fs-24 q-mb-0 text-white input-no-append"
 							input-class="q-py-0"
 							:error="errorMessage !== undefined"
+							:placeholder="placeholder"
 							@update:model-value="updateModelValue($event)"
 							@blur="handleBlur"
 						/>

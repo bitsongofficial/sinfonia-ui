@@ -87,7 +87,7 @@ const formValid = computed(() => {
 					fit
 					:padding-y="16"
 					class="q-px-66"
-					:disabled="!formValid"
+					:disable="!formValid"
 				>
 					<span class="text-uppercase"> Bond tokens </span>
 				</LargeButton>

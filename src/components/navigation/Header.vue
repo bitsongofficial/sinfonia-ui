@@ -27,7 +27,7 @@ const isProduction = import.meta.env.VITE_MODE
 				<div>
 					<StandardButton
 						v-if="isProduction === 'testnet' && authStore.session"
-						:disabled="bankStore.loadingFaucet"
+						:disable="bankStore.loadingFaucet"
 						@click="bankStore.getFaucet"
 						with-icon
 						:icon="resolveIcon('coin', 24, 24)"

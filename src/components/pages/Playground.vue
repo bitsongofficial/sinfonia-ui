@@ -193,7 +193,7 @@ const nextPage = () => {
 				:padding-x="32"
 				:padding-y="18"
 				@click="onTwitterClick"
-				:disabled="addressAlreadyRegistered"
+				:disable="addressAlreadyRegistered"
 			>
 				<div class="flex items-center">
 					<span class="q-mr-20" v-if="!addressAlreadyRegistered">

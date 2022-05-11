@@ -630,7 +630,7 @@ const subscribeMailchimp = () => {
 							<LargeButton
 								fit
 								type="submit"
-								:disabled="mailchimpStore.loading || !newsletter"
+								:disable="mailchimpStore.loading || !newsletter"
 							>
 								Get notified
 							</LargeButton>
