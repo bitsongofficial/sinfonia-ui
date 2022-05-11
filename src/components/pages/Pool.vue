@@ -7,7 +7,7 @@ import {
 	gtnZero,
 } from "@/common/numbers"
 import { TableColumn, LockableDurationWithApr, LockCoin } from "@/types"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { BigNumber } from "bignumber.js"
 import { reduce } from "lodash"
@@ -36,6 +36,7 @@ const poolsStore = usePools()
 const authStore = useAuth()
 const configStore = useConfig()
 const route = useRoute()
+const router = useRouter()
 const id = route.params["id"] as string
 const openBondModal = ref(false)
 const openAddRemoveModal = ref(false)
@@ -218,6 +219,18 @@ onMounted(() => {
 onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
 })
+
+const onSwapClick = () => {
+	if (pool.value) {
+		const coins = [...pool.value.coins]
+		const fromCoin = coins.shift()
+		const toCoin = coins.shift()
+
+		if (fromCoin && toCoin) {
+			router.push(`/swap?from=${fromCoin.token.symbol}&to=${toCoin.token.symbol}`)
+		}
+	}
+}
 </script>
 
 <template>
@@ -228,7 +241,9 @@ onUnmounted(() => {
 				<h1 class="fs-27">#{{ pool.id }}: {{ poolTokensName }}</h1>
 			</div>
 			<div class="flex items-center">
-				<OutlineButton class="q-mr-12" to="/swap">Swap Tokens</OutlineButton>
+				<OutlineButton class="q-mr-12" @click="onSwapClick">
+					Swap Tokens
+				</OutlineButton>
 				<StandardButton
 					@click="openAddRemoveModal = true"
 					:disable="!authStore.session"

@@ -9,7 +9,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { resolveIcon } from "@/common/resolvers"
 import { TableColumn } from "@/types/table"
 import { Pool, FantokenTab } from "@/types"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import StandardSelect from "@/components/inputs/StandardSelect.vue"
 import Tabs from "@/components/Tabs.vue"
 import Progress from "@/components/Progress.vue"
@@ -32,6 +32,7 @@ const bankStore = useBank()
 const configStore = useConfig()
 const mailchimpStore = useMailchimp()
 const route = useRoute()
+const router = useRouter()
 const id = route.params["id"] as string
 
 const fantoken = computed(() => configStore.findFantokenByDenom(id))
@@ -235,6 +236,22 @@ const subscribeMailchimp = () => {
 		)
 	}
 }
+
+const onSwapClick = () => {
+	if (fantokenPools.value) {
+		const pool = [...fantokenPools.value].shift()
+
+		if (pool) {
+			const coins = [...pool.coins]
+			const fromCoin = coins.shift()
+			const toCoin = coins.shift()
+
+			if (fromCoin && toCoin) {
+				router.push(`/swap?from=${fromCoin.token.symbol}&to=${toCoin.token.symbol}`)
+			}
+		}
+	}
+}
 </script>
 
 <template>
@@ -267,8 +284,8 @@ const subscribeMailchimp = () => {
 								:padding-x="30"
 								:padding-y="14"
 								class="q-ml-xs-0 q-ml-46"
-								to="/swap"
 								fit
+								@click="onSwapClick"
 							>
 								Swap Tokens
 							</LargeButton>
