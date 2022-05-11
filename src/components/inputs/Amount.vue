@@ -5,9 +5,6 @@ import SmallButton from "@/components/buttons/SmallButton.vue"
 import { validateRules } from "@/common/inputs"
 import { TokenWithAddress } from "@/types"
 import { useMaxAmount } from "@/hooks/useMaxAmount"
-import useConfig from "@/store/config"
-
-const configStore = useConfig()
 
 const props = defineProps<{
 	modelValue: string
@@ -44,6 +41,8 @@ const { getMaxAmount } = useMaxAmount(available, network)
 const validate = (value) => {
 	hasError.value = validateRules(rules, value, errorMessage)
 }
+
+const availableGtnZero = computed(() => gtnZero(available.value ?? "0"))
 
 const value = computed({
 	get(): string {
@@ -86,6 +85,7 @@ defineExpose({
 					label="max"
 					xs
 					@click="value = network ? getMaxAmount() : max ?? '0'"
+					:disable="!availableGtnZero"
 				/>
 			</div>
 		</div>

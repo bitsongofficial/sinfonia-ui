@@ -8,6 +8,7 @@ import {
 	amountFromCoin,
 	amountIBCFromCoin,
 	gteComparePercentage,
+	gtnZero,
 } from "@/common"
 import { compact } from "lodash"
 import { Coin } from "@cosmjs/proto-signing"
@@ -181,12 +182,19 @@ const onSubmit = () => {
 	}
 }
 
+const availableGtnZero = computed(() => gtnZero(available.value))
+
 const bigTransfer = computed({
 	get(): boolean {
-		return gteComparePercentage(amount.value, available.value)
+		if (availableGtnZero.value) {
+			return gteComparePercentage(amount.value, available.value)
+		}
+
+		return false
 	},
 	set(value: boolean) {
 		bigTransferInternal.value = value
+
 		if (value) {
 			showBigTransferTooltip.value = value
 			hasAmountError.value = true
