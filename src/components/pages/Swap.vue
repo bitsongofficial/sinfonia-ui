@@ -63,6 +63,12 @@ const columns: TableColumn[] = [
 	},
 ]
 
+const pagination = {
+	rowsPerPage: -1,
+	sortBy: "price",
+	descending: true,
+}
+
 const transactionColumns: TableColumn[] = [
 	{
 		name: "token",
@@ -194,6 +200,7 @@ const onRowClick = (index: number, row: TokenBalance) => {
 						<CryptoTable
 							:rows="configStore.fantokens"
 							:columns="columns"
+							:pagination="pagination"
 							no-background
 							hide-header
 							class="small-rows full-height"
