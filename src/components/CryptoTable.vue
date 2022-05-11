@@ -21,7 +21,7 @@ defineProps<{
 					<q-avatar size="30px" class="q-mr-22">
 						<img :src="slotProps.row.logos.default" :alt="slotProps.row.name" />
 					</q-avatar>
-					<p class="text-weight-medium fs-15">
+					<p class="text-weight-medium fs-15 white-space-pre-line">
 						{{ slotProps.row.name }}
 					</p>
 				</div>
