@@ -80,8 +80,8 @@ const validationSchema = computed(() => ({
 }))
 
 const initialValues = {
-	fromAmount: "0",
-	toAmount: "0",
+	fromAmount: "",
+	toAmount: "",
 }
 
 const { handleSubmit, setFieldValue, values, meta } = useForm({
@@ -246,10 +246,14 @@ const toAmountChange = (value: string) => {
 }
 
 const swapAmountFiat = computed<string>(() => {
-	if (values.fromAmount.length > 0) {
-		return new Decimal(values.fromAmount)
-			.mul(fromCoin.value?.price ?? "0")
-			.toString()
+	try {
+		if (values.fromAmount.length > 0) {
+			return new Decimal(values.fromAmount)
+				.mul(fromCoin.value?.price ?? "0")
+				.toString()
+		}
+	} catch (error) {
+		return "0"
 	}
 
 	return "0"
@@ -406,8 +410,14 @@ const onSubmit = handleSubmit(() => {
 				</q-icon> -->
 				</div>
 				<div class="flex">
-					<p :class="'q-mr-14' + (invalidSlippage ? ' text-primary' : '')">
-						{{ estimatedHopSwap ? percentageRange(slippage) : "Inf" }} %
+					<p
+						:class="'q-mr-14' + (invalidSlippage ? ' text-primary' : '')"
+						v-if="values.fromAmount && values.toAmount"
+					>
+						{{ estimatedHopSwap ? percentageRange(slippage) : "inf" }} %
+					</p>
+					<p :class="'q-mr-14' + (invalidSlippage ? ' text-primary' : '')" v-else>
+						0 %
 					</p>
 					<q-icon
 						:name="resolveIcon('dropdown', 11, 7)"
