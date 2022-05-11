@@ -90,6 +90,10 @@ const useTransactionManager = defineStore("transactionManager", {
 								loader()
 							}
 
+							if (txId) {
+								this.updateTx(txId, undefined, TransactionStatus.FAILED)
+							}
+
 							notifyError("Transaction Failed", (error as Error).message)
 						})
 
@@ -160,6 +164,10 @@ const useTransactionManager = defineStore("transactionManager", {
 							loader()
 						}
 
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
+						}
+
 						notifyError("Transaction Failed", (error as Error).message)
 					})
 
@@ -223,6 +231,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					manager.on("onerror", (error: any) => {
 						if (loader) {
 							loader()
+						}
+
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
 						}
 
 						notifyError("Transaction Failed", (error as Error).message)
@@ -299,6 +311,10 @@ const useTransactionManager = defineStore("transactionManager", {
 							loader()
 						}
 
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
+						}
+
 						notifyError("Transaction Failed", (error as Error).message)
 					})
 
@@ -367,6 +383,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					manager.on("onerror", (error: any) => {
 						if (loader) {
 							loader()
+						}
+
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
 						}
 
 						notifyError("Transaction Failed", (error as Error).message)
@@ -456,6 +476,10 @@ const useTransactionManager = defineStore("transactionManager", {
 							loader()
 						}
 
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
+						}
+
 						notifyError("Transaction Failed", (error as Error).message)
 					})
 
@@ -526,6 +550,10 @@ const useTransactionManager = defineStore("transactionManager", {
 							loader()
 						}
 
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
+						}
+
 						notifyError("Transaction Failed", (error as Error).message)
 					})
 
@@ -573,7 +601,7 @@ const useTransactionManager = defineStore("transactionManager", {
 		},
 		updateTx(
 			id: string,
-			tx: DeliverTxResponse,
+			tx: DeliverTxResponse | undefined,
 			status = TransactionStatus.PENDING
 		) {
 			const transactions = [...this.transactions].map((transaction) => {
