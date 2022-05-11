@@ -18,10 +18,12 @@ const props = withDefaults(
 		swapAmountFiat?: string
 		showInput?: boolean
 		showMax?: boolean
+		disableMax?: boolean
 	}>(),
 	{
 		value: "",
 		placeholder: "0",
+		disableMax: false,
 	}
 )
 
@@ -87,7 +89,12 @@ const updateModelValue = (e: unknown) => {
 						</p>
 					</div>
 					<div v-if="showMax">
-						<SmallButton xs label="MAX" @click="$emit('maxClick')"></SmallButton>
+						<SmallButton
+							xs
+							label="MAX"
+							:disable="disableMax"
+							@click="$emit('maxClick')"
+						></SmallButton>
 					</div>
 				</div>
 				<div class="vertical-separator q-mx-28 gt-xs"></div>

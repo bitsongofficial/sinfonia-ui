@@ -7,6 +7,7 @@ import {
 	amountIBCFromCoin,
 	percentageRange,
 	calculateSlippageTokenIn,
+	gtnZero,
 } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
@@ -374,6 +375,7 @@ const onSubmit = handleSubmit(() => {
 			show-max
 			:swap-amount-fiat="swapAmountFiat"
 			:options="fromSwappableBalances"
+			:disable-max="!gtnZero(available)"
 			@max-click="setMaxAmount"
 			@update:model-value="fromAmountChange"
 		/>
