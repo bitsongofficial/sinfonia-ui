@@ -89,22 +89,22 @@ const { handleSubmit, setFieldValue, values, meta } = useForm({
 	validationSchema,
 })
 
-const updateFromAmount = () => {
-	const swapAmountBn = new BigNumber(values.fromAmount)
+const updateFromAmount = (swap = false) => {
+	const fromAmount = new BigNumber(swap ? values.toAmount : values.fromAmount)
 
 	if (values.fromAmount.length > 0) {
-		if (!swapAmountBn.isNaN()) {
-			setFieldValue("toAmount", swapAmountBn.div(swapRatio.value).toFixed(6))
+		if (!fromAmount.isNaN()) {
+			setFieldValue("toAmount", fromAmount.div(swapRatio.value).toFixed(6))
 		}
 	}
 }
 
-const updateToAmount = () => {
-	const toAmountBn = new BigNumber(values.toAmount)
+const updateToAmount = (swap = false) => {
+	const toAmount = new BigNumber(swap ? values.fromAmount : values.toAmount)
 
 	if (values.toAmount.length > 0) {
-		if (!toAmountBn.isNaN()) {
-			setFieldValue("fromAmount", toAmountBn.div(1 / swapRatio.value).toFixed(6))
+		if (!toAmount.isNaN()) {
+			setFieldValue("fromAmount", toAmount.div(1 / swapRatio.value).toFixed(6))
 		}
 	}
 }
@@ -121,16 +121,18 @@ const toCoin = computed<TokenBalance | null>({
 const coinsWatcher = watch(
 	() => [fromCoin.value, toCoin.value],
 	([oldFrom, oldTo], [newFrom, newTo]) => {
-		if (oldFrom && newFrom) {
-			if (oldFrom.symbol !== newFrom.symbol) {
-				updateToAmount()
-			}
+		const fromChanged =
+			oldFrom !== null && newFrom !== null && oldFrom.symbol !== newFrom.symbol
+		const toChanged =
+			oldTo !== null && newTo !== null && oldTo.symbol !== newTo.symbol
+		const swap = fromChanged && toChanged
+
+		if (fromChanged) {
+			updateToAmount(swap)
 		}
 
-		if (oldTo && newTo) {
-			if (oldTo.symbol !== newTo.symbol) {
-				updateFromAmount()
-			}
+		if (toChanged) {
+			updateFromAmount(swap)
 		}
 	}
 )
@@ -320,7 +322,8 @@ const swapRoutes = computed(() => {
 })
 
 const setMaxAmount = () => {
-	setFieldValue("fromAmount", available.value)
+	setFieldValue("fromAmount", available.value, { force: true })
+	fromAmountChange(available.value)
 }
 
 const onSubmit = handleSubmit(() => {
