@@ -149,13 +149,6 @@ const newsletter = ref(false)
 
 const poolsColumns: TableColumn[] = [
 	{
-		name: "index",
-		required: true,
-		label: "",
-		align: "left",
-		field: "index",
-	},
-	{
 		name: "tokenPair",
 		align: "left",
 		label: fantoken.value?.symbol + " Pools",
@@ -577,16 +570,12 @@ const subscribeMailchimp = () => {
 						}
 					"
 				>
-					<template v-slot:body-cell-index="slotProps">
-						<q-td :props="slotProps">
-							<span class="opacity-40">
-								{{ slotProps.rowIndex + 1 }}
-							</span>
-						</q-td>
-					</template>
 					<template v-slot:body-cell-tokenPair="slotProps">
 						<q-td :props="slotProps">
 							<div class="flex no-wrap items-center">
+								<span class="opacity-40 q-mr-42">
+									{{ slotProps.rowIndex + 1 }}
+								</span>
 								<ImagePair
 									:coins="slotProps.row.coins"
 									class="q-mr-30"
