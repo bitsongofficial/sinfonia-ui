@@ -289,10 +289,10 @@ export const gaugeToGaugeToken = (
 
 	if (epochDuration) {
 		const duration = parse({
-			seconds: epochDuration.duration * numEpochsPaidOver,
+			seconds: epochDuration.duration * leftEpochs,
 		})
 
-		endTime = apply(parseISO(gauge.start_time), duration).toISOString()
+		endTime = apply(new Date(), duration).toISOString()
 	}
 
 	return {
