@@ -6,22 +6,23 @@ import {
 	LockableDuration,
 	LockableDurationWithApr,
 	LockCoin,
+	LockedGauge,
 	OsmosisPool,
 	OsmosisPoolAsset,
 	Pool,
 	PoolAsset,
 	TokenBalance,
 } from "@/types"
-import { amountToCoin, gtnZero, toDecimalGamm, toViewDenom } from "./numbers"
+import { amountToCoin, toDecimalGamm, toViewDenom } from "./numbers"
 import { BigNumber } from "bignumber.js"
-import { toMilliseconds } from "duration-fns"
+import { toMilliseconds, toSeconds } from "duration-fns"
 import useBank from "@/store/bank"
 import useConfig from "@/store/config"
 import usePools from "@/store/pools"
 import usePrices from "@/store/prices"
 import { mapLockableDuration } from "./duration"
 import { compact, max, reduce, sortBy, uniqBy } from "lodash"
-import { parseISO } from "date-fns"
+import { getDaysInYear, parseISO } from "date-fns"
 import { apply, parse } from "duration-fns"
 import { Coin } from "@cosmjs/proto-signing"
 import { unboundingEndTimeStart } from "./date"
@@ -431,10 +432,25 @@ export const calculateTotalExternalApr = (
 		gauge.coins
 	)
 
+	const lockExtraGauge = poolsStore.lockedExtraGagues.find(
+		(bondedGauge) => bondedGauge.gaugeID === extraGauge?.id
+	)
+
+	const epochDuration = poolsStore.epochDuration
+
 	let apr = new BigNumber("0")
 
-	if (extraGauge) {
-		apr = new BigNumber(getExternalPoolApr(extraGauge, liquidityPool, tokens))
+	if (extraGauge && lockExtraGauge && epochDuration) {
+		apr = new BigNumber(
+			getExternalPoolApr(
+				pool,
+				extraGauge,
+				lockExtraGauge,
+				epochDuration,
+				liquidityPool,
+				tokens
+			)
+		)
 
 		for (const lockableDuration of poolsStore.lockableDuration) {
 			if (lockableDuration.milliseconds >= duration.milliseconds) {
@@ -447,8 +463,21 @@ export const calculateTotalExternalApr = (
 				gauge.coins
 			)
 
-			if (otherGauge) {
-				apr = apr.plus(getExternalPoolApr(otherGauge, liquidityPool, tokens))
+			const lockExtraGauge = poolsStore.lockedExtraGagues.find(
+				(bondedGauge) => bondedGauge.gaugeID === otherGauge?.id
+			)
+
+			if (otherGauge && lockExtraGauge) {
+				apr = apr.plus(
+					getExternalPoolApr(
+						pool,
+						otherGauge,
+						lockExtraGauge,
+						epochDuration,
+						liquidityPool,
+						tokens
+					)
+				)
 			}
 		}
 	}
@@ -457,15 +486,21 @@ export const calculateTotalExternalApr = (
 }
 
 export const getExternalPoolApr = (
+	pool: OsmosisPool,
 	gauge: Gauge,
+	lpLockedForGauge: LockedGauge,
+	epochDuration: LockableDuration,
 	liquidityPool: string,
 	tokens: TokenBalance[]
 ): string => {
-	const poolTVL = new BigNumber(liquidityPool)
+	const poolTVL = new BigNumber(liquidityPool).multipliedBy(2)
+	const daysInYear = getDaysInYear(new Date())
+	const daysInYearToSeconds = toSeconds({ days: daysInYear })
 
 	if (poolTVL.gt(0)) {
-		let totalReward = new BigNumber("0")
+		let totalAPR = new BigNumber("0")
 
+		// Distribution coins
 		for (const coin of gauge.coins) {
 			const token = findTokenByIBCDenom(tokens, coin.denom)
 
@@ -474,18 +509,33 @@ export const getExternalPoolApr = (
 				const viewCoin = amountToCoin(amount.toString(), token)
 
 				if (viewCoin) {
-					const yearAmount = new BigNumber(365)
-						.multipliedBy(viewCoin.amount)
-						.div(gtnZero(gauge.filled_epochs) ? gauge.filled_epochs : "1")
-
-					totalReward = totalReward.plus(
-						new BigNumber(yearAmount.toString()).multipliedBy(token.price ?? "0")
+					// Distribution amount by dollar price reference
+					const distributionAmount = new BigNumber(viewCoin.amount).multipliedBy(
+						token.price ?? "0"
 					)
+
+					const yearDistributionAmount = distributionAmount
+						.multipliedBy(daysInYearToSeconds)
+						.div(
+							new BigNumber(epochDuration.duration).multipliedBy(
+								gauge.num_epochs_paid_over
+							)
+						)
+
+					const lpLockedRatio = new BigNumber(lpLockedForGauge.lockSum).div(
+						pool.totalShares.amount
+					)
+
+					const bondedLiquidity = poolTVL.multipliedBy(lpLockedRatio)
+
+					const APR = yearDistributionAmount.div(bondedLiquidity)
+
+					totalAPR = totalAPR.plus(APR)
 				}
 			}
 		}
 
-		return totalReward.div(poolTVL).toString()
+		return totalAPR.toString()
 	}
 
 	return "0"

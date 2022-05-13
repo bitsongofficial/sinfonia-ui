@@ -107,3 +107,9 @@ export interface OsmosisRoute {
 	poolId: string
 	tokenOutDenom: string
 }
+
+export interface LockedGauge {
+	gaugeID: string
+	denom: string
+	lockSum: string
+}

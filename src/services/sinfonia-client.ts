@@ -191,6 +191,24 @@ export default class SinfoniaClient {
 		return []
 	}
 
+	public lockedGaugesByIds = async (ids: string[]) => {
+		try {
+			if (this.osmosisClient) {
+				const lockedGaugeRequests = ids.map((id) =>
+					this.osmosisClient?.lockedByGaugeId(id)
+				)
+				const responses = await Promise.all(lockedGaugeRequests)
+
+				return compact(responses)
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+
+		return []
+	}
+
 	public assetLists = async () => {
 		try {
 			const response = await this.configClient.assetLists()

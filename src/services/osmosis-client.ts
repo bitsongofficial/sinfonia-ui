@@ -9,6 +9,7 @@ import {
 	OsmosisLock,
 	MintParams,
 	DistrInfo,
+	LockedGauge,
 } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
 import ChainClient from "./chain-client"
@@ -43,6 +44,17 @@ export default class OsmosisClient extends ChainClient {
 		this.instance.get<ChainData<"coins", Coin[]>>(
 			`osmosis/lockup/v1beta1/account_locked_coins/${address}`
 		)
+
+	public lockedByGaugeId = async (gaugeID: string) => {
+		const response = await this.instance.get<LockedGauge>(
+			`osmosis/lockup/v1beta1/locked_by_gauge_id/${gaugeID}`
+		)
+
+		return {
+			...response.data,
+			gaugeID,
+		}
+	}
 
 	public accountLockedLongerDuration = (address: string) =>
 		this.instance.get<ChainData<"locks", OsmosisLock[]>>(
