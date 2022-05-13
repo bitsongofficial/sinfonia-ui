@@ -21,7 +21,7 @@ export default defineConfig({
     },
   },
   define: {
-    'process.env': {},
-    'process.platform': 'win32'
-  }
+		"process.env": {},
+		"process.platform": {},
+	},
 })
