@@ -44,7 +44,7 @@ const coinWrapper = computed<TokenBalance | null>({
 
 const name = toRef(props, "name")
 
-const { value, errorMessage, handleBlur, handleChange, meta } = useField(
+const { value, errorMessage, handleBlur, handleChange } = useField(
 	name,
 	undefined,
 	{

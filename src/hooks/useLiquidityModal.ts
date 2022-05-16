@@ -22,6 +22,7 @@ import {
 import { BigNumber } from "bignumber.js"
 import { coinsConfig } from "@/configs/config"
 import { Coin } from "@cosmjs/proto-signing"
+import { useForm } from "vee-validate"
 
 const useLiquidityModal = (
 	pool: Ref<Pool>,
@@ -32,29 +33,86 @@ const useLiquidityModal = (
 	const transactionManagerStore = useTransactionManager()
 
 	const add = ref(true)
-	const coinsAmounts = ref<Dictionary<string>>({})
 	const shareOutAmount = ref("0")
 	const single = ref(false)
 	const currentSingle = ref(0)
 	const removeValues = [0.25, 0.5, 0.75, 1]
 	const removePercent = ref(removeValues[2])
+	const initialValues: Dictionary<string> = {}
 
 	// Balances denoms on osmosis
 	const balanceDenoms = computed(() =>
 		pool.value.coins.map((el) => el.token.denom)
 	)
 
+	const balances = computed(() => {
+		const balancesMap = {}
+
+		const tokenBalances = bankStore.osmosisAvailableBalances(balanceDenoms.value)
+
+		if (configStore.osmosisToken) {
+			tokenBalances.forEach((balance) => {
+				if (balance.chains) {
+					const chain = balance.chains.find(
+						(el) => el.symbol === configStore.osmosisToken?.symbol
+					)
+
+					if (chain) {
+						balancesMap[balance.symbol] = chain.available
+					} else {
+						balancesMap[balance.symbol] = "0"
+					}
+				}
+			})
+		}
+
+		return balancesMap
+	})
+
+	for (const coin of pool.value.coins) {
+		initialValues[coin.token.symbol] = ""
+	}
+
 	const currentSymbol = computed(() => {
-		const keys = Object.keys(coinsAmounts.value)
+		const keys = Object.keys(initialValues)
 
 		if (keys.length) {
 			return keys[currentSingle.value]
 		}
 	})
 
+	const validationSchema = computed(() => {
+		const validationMap = {}
+
+		if (!single.value) {
+			for (const coin of pool.value.coins) {
+				validationMap[coin.token.symbol] = {
+					required: true,
+					isNaN: true,
+					gtnZero: true,
+					compareBalance: { compare: balances.value[coin.token.symbol] },
+				}
+			}
+		} else if (currentSymbol.value) {
+			validationMap[currentSymbol.value] = {
+				required: true,
+				isNaN: true,
+				gtnZero: true,
+				compareBalance: { compare: balances.value[currentSymbol.value] },
+			}
+		}
+
+		return validationMap
+	})
+
+	const { handleSubmit, values, meta, setValues, resetForm } = useForm({
+		initialValues,
+		validationSchema,
+	})
+
 	const singleAssetAmount = computed(() => {
 		if (currentSymbol.value) {
-			return coinsAmounts.value[currentSymbol.value]
+			return values[currentSymbol.value]
 		}
 	})
 
@@ -89,13 +147,7 @@ const useLiquidityModal = (
 	})
 
 	const onInputUpdate = () => {
-		const coinsAmountsMap = {}
-
-		pool.value.coins.forEach((coin) => {
-			coinsAmountsMap[coin.token.symbol] = "0"
-		})
-
-		coinsAmounts.value = coinsAmountsMap
+		resetForm(initialValues)
 	}
 
 	const poolWatcher = watch(
@@ -112,30 +164,6 @@ const useLiquidityModal = (
 		},
 		{ immediate: true }
 	)
-
-	const balances = computed(() => {
-		const balancesMap = {}
-
-		const tokenBalances = bankStore.osmosisAvailableBalances(balanceDenoms.value)
-
-		if (configStore.osmosisToken) {
-			tokenBalances.forEach((balance) => {
-				if (balance.chains) {
-					const chain = balance.chains.find(
-						(el) => el.symbol === configStore.osmosisToken?.symbol
-					)
-
-					if (chain) {
-						balancesMap[balance.symbol] = chain.available
-					} else {
-						balancesMap[balance.symbol] = "0"
-					}
-				}
-			})
-		}
-
-		return balancesMap
-	})
 
 	const joinSwapExternAmountIn = () => {
 		if (currentSymbol.value) {
@@ -172,11 +200,11 @@ const useLiquidityModal = (
 		const tokenInMaxs: Coin[] = []
 		const joinSlippage = new BigNumber(coinsConfig.joinPoolSlippage).plus(1)
 
-		for (const symbol in coinsAmounts.value) {
+		for (const symbol in values) {
 			const token = configStore.findTokenBySymbol(symbol)
 
 			if (token) {
-				const tokenInMax = amountIBCFromCoin(coinsAmounts.value[symbol], token)
+				const tokenInMax = amountIBCFromCoin(values[symbol], token)
 
 				if (tokenInMax) {
 					tokenInMaxs.push({
@@ -196,56 +224,56 @@ const useLiquidityModal = (
 		)
 	}
 
-	const onSubmit = () => {
-		if (add.value) {
-			if (single.value) {
-				joinSwapExternAmountIn()
-			} else {
-				joinPool()
-			}
-		} else {
-			const bondendLP = reduce<Coin, BigNumber>(
-				pool.value.availableLPBalances,
-				(all, coin) => {
-					return all.plus(coin.amount)
-				},
-				new BigNumber("0")
-			).toString()
+	const onExitPool = () => {
+		const bondendLP = reduce<Coin, BigNumber>(
+			pool.value.availableLPBalances,
+			(all, coin) => {
+				return all.plus(coin.amount)
+			},
+			new BigNumber("0")
+		).toString()
 
-			const poolShareWithPercentage = new BigNumber(bondendLP).multipliedBy(
-				new BigNumber(removePercent.value)
-			)
+		const poolShareWithPercentage = new BigNumber(bondendLP).multipliedBy(
+			new BigNumber(removePercent.value)
+		)
 
-			const shareInAmount = poolShareWithPercentage.toFixed(0)
-			const shareRatio = new BigNumber(poolShareWithPercentage).div(
-				new BigNumber(pool.value.totalShares.amount)
-			)
+		const shareInAmount = poolShareWithPercentage.toFixed(0)
+		const shareRatio = new BigNumber(poolShareWithPercentage).div(
+			new BigNumber(pool.value.totalShares.amount)
+		)
 
-			const tokenOutMins = pool.value.coins.map((coin) => {
-				if (coin.token.coinLookup) {
-					const amountIn = fromViewDenom(
-						coin.token.amount,
-						coin.token.coinLookup.chainToViewConversionFactor
-					)
+		const tokenOutMins = pool.value.coins.map((coin) => {
+			if (coin.token.coinLookup) {
+				const amountIn = fromViewDenom(
+					coin.token.amount,
+					coin.token.coinLookup.chainToViewConversionFactor
+				)
 
-					const tokenOutAmount = shareRatio.multipliedBy(amountIn)
+				const tokenOutAmount = shareRatio.multipliedBy(amountIn)
 
-					return {
-						amount: tokenOutAmount
-							.multipliedBy(new BigNumber(1).minus(coinsConfig.exitPoolSlippage))
-							.toFixed(0),
-						denom: coin.token.coinDenom,
-					}
+				return {
+					amount: tokenOutAmount
+						.multipliedBy(new BigNumber(1).minus(coinsConfig.exitPoolSlippage))
+						.toFixed(0),
+					denom: coin.token.coinDenom,
 				}
-			})
+			}
+		})
 
-			transactionManagerStore.exitPool(
-				pool.value.id,
-				shareInAmount,
-				compact(tokenOutMins).slice(0, 1)
-			)
-		}
+		transactionManagerStore.exitPool(
+			pool.value.id,
+			shareInAmount,
+			compact(tokenOutMins).slice(0, 1)
+		)
 	}
+
+	const onSubmit = handleSubmit(() => {
+		if (single.value) {
+			joinSwapExternAmountIn()
+		} else {
+			joinPool()
+		}
+	})
 
 	const changeToken = () => {
 		let nextIndex = currentSingle.value + 1
@@ -255,18 +283,31 @@ const useLiquidityModal = (
 		}
 
 		currentSingle.value = nextIndex
+
+		resetForm()
 	}
 
 	const onAmountChange = (symbol: string, rawAmount: string) => {
-		const balancer = amountBalancer(pool.value, symbol, rawAmount)
-		const tempCoinsAmounts = { ...coinsAmounts.value }
+		try {
+			const tempCoinsAmounts = { ...values }
+			const balancer = amountBalancer(pool.value, symbol, rawAmount)
 
-		for (const symbol in balancer.assetsAmounts) {
-			tempCoinsAmounts[symbol] = balancer.assetsAmounts[symbol]
+			for (const symbol in balancer.assetsAmounts) {
+				tempCoinsAmounts[symbol] = balancer.assetsAmounts[symbol]
+			}
+
+			shareOutAmount.value = balancer.shareOutAmount
+
+			const amount = new BigNumber(rawAmount)
+
+			if (!amount.isNaN()) {
+				setValues(tempCoinsAmounts)
+			} else {
+				resetForm()
+			}
+		} catch (error) {
+			resetForm()
 		}
-
-		coinsAmounts.value = tempCoinsAmounts
-		shareOutAmount.value = balancer.shareOutAmount
 	}
 
 	onUnmounted(() => {
@@ -276,7 +317,6 @@ const useLiquidityModal = (
 
 	return {
 		add,
-		coinsAmounts,
 		shareOutAmount,
 		single,
 		currentSingle,
@@ -286,7 +326,9 @@ const useLiquidityModal = (
 		removeValues,
 		removePercent,
 		priceImpact,
+		meta,
 		onSubmit,
+		onExitPool,
 		changeToken,
 		onAmountChange,
 	}

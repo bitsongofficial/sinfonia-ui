@@ -1,6 +1,6 @@
 import { defineRule } from "vee-validate"
 import { required } from "@vee-validate/rules"
-import { compareBalance, isNaN, gtnZero } from "@/common/numbers"
+import { compareBalance, isNaN, gtnZero, equalZero } from "@/common/numbers"
 
 interface CompareBalanceValidation {
 	compare: string
@@ -26,6 +26,14 @@ defineRule<string>("isNaN", (value) => {
 
 defineRule<string>("gtnZero", (value) => {
 	if (!gtnZero(value)) {
+		return "Amount must be greater then zero"
+	}
+
+	return true
+})
+
+defineRule<string>("equalZero", (value) => {
+	if (equalZero(value)) {
 		return "Amount must be greater then zero"
 	}
 
