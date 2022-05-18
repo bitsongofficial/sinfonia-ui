@@ -2,12 +2,13 @@
 import {
 	balancedCurrency,
 	percentage,
+	percentageRange,
 	toDecimalGamm,
 	balancedGamm,
 	gtnZero,
 } from "@/common/numbers"
-import { TableColumn, LockableDurationWithApr, LockCoin } from "@/types"
-import { useRoute } from "vue-router"
+import { TableColumn, LockableDurationWithApr, LockCoin, Option } from "@/types"
+import { useRoute, useRouter } from "vue-router"
 import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { BigNumber } from "bignumber.js"
 import { reduce } from "lodash"
@@ -30,17 +31,56 @@ import Progress from "@/components/Progress.vue"
 import LightTable from "@/components/LightTable.vue"
 import BondModal from "@/components/modals/BondModal.vue"
 import LiquidityModal from "@/components//modals/LiquidityModal.vue"
+import StandardSelect from "@/components/inputs/StandardSelect.vue"
 
 const transactionManagerStore = useTransactionManager()
 const poolsStore = usePools()
 const authStore = useAuth()
 const configStore = useConfig()
 const route = useRoute()
+const router = useRouter()
 const id = route.params["id"] as string
 const openBondModal = ref(false)
 const openAddRemoveModal = ref(false)
+const catalystSelection = ref<Option>()
 
 const pool = computed(() => poolsStore.poolById(id))
+
+const catalystOptions = computed<Option[]>(() => {
+	if (pool.value) {
+		return pool.value.coins.map((coin) => ({
+			label: coin.token.name,
+			value: coin.token.symbol,
+		}))
+	}
+
+	return []
+})
+
+const currentCatalystCoinStats = computed(() => {
+	if (pool.value && catalystSelection.value) {
+		const coin = pool.value.coins.find(
+			(coin) => coin.token.symbol === catalystSelection.value?.value
+		)
+
+		if (coin) {
+			const amountRatio = new BigNumber(coin.token.userTotalAmount).div(
+				coin.token.amount
+			)
+
+			const stats = {
+				totalAmount: coin.token.amount,
+				myAmount: coin.token.userTotalAmount,
+				percentage: amountRatio.multipliedBy(100).toNumber(),
+				amountRatio: amountRatio.toString(),
+				symbol: coin.token.symbol,
+				logo: coin.token.logos.default,
+			}
+
+			return stats
+		}
+	}
+})
 
 const broadcastingWatcher = watch(
 	() => transactionManagerStore.loadingBroadcasting,
@@ -51,10 +91,6 @@ const broadcastingWatcher = watch(
 		}
 	}
 )
-
-onUnmounted(() => {
-	broadcastingWatcher()
-})
 
 const lpLiquidity = computed(() => {
 	if (pool.value) {
@@ -210,6 +246,18 @@ const untilSetSize = () => {
 	}
 }
 
+const poolWatcher = watch(
+	() => pool.value,
+	(newPool) => {
+		if (newPool) {
+			if (catalystOptions.value.length > 0) {
+				catalystSelection.value = catalystOptions.value[0]
+			}
+		}
+	},
+	{ immediate: true }
+)
+
 onMounted(() => {
 	window.addEventListener("resize", setSize)
 	untilSetSize()
@@ -217,7 +265,21 @@ onMounted(() => {
 
 onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
+	broadcastingWatcher()
+	poolWatcher()
 })
+
+const onSwapClick = () => {
+	if (pool.value) {
+		const coins = [...pool.value.coins]
+		const fromCoin = coins.shift()
+		const toCoin = coins.shift()
+
+		if (fromCoin && toCoin) {
+			router.push(`/swap?from=${fromCoin.token.symbol}&to=${toCoin.token.symbol}`)
+		}
+	}
+}
 </script>
 
 <template>
@@ -228,7 +290,9 @@ onUnmounted(() => {
 				<h1 class="fs-27">#{{ pool.id }}: {{ poolTokensName }}</h1>
 			</div>
 			<div class="flex items-center">
-				<OutlineButton class="q-mr-12" to="/swap">Swap Tokens</OutlineButton>
+				<OutlineButton class="q-mr-12" @click="onSwapClick">
+					Swap Tokens
+				</OutlineButton>
 				<StandardButton
 					@click="openAddRemoveModal = true"
 					:disable="!authStore.session"
@@ -490,7 +554,11 @@ onUnmounted(() => {
 		</LightTable>
 		<template v-if="unbondedCoins.length > 0">
 			<p class="fs-18 q-mb-30">My Unbondings</p>
-			<LightTable :rows="unbondedCoins" :columns="unbondingsColumn">
+			<LightTable
+				class="q-mb-88"
+				:rows="unbondedCoins"
+				:columns="unbondingsColumn"
+			>
 				<template v-slot:body-cell-time="props">
 					<q-td :props="props">
 						<span class="text-weight-medium opacity-40">
@@ -500,6 +568,72 @@ onUnmounted(() => {
 				</template>
 			</LightTable>
 		</template>
+
+		<div class="q-mb-36 flex row items-center">
+			<p class="fs-18 text-weight-medium opacity-40 q-mb-none">Pool Catalyst</p>
+			<StandardSelect
+				color="white"
+				v-model="catalystSelection"
+				:options="catalystOptions"
+				class="q-ml-36 text-uppercase"
+			/>
+		</div>
+
+		<div class="row q-col-gutter-xl" v-if="currentCatalystCoinStats">
+			<div class="col-8 col-lg-4">
+				<div class="row q-col-gutter-xl">
+					<div class="col-8 col-lg-4">
+						<div ref="heightRef">
+							<CardWithHeader header="pool tokens" class="q-py-34">
+								<div class="flex justify-between items-center text-center q-mb-20">
+									<p class="fs-18">
+										{{ balancedCurrency(currentCatalystCoinStats.totalAmount) }}
+									</p>
+									<p class="fs-10 opacity-50">
+										{{ currentCatalystCoinStats.symbol }}
+									</p>
+								</div>
+								<div class="flex justify-between items-center text-center q-mb-26">
+									<p class="fs-18">
+										{{ balancedCurrency(currentCatalystCoinStats.myAmount) }}
+									</p>
+									<p class="fs-10 opacity-50">
+										MY {{ currentCatalystCoinStats.symbol }}
+									</p>
+								</div>
+								<div class="flex">
+									<PercentageWithImage
+										:value="currentCatalystCoinStats.percentage"
+										:image="currentCatalystCoinStats.logo"
+										class="q-mr-20"
+									></PercentageWithImage>
+									<div class="text-weight-medium">
+										<p class="fs-12 text-uppercase q-mb-10 opacity-50">% composition</p>
+										<p class="fs-18">
+											{{ percentageRange(currentCatalystCoinStats.amountRatio) }}%
+										</p>
+									</div>
+								</div>
+							</CardWithHeader>
+						</div>
+					</div>
+					<div class="col-8 col-lg-4 flex justify-center items-center">
+						<div :style="compositionGraphStyle">
+							<PercentageWithImage
+								alt-style
+								full
+								class="full-width full-height--15"
+								imageSize="48px"
+								:thickness="0.35"
+								:image="currentCatalystCoinStats.logo"
+								:value="currentCatalystCoinStats.percentage"
+							>
+							</PercentageWithImage>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<BondModal v-model="openBondModal" :pool="pool" />
 		<LiquidityModal v-model="openAddRemoveModal" :pool="pool" />

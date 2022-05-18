@@ -34,6 +34,13 @@ export const balancedCurrency = (
 	return currency(value.toString(), Math.min(value.dp(), fraction))
 }
 
+export const toDynamicDp = (number: number | string, fraction = 6) => {
+	const value = new BigNumber(number)
+	const decimalPlaces = Math.min(value.dp(), fraction)
+
+	return value.toFixed(decimalPlaces, BigNumber.ROUND_DOWN)
+}
+
 export const balancedGamm = (number: number | string): string => {
 	let value = new BigNumber(number)
 

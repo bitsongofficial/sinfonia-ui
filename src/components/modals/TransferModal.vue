@@ -8,6 +8,7 @@ import {
 	amountFromCoin,
 	amountIBCFromCoin,
 	gteComparePercentage,
+	gtnZero,
 } from "@/common"
 import { compact } from "lodash"
 import { Coin } from "@cosmjs/proto-signing"
@@ -20,6 +21,7 @@ import AddressesSelect from "@/components/inputs/AddressesSelect.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import Amount from "@/components/inputs/Amount.vue"
 import DangerTooltip from "@/components/tooltips/DangerTooltip.vue"
+import { useForm } from "vee-validate"
 
 const configStore = useConfig()
 const keplrStore = useKeplr()
@@ -120,11 +122,8 @@ const title = computed(() => {
 	return "Transfer " + props.coin.symbol
 })
 
-const amount = ref("0")
-
 const showBigTransferTooltip = ref(false)
 const bigTransferInternal = ref(false)
-const hasAmountError = ref<boolean>(false)
 
 const balance = computed(() => {
 	const balances = [...bankStore.allBalances]
@@ -161,14 +160,32 @@ const available = computed(() => {
 	return "0"
 })
 
-const onSubmit = () => {
+const validationSchema = computed(() => ({
+	amount: {
+		required: true,
+		isNaN: true,
+		gtnZero: true,
+		compareBalance: { compare: available.value },
+	},
+}))
+
+const initialValues = {
+	amount: "",
+}
+
+const { handleSubmit, values, meta } = useForm({
+	initialValues,
+	validationSchema,
+})
+
+const onSubmit = handleSubmit(() => {
 	if (fromChain.value && toChain.value && fromAddress.value && toAddress.value) {
 		let transferAmount: Coin | undefined = undefined
 
 		if (fromChain.value.ibcEnabled) {
-			transferAmount = amountFromCoin(amount.value, props.coin)
+			transferAmount = amountFromCoin(values.amount, props.coin)
 		} else {
-			transferAmount = amountIBCFromCoin(amount.value, props.coin)
+			transferAmount = amountIBCFromCoin(values.amount, props.coin)
 		}
 
 		transactionManagerStore.sendIbcTokens(
@@ -179,17 +196,23 @@ const onSubmit = () => {
 			transferAmount
 		)
 	}
-}
+})
+
+const availableGtnZero = computed(() => gtnZero(available.value))
 
 const bigTransfer = computed({
 	get(): boolean {
-		return gteComparePercentage(amount.value, available.value)
+		if (availableGtnZero.value) {
+			return gteComparePercentage(values.amount, available.value)
+		}
+
+		return false
 	},
 	set(value: boolean) {
 		bigTransferInternal.value = value
+
 		if (value) {
 			showBigTransferTooltip.value = value
-			hasAmountError.value = true
 		}
 	},
 })
@@ -201,73 +224,65 @@ const bigTransfer = computed({
 		:title="title"
 		@click="showBigTransferTooltip = false"
 	>
-		<q-form @submit="onSubmit">
-			<div class="flex items-center no-wrap q-mb-40">
-				<AddressesSelect
-					v-model="fromChain"
-					:addresses="optionsAddresses"
-					title="From"
-					class="flex-1"
-				/>
-
-				<div class="q-pb-8 q-mx-12 opacity-15">
-					<q-icon :name="resolveIcon('arrow-right', 14, 14)" size="12px" />
-				</div>
-
-				<AddressesSelect
-					v-model="toChain"
-					:addresses="optionsAddresses"
-					title="To"
-					class="flex-1"
-				/>
-			</div>
-
-			<div
-				:class="
-					'flex justify-between items-center q-mb-16 fs-12 text-dark' +
-					(bigTransfer ? ' q-field--error' : '')
-				"
-			>
-				<div class="flex title-with-error">
-					<p
-						:class="
-							'text-weight-medium text-uppercase q-mr-12' +
-							(hasAmountError ? ' text-primary' : '')
-						"
-					>
-						Amount to transfer
-					</p>
-					<q-icon :name="resolveIcon('info', 15, 15)" size="12px" color="primary">
-						<DangerTooltip
-							anchor="center right"
-							self="center start"
-							v-model="showBigTransferTooltip"
-						>
-							You are about to transfer more than 20% of your total amount. We suggest
-							that you do not transfer more than the amount you want to trade. Proceed
-							at your own risk.
-						</DangerTooltip>
-					</q-icon>
-				</div>
-				<p>
-					Available
-					<span class="q-ml-8 text-white">{{ balancedCurrency(available) }}</span>
-				</p>
-			</div>
-
-			<Amount
-				v-model="amount"
-				:max="available"
-				:token="fromChain"
-				class="q-mb-32"
-				@error-change="(val) => (hasAmountError = val)"
+		<div class="flex items-center no-wrap q-mb-40">
+			<AddressesSelect
+				v-model="fromChain"
+				:addresses="optionsAddresses"
+				title="From"
+				class="flex-1"
 			/>
 
-			<div class="flex justify-center">
-				<LargeButton type="submit" fit class="q-px-80" :padding-y="14">
-					<div class="text-uppercase">Transfer</div>
-				</LargeButton>
+			<div class="q-pb-8 q-mx-12 opacity-15">
+				<q-icon :name="resolveIcon('arrow-right', 14, 14)" size="12px" />
 			</div>
-		</q-form>
+
+			<AddressesSelect
+				v-model="toChain"
+				:addresses="optionsAddresses"
+				title="To"
+				class="flex-1"
+			/>
+		</div>
+
+		<div
+			:class="
+				'flex justify-between items-center q-mb-16 fs-12 text-dark' +
+				(bigTransfer ? ' q-field--error' : '')
+			"
+		>
+			<div class="flex title-with-error">
+				<p class="text-weight-medium text-uppercase q-mr-12">Amount to transfer</p>
+				<q-icon :name="resolveIcon('info', 15, 15)" size="12px" color="primary">
+					<DangerTooltip
+						anchor="center right"
+						self="center start"
+						v-model="showBigTransferTooltip"
+					>
+						You are about to transfer more than 20% of your total amount. We suggest
+						that you do not transfer more than the amount you want to trade. Proceed
+						at your own risk.
+					</DangerTooltip>
+				</q-icon>
+			</div>
+			<p>
+				Available
+				<span class="q-ml-8 text-white">{{ balancedCurrency(available) }}</span>
+			</p>
+		</div>
+
+		<Amount name="amount" :max="available" :token="fromChain" class="q-mb-32" />
+
+		<div class="flex justify-center">
+			<LargeButton
+				type="submit"
+				fit
+				class="q-px-80"
+				:padding-y="14"
+				:disable="!meta.valid"
+				@click="onSubmit"
+			>
+				<div class="text-uppercase">Transfer</div>
+			</LargeButton>
+		</div>
 	</ModalWithClose>
 </template>

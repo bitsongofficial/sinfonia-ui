@@ -6,6 +6,7 @@ import {
 	Epoch,
 	Gauge,
 	IncentivizedPool,
+	LockedGauge,
 	MintParams,
 	OsmosisPool,
 	Pool,
@@ -14,7 +15,7 @@ import {
 } from "@/types"
 import { mapPools, mapLockableDuration } from "@/common"
 import { Coin } from "@cosmjs/proto-signing"
-import { parseISO, differenceInMilliseconds } from "date-fns"
+import { parseISO, differenceInMilliseconds, addMinutes } from "date-fns"
 import { apply, parse } from "duration-fns"
 import useBank from "@/store/bank"
 import useConfig from "@/store/config"
@@ -23,6 +24,7 @@ import BigNumber from "bignumber.js"
 export interface PoolsState {
 	loading: boolean
 	loadingGauges: boolean
+	loadingLockedGauges: boolean
 	rawPools: OsmosisPool[]
 	incentivizedPools: IncentivizedPool[]
 	mintParams?: MintParams
@@ -30,6 +32,7 @@ export interface PoolsState {
 	epochs: Epoch[]
 	rawLockableDurations: string[]
 	extraGauges: Gauge[]
+	lockedExtraGagues: LockedGauge[]
 	epochProvisions: string
 }
 
@@ -37,6 +40,7 @@ const usePools = defineStore("pools", {
 	state: (): PoolsState => ({
 		loading: false,
 		loadingGauges: false,
+		loadingLockedGauges: false,
 		rawPools: [],
 		incentivizedPools: [],
 		mintParams: undefined,
@@ -44,6 +48,7 @@ const usePools = defineStore("pools", {
 		epochs: [],
 		rawLockableDurations: [],
 		extraGauges: [],
+		lockedExtraGagues: [],
 		epochProvisions: "0",
 	}),
 	actions: {
@@ -52,6 +57,7 @@ const usePools = defineStore("pools", {
 				this.loading = true
 
 				this.loadGauges()
+				this.loadLockedGauges()
 
 				const [
 					rawPools,
@@ -98,6 +104,21 @@ const usePools = defineStore("pools", {
 				throw error
 			} finally {
 				this.loadingGauges = false
+			}
+		},
+		async loadLockedGauges() {
+			const configStore = useConfig()
+
+			try {
+				this.loadingLockedGauges = true
+
+				const ids = configStore.extraGaugeIds
+				this.lockedExtraGagues = await sinfoniaClient.lockedGaugesByIds(ids)
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loadingLockedGauges = false
 			}
 		},
 	},
@@ -270,10 +291,10 @@ const usePools = defineStore("pools", {
 			if (activeEpoch && epochDuration) {
 				const duration = parse({ seconds: epochDuration.duration })
 
-				const endTime = apply(
-					parseISO(activeEpoch.current_epoch_start_time),
-					duration
-				)
+				const endTime = addMinutes(
+					apply(parseISO(activeEpoch.current_epoch_start_time), duration),
+					1
+				) // Plus one for round up
 
 				return differenceInMilliseconds(endTime, new Date())
 			}

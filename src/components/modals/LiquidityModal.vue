@@ -19,7 +19,6 @@ const props = defineProps<{
 const balance = computed(() => [...props.pool.availableLPBalances].pop())
 
 const lpAvailable = computed(() => {
-	console.log(balance.value)
 	if (balance.value) {
 		return gtnZero(balance.value.amount)
 	}
@@ -46,13 +45,14 @@ const {
 	add,
 	single,
 	currentSingle,
-	coinsAmounts,
+	meta,
 	balances,
 	removePercent,
 	removeValues,
 	priceImpact,
 	onAmountChange,
 	onSubmit,
+	onExitPool,
 	changeToken,
 } = useLiquidityModal(currentPool, model)
 
@@ -75,30 +75,8 @@ const removePercentInputRules = [
 	(val) => Number(val) <= 100 || "Amount must be less then 100",
 ]
 
-let inputReferences: any[] = []
-const setInputRef = (el) => {
-	if (el) {
-		inputReferences.push(el)
-	}
-}
-
-onBeforeUpdate(() => {
-	inputReferences = []
-})
-
-const validateAll = () => {
-	inputReferences.forEach((el) => {
-		if (el) {
-			const symbol = el.$el.getAttribute("data-symbol")
-			const amount = coinsAmounts.value[symbol]
-			el.validate(amount)
-		}
-	})
-}
-
 const inputChangeEvent = (coin, value) => {
 	onAmountChange(coin.token.symbol, value)
-	validateAll()
 }
 </script>
 
@@ -133,12 +111,11 @@ const inputChangeEvent = (coin, value) => {
 					<div class="q-mb-21" v-if="!single || (single && index === currentSingle)">
 						<div class="flex column-xs items-center items-end-xs no-wrap q-mb-9">
 							<Amount
-								v-model="coinsAmounts[coin.token.symbol]"
+								:name="coin.token.symbol"
 								:max="balances[coin.token.symbol]"
 								class="q-mr-24 q-mr-xs-0"
 								@update:model-value="(value) => inputChangeEvent(coin, value)"
-								:ref="setInputRef"
-								:data-symbol="coin.token.symbol"
+								@max-click="(value) => inputChangeEvent(coin, value)"
 							/>
 							<div class="flex items-center no-wrap">
 								<div class="text-weight-medium text-right q-mr-16">
@@ -204,7 +181,7 @@ const inputChangeEvent = (coin, value) => {
 							<p class="q-mr-6 text-gradient">Price Impact</p>
 							<p>{{ priceImpact }} %</p>
 						</div>
-						<LargeButton type="submit" fit :padding-y="14">
+						<LargeButton type="submit" fit :padding-y="14" :disable="!meta.valid">
 							<span class="text-uppercase"> Add liquidity </span>
 						</LargeButton>
 					</div>
@@ -270,6 +247,7 @@ const inputChangeEvent = (coin, value) => {
 						:padding-y="14"
 						class="q-px-52"
 						:disable="!lpAvailable"
+						@click="onExitPool"
 					>
 						<span class="text-uppercase"> Remove liquidity </span>
 					</LargeButton>

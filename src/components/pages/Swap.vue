@@ -63,6 +63,12 @@ const columns: TableColumn[] = [
 	},
 ]
 
+const pagination = {
+	rowsPerPage: -1,
+	sortBy: "price",
+	descending: true,
+}
+
 const transactionColumns: TableColumn[] = [
 	{
 		name: "token",
@@ -194,6 +200,7 @@ const onRowClick = (index: number, row: TokenBalance) => {
 						<CryptoTable
 							:rows="configStore.fantokens"
 							:columns="columns"
+							:pagination="pagination"
 							no-background
 							hide-header
 							class="small-rows full-height"
@@ -211,15 +218,7 @@ const onRowClick = (index: number, row: TokenBalance) => {
 							:href="`${externalWebsites.mintscan}osmosis/account/${authStore.osmosisAddress}`"
 							target="_blank"
 							label="View all"
-							:disabled="
-								transactionManagerStore.swapTransactions.length === 0 ? true : undefined
-							"
-							@click="
-								(e) => {
-									if (transactionManagerStore.swapTransactions.length === 0)
-										e.preventDefault()
-								}
-							"
+							:disable="disabledTransactions"
 							class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
 						/>
 					</div>
@@ -285,13 +284,13 @@ const onRowClick = (index: number, row: TokenBalance) => {
 										<p
 											v-if="slotProps.row.status != 'success'"
 											:class="
-												'rounded-20 q-py-9 q-px-8 text-white light:text- text-capitalize fs-9 ' +
+												'rounded-20 q-py-6 q-px-8 text-white light:text- text-capitalize fs-9 !leading-11 ' +
 												(slotProps.row.status == 'pending' ? 'bg-dark' : 'bg-primary')
 											"
 										>
 											{{ slotProps.row.status }}
 										</p>
-										<p v-else class="fs-9 text-gray">
+										<p v-else class="fs-9 !leading-11 text-gray">
 											{{ formatDistanceToNow(new Date(slotProps.row.time)) }}
 										</p>
 									</div>
