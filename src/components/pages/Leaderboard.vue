@@ -186,7 +186,7 @@ const bitsongCoinLookup = computed(() => {
 		<div class="col-8 !w-md-1/3">
 			<CardWithIcon header="1. Remove Liquidity">
 				<p class="fs-14 !leading-24 opacity-50 q-pr-32">
-					Unbound and Remove Liquidity from your Pools and Swap your Fan Token to
+					Unbond and Remove Liquidity from your Pools and Swap your Fan Token to
 					BTSG.
 				</p>
 
