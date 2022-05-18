@@ -242,7 +242,7 @@ const bitsongCoinLookup = computed(() => {
 		<div class="flex items-center row">
 			<p class="fs-18 font-weight-medium">Leaderboard</p>
 		</div>
-		<div
+		<!-- <div
 			@click="focussed"
 			@focusout="searchFocussed = false"
 			:class="'relative-position cursor-pointer group'"
@@ -264,7 +264,7 @@ const bitsongCoinLookup = computed(() => {
 				/>
 				<q-icon size="13px" :name="resolveIcon('search', 13, 13)"></q-icon>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<LightTable
 		:columns="accountColumns"
@@ -273,7 +273,7 @@ const bitsongCoinLookup = computed(() => {
 		hide-header
 		:loading="twitterStore.loading"
 		v-model:pagination="pagination"
-		no-data-label="Coming soon"
+		no-data-label="Leaderboard of winners (or not) will be available only after the end of the competition."
 		:hide-bottom="false"
 	>
 		<template v-slot:body-cell-index="props">
