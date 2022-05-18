@@ -34,6 +34,15 @@ export const balancedCurrency = (
 	return currency(value.toString(), Math.min(value.dp(), fraction))
 }
 
+export const balancedCurrencyFixed = (
+	number: number | string,
+	fraction = 2
+): string => {
+	const value = new BigNumber(number)
+
+	return currency(value.toString(), fraction)
+}
+
 export const toDynamicDp = (number: number | string, fraction = 6) => {
 	const value = new BigNumber(number)
 	const decimalPlaces = Math.min(value.dp(), fraction)
@@ -192,6 +201,12 @@ export const gteCompare = (amount: string, compare: string): boolean => {
 	const number = new BigNumber(amount)
 
 	return number.gte(new BigNumber(compare))
+}
+
+export const gtCompare = (amount: string, compare: string): boolean => {
+	const number = new BigNumber(amount)
+
+	return number.gt(new BigNumber(compare))
 }
 
 export const gteComparePercentage = (

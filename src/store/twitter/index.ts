@@ -1,11 +1,15 @@
-import { TweetAuthor } from "@/types"
+import { Leaderboard, TweetAuthor } from "@/types"
 import { acceptHMRUpdate, defineStore } from "pinia"
-import { getTweetAuthors } from "@/services/twitter"
+import { getLeaderboard, getTweetAuthors } from "@/services/twitter"
+import { amountToCoin, gtCompare } from "@/common"
+import useConfig from "../config"
 
 export interface AuthState {
 	loading: boolean
 	authors: TweetAuthor[]
+	leaderboard: Leaderboard[]
 	totalAuthors: number
+	totalLeaderboard: number
 	totalEligibles: number
 	totalAccounts: number
 	totalPages: number
@@ -18,7 +22,9 @@ const useTwitter = defineStore("twitter", {
 	state: (): AuthState => ({
 		loading: false,
 		authors: [],
+		leaderboard: [],
 		totalAuthors: 0,
+		totalLeaderboard: 0,
 		totalEligibles: 0,
 		totalAccounts: 0,
 		totalPages: 0,
@@ -35,8 +41,8 @@ const useTwitter = defineStore("twitter", {
 
 				this.authors = result.docs
 				this.totalAuthors = result.totalDocs
-				this.totalEligibles = result.eligibleAccounts
-				this.totalAccounts = result.totalAccounts
+				this.totalEligibles = result.eligibleAccounts ?? 0
+				this.totalAccounts = result.totalAccounts ?? 0
 				this.totalPages = result.totalPages
 				this.hasPrevPage = result.hasPrevPage
 				this.hasNextPage = result.hasNextPage
@@ -46,6 +52,48 @@ const useTwitter = defineStore("twitter", {
 			} finally {
 				this.loading = false
 			}
+		},
+		async loadLeaderboard(page = 1, search?: string) {
+			try {
+				this.loading = true
+				this.currentPage = page
+				const result = await getLeaderboard(50, this.currentPage, search)
+
+				this.leaderboard = result.docs
+				this.totalLeaderboard = result.totalDocs
+				this.totalPages = result.totalPages
+				this.hasPrevPage = result.hasPrevPage
+				this.hasNextPage = result.hasNextPage
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
+	},
+	getters: {
+		leaderboardMap: ({ leaderboard }) => {
+			const configStore = useConfig()
+			const bitsongToken = configStore.bitsongToken
+
+			return leaderboard.map((author) => {
+				let balance = { ...author.balance }
+
+				if (bitsongToken) {
+					const coin = amountToCoin(balance.amount, bitsongToken)
+
+					if (coin) {
+						balance = { ...coin }
+					}
+				}
+
+				return {
+					...author,
+					balance,
+					valid: gtCompare(balance.amount, "10000"),
+				}
+			})
 		},
 	},
 })

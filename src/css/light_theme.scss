@@ -11,6 +11,16 @@ body.body--light {
     background: linear-gradient(338.9deg, rgba(17, 8, 44, 0.1) -14.43%, rgba(21, 10, 52, 0) 70.51%), #F0EDF2 !important;
   }
 
+  .pagination-btn {
+    background: transparentize($color: $secondary, $amount: 0.9)
+  }
+
+  .q-pagination {
+    .q-btn.bg-primary-dark {
+      background: transparentize($color: $secondary, $amount: 0.9) !important
+    }
+  }
+
   .text-white {
     color: $secondary !important;
   }
@@ -101,6 +111,10 @@ body.body--light {
 
     &bg-secondary-320 {
       background: $secondary-320 !important;
+    }
+
+    &bg-secondary-opacity-10 {
+      background: transparentize($color: $secondary, $amount: 0.9) !important;
     }
 
     &bg-gray-light {

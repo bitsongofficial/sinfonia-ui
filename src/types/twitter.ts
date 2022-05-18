@@ -1,3 +1,5 @@
+import { Coin } from "@cosmjs/proto-signing"
+
 export interface TwitterPagination<T> {
 	docs: T[]
 	totalDocs: number
@@ -10,8 +12,8 @@ export interface TwitterPagination<T> {
 	hasNextPage: boolean
 	prevPage: number
 	nextPage: number
-	eligibleAccounts: number
-	totalAccounts: number
+	eligibleAccounts?: number
+	totalAccounts?: number
 }
 
 export interface TweetAuthor {
@@ -24,4 +26,8 @@ export interface TweetAuthor {
 	valid: boolean
 	createdAt: string
 	updatedAt: string
+}
+
+export interface Leaderboard extends TweetAuthor {
+	balance: Coin
 }
