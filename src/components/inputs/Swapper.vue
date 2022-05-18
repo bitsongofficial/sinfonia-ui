@@ -8,6 +8,7 @@ import {
 	percentageRange,
 	calculateSlippageTokenIn,
 	gtnZero,
+	toDynamicDp,
 } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
@@ -60,7 +61,9 @@ const available = computed(() => {
 		)
 
 		if (chain) {
-			return chain.available ? new BigNumber(chain.available).toFixed(6) : "0"
+			return toDynamicDp(
+				chain.available ? new BigNumber(chain.available).toString() : "0"
+			)
 		}
 	}
 
@@ -95,7 +98,10 @@ const updateFromAmount = (swap = false) => {
 
 	if (values.fromAmount.length > 0) {
 		if (!fromAmount.isNaN()) {
-			setFieldValue("toAmount", fromAmount.div(swapRatio.value).toFixed(6))
+			setFieldValue(
+				"toAmount",
+				toDynamicDp(fromAmount.div(swapRatio.value).toString())
+			)
 		}
 	}
 }
@@ -105,7 +111,10 @@ const updateToAmount = (swap = false) => {
 
 	if (values.toAmount.length > 0) {
 		if (!toAmount.isNaN()) {
-			setFieldValue("fromAmount", toAmount.div(1 / swapRatio.value).toFixed(6))
+			setFieldValue(
+				"fromAmount",
+				toDynamicDp(toAmount.div(1 / swapRatio.value).toString())
+			)
 		}
 	}
 }
@@ -233,7 +242,10 @@ const fromAmountChange = (value: string) => {
 
 	if (value.length > 0) {
 		if (!amount.isNaN()) {
-			setFieldValue("toAmount", amount.div(swapRatio.value).toFixed(6))
+			setFieldValue(
+				"toAmount",
+				toDynamicDp(amount.div(swapRatio.value).toString())
+			)
 		}
 	}
 }
@@ -243,7 +255,10 @@ const toAmountChange = (value: string) => {
 
 	if (value.length > 0) {
 		if (!amount.isNaN()) {
-			setFieldValue("fromAmount", amount.div(1 / swapRatio.value).toFixed(6))
+			setFieldValue(
+				"fromAmount",
+				toDynamicDp(amount.div(1 / swapRatio.value).toString())
+			)
 		}
 	}
 }
