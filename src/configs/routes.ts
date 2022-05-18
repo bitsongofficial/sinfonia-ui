@@ -6,7 +6,7 @@ import Assets from "@/components/pages/Assets.vue"
 import Swap from "@/components/pages/Swap.vue"
 import Pool from "@/components/pages/Pool.vue"
 import FanToken from "@/components/pages/FanToken.vue"
-import Playground from "@/components/pages/Playground.vue"
+import Leaderboard from "@/components/pages/Leaderboard.vue"
 import { RouteRecordRaw } from "vue-router"
 import { externalWebsites } from "./config"
 
@@ -122,7 +122,7 @@ if (!disabledPlayground) {
 	routes.push({
 		path: "/playground",
 		name: "Playground",
-		component: Playground,
+		component: Leaderboard,
 	})
 }
 

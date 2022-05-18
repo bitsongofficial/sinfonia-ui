@@ -15,5 +15,9 @@
     margin-left: 4px;
     margin-right: 4px;
     border-radius: 30px;
+  
+    &::before {
+      box-shadow: none;
+    }
   }
 }
