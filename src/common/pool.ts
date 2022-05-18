@@ -169,7 +169,7 @@ export const mapPools = (
 			availableLPTokens = availableLPTokens.plus(availableBalance.amount)
 		}
 
-		const lockableDurationApr: LockableDurationWithApr[] =
+		const lockableDurationAprRaw: LockableDurationWithApr[] =
 			poolsStore.lockableDuration.map((duration) => {
 				const lockedLonger = bankStore.lockedLongerByPoolIdAndDuration(
 					pool.id,
@@ -226,6 +226,25 @@ export const mapPools = (
 					totalApr: totalApr.toString(),
 				}
 			})
+
+		const lockableDurationApr: LockableDurationWithApr[] = []
+
+		let prevDurationApr: LockableDurationWithApr | undefined = undefined
+
+		for (const durationApr of lockableDurationAprRaw) {
+			let totalApr = new BigNumber(durationApr.totalApr)
+
+			if (prevDurationApr) {
+				totalApr = totalApr.plus(prevDurationApr.totalApr)
+			}
+
+			lockableDurationApr.push({
+				...durationApr,
+				totalApr: totalApr.toString(),
+			})
+
+			prevDurationApr = durationApr
+		}
 
 		const maxIncentivizedApr = max(
 			lockableDurationApr.map((duration) =>
@@ -295,6 +314,16 @@ export const gaugeToGaugeToken = (
 		endTime = apply(new Date(), duration).toISOString()
 	}
 
+	const totalApr = new BigNumber(
+		calculateTotalExternalApr(
+			pool,
+			gauge,
+			lockableDuration,
+			liquidityPool,
+			tokens
+		)
+	)
+
 	return {
 		...gauge,
 		numEpochsPaidOver,
@@ -302,13 +331,7 @@ export const gaugeToGaugeToken = (
 		leftEpochs,
 		coins,
 		endTime,
-		apr: calculateTotalExternalApr(
-			pool,
-			gauge,
-			lockableDuration,
-			liquidityPool,
-			tokens
-		),
+		apr: totalApr.toString(),
 	}
 }
 
@@ -451,35 +474,6 @@ export const calculateTotalExternalApr = (
 				tokens
 			)
 		)
-
-		for (const lockableDuration of poolsStore.lockableDuration) {
-			if (lockableDuration.milliseconds >= duration.milliseconds) {
-				break
-			}
-
-			const otherGauge = poolsStore.extraGaugeByPoolIdAndDurationAndCoins(
-				pool.id,
-				lockableDuration.rawDuration,
-				gauge.coins
-			)
-
-			const lockExtraGauge = poolsStore.lockedExtraGagues.find(
-				(bondedGauge) => bondedGauge.gaugeID === otherGauge?.id
-			)
-
-			if (otherGauge && lockExtraGauge) {
-				apr = apr.plus(
-					getExternalPoolApr(
-						pool,
-						otherGauge,
-						lockExtraGauge,
-						epochDuration,
-						liquidityPool,
-						tokens
-					)
-				)
-			}
-		}
 	}
 
 	return apr.toString()
