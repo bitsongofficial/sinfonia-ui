@@ -14,6 +14,8 @@ export interface TwitterPagination<T> {
 	nextPage: number
 	eligibleAccounts?: number
 	totalAccounts?: number
+	snapshotDate?: string
+	blockHeight?: string
 }
 
 export interface TweetAuthor {
@@ -24,6 +26,7 @@ export interface TweetAuthor {
 	address: string
 	profileImageUrl: string
 	valid: boolean
+	disqualified?: boolean
 	createdAt: string
 	updatedAt: string
 }

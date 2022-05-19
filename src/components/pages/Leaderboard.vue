@@ -59,7 +59,7 @@ const searchActive = computed(() => {
 
 const authorsWithIndex = computed(() => {
 	const offset =
-		Math.ceil(twitterStore.totalAccounts / twitterStore.totalPages) *
+		Math.ceil(twitterStore.totalDocs / twitterStore.totalPages) *
 		(twitterStore.currentPage - 1)
 
 	return twitterStore.leaderboardMap.map((author, index) => ({
@@ -68,7 +68,7 @@ const authorsWithIndex = computed(() => {
 	}))
 })
 
-const focussed = (e) => {
+const focussed = () => {
 	searchFocussed.value = true
 }
 
@@ -85,7 +85,9 @@ const playgroundStartTime = computed(() => {
 })
 
 onMounted(() => {
-	twitterStore.loadLeaderboard()
+	if (import.meta.env.VITE_LEADERBOARD_LOADING_DISABLED !== "true") {
+		twitterStore.loadLeaderboard()
+	}
 })
 
 const pagination = computed(() => ({
@@ -178,9 +180,15 @@ const bitsongCoinLookup = computed(() => {
 	<div class="flex row items-center justify-between q-mb-34">
 		<p class="fs-18 font-weight-medium">Rules</p>
 
-		<!-- <p class="fs-16 font-weight-medium">
-			<span class="opacity-50 q-mr-20">Snapshot</span>May 21 2022, 11:30 am
-		</p> -->
+		<div class="column items-end">
+			<p class="fs-16 font-weight-medium">
+				<span class="opacity-50 q-mr-20">Snapshot</span>
+				{{ twitterStore.snapshotDateFormatted }}
+			</p>
+			<p class="fs-12 font-weight-medium opacity-50 q-mt-4">
+				(block height: {{ twitterStore.blockHeight }})
+			</p>
+		</div>
 	</div>
 	<div class="row text-weight-medium q-col-gutter-xl q-mb-60">
 		<div class="col-8 !w-md-1/3">
@@ -242,7 +250,7 @@ const bitsongCoinLookup = computed(() => {
 		<div class="flex items-center row">
 			<p class="fs-18 font-weight-medium">Leaderboard</p>
 		</div>
-		<!-- <div
+		<div
 			@click="focussed"
 			@focusout="searchFocussed = false"
 			:class="'relative-position cursor-pointer group'"
@@ -264,7 +272,7 @@ const bitsongCoinLookup = computed(() => {
 				/>
 				<q-icon size="13px" :name="resolveIcon('search', 13, 13)"></q-icon>
 			</div>
-		</div> -->
+		</div>
 	</div>
 	<LightTable
 		:columns="accountColumns"
@@ -302,7 +310,7 @@ const bitsongCoinLookup = computed(() => {
 					<p
 						class="text-weight-medium fs-15 table-text-contained"
 						:class="{
-							'opacity-20': !slotProps.row.valid,
+							'opacity-20': !slotProps.row.valid || slotProps.row.disqualified,
 						}"
 					>
 						{{ slotProps.row.name }}
@@ -314,8 +322,8 @@ const bitsongCoinLookup = computed(() => {
 			<q-td :props="slotProps">
 				<a
 					:class="{
-						'opacity-20': !slotProps.row.valid,
-						'opacity-40': slotProps.row.valid,
+						'opacity-20': !slotProps.row.valid || slotProps.row.disqualified,
+						'opacity-40': slotProps.row.valid && !slotProps.row.disqualified,
 					}"
 					:href="'https://twitter.com/' + slotProps.row.username"
 					target="_blank"
@@ -324,16 +332,16 @@ const bitsongCoinLookup = computed(() => {
 				</a>
 			</q-td>
 		</template>
-		<template v-slot:body-cell-address="props">
-			<q-td :props="props">
+		<template v-slot:body-cell-address="slotProps">
+			<q-td :props="slotProps">
 				<p
 					class="fs-14 text-weight-medium"
 					:class="{
-						'opacity-20': !props.row.valid,
-						'opacity-50': props.row.valid,
+						'opacity-20': !slotProps.row.valid || slotProps.row.disqualified,
+						'opacity-50': slotProps.row.valid && !slotProps.row.disqualified,
 					}"
 				>
-					{{ props.row.address }}
+					{{ slotProps.row.address }}
 				</p>
 			</q-td>
 		</template>
@@ -343,7 +351,7 @@ const bitsongCoinLookup = computed(() => {
 					class="text-center"
 					v-if="configStore.bitsongToken && bitsongCoinLookup"
 					:class="{
-						'opacity-20': !slotProps.row.valid,
+						'opacity-20': !slotProps.row.valid || slotProps.row.disqualified,
 					}"
 				>
 					{{ balancedCurrencyFixed(slotProps.row.balance.amount, 3) }}
@@ -354,8 +362,14 @@ const bitsongCoinLookup = computed(() => {
 		<template v-slot:body-cell-valid="slotProps">
 			<q-td :props="slotProps">
 				<div
+					class="flex justify-center q-py-12 q-px-16 fs-12 text-weight-medium bg-white-custom text-capitalize text-white light:bg-secondary-opacity-10"
+					v-if="slotProps.row.disqualified"
+				>
+					<div class="flex items-center text-center">Disqualified</div>
+				</div>
+				<div
 					class="flex justify-center q-py-12 q-px-16 fs-12 text-weight-medium border-gradient-primary text-capitalize text-white"
-					v-if="slotProps.row.valid"
+					v-else-if="slotProps.row.valid"
 				>
 					<div class="flex items-center text-center">Eligible</div>
 				</div>

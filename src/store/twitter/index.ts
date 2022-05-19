@@ -3,15 +3,19 @@ import { acceptHMRUpdate, defineStore } from "pinia"
 import { getLeaderboard, getTweetAuthors } from "@/services/twitter"
 import { amountToCoin, gtCompare } from "@/common"
 import useConfig from "../config"
+import { format } from "date-fns"
 
 export interface AuthState {
 	loading: boolean
 	authors: TweetAuthor[]
 	leaderboard: Leaderboard[]
+	snapshotDate?: string
+	blockHeight: string
 	totalAuthors: number
 	totalLeaderboard: number
 	totalEligibles: number
 	totalAccounts: number
+	totalDocs: number
 	totalPages: number
 	currentPage: number
 	hasPrevPage: boolean
@@ -23,8 +27,11 @@ const useTwitter = defineStore("twitter", {
 		loading: false,
 		authors: [],
 		leaderboard: [],
+		snapshotDate: undefined,
+		blockHeight: "0",
 		totalAuthors: 0,
 		totalLeaderboard: 0,
+		totalDocs: 0,
 		totalEligibles: 0,
 		totalAccounts: 0,
 		totalPages: 0,
@@ -62,8 +69,11 @@ const useTwitter = defineStore("twitter", {
 				this.leaderboard = result.docs
 				this.totalLeaderboard = result.totalDocs
 				this.totalPages = result.totalPages
+				this.totalDocs = result.totalDocs ?? 0
 				this.hasPrevPage = result.hasPrevPage
 				this.hasNextPage = result.hasNextPage
+				this.snapshotDate = result.snapshotDate
+				this.blockHeight = result.blockHeight ?? "0"
 			} catch (error) {
 				console.error(error)
 				throw error
@@ -73,6 +83,11 @@ const useTwitter = defineStore("twitter", {
 		},
 	},
 	getters: {
+		snapshotDateFormatted: ({ snapshotDate }) => {
+			if (snapshotDate) {
+				return format(new Date(snapshotDate), "MMM dd yyyy, HH:mm aaa")
+			}
+		},
 		leaderboardMap: ({ leaderboard }) => {
 			const configStore = useConfig()
 			const bitsongToken = configStore.bitsongToken
