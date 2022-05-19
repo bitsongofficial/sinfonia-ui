@@ -72,6 +72,9 @@ const focussed = () => {
 	searchFocussed.value = true
 }
 
+const leaderboardLoadingDisabled =
+	import.meta.env.VITE_LEADERBOARD_LOADING_DISABLED === "true"
+
 const guideUrl = import.meta.env.VITE_PLAYGROUND_GUIDE_URL
 const playgroundStartTime = computed(() => {
 	if (import.meta.env.VITE_PLAYGROUND_START_DATE) {
@@ -85,7 +88,7 @@ const playgroundStartTime = computed(() => {
 })
 
 onMounted(() => {
-	if (import.meta.env.VITE_LEADERBOARD_LOADING_DISABLED !== "true") {
+	if (!leaderboardLoadingDisabled) {
 		twitterStore.loadLeaderboard()
 	}
 })
@@ -180,7 +183,7 @@ const bitsongCoinLookup = computed(() => {
 	<div class="flex row items-center justify-between q-mb-34">
 		<p class="fs-18 font-weight-medium">Rules</p>
 
-		<div class="column items-end">
+		<div class="column items-end" v-if="!leaderboardLoadingDisabled">
 			<p class="fs-16 font-weight-medium">
 				<span class="opacity-50 q-mr-20">Snapshot</span>
 				{{ twitterStore.snapshotDateFormatted }}
@@ -254,6 +257,7 @@ const bitsongCoinLookup = computed(() => {
 			@click="focussed"
 			@focusout="searchFocussed = false"
 			:class="'relative-position cursor-pointer group'"
+			v-if="!leaderboardLoadingDisabled"
 		>
 			<div
 				class="absolute-full bg-white rounded-30 opacity-5 shadow-md group-hover:opacity-15"
