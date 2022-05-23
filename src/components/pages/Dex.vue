@@ -16,6 +16,8 @@ const columns: TableColumn[] = [
 		label: "",
 		align: "left",
 		field: "rank",
+		headerClasses: "w-5",
+		classes: "w-5",
 	},
 	{
 		name: "token",

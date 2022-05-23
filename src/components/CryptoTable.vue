@@ -10,6 +10,11 @@ defineProps<{
 
 <template>
 	<LightTable :rows="rows" :columns="columns">
+		<template v-slot:body-cell-rank="slotProps">
+			<q-td :props="slotProps">
+				<span>{{ slotProps.row.rank }}</span>
+			</q-td>
+		</template>
 		<template v-slot:body-cell-symbol="slotProps">
 			<q-td :props="slotProps">
 				<span class="opacity-40"> {{ slotProps.row.symbol }} </span>
