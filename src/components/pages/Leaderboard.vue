@@ -7,6 +7,7 @@ import CardWithIcon from "@/components/cards/CardWithIcon.vue"
 import LightTable from "@/components/LightTable.vue"
 import useTwitter from "@/store/twitter"
 import useConfig from "@/store/config"
+import Decimal from "decimal.js"
 
 const twitterStore = useTwitter()
 const configStore = useConfig()
@@ -40,6 +41,12 @@ const accountColumns: TableColumn[] = [
 		name: "balance",
 		label: "Balance",
 		field: "balance",
+		align: "center",
+	},
+	{
+		name: "reward",
+		label: "Reward",
+		field: "reward",
 		align: "center",
 	},
 	{
@@ -135,6 +142,12 @@ const bitsongCoinLookup = computed(() => {
 		return coinLookup
 	}
 })
+
+const distributionAmount = (amount: string) => {
+	return new Decimal(amount)
+		.mul(import.meta.env.VITE_LEADERBOARD_DISTRIBUTION_RATIO)
+		.toString()
+}
 </script>
 
 <template>
@@ -359,6 +372,25 @@ const bitsongCoinLookup = computed(() => {
 					}"
 				>
 					{{ balancedCurrencyFixed(slotProps.row.balance.amount, 3) }}
+					{{ configStore.bitsongToken?.symbol }}
+				</p>
+			</q-td>
+		</template>
+		<template v-slot:body-cell-reward="slotProps">
+			<q-td :props="slotProps">
+				<p
+					class="text-center opacity-20"
+					v-if="!slotProps.row.valid || slotProps.row.disqualified"
+				>
+					0 {{ configStore.bitsongToken?.symbol }}
+				</p>
+				<p
+					class="text-center"
+					v-else-if="configStore.bitsongToken && bitsongCoinLookup"
+				>
+					{{
+						balancedCurrencyFixed(distributionAmount(slotProps.row.balance.amount), 3)
+					}}
 					{{ configStore.bitsongToken?.symbol }}
 				</p>
 			</q-td>
