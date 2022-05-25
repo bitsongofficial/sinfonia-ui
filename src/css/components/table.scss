@@ -1,5 +1,9 @@
 $table-padding: 20px;
+$alternative-header-horizontal-padding: 30px;
+$alternative-header-top-padding: 24px;
+$alternative-header-bottom-padding: 8px;
 $row-padding-y: 17px;
+$alternative-row-padding-y: 12px;
 $row-padding-x: 30px;
 
 .q-table__container {
@@ -22,16 +26,18 @@ $row-padding-x: 30px;
 
             tr {
                 border: none;
-            }
 
-            th {
-                padding-bottom: $table-padding * 2;
-                opacity: 0.5;
-                border: none;
-
-                &.sorted {
-                    color: white;
-                    opacity: 1;
+                th {
+                    position: sticky;
+                    z-index: 1;
+                    padding-bottom: $table-padding * 2;
+                    opacity: 0.5;
+                    border: none;
+    
+                    &.sorted {
+                        color: white;
+                        opacity: 1;
+                    }
                 }
             }
 
@@ -143,6 +149,55 @@ $row-padding-x: 30px;
 
     &.table-no-background .q-table tbody::before {
         display: none;
+    }
+
+    &.alternative {
+        .q-table {
+            padding: 0;
+            border-spacing: 0 16px;
+    
+            thead {
+                th {
+                    padding-left: $alternative-header-horizontal-padding;
+                    padding-right: $alternative-header-horizontal-padding;
+                    padding-top: $alternative-header-top-padding;
+                    padding-bottom: $alternative-header-bottom-padding;
+                }
+            }
+    
+            tbody {
+                backdrop-filter: unset;
+    
+                tr {
+                    position: relative;
+                    border: none;
+    
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        z-index: 0;
+                        pointer-events: none;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: transparentize($color: $white, $amount: 0.95);
+                        backdrop-filter: unset;
+                        border-radius: 20px;
+                    }
+    
+                    &:hover::after {
+                        background-color: transparentize($color: $white, $amount: 0.9);
+                        backdrop-filter: unset;
+                    }
+
+                    td {
+                        padding-top: $alternative-row-padding-y;
+                        padding-bottom: $alternative-row-padding-y;
+                    }
+                }
+            }
+        }
     }
 }
 

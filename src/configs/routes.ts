@@ -7,6 +7,7 @@ import Swap from "@/components/pages/Swap.vue"
 import Pool from "@/components/pages/Pool.vue"
 import FanToken from "@/components/pages/FanToken.vue"
 import Leaderboard from "@/components/pages/Leaderboard.vue"
+import Airdrops from "@/components/pages/Airdrops.vue"
 import { RouteRecordRaw } from "vue-router"
 import { externalWebsites } from "./config"
 
@@ -71,6 +72,11 @@ const routes: RouteRecordRaw[] = [
 		component: Assets,
 	},
 	{
+		path: "/airdrops",
+		name: "Airdrops",
+		component: Airdrops,
+	},
+	{
 		path: "/:pathMatch(.*)",
 		redirect: "/fantokens",
 	},
@@ -78,15 +84,15 @@ const routes: RouteRecordRaw[] = [
 
 export const menuItems: MenuItem[] = [
 	{
-		icon: { name: "list", width: 19, height: 13 },
-		label: "FanTokens",
-		path: "/fantokens",
-		disabled: disabledRoutes,
-	},
-	{
 		icon: { name: "refresh", width: 21, height: 17 },
 		label: "Swap",
 		path: "/swap",
+		disabled: disabledRoutes,
+	},
+	{
+		icon: { name: "list", width: 19, height: 13 },
+		label: "FanTokens",
+		path: "/fantokens",
 		disabled: disabledRoutes,
 	},
 	{
@@ -99,6 +105,12 @@ export const menuItems: MenuItem[] = [
 		icon: { name: "suitcase", width: 18, height: 16 },
 		label: "Assets",
 		path: "/assets",
+		disabled: disabledRoutes,
+	},
+	{
+		icon: { name: "airdrop", width: 20, height: 22 },
+		label: "Airdrops",
+		path: "/airdrops",
 		disabled: disabledRoutes,
 	},
 ]

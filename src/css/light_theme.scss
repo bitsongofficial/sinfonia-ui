@@ -90,6 +90,25 @@ body.body--light {
         background-image: url("@/assets/images/icons/sortarrow_light.svg");
       }
     }
+
+    &.alternative {
+      .q-table {
+        tbody {
+          backdrop-filter: unset;
+
+          tr {
+            &::after {
+              background-color: $white;
+              box-shadow: none;
+            }
+
+            &:hover::after {
+              background-color: transparentize($color: $white, $amount: 0.5);
+            }
+          }
+        }
+      }
+    }
   }
 
   .light\: {
@@ -187,6 +206,10 @@ body.body--light {
 
     &shadow-none {
       box-shadow: none !important;
+    }
+
+    &shadow-10 {
+      box-shadow: 0px 0px 20px transparentize($color: $alternative, $amount: 0.9) !important;
     }
 
     &inner\:shadow-none {
@@ -389,6 +412,7 @@ body.body--light {
 
   .q-menu {
     .q-item {
+
       &:hover,
       &:active,
       &:focus,

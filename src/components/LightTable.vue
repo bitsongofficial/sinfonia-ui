@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import { TableColumn } from "@/types/table"
-defineProps<{
-	rows: any[]
-	columns: TableColumn[]
-	noBackground?: boolean
-}>()
+
+withDefaults(
+	defineProps<{
+		rows: any[]
+		columns: TableColumn[]
+		alternative?: boolean
+		noBackground?: boolean
+	}>(),
+	{
+		alternative: false,
+	}
+)
 
 const pagination = {
 	rowsPerPage: -1,
@@ -17,7 +24,11 @@ const pagination = {
 		:rows="rows"
 		:columns="columns"
 		:pagination="pagination"
-		:class="(noBackground ? 'table-no-background' : '') + ' footer-h-0'"
+		class="footer-h-0"
+		:class="{
+			'table-no-background': noBackground || alternative,
+			alternative: alternative,
+		}"
 		hide-bottom
 	>
 		<template v-slot:header="slotProps">

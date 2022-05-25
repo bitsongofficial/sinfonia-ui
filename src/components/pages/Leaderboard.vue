@@ -273,7 +273,7 @@ const distributionAmount = (amount: string) => {
 			v-if="!leaderboardLoadingDisabled"
 		>
 			<div
-				class="absolute-full bg-white rounded-30 opacity-5 shadow-md group-hover:opacity-15"
+				class="absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md"
 			></div>
 			<div class="flex items-center q-px-28 q-py-14">
 				<q-input
@@ -287,7 +287,7 @@ const distributionAmount = (amount: string) => {
 					:debounce="1000"
 					dense
 				/>
-				<q-icon size="13px" :name="resolveIcon('search', 13, 13)"></q-icon>
+				<q-icon size="15px" :name="resolveIcon('search', 13, 13)"></q-icon>
 			</div>
 		</div>
 	</div>
