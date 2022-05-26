@@ -20,6 +20,7 @@ $dark-lighter: #322142;
 $gray-light: #E9E6EC;
 $gray-600: #B0A9B8;
 $gray-700: #C0BAC6;
+$gray-800: #EAE7ED;
 $white-780: #ECE9EE;
 $white-800: #F7F5F8;
 $white: #FFFFFF;
@@ -34,7 +35,7 @@ $scrollbarSize: $padding * 2+$thumbSize;
 }
 
 @mixin text-gradient() {
-    background: linear-gradient(147.07deg, #9C589C 21.78%, #FF005C 79.22%);
+    background: linear-gradient(176deg, #9C589C 21.78%, #FF005C 79.22%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -5,9 +5,12 @@ import { computed, ref } from "vue"
 import Title from "@/components/typography/Title.vue"
 import LightTable from "@/components/LightTable.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
+import AirdropCard from "@/components/cards/AirdropCard.vue"
 import useConfig from "@/store/config"
+import { useQuasar } from "quasar"
 
 const configStore = useConfig()
+const $q = useQuasar()
 
 const airdropColumns: TableColumn[] = [
 	{
@@ -186,7 +189,13 @@ const focussed = () => {
 			</div>
 		</div>
 	</div>
-	<LightTable :columns="airdropColumns" :rows="data" alternative row-key="drop">
+	<LightTable
+		:columns="airdropColumns"
+		:rows="data"
+		alternative
+		row-key="drop"
+		v-if="$q.screen.gt.md"
+	>
 		<template v-slot:body-cell-drop="slotProps">
 			<q-td class="author-column" :props="slotProps">
 				<div class="row items-center no-wrap">
@@ -248,6 +257,14 @@ const focussed = () => {
 			</q-td>
 		</template>
 	</LightTable>
+	<div class="row grid-gap-32" v-else>
+		<AirdropCard
+			v-for="(airdrop, index) of data"
+			:key="index"
+			:airdrop="airdrop"
+			class="flex-100 flex-between-md-half"
+		/>
+	</div>
 </template>
 
 <style lang="scss" scoped>

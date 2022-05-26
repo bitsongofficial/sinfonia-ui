@@ -23,7 +23,7 @@ export const disabledPlayground =
 const routes: RouteRecordRaw[] = [
 	{
 		path: "/",
-		redirect: "/fantokens",
+		redirect: "/swap",
 	},
 	{
 		path: "/fantokens",
