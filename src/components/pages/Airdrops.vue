@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { resolveIcon, balancedCurrency } from "@/common"
 import { TableColumn } from "@/types"
-import { computed, ref } from "vue"
+import { computed, ref, watch, onUnmounted } from "vue"
+import { useQuasar } from "quasar"
 import Title from "@/components/typography/Title.vue"
 import LightTable from "@/components/LightTable.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import AirdropCard from "@/components/cards/AirdropCard.vue"
 import useConfig from "@/store/config"
-import { useQuasar } from "quasar"
 
 const configStore = useConfig()
 const $q = useQuasar()
@@ -157,19 +157,13 @@ const focussed = () => {
 </script>
 
 <template>
-	<Title class="q-mb-32">Airdrops</Title>
-	<div class="row items-start justify-between q-mb-30">
-		<div class="flex items-center col-8 col-md-6 col-lg-5">
-			<p class="fs-16 opacity-40 font-weight-medium !leading-24">
-				Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many
-				international hits, among which the best-known is undoubtedly Born Again
-				(Babylonia). Recognized as a dance music.
-			</p>
-		</div>
+	<div class="row items-center justify-between q-mb-28 q-mb-md-32">
+		<Title>Airdrops</Title>
 		<div
 			@click="focussed"
 			@focusout="searchFocussed = false"
 			class="relative-position cursor-pointer group col-auto"
+			v-if="$q.screen.lt.lg && $q.screen.gt.xs"
 		>
 			<div
 				class="absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md light:shadow-10"
@@ -185,10 +179,77 @@ const focussed = () => {
 					:debounce="1000"
 					dense
 				/>
-				<q-icon size="15px" :name="resolveIcon('search', 13, 13)"></q-icon>
+				<q-icon
+					size="15px"
+					:name="resolveIcon('search', 13, 13)"
+					class="opacity-40"
+				></q-icon>
 			</div>
 		</div>
 	</div>
+	<div class="row items-start justify-between q-mb-30">
+		<div class="flex items-center col-8 col-md-6 col-lg-5">
+			<p class="fs-16 opacity-40 font-weight-medium !leading-24">
+				Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many
+				international hits, among which the best-known is undoubtedly Born Again
+				(Babylonia). Recognized as a dance music.
+			</p>
+		</div>
+		<div
+			@click="focussed"
+			@focusout="searchFocussed = false"
+			class="relative-position cursor-pointer group col-auto"
+			v-if="$q.screen.gt.md"
+		>
+			<div
+				class="absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md light:shadow-10"
+			></div>
+			<div class="flex items-center q-px-28 q-py-14">
+				<q-input
+					class="q-mr-4 min-size-input"
+					input-class="q-py-0"
+					hide-bottom-space
+					borderless
+					v-show="searchActive"
+					v-model="searchValue"
+					:debounce="1000"
+					dense
+				/>
+				<q-icon
+					size="15px"
+					:name="resolveIcon('search', 13, 13)"
+					class="opacity-40"
+				></q-icon>
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="relative-position cursor-pointer group col-auto q-mt-48 q-mb-30"
+		v-if="$q.screen.lt.sm"
+	>
+		<div
+			class="absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md light:shadow-10"
+		></div>
+		<div class="flex items-center q-px-28 q-py-14">
+			<q-input
+				class="q-mr-4 min-size-input flex-1"
+				input-class="q-py-0"
+				hide-bottom-space
+				borderless
+				v-model="searchValue"
+				:debounce="1000"
+				dense
+				placeholder="Search"
+			/>
+			<q-icon
+				size="15px"
+				:name="resolveIcon('search', 13, 13)"
+				class="opacity-40"
+			></q-icon>
+		</div>
+	</div>
+
 	<LightTable
 		:columns="airdropColumns"
 		:rows="data"

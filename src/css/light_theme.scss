@@ -76,10 +76,11 @@ body.body--light {
         }
 
         tr {
-          &:hover::after {
-            background-color: #FFFFFF;
-            box-shadow: 0px 0px 15px rgba(20, 20, 46, 0.04);
-            backdrop-filter: blur(60px);
+          &:hover {
+            td {
+              background-color: $white;
+              box-shadow: 0px 0px 15px rgba(20, 20, 46, 0.04);
+            }
           }
         }
       }
@@ -97,13 +98,15 @@ body.body--light {
           backdrop-filter: unset;
 
           tr {
-            &::after {
-              background-color: $white;
-              box-shadow: none;
+            &:hover {
+              td {
+                background-color: transparentize($color: $white, $amount: 0.5);
+              }
             }
 
-            &:hover::after {
-              background-color: transparentize($color: $white, $amount: 0.5);
+            td {
+              background-color: $white;
+              box-shadow: none;
             }
           }
         }

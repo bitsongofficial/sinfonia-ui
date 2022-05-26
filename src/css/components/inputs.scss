@@ -77,9 +77,12 @@
 }
 
 .q-field__native,
-.q-field__native,
 .q-field__control {
     height: fit-content;
+
+    &::placeholder {
+        opacity: 0.4;
+    }
 }
 
 .clean-input {

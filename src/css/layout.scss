@@ -652,6 +652,10 @@ $s in $custom-sizes {
     .q-pa-md-36 {
         padding: 36px !important;
     }
+
+    .q-mb-md-32 {
+        margin-bottom: 32px;
+    }
 }
 
 @media screen and (min-width: $breakpoint-lg) {
