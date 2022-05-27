@@ -20,6 +20,8 @@ export const disabledTransactions =
 export const disabledPlayground =
 	import.meta.env.VITE_PLAYGROUND_DISABLE === "true"
 
+export const disabledAirdrops = import.meta.env.VITE_AIRDROPS_DISABLE === "true"
+
 const routes: RouteRecordRaw[] = [
 	{
 		path: "/",
@@ -107,13 +109,16 @@ export const menuItems: MenuItem[] = [
 		path: "/assets",
 		disabled: disabledRoutes,
 	},
-	{
+]
+
+if (!disabledAirdrops) {
+	menuItems.push({
 		icon: { name: "airdrop", width: 20, height: 22 },
 		label: "Airdrops",
 		path: "/airdrops",
 		disabled: disabledRoutes,
-	},
-]
+	})
+}
 
 if (!disabledTransactions) {
 	menuItems.push({

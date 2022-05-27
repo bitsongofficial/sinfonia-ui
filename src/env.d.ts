@@ -22,6 +22,7 @@ interface ImportMetaEnv {
 	readonly VITE_LEADERBOARD_LOADING_DISABLED: string
 	readonly VITE_LEADERBOARD_DISTRIBUTION_RATIO: string
 	readonly VITE_TRANSACTIONS_DISABLE: string
+	readonly VITE_AIRDROPS_DISABLE: string
 	readonly VITE_MODE: string
 }
 
