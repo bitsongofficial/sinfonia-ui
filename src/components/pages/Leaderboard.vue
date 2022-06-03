@@ -43,12 +43,12 @@ const accountColumns: TableColumn[] = [
 		field: "balance",
 		align: "center",
 	},
-	/* {
+	{
 		name: "reward",
 		label: "Prize (BTSG)",
 		field: "reward",
 		align: "center",
-	}, */
+	},
 	{
 		name: "valid",
 		label: "",
@@ -376,20 +376,21 @@ const distributionAmount = (amount: string) => {
 		</template>
 		<template v-slot:body-cell-reward="slotProps">
 			<q-td :props="slotProps">
-				<p
+				<p class="text-center">TBA</p>
+				<!-- <p
 					class="text-center opacity-20"
 					v-if="!slotProps.row.valid || slotProps.row.disqualified"
 				>
 					0
-				</p>
-				<p
+				</p> -->
+				<!-- <p
 					class="text-center"
 					v-else-if="configStore.bitsongToken && bitsongCoinLookup"
 				>
 					{{
 						balancedCurrencyFixed(distributionAmount(slotProps.row.balance.amount), 3)
 					}}
-				</p>
+				</p> -->
 			</q-td>
 		</template>
 		<template v-slot:body-cell-valid="slotProps">
