@@ -28,6 +28,7 @@ const pagination = {
 		:class="{
 			'table-no-background': noBackground || alternative,
 			alternative: alternative,
+			'table-empty': rows.length === 0,
 		}"
 		hide-bottom
 	>
@@ -48,7 +49,7 @@ const pagination = {
 		</template>
 		<template v-slot:no-data="{ message }">
 			<div
-				class="absolute-full q-py-16 q-pr-16 q-pl-10 flex justify-center items-center fs-18 opacity-40"
+				class="q-py-16 q-pr-16 q-pl-10 flex justify-center items-center fs-18 opacity-40"
 			>
 				<p>
 					{{ message ?? "No data" }}

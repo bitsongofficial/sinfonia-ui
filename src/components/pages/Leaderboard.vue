@@ -262,7 +262,7 @@ const distributionAmount = (amount: string) => {
 			</CardWithIcon>
 		</div>
 	</div>
-	<div class="flex items-center justify-between q-mb-36">
+	<div class="flex items-center justify-between">
 		<div class="flex items-center row">
 			<p class="fs-18 font-weight-medium">Leaderboard</p>
 		</div>
