@@ -6,8 +6,10 @@ $container-center: 508px;
 $primary-darker: #1B0B30;
 $primary-darker-half: transparentize($primary-darker, 0.5);
 $primary-dark-700 : #261639;
+$primary-dark-600: #24142E;
 $primary-dark: #220D32;
 $primary-light: #6D547A;
+$alternative: #14142E;
 $secondary-390: #413156;
 $secondary-350: #463659;
 $secondary-320: #49395C;
@@ -18,6 +20,7 @@ $dark-lighter: #322142;
 $gray-light: #E9E6EC;
 $gray-600: #B0A9B8;
 $gray-700: #C0BAC6;
+$gray-800: #EAE7ED;
 $white-780: #ECE9EE;
 $white-800: #F7F5F8;
 $white: #FFFFFF;
@@ -32,7 +35,7 @@ $scrollbarSize: $padding * 2+$thumbSize;
 }
 
 @mixin text-gradient() {
-    background: linear-gradient(147.07deg, #9C589C 21.78%, #FF005C 79.22%);
+    background: linear-gradient(176deg, #9C589C 21.78%, #FF005C 79.22%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

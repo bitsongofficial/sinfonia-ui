@@ -76,10 +76,11 @@ body.body--light {
         }
 
         tr {
-          &:hover::after {
-            background-color: #FFFFFF;
-            box-shadow: 0px 0px 15px rgba(20, 20, 46, 0.04);
-            backdrop-filter: blur(60px);
+          &:hover {
+            td {
+              background-color: $white;
+              box-shadow: 0px 0px 15px rgba(20, 20, 46, 0.04);
+            }
           }
         }
       }
@@ -88,6 +89,27 @@ body.body--light {
     .transactions-table-head-row {
       .q-table__sort-icon {
         background-image: url("@/assets/images/icons/sortarrow_light.svg");
+      }
+    }
+
+    &.alternative {
+      .q-table {
+        tbody {
+          backdrop-filter: unset;
+
+          tr {
+            &:hover {
+              td {
+                background-color: transparentize($color: $white, $amount: 0.5);
+              }
+            }
+
+            td {
+              background-color: $white;
+              box-shadow: none;
+            }
+          }
+        }
       }
     }
   }
@@ -149,6 +171,10 @@ body.body--light {
       background-color: $primary !important;
     }
 
+    &bg-gray-800-opacity-50 {
+      background: transparentize($color: $gray-800, $amount: 0.5) !important;
+    }
+
     &border-primary {
       border-color: $primary !important;
     }
@@ -187,6 +213,10 @@ body.body--light {
 
     &shadow-none {
       box-shadow: none !important;
+    }
+
+    &shadow-10 {
+      box-shadow: 0px 0px 20px transparentize($color: $alternative, $amount: 0.9) !important;
     }
 
     &inner\:shadow-none {
@@ -303,7 +333,7 @@ body.body--light {
     }
 
     &bg-gradient {
-      background: linear-gradient(147.07deg, $primary-complementary 21.78%, $primary 79.22%) !important;
+      background: linear-gradient(176deg, $primary-complementary 21.78%, $primary 79.22%) !important;
       border-radius: 30px;
     }
 
@@ -365,7 +395,7 @@ body.body--light {
   }
 
   .main-page-background-helper {
-    background: #EAE7ED;
+    background: $gray-800;
     filter: blur(30px);
     backdrop-filter: blur(100px);
   }
@@ -389,6 +419,7 @@ body.body--light {
 
   .q-menu {
     .q-item {
+
       &:hover,
       &:active,
       &:focus,

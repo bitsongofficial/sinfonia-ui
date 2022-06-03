@@ -9,6 +9,7 @@ import {
 	calculateSlippageTokenIn,
 	gtnZero,
 	toDynamicDp,
+	toViewDenom,
 } from "@/common"
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
@@ -24,6 +25,7 @@ import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 import SwapperField from "@/components/inputs/SwapperField.vue"
+import { coin } from "@cosmjs/proto-signing"
 
 const bankStore = useBank()
 const poolsStore = usePools()
@@ -98,10 +100,7 @@ const updateFromAmount = (swap = false) => {
 
 	if (values.fromAmount.length > 0) {
 		if (!fromAmount.isNaN()) {
-			setFieldValue(
-				"toAmount",
-				toDynamicDp(fromAmount.div(swapRatio.value).toString())
-			)
+			setFieldValue("toAmount", toDynamicDp(tokenOutSwap.value))
 		}
 	}
 }
@@ -111,10 +110,7 @@ const updateToAmount = (swap = false) => {
 
 	if (values.toAmount.length > 0) {
 		if (!toAmount.isNaN()) {
-			setFieldValue(
-				"fromAmount",
-				toDynamicDp(toAmount.div(1 / swapRatio.value).toString())
-			)
+			setFieldValue("fromAmount", toDynamicDp(tokenInSwap.value))
 		}
 	}
 }
@@ -237,32 +233,6 @@ const swapRatio = computed<number>(() => {
 	return 0
 })
 
-const fromAmountChange = (value: string) => {
-	const amount = new BigNumber(value)
-
-	if (value.length > 0) {
-		if (!amount.isNaN()) {
-			setFieldValue(
-				"toAmount",
-				toDynamicDp(amount.div(swapRatio.value).toString())
-			)
-		}
-	}
-}
-
-const toAmountChange = (value: string) => {
-	const amount = new BigNumber(value)
-
-	if (value.length > 0) {
-		if (!amount.isNaN()) {
-			setFieldValue(
-				"fromAmount",
-				toDynamicDp(amount.div(1 / swapRatio.value).toString())
-			)
-		}
-	}
-}
-
 const swapAmountFiat = computed<string>(() => {
 	try {
 		if (values.fromAmount.length > 0) {
@@ -289,15 +259,89 @@ const swapCoin = computed(() => {
 	return undefined
 })
 
+const swapToCoin = computed(() => {
+	try {
+		if (toCoin.value && values.toAmount.length > 0) {
+			return amountIBCFromCoin(values.toAmount, toCoin.value)
+		}
+	} catch (error) {
+		console.error(error)
+		return undefined
+	}
+
+	return coin(0, "")
+})
+
 const estimatedHopSwap = computed(() => {
-	if (fromCoin.value && swapCoin.value) {
+	if (fromCoin.value && swapCoin.value && swapToCoin.value) {
 		return estimateHopSwapExactAmountIn(
 			swapCoin.value,
+			swapToCoin.value,
 			fromCoin.value,
 			swapRoutes.value
 		)
 	}
 })
+
+const tokenOutSwap = computed(() => {
+	const estimatedHopSwapOut = estimatedHopSwap.value
+	const outCoin = toCoin.value
+
+	if (estimatedHopSwapOut && outCoin) {
+		const coinLookup = outCoin.coinLookup.find(
+			(coin) => coin.viewDenom === outCoin.symbol
+		)
+
+		if (coinLookup) {
+			return toViewDenom(
+				estimatedHopSwapOut.tokenOutput.amount,
+				coinLookup.chainToViewConversionFactor
+			)
+		}
+	}
+
+	return "0"
+})
+
+const tokenInSwap = computed(() => {
+	const estimatedHopSwapOut = estimatedHopSwap.value
+	const outCoin = fromCoin.value
+
+	if (estimatedHopSwapOut && outCoin) {
+		const coinLookup = outCoin.coinLookup.find(
+			(coin) => coin.viewDenom === outCoin.symbol
+		)
+
+		if (coinLookup) {
+			return toViewDenom(
+				estimatedHopSwapOut.tokenInput.amount,
+				coinLookup.chainToViewConversionFactor
+			)
+		}
+	}
+
+	return "0"
+})
+
+const fromAmountChange = (value: string) => {
+	const amount = new BigNumber(value)
+
+	if (value.length > 0) {
+		if (!amount.isNaN()) {
+			setFieldValue("toAmount", toDynamicDp(tokenOutSwap.value))
+		}
+	}
+}
+
+const toAmountChange = (value: string) => {
+	const amount = new BigNumber(value)
+
+	if (value.length > 0) {
+		if (!amount.isNaN()) {
+			setFieldValue("fromAmount", toDynamicDp(tokenInSwap.value))
+		}
+	}
+}
 
 const slippage = computed(() => {
 	if (estimatedHopSwap.value) {
@@ -326,7 +370,7 @@ const setSlippage = (index: string) => {
 }
 
 const invalidSlippage = computed(() => {
-	return new BigNumber(slippage.value).multipliedBy(100).gt(maxSlippage.value)
+	return new BigNumber(slippage.value).multipliedBy(100).gt("1")
 })
 
 const swapRoutes = computed(() => {
@@ -357,7 +401,9 @@ const onSubmit = handleSubmit(() => {
 				estimatedHopSwap.value.spotPriceBefore,
 				swapCoin.value.amount,
 				maxSlippageDec
-			).toFixed(0)
+			)
+				.truncated()
+				.toString()
 		}
 
 		transactionManagerStore.swapExactAmountIn(
@@ -419,15 +465,16 @@ const onSubmit = handleSubmit(() => {
 			>
 				<div class="flex items-center">
 					<p class="q-mr-8">Estimated slippage</p>
-					<!-- <q-icon
-					size="12px"
-					:name="resolveIcon('info', 15, 15)"
-					class="cursor-pointer"
-				>
-					<InformativeTooltip anchor="center right" self="center left">
-						slippage is the difference between a trade's expected and actual price
-					</InformativeTooltip>
-				</q-icon> -->
+					<q-icon
+						size="12px"
+						:name="resolveIcon('info', 15, 15)"
+						class="cursor-pointer"
+					>
+						<InformativeTooltip anchor="center right" self="center left">
+							Difference between trade's expect and the actual price. Swapping above 1%
+							at your own risk.
+						</InformativeTooltip>
+					</q-icon>
 				</div>
 				<div class="flex">
 					<p

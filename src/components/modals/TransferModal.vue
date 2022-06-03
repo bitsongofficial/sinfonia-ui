@@ -199,23 +199,6 @@ const onSubmit = handleSubmit(() => {
 })
 
 const availableGtnZero = computed(() => gtnZero(available.value))
-
-const bigTransfer = computed({
-	get(): boolean {
-		if (availableGtnZero.value) {
-			return gteComparePercentage(values.amount, available.value)
-		}
-
-		return false
-	},
-	set(value: boolean) {
-		bigTransferInternal.value = value
-
-		if (value) {
-			showBigTransferTooltip.value = value
-		}
-	},
-})
 </script>
 
 <template>
@@ -244,25 +227,9 @@ const bigTransfer = computed({
 			/>
 		</div>
 
-		<div
-			:class="
-				'flex justify-between items-center q-mb-16 fs-12 text-dark' +
-				(bigTransfer ? ' q-field--error' : '')
-			"
-		>
+		<div class="flex justify-between items-center q-mb-16 fs-12 text-dark">
 			<div class="flex title-with-error">
 				<p class="text-weight-medium text-uppercase q-mr-12">Amount to transfer</p>
-				<q-icon :name="resolveIcon('info', 15, 15)" size="12px" color="primary">
-					<DangerTooltip
-						anchor="center right"
-						self="center start"
-						v-model="showBigTransferTooltip"
-					>
-						You are about to transfer more than 20% of your total amount. We suggest
-						that you do not transfer more than the amount you want to trade. Proceed
-						at your own risk.
-					</DangerTooltip>
-				</q-icon>
 			</div>
 			<p>
 				Available

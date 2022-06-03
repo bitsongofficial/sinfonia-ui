@@ -17,7 +17,7 @@ const authStore = useAuth()
 const isProduction = import.meta.env.VITE_MODE
 </script>
 <template>
-	<div v-if="$q.screen.gt.xs" class="row justify-between items-center">
+	<div v-if="$q.screen.gt.md" class="row justify-between items-center">
 		<RouterLink to="/fantokens">
 			<Logo></Logo>
 		</RouterLink>

@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import { TableColumn } from "@/types/table"
-defineProps<{
-	rows: any[]
-	columns: TableColumn[]
-	noBackground?: boolean
-}>()
+
+withDefaults(
+	defineProps<{
+		rows: any[]
+		columns: TableColumn[]
+		alternative?: boolean
+		noBackground?: boolean
+	}>(),
+	{
+		alternative: false,
+	}
+)
 
 const pagination = {
 	rowsPerPage: -1,
@@ -17,7 +24,12 @@ const pagination = {
 		:rows="rows"
 		:columns="columns"
 		:pagination="pagination"
-		:class="(noBackground ? 'table-no-background' : '') + ' footer-h-0'"
+		class="footer-h-0"
+		:class="{
+			'table-no-background': noBackground || alternative,
+			alternative: alternative,
+			'table-empty': rows.length === 0,
+		}"
 		hide-bottom
 	>
 		<template v-slot:header="slotProps">
@@ -37,7 +49,7 @@ const pagination = {
 		</template>
 		<template v-slot:no-data="{ message }">
 			<div
-				class="absolute-full q-py-16 q-pr-16 q-pl-10 flex justify-center items-center fs-18 opacity-40"
+				class="q-py-16 q-pr-16 q-pl-10 flex justify-center items-center fs-18 opacity-40"
 			>
 				<p>
 					{{ message ?? "No data" }}

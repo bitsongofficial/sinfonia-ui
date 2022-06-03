@@ -17,9 +17,9 @@ export const getLeaderboard = async (limit = 50, page = 1, search = "") => {
 	const { data: result } = await externalClient.get<
 		TwitterPagination<Leaderboard>
 	>(
-		`${
-			import.meta.env.VITE_BITSONG_TWITTER_API
-		}leaderboards/${limit}/${page}/${search}`
+		`${import.meta.env.VITE_BITSONG_TWITTER_API}leaderboards/${limit}/${page}/${
+			search ?? ""
+		}`
 	)
 
 	return result

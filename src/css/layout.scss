@@ -55,12 +55,20 @@
     flex: 0;
 }
 
+.flex-half {
+    flex: 0 0 calc(50% - var(--grid-gap-offset, 0) / 2);
+}
+
 .\!flex-0 {
     flex: 0 !important;
 }
 
 .flex-1 {
     flex: 1;
+}
+
+.flex-100 {
+    flex: 0 0 100%;
 }
 
 .min-h-fit {
@@ -102,6 +110,10 @@
     .col {
         width: 33.33%;
     }
+}
+
+.w-5 {
+    width: 5%;
 }
 
 .w-1\/4 {
@@ -322,6 +334,11 @@ $s in $custom-sizes {
     .h-#{$k} {
         height: $s;
     }
+
+    .grid-gap-#{$k} {
+        --grid-gap-offset: #{$s};
+        gap: $s;
+    }
 }
 
 @media screen and (min-height: 600px) {
@@ -435,6 +452,10 @@ $s in $custom-sizes {
         margin-top: 10px !important;
     }
 
+    .q-mt-xs-56 {
+        margin-top: 56px !important;
+    }
+
     .q-mb-xs-14 {
         margin-bottom: 14px !important;
     }
@@ -537,6 +558,20 @@ $s in $custom-sizes {
     }
 }
 
+@media screen and (min-width: $breakpoint-sm) and (max-width: $breakpoint-md) {
+    .container {
+        padding: 0 56px;
+    }
+
+    .q-pt-md-64 {
+        padding-top: 64px !important;
+    }
+
+    .flex-between-md-half {
+        flex: 0 0 calc(50% - var(--grid-gap-offset, 0) / 2);
+    }
+}
+
 @media screen and (max-width: $breakpoint-md) {
     .text-left-md {
         text-align: left;
@@ -544,6 +579,15 @@ $s in $custom-sizes {
 
     .q-mt-md-10 {
         margin-top: 10px !important;
+    }
+
+    .q-px-md-0 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .flex-md-half {
+        flex: 0 0 calc(50% - var(--grid-gap-offset, 0) / 2);
     }
 }
 
@@ -608,6 +652,10 @@ $s in $custom-sizes {
     .q-pa-md-36 {
         padding: 36px !important;
     }
+
+    .q-mb-md-32 {
+        margin-bottom: 32px;
+    }
 }
 
 @media screen and (min-width: $breakpoint-lg) {
@@ -621,5 +669,9 @@ $s in $custom-sizes {
 
     .\!w-lg-1\/3 {
         width: 33.33% !important;
+    }
+
+    .flex-lg-1 {
+        flex: 1;
     }
 }

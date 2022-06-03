@@ -36,11 +36,13 @@ const disclaimerUpdate = (value: boolean) => {
 </script>
 
 <template>
-	<div class="min-h-window-height q-pt-70 q-pb-60 q-pb-xs-150 column">
-		<div class="container q-px-xs-0">
+	<div
+		class="min-h-window-height q-pt-70 q-pb-60 q-pt-md-64 q-mt-xs-56 q-pb-xs-150 column"
+	>
+		<div class="container q-px-xs-0 q-px-md-0">
 			<div class="column col-grow">
 				<Header></Header>
-				<div v-if="$q.screen.gt.xs" class="no-pointer-events full-width flex">
+				<div v-if="$q.screen.gt.md" class="no-pointer-events full-width flex">
 					<div
 						class="full-width !w-xs-1/3 q-px-xs-0 !w-sm-1/4 !w-md-1/6 self-end fixed-xs z-10 left-0 bottom-0"
 					>

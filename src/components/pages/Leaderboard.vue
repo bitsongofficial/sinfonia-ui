@@ -7,6 +7,7 @@ import CardWithIcon from "@/components/cards/CardWithIcon.vue"
 import LightTable from "@/components/LightTable.vue"
 import useTwitter from "@/store/twitter"
 import useConfig from "@/store/config"
+import Decimal from "decimal.js"
 
 const twitterStore = useTwitter()
 const configStore = useConfig()
@@ -20,26 +21,32 @@ const accountColumns: TableColumn[] = [
 	},
 	{
 		name: "user",
-		label: "",
+		label: "User",
 		align: "left",
 		field: "",
 	},
 	{
 		name: "account",
-		label: "",
+		label: "Twitter ID",
 		align: "center",
 		field: "account",
 	},
 	{
 		name: "address",
-		label: "Wallet",
+		label: "public address",
 		field: "address",
 		align: "center",
 	},
 	{
 		name: "balance",
-		label: "Balance",
+		label: "Balance (BTSG)",
 		field: "balance",
+		align: "center",
+	},
+	{
+		name: "reward",
+		label: "Prize (BTSG)",
+		field: "reward",
 		align: "center",
 	},
 	{
@@ -135,6 +142,12 @@ const bitsongCoinLookup = computed(() => {
 		return coinLookup
 	}
 })
+
+const distributionAmount = (amount: string) => {
+	return new Decimal(amount)
+		.mul(import.meta.env.VITE_LEADERBOARD_DISTRIBUTION_RATIO)
+		.toString()
+}
 </script>
 
 <template>
@@ -249,7 +262,7 @@ const bitsongCoinLookup = computed(() => {
 			</CardWithIcon>
 		</div>
 	</div>
-	<div class="flex items-center justify-between q-mb-36">
+	<div class="flex items-center justify-between">
 		<div class="flex items-center row">
 			<p class="fs-18 font-weight-medium">Leaderboard</p>
 		</div>
@@ -260,7 +273,7 @@ const bitsongCoinLookup = computed(() => {
 			v-if="!leaderboardLoadingDisabled"
 		>
 			<div
-				class="absolute-full bg-white rounded-30 opacity-5 shadow-md group-hover:opacity-15"
+				class="absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md"
 			></div>
 			<div class="flex items-center q-px-28 q-py-14">
 				<q-input
@@ -274,7 +287,7 @@ const bitsongCoinLookup = computed(() => {
 					:debounce="1000"
 					dense
 				/>
-				<q-icon size="13px" :name="resolveIcon('search', 13, 13)"></q-icon>
+				<q-icon size="15px" :name="resolveIcon('search', 13, 13)"></q-icon>
 			</div>
 		</div>
 	</div>
@@ -282,7 +295,6 @@ const bitsongCoinLookup = computed(() => {
 		:columns="accountColumns"
 		:rows="authorsWithIndex"
 		row-key="address"
-		hide-header
 		:loading="twitterStore.loading"
 		v-model:pagination="pagination"
 		no-data-label="Leaderboard of winners (or not) will be available only after the end of the competition."
@@ -359,7 +371,24 @@ const bitsongCoinLookup = computed(() => {
 					}"
 				>
 					{{ balancedCurrencyFixed(slotProps.row.balance.amount, 3) }}
-					{{ configStore.bitsongToken?.symbol }}
+				</p>
+			</q-td>
+		</template>
+		<template v-slot:body-cell-reward="slotProps">
+			<q-td :props="slotProps">
+				<p
+					class="text-center opacity-20"
+					v-if="!slotProps.row.valid || slotProps.row.disqualified"
+				>
+					0
+				</p>
+				<p
+					class="text-center"
+					v-else-if="configStore.bitsongToken && bitsongCoinLookup"
+				>
+					{{
+						balancedCurrencyFixed(distributionAmount(slotProps.row.balance.amount), 3)
+					}}
 				</p>
 			</q-td>
 		</template>
