@@ -43,12 +43,12 @@ const accountColumns: TableColumn[] = [
 		field: "balance",
 		align: "center",
 	},
-	{
+	/* {
 		name: "reward",
 		label: "Prize (BTSG)",
 		field: "reward",
 		align: "center",
-	},
+	}, */
 	{
 		name: "valid",
 		label: "",
