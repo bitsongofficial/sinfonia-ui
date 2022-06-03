@@ -21,31 +21,31 @@ const accountColumns: TableColumn[] = [
 	},
 	{
 		name: "user",
-		label: "",
+		label: "User",
 		align: "left",
 		field: "",
 	},
 	{
 		name: "account",
-		label: "",
+		label: "Twitter ID",
 		align: "center",
 		field: "account",
 	},
 	{
 		name: "address",
-		label: "Wallet",
+		label: "public address",
 		field: "address",
 		align: "center",
 	},
 	{
 		name: "balance",
-		label: "Balance",
+		label: "Balance (BTSG)",
 		field: "balance",
 		align: "center",
 	},
 	{
 		name: "reward",
-		label: "Reward",
+		label: "Prize (BTSG)",
 		field: "reward",
 		align: "center",
 	},
@@ -295,7 +295,6 @@ const distributionAmount = (amount: string) => {
 		:columns="accountColumns"
 		:rows="authorsWithIndex"
 		row-key="address"
-		hide-header
 		:loading="twitterStore.loading"
 		v-model:pagination="pagination"
 		no-data-label="Leaderboard of winners (or not) will be available only after the end of the competition."
@@ -372,7 +371,6 @@ const distributionAmount = (amount: string) => {
 					}"
 				>
 					{{ balancedCurrencyFixed(slotProps.row.balance.amount, 3) }}
-					{{ configStore.bitsongToken?.symbol }}
 				</p>
 			</q-td>
 		</template>
@@ -382,7 +380,7 @@ const distributionAmount = (amount: string) => {
 					class="text-center opacity-20"
 					v-if="!slotProps.row.valid || slotProps.row.disqualified"
 				>
-					0 {{ configStore.bitsongToken?.symbol }}
+					0
 				</p>
 				<p
 					class="text-center"
@@ -391,7 +389,6 @@ const distributionAmount = (amount: string) => {
 					{{
 						balancedCurrencyFixed(distributionAmount(slotProps.row.balance.amount), 3)
 					}}
-					{{ configStore.bitsongToken?.symbol }}
 				</p>
 			</q-td>
 		</template>
