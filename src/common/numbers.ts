@@ -439,26 +439,14 @@ export function calcOutGivenOut(
 	const weightRatio = poolAssetWeightOut.div(poolAssetWeightIn)
 	const swapFeeAmount = new Decimal(swapFee)
 	const minusOne = new Decimal(-1)
-	const poolOutBase = minusOne.mul(
-		tokenOutAmount.minus(poolAssetBalanceOut).div(poolAssetBalanceOut)
-	)
+	const one = new Decimal(1)
+	const poolOutBase = one.minus(tokenOutAmount.div(poolAssetBalanceOut))
 
-	const poolOutReverse = Decimal.pow(
-		poolOutBase,
-		minusOne.mul(weightRatio)
-	)
+	const poolOut = Decimal.pow(poolOutBase, minusOne.mul(weightRatio))
 
-	const poolOut = Decimal.pow(
-		poolOutBase,
-		weightRatio
-	)
-
-	const tokenIn = poolAssetBalanceIn
-		.mul(poolOutReverse)
-		.mul(poolOut.plus(minusOne))
+	return poolAssetBalanceIn
+		.mul(one.minus(poolOut))
 		.div(swapFeeAmount.plus(minusOne))
-
-	return tokenIn
 }
 
 export const estimateSwapExactAmountIn = (
