@@ -26,7 +26,7 @@ This section guides you through submitting a bug report for Sinfonia. Following 
 
 #### How to submit a Bug Report? :incoming_envelope: 
 
-Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create an issue on this repository and provide the needed information by filling in [the template](https://github.com/bitsongofficial/sinfonia-ui/issues/new?assignees=&labels=bug&template=BUG-REPORT.yml&title=%5BBug%5D%3A+) (if it is to join the "bugs competition", click [here](https://github.com/bitsongofficial/sinfonia-ui/issues/new?assignees=angelorc%2CDavideSegullo%2CGiorgionocera&labels=bug%2Ccompetition+bug+report&template=BUG-COMPETITION-REPORT.yml&title=%5BCompetition+Bug%5D%3A+)).
+Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create an issue on this repository and provide the needed information by filling in [the template](https://github.com/bitsongofficial/sinfonia-ui/issues/new?assignees=&labels=bug&template=BUG-REPORT.yml&title=%5BBug%5D%3A+).
 
 You have to completely explain the problem and include additional details to help maintainers reproduce the problem:
 
