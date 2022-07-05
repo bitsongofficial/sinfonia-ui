@@ -21,7 +21,6 @@ export interface BankState {
 	fantokensBalance: Coin[]
 	lockedCoinsBalance: Coin[]
 	totalMintedFantokens: Coin[]
-	totalBurnedFantokens: Coin[]
 	lockedLongerDuration: OsmosisLock[]
 }
 
@@ -35,7 +34,6 @@ const useBank = defineStore("bank", {
 		fantokensBalance: [],
 		lockedCoinsBalance: [],
 		totalMintedFantokens: [],
-		totalBurnedFantokens: [],
 		lockedLongerDuration: [],
 	}),
 	actions: {
@@ -44,7 +42,6 @@ const useBank = defineStore("bank", {
 				this.loading = true
 
 				this.totalMintedFantokens = await sinfoniaClient.totalMintedFantokens()
-				this.totalBurnedFantokens = await sinfoniaClient.totalBurnedFantokens()
 			} catch (error) {
 				console.error(error)
 				throw error

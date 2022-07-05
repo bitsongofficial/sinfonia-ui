@@ -15,7 +15,6 @@ export interface TokenBalance extends Token, Balance {
 	marketCap?: string
 	circulatingSupply?: string
 	totalMintedTokens?: string
-	totalBurnedTokens?: string
 	chains?: ChainBalance[]
 	routeDenom?: string
 }

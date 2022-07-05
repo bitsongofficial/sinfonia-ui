@@ -18,21 +18,6 @@ export default class SinfoniaClient {
 		this.configClient = new ConfigClient(configUrl)
 	}
 
-	public totalBurnedFantokens = async () => {
-		try {
-			if (this.bitsongClient) {
-				const response = await this.bitsongClient.totalBurnedFantokens()
-
-				return response.data.burned_coins
-			}
-		} catch (error) {
-			console.error(error)
-			throw error
-		}
-
-		return []
-	}
-
 	public totalMintedFantokens = async (): Promise<Coin[]> => {
 		try {
 			if (this.bitsongClient && this.assetListsConfig) {
