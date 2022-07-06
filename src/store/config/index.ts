@@ -64,7 +64,6 @@ const useConfig = defineStore("config", {
 
 				let circulatingSupply = new BigNumber("0")
 				let totalMintedTokens = new BigNumber("0")
-				let totalBurnedTokens = new BigNumber("0")
 				let price = "0"
 
 				if (coinLookup) {
@@ -72,21 +71,9 @@ const useConfig = defineStore("config", {
 						coinLookup.fantokenDenom ? coinLookup.fantokenDenom : coinLookup.viewDenom
 					)
 
-					const totalBurnedFantokens = bankStore.totalBurnedFantokens.filter(
-						(el) => el.denom === coinLookup.fantokenDenom
-					)
-
 					const totalMintedFantokens = bankStore.totalMintedFantokens.filter(
 						(el) => el.denom === coinLookup.fantokenDenom
 					)
-
-					totalBurnedTokens = reduce<Coin, BigNumber>(
-						totalBurnedFantokens,
-						(all, burned) => {
-							return all.plus(burned.amount)
-						},
-						new BigNumber("0")
-					).multipliedBy(coinLookup.chainToViewConversionFactor)
 
 					totalMintedTokens = reduce<Coin, BigNumber>(
 						totalMintedFantokens,
@@ -96,7 +83,7 @@ const useConfig = defineStore("config", {
 						new BigNumber("0")
 					).multipliedBy(coinLookup.chainToViewConversionFactor)
 
-					circulatingSupply = totalMintedTokens.minus(totalBurnedTokens)
+					circulatingSupply = totalMintedTokens
 				}
 
 				return {
@@ -105,7 +92,6 @@ const useConfig = defineStore("config", {
 					marketCap: circulatingSupply.multipliedBy(price).toString(),
 					circulatingSupply: circulatingSupply.toString(),
 					totalMintedTokens: totalMintedTokens.toString(),
-					totalBurnedTokens: totalBurnedTokens.toString(),
 				}
 			})
 		},
