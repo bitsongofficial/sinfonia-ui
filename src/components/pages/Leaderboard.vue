@@ -108,8 +108,8 @@ const pagination = computed(() => ({
 
 const currentPage = ref(1)
 
-const onRequest = (page: string) => {
-	twitterStore.loadLeaderboard(parseInt(page))
+const onRequest = (page: string | number) => {
+	twitterStore.loadLeaderboard(parseInt(page.toString()))
 }
 
 const onSearch = (search: string | number | null) => {
