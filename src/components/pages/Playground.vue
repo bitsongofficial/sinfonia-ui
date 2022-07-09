@@ -114,8 +114,8 @@ const pagination = computed(() => ({
 
 const currentPage = ref(1)
 
-const onRequest = (page: string) => {
-	twitterStore.loadAuthors(parseInt(page))
+const onRequest = (page: string | number) => {
+	twitterStore.loadAuthors(parseInt(page.toString()))
 }
 
 const onSearch = (search: string | number | null) => {
