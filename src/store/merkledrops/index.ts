@@ -108,7 +108,7 @@ const useMerkledrops = defineStore("merkledrops", {
 					const endHeight = new Decimal(merkledrop.end_height)
 					const lastTime = new Date(bitsongBlock.block.header.time)
 					const estimatedBlockTime = new Decimal(
-						import.meta.env.VITE_ESTIMATED_BLOCK_TIME ?? "60200"
+						import.meta.env.VITE_ESTIMATED_BLOCK_TIME ?? "6020"
 					) // ms
 
 					if (lastHeight.gt(endHeight)) {

@@ -31,6 +31,7 @@
 		"@storipress/apollo-vue-devtool": "^0.0.4",
 		"@vee-validate/rules": "^4.5.11",
 		"@vue/apollo-composable": "4.0.0-alpha.17",
+		"@vueuse/core": "^8.9.1",
 		"axios": "^0.26.1",
 		"bech32": "^2.0.0",
 		"bignumber.js": "^9.0.2",

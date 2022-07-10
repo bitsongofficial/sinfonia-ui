@@ -6,17 +6,20 @@ import {
 	formatShortAddress,
 } from "@/common"
 import { TableColumn } from "@/types"
-import { computed, onMounted, ref, watch } from "vue"
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { useQuasar } from "quasar"
+import { until } from "@vueuse/core"
 import Title from "@/components/typography/Title.vue"
 import LightTable from "@/components/LightTable.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import AirdropCard from "@/components/cards/AirdropCard.vue"
 import useMerkledrops from "@/store/merkledrops"
+import useConfig from "@/store/config"
 import useAuth from "@/store/auth"
 
 const merkledrops = useMerkledrops()
 const authStore = useAuth()
+const configStore = useConfig()
 const $q = useQuasar()
 
 const airdropColumns: TableColumn[] = [
@@ -65,18 +68,29 @@ const searchActive = computed(() => {
 	return searchValue.value.length > 0 || searchFocussed.value
 })
 
+const bitsongToken = computed(() => configStore.bitsongToken)
+
 const focussed = () => {
 	searchFocussed.value = true
 }
 
-authStore.$subscribe((_, state) => {
-	if (!state.loading) {
-		if (state.session) {
-			merkledrops.loadAirdrops(authStore.bitsongAddress)
-		} else {
-			merkledrops.loadAirdrops()
+onMounted(async () => {
+	await until(bitsongToken).toBeTruthy()
+
+	merkledrops.loadAirdrops(authStore.bitsongAddress)
+})
+
+const addressWatcher = watch(
+	() => authStore.bitsongAddress,
+	(address, oldAddress) => {
+		if (address !== oldAddress) {
+			merkledrops.loadAirdrops(address)
 		}
 	}
+)
+
+onUnmounted(() => {
+	addressWatcher()
 })
 </script>
 
