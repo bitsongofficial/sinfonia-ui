@@ -11,19 +11,19 @@ export const currency = (number: number | string, fraction = 2): string => {
 		return "0"
 	}
 
-	if (amount.gt(0.01)) {
+	if (amount.gt(0.00001)) {
 		return new Intl.NumberFormat("en-US", {
 			maximumFractionDigits: fraction,
 			minimumFractionDigits: fraction,
 		}).format(amount.toNumber())
 	}
 
-	return "< 0.01"
+	return "< 0.00001"
 }
 
 export const balancedCurrency = (
 	number: number | string,
-	fraction = 2
+	fraction = 4
 ): string => {
 	let value = new BigNumber(number)
 
