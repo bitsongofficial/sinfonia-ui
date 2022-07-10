@@ -1,7 +1,12 @@
 import OsmosisClient from "./osmosis-client"
 import ConfigClient from "./config-client"
 import BitsongClient from "./bitsong-client"
-import { AssetListConfig, ChainData, OsmosisPool } from "@/types"
+import {
+	AssetListConfig,
+	BitsongMerkledrop,
+	ChainData,
+	OsmosisPool,
+} from "@/types"
 import { AxiosResponse } from "axios"
 import { Coin } from "@cosmjs/proto-signing"
 import { mapTokensWithDefaults, tokenWithDefaults } from "@/common"
@@ -16,6 +21,42 @@ export default class SinfoniaClient {
 
 	public constructor(configUrl: string) {
 		this.configClient = new ConfigClient(configUrl)
+	}
+
+	public bitsongBlocks = async (block?: string) => {
+		try {
+			if (this.bitsongClient) {
+				const response = await this.bitsongClient.blocks(block)
+
+				return response.data
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public merkledrops = async (ids: number[]): Promise<BitsongMerkledrop[]> => {
+		try {
+			if (this.bitsongClient) {
+				const requests: Promise<
+					AxiosResponse<ChainData<"merkledrop", BitsongMerkledrop>>
+				>[] = []
+
+				for (const id of ids) {
+					requests.push(this.bitsongClient.merkledrop(id))
+				}
+
+				const merkledropsResponse = await Promise.all(requests)
+
+				return merkledropsResponse.map((el) => el.data.merkledrop)
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+
+		return []
 	}
 
 	public totalMintedFantokens = async (): Promise<Coin[]> => {

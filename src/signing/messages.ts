@@ -136,3 +136,22 @@ export const SwapExactAmountIn = (
 		},
 	}
 }
+
+export const MerkledropClaim = (
+	senderAddress: string, // Owner
+	merkledropId: number,
+	index: number,
+	amount: string,
+	proofs: string[]
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/bitsong.merkledrop.v1beta1.MsgClaim",
+		value: {
+			sender: senderAddress,
+			merkledrop_id: Long.fromString(merkledropId.toString()),
+			index: Long.fromString(index.toString()),
+			amount: amount,
+			proofs,
+		},
+	}
+}

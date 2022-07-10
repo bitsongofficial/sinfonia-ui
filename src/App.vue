@@ -9,6 +9,7 @@ import useBootstrap from "@/hooks/useBootstrap"
 import useSettings from "@/store/settings"
 import LightModeSwitch from "@/components/inputs/LightModeSwitch.vue"
 import DisclaimerModal from "@/components/modals/DisclaimerModal.vue"
+import apolloClient from "./services/sinfonia-gql"
 
 const settingsStore = useSettings()
 const $q = useQuasar()

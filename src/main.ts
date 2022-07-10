@@ -6,6 +6,7 @@ import { createRouter, createWebHistory } from "vue-router"
 import "@/common/validation"
 import VueGtag from "vue-gtag"
 import VueCountdown from "@chenfengyuan/vue-countdown"
+import Plugin from "@storipress/apollo-vue-devtool"
 
 // Import Quasar css
 import "quasar/src/css/index.sass"
@@ -80,6 +81,8 @@ pinia.use(createPersistedStatePlugin())
 app.use(pinia)
 
 app.use(router)
+
+app.use(Plugin)
 
 app.component(VueCountdown.name, VueCountdown)
 

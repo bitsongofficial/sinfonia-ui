@@ -31,3 +31,13 @@ export const osmosisRegistry = (): Registry => {
 		],
 	])
 }
+
+export const bitsongRegistry = (): Registry => {
+	return new Registry([
+		...defaultRegistryTypes,
+		[
+			"/osmosis.lockup.MsgLockTokens",
+			osmosis.lockup.MsgLockTokens as GeneratedType,
+		],
+	])
+}

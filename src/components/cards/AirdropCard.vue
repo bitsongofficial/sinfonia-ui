@@ -1,10 +1,32 @@
 <script setup lang="ts">
 import Card from "./Card.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
+import {
+	resolveIcon,
+	balancedCurrency,
+	percentage,
+	formatShortAddress,
+} from "@/common"
+import { MerkledropWithProof } from "@/types"
+import { computed } from "vue"
 
-defineProps<{
-	airdrop: any
+const props = defineProps<{
+	airdrop: MerkledropWithProof
 }>()
+
+const unavailableText = computed(() => {
+	if (!props.airdrop.active) {
+		return "Expired"
+	}
+
+	if (!props.airdrop.proof) {
+		return "Not Eligible"
+	}
+
+	if (!props.airdrop.proof.claimed) {
+		return "Claimed"
+	}
+})
 </script>
 
 <template>
@@ -21,10 +43,7 @@ defineProps<{
 			</div>
 
 			<q-avatar size="45px">
-				<img
-					src="https://raw.githubusercontent.com/bitsongofficial/assetlists/testnet/logos/clay.png"
-					alt="Clay"
-				/>
+				<img :src="airdrop.image" :alt="airdrop.name" />
 			</q-avatar>
 		</div>
 
@@ -32,14 +51,16 @@ defineProps<{
 			<div class="column items-start flex-half">
 				<p class="fs-14 !leading-18 q-mb-8 opacity-30 text-uppercase">Amount</p>
 				<p class="fs-15 !leading-19 text-capitalize">
-					{{ airdrop.amount }}
+					{{ balancedCurrency(airdrop.amount, 3) }}
 
-					<span class="opacity-40 q-ml-6 text-uppercase">{{ airdrop.denom }}</span>
+					<span class="opacity-40 q-ml-6 text-uppercase">{{ airdrop.symbol }}</span>
 				</p>
 			</div>
 			<div class="column items-start flex-half">
 				<p class="fs-14 !leading-18 q-mb-8 opacity-30 text-uppercase">Claimed</p>
-				<p class="fs-15 !leading-19 text-capitalize">{{ airdrop.claimed }}</p>
+				<p class="fs-15 !leading-19 text-capitalize">
+					{{ percentage(airdrop.claimedPercentage) }} %
+				</p>
 			</div>
 		</div>
 
@@ -48,23 +69,25 @@ defineProps<{
 		>
 			<div class="row items-center justify-between q-mb-16">
 				<p class="fs-14 !leading-18 opacity-30 text-uppercase">sender</p>
-				<p class="fs-15 !leading-19 opacity-60">{{ airdrop.sender }}</p>
+				<p class="fs-15 !leading-19 opacity-60">
+					{{ formatShortAddress(airdrop.owner, 6) }}
+				</p>
 			</div>
 			<div class="row items-center justify-between">
 				<p class="fs-14 !leading-18 opacity-30 text-uppercase">datetime</p>
-				<p class="fs-15 !leading-19 opacity-60">{{ airdrop.datetime }}</p>
+				<p class="fs-15 !leading-19 opacity-60">{{ airdrop.endTime }}</p>
 			</div>
 		</div>
 
-		<LargeButton label="Claim" :padding-y="18" v-if="airdrop.claim" />
 		<q-btn
-			v-else
+			v-if="!airdrop.active || !airdrop.proof || airdrop.proof.claimed"
 			outline
 			rounded
 			color="white"
-			label="Claimed"
+			:label="unavailableText"
 			disable
 			class="q-px-22 q-py-18 fs-16 full-width text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
 		/>
+		<LargeButton label="Claim" :padding-y="18" v-else="!airdrop.proof.claimed" />
 	</Card>
 </template>
