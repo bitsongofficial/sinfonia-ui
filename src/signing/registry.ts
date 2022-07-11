@@ -1,5 +1,6 @@
 import { Registry, GeneratedType } from "@cosmjs/proto-signing"
 import { defaultRegistryTypes } from "@cosmjs/stargate"
+import { MsgClaim } from "./codec/bitsong/merkledrop/v1beta1/tx"
 import { osmosis } from "./proto"
 
 export const osmosisRegistry = (): Registry => {
@@ -29,5 +30,6 @@ export const osmosisRegistry = (): Registry => {
 			"/osmosis.gamm.v1beta1.MsgSwapExactAmountIn",
 			osmosis.gamm.v1beta1.MsgSwapExactAmountIn as GeneratedType,
 		],
+		["/bitsong.merkledrop.v1beta1.MsgClaim", MsgClaim as GeneratedType],
 	])
 }

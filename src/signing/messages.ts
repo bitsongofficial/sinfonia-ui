@@ -3,6 +3,7 @@ import { Height } from "cosmjs-types/ibc/core/client/v1/client"
 import { OsmosisRoute, SignerMessage } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
 import { osmosis } from "./proto"
+import { MsgClaim as MerkleDropMsgClaim } from "./codec/bitsong/merkledrop/v1beta1/tx"
 import Long from "long"
 
 export type messageTimestamp = string | number | Long.Long | undefined
@@ -134,5 +135,24 @@ export const SwapExactAmountIn = (
 			tokenIn,
 			tokenOutMinAmount,
 		},
+	}
+}
+
+export const MerkledropClaim = (
+	senderAddress: string, // Owner
+	merkledropId: number,
+	index: number,
+	amount: string,
+	proofs: string[]
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/bitsong.merkledrop.v1beta1.MsgClaim",
+		value: MerkleDropMsgClaim.fromJSON({
+			sender: senderAddress,
+			merkledropId: merkledropId.toString(),
+			index: index.toString(),
+			amount,
+			proofs,
+		}),
 	}
 }

@@ -386,7 +386,7 @@ export const getPoolApr = (
 			const epoch = poolsStore.epochByIdentifier(epochIdentifier)
 
 			if (epoch && epoch.duration && distrInfo) {
-				const totalWeight = new BigNumber(distrInfo.total_weight)
+				const totalWeight = new BigNumber(distrInfo.totalWeight)
 				const poolTVL = new BigNumber(liquidityPool)
 				const potWeightRecord = distrInfo.records.find(
 					(record) => record.gauge_id === gaugeId.gauge_id

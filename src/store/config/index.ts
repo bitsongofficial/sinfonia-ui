@@ -128,6 +128,22 @@ const useConfig = defineStore("config", {
 				}
 			)
 		},
+		findTokenByDenom() {
+			return (denom: string) =>
+				unionBy(this.allMainTokens, this.fantokens, "symbol").find((token) => {
+					const coinLookup = token.coinLookup.find(
+						(coin) => coin.viewDenom === token.symbol
+					)
+
+					if (coinLookup) {
+						if (coinLookup.fantokenDenom) {
+							return coinLookup.fantokenDenom === denom
+						}
+
+						return coinLookup.chainDenom === denom
+					}
+				})
+		},
 		findFantokenByDenom() {
 			return (denom: string) =>
 				this.fantokens.find((token) => {

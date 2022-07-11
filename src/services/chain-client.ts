@@ -4,6 +4,7 @@ import { ChainError, ChainPaginationResponse } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
 import { AxiosError } from "axios"
 import { DeliverTxResponse } from "@cosmjs/stargate"
+import { BlockResponse } from "@cosmjs/launchpad"
 
 export default class ChainClient extends HttpClient {
 	public constructor(url: string) {
@@ -45,4 +46,7 @@ export default class ChainClient extends HttpClient {
 		this.instance.get<ChainData<"amount", Coin>>(
 			`cosmos/bank/v1beta1/supply/${denom}`
 		)
+
+	public blocks = (block?: string) =>
+		this.instance.get<BlockResponse>(`blocks/${block ? block : "latest"}`)
 }

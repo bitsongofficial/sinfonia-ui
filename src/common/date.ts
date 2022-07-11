@@ -7,6 +7,10 @@ import {
 
 const defaultLockEndTime = new Date("0001-01-01T00:00:00Z")
 
+export const formatTimeLocate = (date: string | Date) => {
+	return format(new Date(date), "MMM d yyyy, HH:mm aaa")
+}
+
 export const unboundingEndTimeStart = (endTime: string) => {
 	const endTimeDate = new Date(endTime)
 

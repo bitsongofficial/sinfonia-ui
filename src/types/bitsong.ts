@@ -16,3 +16,14 @@ export interface BitsongFantoken {
 	owner: string
 	meta_data: BitsongFantokenMetaData
 }
+
+export interface BitsongMerkledrop {
+	id: string
+	merkle_root: string
+	start_height: string
+	end_height: string
+	denom: string
+	amount: string
+	claimed: string
+	owner: string
+}

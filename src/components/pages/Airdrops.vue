@@ -1,23 +1,35 @@
 <script setup lang="ts">
-import { resolveIcon, balancedCurrency } from "@/common"
-import { TableColumn } from "@/types"
-import { computed, ref, watch, onUnmounted } from "vue"
+import {
+	resolveIcon,
+	balancedCurrency,
+	percentage,
+	formatShortAddress,
+} from "@/common"
+import { MerkledropWithProof, TableColumn } from "@/types"
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { useQuasar } from "quasar"
+import { until } from "@vueuse/core"
 import Title from "@/components/typography/Title.vue"
 import LightTable from "@/components/LightTable.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import AirdropCard from "@/components/cards/AirdropCard.vue"
+import useMerkledrops from "@/store/merkledrops"
 import useConfig from "@/store/config"
+import useAuth from "@/store/auth"
+import useTransactionManager from "@/store/transaction-manager"
 
+const merkledrops = useMerkledrops()
+const authStore = useAuth()
+const transactionManagerStore = useTransactionManager()
 const configStore = useConfig()
 const $q = useQuasar()
 
 const airdropColumns: TableColumn[] = [
 	{
-		name: "drop",
+		name: "name",
 		label: "drop",
 		align: "left",
-		field: "drop",
+		field: "name",
 	},
 	{
 		name: "amount",
@@ -32,15 +44,15 @@ const airdropColumns: TableColumn[] = [
 		align: "center",
 	},
 	{
-		name: "sender",
+		name: "owner",
 		label: "sender",
-		field: "sender",
+		field: "owner",
 		align: "right",
 	},
 	{
-		name: "datetime",
+		name: "endTime",
 		label: "datetime",
-		field: "datetime",
+		field: "endTime",
 		align: "right",
 	},
 	{
@@ -51,99 +63,6 @@ const airdropColumns: TableColumn[] = [
 	},
 ]
 
-const data = [
-	{
-		drop: "Name",
-		amount: "200000",
-		denom: "clay",
-		claimed: "90.00 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: true,
-	},
-	{
-		drop: "Name 2",
-		amount: "200000",
-		denom: "clay",
-		claimed: "96.57 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: false,
-	},
-	{
-		drop: "Name 3",
-		amount: "200000",
-		denom: "clay",
-		claimed: "96.57 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: false,
-	},
-	{
-		drop: "Name 4",
-		amount: "200000",
-		denom: "clay",
-		claimed: "92.00 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: false,
-	},
-	{
-		drop: "Name 5",
-		amount: "200000",
-		denom: "clay",
-		claimed: "92.00 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: false,
-	},
-	{
-		drop: "Name 6",
-		amount: "200000",
-		denom: "clay",
-		claimed: "92.00 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: false,
-	},
-	{
-		drop: "Name 7",
-		amount: "200000",
-		denom: "clay",
-		claimed: "92.00 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: false,
-	},
-	{
-		drop: "Name 8",
-		amount: "200000",
-		denom: "clay",
-		claimed: "92.00 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: false,
-	},
-	{
-		drop: "Name 9",
-		amount: "200000",
-		denom: "clay",
-		claimed: "92.00 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: false,
-	},
-	{
-		drop: "Name 10",
-		amount: "200000",
-		denom: "clay",
-		claimed: "92.00 %",
-		sender: "bitsong2uet ... vwzsjq",
-		datetime: "Dec 2 2023, 08:31 am",
-		claim: false,
-	},
-]
-
 const searchFocussed = ref(false)
 const searchValue = ref("")
 
@@ -151,9 +70,41 @@ const searchActive = computed(() => {
 	return searchValue.value.length > 0 || searchFocussed.value
 })
 
+const bitsongToken = computed(() => configStore.bitsongToken)
+
 const focussed = () => {
 	searchFocussed.value = true
 }
+
+onMounted(async () => {
+	await until(bitsongToken).toBeTruthy()
+
+	merkledrops.loadAirdrops(authStore.bitsongAddress)
+})
+
+const addressWatcher = watch(
+	() => authStore.bitsongAddress,
+	(address, oldAddress) => {
+		if (address !== oldAddress) {
+			merkledrops.loadAirdrops(address)
+		}
+	}
+)
+
+const onClaim = (merkledrop: MerkledropWithProof) => {
+	if (merkledrop.proof) {
+		transactionManagerStore.merkledropClaim(
+			merkledrop.merkledrop_id,
+			merkledrop.proof?.index,
+			merkledrop.proof.amount.toString(),
+			merkledrop.proof?.proofs
+		)
+	}
+}
+
+onUnmounted(() => {
+	addressWatcher()
+})
 </script>
 
 <template>
@@ -190,9 +141,8 @@ const focussed = () => {
 	<div class="row items-start justify-between q-mb-30">
 		<div class="flex items-center col-8 col-md-6 col-lg-5">
 			<p class="fs-16 opacity-40 font-weight-medium !leading-24">
-				Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many
-				international hits, among which the best-known is undoubtedly Born Again
-				(Babylonia). Recognized as a dance music.
+				Artists, Record Labels, Festivals and Clubs are waiting for you!<br />Discover
+				free giveaways of FanTokens to the community.
 			</p>
 		</div>
 		<div
@@ -252,22 +202,20 @@ const focussed = () => {
 
 	<LightTable
 		:columns="airdropColumns"
-		:rows="data"
+		:rows="merkledrops.merkledropsWithProofs"
+		:loading="merkledrops.loading || authStore.loading"
 		alternative
 		row-key="drop"
 		v-if="$q.screen.gt.md"
 	>
-		<template v-slot:body-cell-drop="slotProps">
+		<template v-slot:body-cell-name="slotProps">
 			<q-td class="author-column" :props="slotProps">
 				<div class="row items-center no-wrap">
 					<q-avatar size="40px" class="q-mr-26">
-						<img
-							src="https://raw.githubusercontent.com/bitsongofficial/assetlists/testnet/logos/clay.png"
-							alt="Clay"
-						/>
+						<img :src="slotProps.row.image" :alt="slotProps.row.name" />
 					</q-avatar>
 					<p class="text-weight-medium fs-14 table-text-contained q-px-2">
-						{{ slotProps.row.drop }}
+						{{ slotProps.row.name }}
 					</p>
 				</div>
 			</q-td>
@@ -277,35 +225,60 @@ const focussed = () => {
 				<p class="text-weight-medium fs-14">
 					{{ balancedCurrency(slotProps.row.amount, 3) }}
 					<span class="fs-13 opacity-40 text-uppercase q-ml-12">{{
-						slotProps.row.denom
+						slotProps.row.symbol
 					}}</span>
 				</p>
 			</q-td>
 		</template>
 		<template v-slot:body-cell-claimed="slotProps">
 			<q-td :props="slotProps">
-				<p class="fs-14">
-					{{ slotProps.row.claimed }}
+				<p class="fs-14">{{ percentage(slotProps.row.claimedPercentage) }} %</p>
+			</q-td>
+		</template>
+		<template v-slot:body-cell-owner="slotProps">
+			<q-td :props="slotProps">
+				<p class="fs-14 opacity-40">
+					{{ formatShortAddress(slotProps.row.owner, 6) }}
 				</p>
 			</q-td>
 		</template>
-		<template v-slot:body-cell-sender="slotProps">
+		<template v-slot:body-cell-endtime="slotProps">
 			<q-td :props="slotProps">
 				<p class="fs-14 opacity-40">
-					{{ slotProps.row.sender }}
-				</p>
-			</q-td>
-		</template>
-		<template v-slot:body-cell-datetime="slotProps">
-			<q-td :props="slotProps">
-				<p class="fs-14 opacity-40">
-					{{ slotProps.row.datetime }}
+					{{ slotProps.row.endTime }}
 				</p>
 			</q-td>
 		</template>
 		<template v-slot:body-cell-actions="slotProps">
 			<q-td :props="slotProps">
-				<StandardButton label="Claim" no-padding v-if="slotProps.row.claim" />
+				<q-btn
+					v-if="!slotProps.row.active"
+					outline
+					rounded
+					color="white"
+					label="Expired"
+					disable
+					class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
+				/>
+				<q-btn
+					v-else-if="!slotProps.row.proof"
+					outline
+					rounded
+					color="white"
+					label="Not Eligible"
+					disable
+					class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
+				/>
+				<StandardButton
+					label="Claim"
+					no-padding
+					v-else-if="!slotProps.row.proof.claimed"
+					@click="onClaim(slotProps.row)"
+					:disable="
+						transactionManagerStore.loadingBroadcasting ||
+						transactionManagerStore.loadingSign
+					"
+				/>
 				<q-btn
 					v-else
 					outline
@@ -320,7 +293,7 @@ const focussed = () => {
 	</LightTable>
 	<div class="row grid-gap-32" v-else>
 		<AirdropCard
-			v-for="(airdrop, index) of data"
+			v-for="(airdrop, index) of merkledrops.merkledropsWithProofs"
 			:key="index"
 			:airdrop="airdrop"
 			class="flex-100 flex-between-md-half"

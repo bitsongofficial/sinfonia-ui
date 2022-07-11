@@ -3,6 +3,25 @@ import { Coin } from "@cosmjs/proto-signing"
 import Long from "long"
 import { OsmosisPool } from "@/types"
 
+export interface AminoMsgMerkleDropClaim {
+	readonly type: "go-bitsong/merkledrop/MsgClaim"
+	readonly value: {
+		sender: string // Owner
+		merkledropId: number
+		index: number
+		amount: string
+		proofs: string[]
+	}
+}
+
+export interface MsgMerkleDropClaim {
+	sender: string // Owner
+	merkledropId: Long
+	index: Long
+	amount: string
+	proofs: string[]
+}
+
 export interface AminoMsgSwapExactAmountIn {
 	readonly type: "osmosis/gamm/swap-exact-amount-in"
 	readonly value: {
@@ -89,8 +108,46 @@ export interface MsgExitPool {
 	tokenOutMins: Coin[]
 }
 
+/* sender: string, // Owner
+		merkledropId: number,
+		index: number,
+		amount: string,
+		proofs: string[] */
 export const createOsmosisAminoConverters = (): AminoConverters => {
 	return {
+		"/bitsong.merkledrop.v1beta1.MsgClaim": {
+			aminoType: "go-bitsong/merkledrop/MsgClaim",
+			toAmino: ({
+				sender,
+				merkledropId,
+				index,
+				amount,
+				proofs,
+			}: MsgMerkleDropClaim) => {
+				return {
+					sender,
+					merkledropId: merkledropId.toString(),
+					index: index.toString(),
+					amount,
+					proofs,
+				}
+			},
+			fromAmino: ({
+				sender,
+				merkledropId,
+				index,
+				amount,
+				proofs,
+			}: AminoMsgMerkleDropClaim["value"]) => {
+				return {
+					sender,
+					merkledropId,
+					index,
+					amount,
+					proofs,
+				}
+			},
+		},
 		"/osmosis.gamm.v1beta1.MsgSwapExactAmountIn": {
 			aminoType: "osmosis/gamm/swap-exact-amount-in",
 			toAmino: ({

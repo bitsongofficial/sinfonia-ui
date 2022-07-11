@@ -99,7 +99,7 @@ export interface DistrInfoGauge {
 }
 
 export interface DistrInfo {
-	total_weight: string
+	totalWeight: string
 	records: DistrInfoGauge[]
 }
 
