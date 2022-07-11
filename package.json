@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"scripts": {
 		"dev": "vite",
-		"dev:mainet": "vite --mode mainnet",
+		"dev:mainnet": "vite --mode mainnet",
 		"build": "vue-tsc --noEmit && vite build",
 		"build:mainnet": "vue-tsc --noEmit && vite build --mode mainnet",
 		"preview": "vite preview",
