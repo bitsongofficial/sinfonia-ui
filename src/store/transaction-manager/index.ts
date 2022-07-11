@@ -3,6 +3,7 @@ import usePools from "@/store/pools"
 import useConfig from "@/store/config"
 import useAuth from "@/store/auth"
 import usePrices from "@/store/prices"
+import useMerkledrops from "@/store/merkledrops"
 import { TransactionManager } from "@/signing/transaction-manager"
 import {
 	LockableDurationWithApr,
@@ -776,12 +777,18 @@ const useTransactionManager = defineStore("transactionManager", {
 									const poolsStore = usePools()
 									const bankStore = useBank()
 									const pricesStore = usePrices()
+									const merkledropsStore = useMerkledrops()
+									const authStore = useAuth()
 
 									setTimeout(() => {
 										pricesStore.init()
 										poolsStore.init()
 										bankStore.init()
 										bankStore.loadBalances()
+
+										if (merkledropsStore.merkledrops.length > 0) {
+											merkledropsStore.loadAirdrops(authStore.bitsongAddress)
+										}
 									}, 1000)
 								}
 
