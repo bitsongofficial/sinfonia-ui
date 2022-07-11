@@ -5,8 +5,8 @@
     font-weight: normal;
     font-style: normal;
     src: local('Circular Std Book'), local('CircularStd-Book'), url('@/assets/fonts/CircularStd-Book.woff2') format('woff2');
-  }
-  
+}
+
 @font-face {
     font-family: Circular Std;
     font-weight: 500;
@@ -30,11 +30,17 @@ $font-sizes: ('13': 13, '15': 15);
     $font-sizes: map.set($font-sizes, $s, $s);
 }
 
-@each $k, $v in $font-sizes {
+@each $k,
+$v in $font-sizes {
     .fs-#{$k} {
         font-size: $v * 1px;
         line-height: $v * 1px;
     }
+
+    .\!leading-#{$k} {
+        line-height: $v * 1px !important;
+    }
+
     .\!fs-#{$k} {
         font-size: $v * 1px !important;
         line-height: $v * 1px !important;
@@ -46,6 +52,32 @@ $font-sizes: ('13': 13, '15': 15);
 }
 
 a {
-    text-decoration: inherit;
-    color: inherit;
+    text-decoration: none;
+    color: unset;
+}
+
+.work-break-all {
+    word-break: break-all;
+}
+
+.white-space-break-spaces {
+    white-space: break-spaces;
+}
+
+.white-space-pre-line {
+    white-space: pre-line;
+}
+
+.text-overflow-ellipsis {
+    text-overflow: ellipsis;
+}
+
+.table-text-contained {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    margin: 0;
 }

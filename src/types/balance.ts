@@ -1,12 +1,11 @@
-import { BaseToken, Token } from './config'
+import { BaseToken, Token } from "./config"
 
 export interface Balance {
 	total?: string
 	available?: string
-	bonded?: string
+	denom?: string
 	totalFiat?: string
 	availableFiat?: string
-	bondedFiat?: string
 }
 
 export type ChainBalance = BaseToken & Balance
@@ -16,6 +15,10 @@ export interface TokenBalance extends Token, Balance {
 	marketCap?: string
 	circulatingSupply?: string
 	totalMintedTokens?: string
-	totalBurnedTokens?: string
 	chains?: ChainBalance[]
+	routeDenom?: string
+}
+
+export interface FantokenRank extends TokenBalance {
+	rank: number
 }

@@ -1,9 +1,6 @@
-.q-tab-panel {
-    padding: 0;
-}
-
 .q-tab {
     text-transform: none;
+
     .q-tab__label {
         font-size: inherit;
     }
@@ -27,6 +24,7 @@
         opacity: 0.8;
 
         .q-focus-helper {
+
             &,
             &::before,
             &::after {
@@ -41,3 +39,5 @@
         font-size: inherit;
     }
 }
+
+@media screen and (max-width: $breakpoint-xs) {}

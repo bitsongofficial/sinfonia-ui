@@ -1,259 +1,255 @@
 <script setup lang="ts">
-	import { Token, TokenWithAddress } from '@/types'
-	import { computed, onMounted, ref, watch } from 'vue'
-	import { resolveIcon } from '@/common/resolvers'
-	import { balancedCurrency, amountToCoin } from '@/common/numbers'
-	import ModalWithClose from '@/components/modals/ModalWithClose.vue'
-	import AddressesSelect from '@/components/inputs/AddressesSelect.vue'
-	import LargeButton from '@/components/buttons/LargeButton.vue'
-	import Amount from '@/components/inputs/Amount.vue'
-	import useConfig from '@/store/config'
-	import useKeplr from '@/store/keplr'
-	import { isValidAddress } from '@/common'
-	import useTransactionManager from '@/store/transaction-manager'
-	import useBank from '@/store/bank'
-	import { Coin } from '@cosmjs/proto-signing'
-import DangerTooltip from '../tooltips/DangerTooltip.vue'
+import { Token, TokenWithAddress } from "@/types"
+import { computed, ref, watch } from "vue"
+import { resolveIcon } from "@/common/resolvers"
+import { balancedCurrency, amountToCoin } from "@/common/numbers"
+import {
+	isValidAddress,
+	amountFromCoin,
+	amountIBCFromCoin,
+	gteComparePercentage,
+	gtnZero,
+} from "@/common"
+import { compact } from "lodash"
+import { Coin } from "@cosmjs/proto-signing"
+import useConfig from "@/store/config"
+import useKeplr from "@/store/keplr"
+import useTransactionManager from "@/store/transaction-manager"
+import useBank from "@/store/bank"
+import ModalWithClose from "@/components/modals/ModalWithClose.vue"
+import AddressesSelect from "@/components/inputs/AddressesSelect.vue"
+import LargeButton from "@/components/buttons/LargeButton.vue"
+import Amount from "@/components/inputs/Amount.vue"
+import DangerTooltip from "@/components/tooltips/DangerTooltip.vue"
+import { useForm } from "vee-validate"
 
-	const configStore = useConfig()
-	const keplrStore = useKeplr()
-	const transactionManagerStore = useTransactionManager()
-	const bankStore = useBank()
+const configStore = useConfig()
+const keplrStore = useKeplr()
+const transactionManagerStore = useTransactionManager()
+const bankStore = useBank()
 
-	const props = defineProps<{
-		modelValue: boolean,
-		coin: Token
-	}>()
+const props = defineProps<{
+	modelValue: boolean
+	coin: Token
+}>()
 
-	const fromToken = ref<TokenWithAddress | undefined>(props.coin)
-	const toToken = ref<TokenWithAddress | undefined>(configStore.osmosisToken)
-	const tempAddress = ref()
-	const addresses = computed<string[]>(() => [...keplrStore.addresses, tempAddress.value])
-	const optionsAddresses = computed<TokenWithAddress[]>(() => {
-		return configStore.allTokens.map(token => {
-			const address = addresses.value.find(addr => isValidAddress(addr, token.addressPrefix))
+const emit = defineEmits<{
+	(e: "update:modelValue", value: boolean): void
+}>()
 
-			return {
-				...token,
-				address
+const model = computed({
+	get() {
+		return props.modelValue
+	},
+	set(value: boolean) {
+		emit("update:modelValue", value)
+	},
+})
+
+watch(
+	() => props.coin,
+	(coin) => {
+		fromChain.value = configStore.allMainTokens.find(
+			(token) => token.chainID === coin.chainID
+		)
+	}
+)
+
+const fromChain = ref<TokenWithAddress | undefined>(
+	configStore.allMainTokens.find((token) => token.chainID === props.coin.chainID)
+)
+
+const toChain = ref<TokenWithAddress | undefined>(configStore.osmosisToken)
+
+watch(
+	() => fromChain.value,
+	(newChain, oldChain) => {
+		if (oldChain?.chainID !== toChain.value?.chainID) {
+			toChain.value = oldChain
+		}
+	}
+)
+
+watch(
+	() => toChain.value,
+	(newChain, oldChain) => {
+		if (oldChain?.chainID !== fromChain.value?.chainID) {
+			fromChain.value = oldChain
+		}
+	}
+)
+
+const addresses = computed<string[]>(() => [...keplrStore.addresses])
+
+const optionsAddresses = computed<TokenWithAddress[]>(() => {
+	return compact(
+		configStore.allMainTokens.map((token) => {
+			const address = addresses.value.find((addr) =>
+				isValidAddress(addr, token.addressPrefix)
+			)
+
+			if (
+				token.chainID === props.coin.chainID ||
+				(configStore.osmosisToken &&
+					configStore.osmosisToken.chainID === token.chainID)
+			) {
+				return {
+					...token,
+					address,
+				}
 			}
 		})
-	})
+	)
+})
 
-	const fromAddresses = computed<TokenWithAddress[]>(() => {
-		if (fromToken.value && !fromToken.value.ibcEnabled) {
-			return []
-		}
-
-		return optionsAddresses.value
-	})
-
-	const toAddresses = computed<TokenWithAddress[]>(() => {
-		if (toToken.value && !toToken.value.ibcEnabled) {
-			return []
-		}
-
-		return optionsAddresses.value
-	})
-
-	const setDefaultValues = (coin: Token) => {
-		fromToken.value = optionsAddresses.value.find(opt => opt.symbol === coin.symbol)
-		const osmosisToken = configStore.osmosisToken
-		
-		if (osmosisToken) {
-			toToken.value = optionsAddresses.value.find(opt => opt.symbol === osmosisToken.symbol)
-		}
+const fromAddress = computed(() => {
+	if (props.modelValue) {
+		return optionsAddresses.value.find(
+			(el) => el.chainID === fromChain.value?.chainID
+		)?.address
 	}
+})
 
-	const addressLookup = async (coin?: Token) => {
-		if (coin) {
-			const account = await keplrStore.getAddress(coin.chainID)
-			
-			if (account) {
-				tempAddress.value = account.address
-
-				if (fromToken.value && !fromToken.value.address) {
-					bankStore.loadBalance(account.address, fromToken.value.chainID)
-				}
-			}
-		}
+const toAddress = computed(() => {
+	if (props.modelValue) {
+		return optionsAddresses.value.find(
+			(el) => el.chainID === toChain.value?.chainID
+		)?.address
 	}
+})
 
-	watch<TokenWithAddress | undefined>(() => toToken.value, async (coin, oldCoin) => {
-		await addressLookup(coin)
+const title = computed(() => {
+	return "Transfer " + props.coin.symbol
+})
 
-		if (fromToken.value) {
-			if (coin) {
-				if (coin.symbol === fromToken.value.symbol && oldCoin) {
-					fromToken.value = optionsAddresses.value.find(opt => opt.symbol === oldCoin.symbol)
-				}
-			}
-		}
+const showBigTransferTooltip = ref(false)
+const bigTransferInternal = ref(false)
 
-		if (toToken.value && !toToken.value.address) {
-			toToken.value = {
-				...toToken.value,
-				address: tempAddress.value,
-			}
-		}
-	})
+const balance = computed(() => {
+	const balances = [...bankStore.allBalances]
+	const from = fromChain.value
 
-	watch<TokenWithAddress | undefined>(() => fromToken.value, async (coin, oldCoin) => {
-		await addressLookup(coin)
+	if (from) {
+		let denom = props.coin.ibc.osmosis.destDenom
 
-		if (toToken.value) {
-			if (coin) {
-				if (coin.symbol === toToken.value.symbol && oldCoin) {
-					toToken.value = optionsAddresses.value.find(opt => opt.symbol === oldCoin.symbol)
-				}
-			}
-		}
-
-		if (fromToken.value && !fromToken.value.address) {
-			fromToken.value = {
-				...fromToken.value,
-				address: tempAddress.value,
-			}
-		}
-	})
-
-	watch(() => props.coin, async (coin) => {
-		await addressLookup(coin)
-		setDefaultValues(coin)
-	}, {
-		immediate: true
-	})
-
-	const emit = defineEmits<{
-		(e:'update:modelValue', value: boolean): void,
-	}>()
-
-	const model = computed({
-		get() {
-			return props.modelValue
-		},
-		set(value: boolean) {
-			emit('update:modelValue', value)
-		}
-	})
-
-	const title = computed(() => {
-		if (!fromToken.value) {
-			return 'Transfer'
-		}
-
-		if (fromToken.value.fantoken) {
-			return 'Transfer $' + fromToken.value.symbol
-		}
-
-		return 'Transfer ' + fromToken.value.symbol
-	})
-
-	const available = computed(() => {
-		const balances = [...bankStore.allBalances]
-		let coin: Coin | undefined = undefined
-		const from = fromToken.value
-		const to = toToken.value
-
-		if (from && from.ibcEnabled) {
-			const coinLookup = from.coinLookup.find(
-				(coin) => coin.viewDenom === from.symbol
+		if (from.ibcEnabled) {
+			const coinLookup = props.coin.coinLookup.find(
+				(coin) => coin.viewDenom === props.coin.symbol
 			)
 
 			if (coinLookup) {
-				const balance = balances.find(
-					el => (!from.fantoken && el.denom === coinLookup.chainDenom) || (from.fantoken && el.denom === coinLookup.fantokenDenom)
-				)
-
-				coin = amountToCoin(balance?.amount ?? '0', from)
+				denom = coinLookup.fantokenDenom ?? coinLookup.chainDenom
 			}
-		} else if (to && to.ibc) {
-			const balance = balances.find(el => el.denom === to.ibc.osmosis.destDenom)
-
-			coin = amountToCoin(balance?.amount ?? '0', to)
 		}
+
+		const balance = balances.find((el) => el.denom === denom)
+
+		return balance
+	}
+})
+
+const available = computed(() => {
+	if (balance.value) {
+		const coin = amountToCoin(balance.value.amount, props.coin)
 
 		if (coin) {
 			return coin.amount
 		}
-
-		return '0'
-	})
-
-	const amount = ref('0')
-
-	const onSubmit = () => {
-		if (fromToken.value && toToken.value && fromToken.value.address && toToken.value.address) {
-			transactionManagerStore.sendIbcTokens(
-				fromToken.value.address,
-				toToken.value.address,
-				fromToken.value,
-				toToken.value,
-				amount.value
-			)
-		}
 	}
 
-	const showBigTransferTooltip = ref(false)
-	const bigTransferInternal = ref(false)
-	const hasAmountError = ref<boolean>(false)
+	return "0"
+})
 
-	const bigTransfer = computed(
-	{
-		get(): (boolean) {
-			return bigTransferInternal.value
-		},
-		set(value: boolean) {
-			bigTransferInternal.value = value
-			if(value)
-			{
-				showBigTransferTooltip.value = value
-				hasAmountError.value = true
-			}
+const validationSchema = computed(() => ({
+	amount: {
+		required: true,
+		isNaN: true,
+		gtnZero: true,
+		compareBalance: { compare: available.value },
+	},
+}))
+
+const initialValues = {
+	amount: "",
+}
+
+const { handleSubmit, values, meta } = useForm({
+	initialValues,
+	validationSchema,
+})
+
+const onSubmit = handleSubmit(() => {
+	if (fromChain.value && toChain.value && fromAddress.value && toAddress.value) {
+		let transferAmount: Coin | undefined = undefined
+
+		if (fromChain.value.ibcEnabled) {
+			transferAmount = amountFromCoin(values.amount, props.coin)
+		} else {
+			transferAmount = amountIBCFromCoin(values.amount, props.coin)
 		}
-	})
+
+		transactionManagerStore.sendIbcTokens(
+			fromAddress.value,
+			toAddress.value,
+			fromChain.value,
+			toChain.value,
+			transferAmount
+		)
+	}
+})
+
+const availableGtnZero = computed(() => gtnZero(available.value))
 </script>
 
 <template>
-	<ModalWithClose v-model="model" :title="title" @click="showBigTransferTooltip = false">
-		<q-form @submit="onSubmit">
-			<div class="flex items-center no-wrap q-mb-40">
-				<AddressesSelect v-model="fromToken" :addresses="fromAddresses" title="From" class="flex-1" />
+	<ModalWithClose
+		v-model="model"
+		:title="title"
+		@click="showBigTransferTooltip = false"
+	>
+		<div class="flex items-center no-wrap q-mb-40">
+			<AddressesSelect
+				v-model="fromChain"
+				:addresses="optionsAddresses"
+				title="From"
+				class="flex-1"
+			/>
 
-				<div class="q-pb-8 q-mx-12 opacity-15">
-					<q-icon :name="resolveIcon('arrow-right', 14, 14)" size="12px" />
-				</div>
-
-				<AddressesSelect v-model="toToken" :addresses="toAddresses" title="To" class="flex-1" />
+			<div class="q-pb-8 q-mx-12 opacity-15">
+				<q-icon :name="resolveIcon('arrow-right', 14, 14)" size="12px" />
 			</div>
 
-			<div :class="'flex justify-between items-center q-mb-16 fs-12 text-dark' + (bigTransfer ? ' q-field--error' : '')">
-				<div class="flex title-with-error">
-					<p :class="'text-weight-medium text-uppercase q-mr-12' + (hasAmountError ? ' text-primary' : '')">Amount to transfer</p>
-					<q-icon
-						:name="resolveIcon('info', 15, 15)"
-						size="12px"
-						color="primary"
-					>
-						<DangerTooltip
-							anchor="center right"
-							self="center start"
-							v-model="showBigTransferTooltip"
-						>
-							Incorrect withdrawal address could result in loss of funds. Avoid withdrawal to exchange deposit address.
-						</DangerTooltip>
-					</q-icon>
-				</div>
-				<p>Available <span class="q-ml-8 text-white">{{ balancedCurrency(available) }}</span></p>
-			</div>
+			<AddressesSelect
+				v-model="toChain"
+				:addresses="optionsAddresses"
+				title="To"
+				class="flex-1"
+			/>
+		</div>
 
-			<Amount v-model="amount" :max="available" class="q-mb-32" @error-change="(val) => hasAmountError = val" />
-
-			<div class="flex justify-center">
-				<LargeButton type="submit" fit class="q-px-80" :padding-y="14">
-					<div class="text-uppercase">Transfer</div>
-				</LargeButton>
+		<div class="flex justify-between items-center q-mb-16 fs-12 text-dark">
+			<div class="flex title-with-error">
+				<p class="text-weight-medium text-uppercase q-mr-12">Amount to transfer</p>
 			</div>
-		</q-form>
+			<p>
+				Available
+				<span class="q-ml-8 text-white">{{ balancedCurrency(available) }}</span>
+			</p>
+		</div>
+
+		<Amount name="amount" :max="available" :token="fromChain" class="q-mb-32" />
+
+		<div class="flex justify-center">
+			<LargeButton
+				type="submit"
+				fit
+				class="q-px-80"
+				:padding-y="14"
+				:disable="!meta.valid"
+				@click="onSubmit"
+			>
+				<div class="text-uppercase">Transfer</div>
+			</LargeButton>
+		</div>
 	</ModalWithClose>
 </template>

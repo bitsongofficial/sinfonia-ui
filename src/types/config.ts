@@ -1,6 +1,12 @@
-import { FantokenMedia, FantokenSocial, FantokenWhitePaper } from './fantoken'
+import { Dictionary } from "lodash"
+import {
+	FantokenAirdrop,
+	FantokenMedia,
+	FantokenSocial,
+	FantokenWhitePaper,
+} from "./fantoken"
 
-export type TokenLogo = 'default' | 'svg' | 'png'
+export type TokenLogo = "default" | "svg" | "png"
 
 export interface BaseToken {
 	name: string
@@ -15,7 +21,7 @@ export interface CoinLookup {
 	chainToViewConversionFactor: number
 }
 
-export type IBCChain = 'osmosis';
+export type IBCChain = "osmosis"
 
 export interface IBC {
 	sourceChannelId: string
@@ -24,14 +30,21 @@ export interface IBC {
 	sourceDenom: string // IBC Denom on Source Chain (Ex: Bitsong)
 }
 
+export enum FeeType {
+	LOW = "low",
+	AVERAGE = "average",
+	HIGH = "high",
+}
+
 export interface NetworkConfigFeeOption {
-  denom: string;
-  amount: string;
+	denom: string
+	amount: string
+	type: FeeType
 }
 
 export interface NetworkConfigFee {
-  gasEstimate: number;
-  feeOptions: NetworkConfigFeeOption[],
+	gasEstimate: number
+	feeOptions: NetworkConfigFeeOption[]
 }
 
 export interface Token extends BaseToken {
@@ -46,16 +59,17 @@ export interface Token extends BaseToken {
 	coinType: number
 	ibc: { [key in IBCChain]: IBC }
 	fees: {
-		default: NetworkConfigFee,
+		default: NetworkConfigFee
 		[key: string]: NetworkConfigFee
-	},
+	}
 	routes?: {
 		poolID: string
 	}
 	ibcEnabled?: boolean
 	fantoken?: boolean
-	socials?: FantokenSocial[]
+	socials?: FantokenSocial
 	media?: FantokenMedia
+	airdrop?: FantokenAirdrop
 	whitepaper?: FantokenWhitePaper
 }
 
@@ -73,12 +87,18 @@ export interface ActivePool {
 	id: string
 }
 
+export interface SwapRoute {
+	id: string
+	out: string
+}
+
 export interface AssetListConfig {
 	bitsongToken: Token
 	osmosisToken: Token
 	tokens: Token[]
 	fantokens: Token[]
 	pools: ActivePool[]
+	routes: Dictionary<Dictionary<SwapRoute[]>>
 	timestamp: string
 	version: ConfigVersion
 }

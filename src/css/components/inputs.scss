@@ -3,7 +3,7 @@
     padding: 0;
     width: 1.8em;
     margin-left: 0px;
-    box-shadow: 0px 0px 20px #14142E;
+    box-shadow: 0px 0px 20px $alternative;
     backdrop-filter: blur(60px);
     /* Note: backdrop-filter has minimal browser support */
 
@@ -25,8 +25,9 @@
     &.q-toggle__inner--truthy {
         .q-toggle__track {
             opacity: 1;
-            background: linear-gradient(147.07deg, #9C589C 21.78%, #FF005C 79.22%);
+            background: linear-gradient(176deg, #9C589C 21.78%, #FF005C 79.22%);
         }
+
         .q-toggle__thumb {
             left: 1em !important;
         }
@@ -76,20 +77,33 @@
 }
 
 .q-field__native,
-.q-field__native,
 .q-field__control {
     height: fit-content;
+
+    &::placeholder {
+        opacity: 0.4;
+    }
+}
+
+.clean-input {
+    height: unset !important;
+    min-height: unset !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 [class*="fs-"] {
+
     .q-field__control,
-    .q-field__native {
+    .q-field__native,
+    .q-field {
         font-size: inherit;
         line-height: inherit;
     }
 }
 
 [class*="text-"] {
+
     .q-field__control,
     .q-field__native,
     .q-field__label {
@@ -132,8 +146,8 @@
     }
 
     &.q-checkbox__inner--truthy {
-        color: $primary;
-        opacity: 1;
+        color: $primary !important;
+        opacity: 1 !important;
     }
 }
 
@@ -141,10 +155,30 @@
     border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
-label:not(.q-field--with-bottom) {
+label:not(.q-field--with-bottom):not(.move-error-to-bottom) {
     .q-field__bottom {
         display: none;
     }
+}
+
+.move-error-to-bottom,
+.move-error-to-bottom-low {
+    padding-bottom: 0;
+    transition: none !important;
+
+    .q-field__bottom {
+        position: absolute;
+        top: 155%;
+        left: -5px;
+        width: 300%;
+        padding-top: 0;
+        color: $primary;
+        transform: translateY(100%) !important;
+    }
+}
+
+.move-error-to-bottom-low .q-field__bottom {
+    top: 135% !important;
 }
 
 .title-with-error {
@@ -167,12 +201,28 @@ label:not(.q-field--with-bottom) {
 
     .title-with-error {
         color: $primary;
+
         p {
             opacity: 1;
         }
+
         .q-icon {
             pointer-events: all;
             visibility: visible;
         }
     }
+}
+
+.min-size-input {
+    .q-field__control {
+        height: fit-content;
+
+        input {
+            width: fit-content;
+        }
+    }
+}
+
+.input-no-append .q-field__append {
+    display: none;
 }

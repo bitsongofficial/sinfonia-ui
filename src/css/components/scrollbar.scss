@@ -5,11 +5,15 @@
     scrollbar-width: thin;
 }
 
+.overflow-overlay {
+    overflow: overlay;
+}
+
 ::-webkit-scrollbar {
     width: $scrollbarSize;
     height: $scrollbarSize;
     background: rgba(0,0,0,0);
-    z-index: 12;
+    z-index: 100;
 }
 
 ::-webkit-scrollbar-thumb {

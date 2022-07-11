@@ -1,45 +1,77 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import { Quasar, Notify, Dialog } from 'quasar'
-import { createPersistedStatePlugin } from 'pinia-plugin-persistedstate-2'
-import {createRouter, createWebHashHistory} from 'vue-router'
+import { createApp } from "vue"
+import { createPinia } from "pinia"
+import { Quasar, Notify, Dialog } from "quasar"
+import { createPersistedStatePlugin } from "pinia-plugin-persistedstate-2"
+import { createRouter, createWebHistory } from "vue-router"
+import "@/common/validation"
+import VueGtag from "vue-gtag"
+import VueCountdown from "@chenfengyuan/vue-countdown"
+import Plugin from "@storipress/apollo-vue-devtool"
 
 // Import Quasar css
-import 'quasar/src/css/index.sass'
-import './css/main.scss'
+import "quasar/src/css/index.sass"
+import "./css/main.scss"
 
-import App from './App.vue'
+import App from "./App.vue"
 
-import routes from '@/configs/routes'
+import routes, { disabledRoutes } from "@/configs/routes"
 
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
-  scrollBehavior: function(to, from, savedPosition) {
-    if (to.hash) {
+	history: createWebHistory(),
+	routes,
+	scrollBehavior: function (to) {
+		if (to.hash.length > 0) {
+			return { el: to.hash }
+		}
 
-      return { el: to.hash }
-    }
-  },
+		const app = document.getElementById("app")
+
+		if (app) {
+			app.scrollTop = 0
+		}
+
+		return { left: 0, top: 0 }
+	},
+})
+
+router.beforeEach((to) => {
+	document.title = "Sinfonia"
+
+	if (disabledRoutes) {
+		if (to.name !== "Playground") {
+			return { name: "Playground" }
+		}
+	}
+
+	return true
 })
 
 const app = createApp(App)
 
+app.use(
+	VueGtag,
+	{
+		appName: import.meta.env.VITE_GA_APP_NAME,
+		pageTrackerScreenviewEnabled: true,
+		config: { id: import.meta.env.VITE_GA_MEASUREMENT_ID },
+	},
+	router
+)
+
 app.use(Quasar, {
-  plugins: {
-    Dialog,
-    Notify
-  },
-  config: {
-    framework: {
-      cssAddon: true,
-    },
-    notify: {
-      classes: 'bg-notification-background rounded-20 q-pt-20 q-pb-18 q-px-30 min-w-440',
-      iconSize: '28px',
-      html: true,
-    }
-  },
+	plugins: {
+		Dialog,
+		Notify,
+	},
+	config: {
+		framework: {
+			cssAddon: true,
+		},
+		notify: {
+			iconSize: "28px",
+			html: true,
+		},
+	},
 })
 
 const pinia = createPinia()
@@ -50,4 +82,8 @@ app.use(pinia)
 
 app.use(router)
 
-app.mount('#app')
+app.use(Plugin)
+
+app.component(VueCountdown.name, VueCountdown)
+
+app.mount("#app")

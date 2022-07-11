@@ -1,78 +1,115 @@
 <script setup lang="ts">
-	import { percentage, balancedGamm, fromDecimalGamm } from '@/common/numbers'
-	import { resolveIcon } from '@/common/resolvers'
-	import { ref } from 'vue'
-	import ModalWithClose from './ModalWithClose.vue'
-	import Amount from '@/components/inputs/Amount.vue'
-	import LargeButton from '@/components/buttons/LargeButton.vue'
-	import { Pool } from '@/types'
-	import useTransactionManager from '@/store/transaction-manager'
+import { balancedGamm, fromDecimalGamm, equalZero } from "@/common/numbers"
+import { resolveIcon } from "@/common/resolvers"
+import { computed } from "vue"
+import { Pool } from "@/types"
+import useTransactionManager from "@/store/transaction-manager"
+import InformativeTooltip from "@/components/tooltips/InformativeTooltip.vue"
+import ModalWithClose from "@/components/modals/ModalWithClose.vue"
+import Amount from "@/components/inputs/Amount.vue"
+import LargeButton from "@/components/buttons/LargeButton.vue"
+import LockableDurationRadio from "@/components/inputs/LockableDurationRadio.vue"
+import { useForm } from "vee-validate"
 
-	const transactionManagerStore = useTransactionManager()
+const transactionManagerStore = useTransactionManager()
 
-	const props = defineProps<{
-		pool: Pool
-	}>()
+const props = defineProps<{
+	pool: Pool
+}>()
 
-	const chosenUnbonding = ref(props.pool.lockableDurationApr[2])
-	const amount = ref('0')
+const validationSchema = computed(() => ({
+	chosenUnbounding: {
+		required: true,
+		equalZero: true,
+	},
+	amount: {
+		required: true,
+		isNaN: true,
+		gtnZero: true,
+		compareBalance: { compare: props.pool.availableLPTokens },
+	},
+}))
 
-	const onSubmit = () => {
-		const balance = [...props.pool.availableLPBalances].pop()
+const initialValues = computed(() => {
+	let chosenUnbounding = [...props.pool.lockableDurationApr].pop()
 
-		if (balance) {
-			transactionManagerStore.lockTokens(
-				chosenUnbonding.value,
-				[{
-					amount: fromDecimalGamm(amount.value),
-					denom: balance.denom
-				}]
-			)
-		}
+	if (chosenUnbounding && equalZero(chosenUnbounding.totalApr)) {
+		chosenUnbounding = undefined
 	}
+
+	return {
+		chosenUnbounding: undefined,
+		amount: "",
+	}
+})
+
+const { handleSubmit, values, meta } = useForm({
+	initialValues,
+	validationSchema,
+})
+
+const onSubmit = handleSubmit(() => {
+	const balance = [...props.pool.availableLPBalances].pop()
+
+	if (values.chosenUnbounding && balance) {
+		transactionManagerStore.lockTokens(values.chosenUnbounding, [
+			{
+				amount: fromDecimalGamm(values.amount),
+				denom: balance.denom,
+			},
+		])
+	}
+})
 </script>
 
 <template>
-    <ModalWithClose title="Bond LP Tokens">
-        <q-form @submit="onSubmit">
-					<div class="q-mb-20 flex items-center text-dark">
-							<p class="fs-14 q-mr-10">
-									Select Unbonding Period
-							</p>
-							<q-icon :name="resolveIcon('info', 15, 15)" size="10px"></q-icon>
-					</div>
-					<div class="row row-cols-3 q-col-gutter-md q-mb-27">
-							<div v-for="up in pool.lockableDurationApr" class="col">
-									<div @click="chosenUnbonding = up" :class="'rounded-20 q-py-16 q-px-16 flex justify-center items-center full-height cursor-pointer ' + (up.apr == chosenUnbonding.apr ? 'bg-gradient' : 'border-primary-darker hover:bg-white-5')">
-											<div>
-													<p class="fs-18 q-mb-8 text-center">
-														{{ up.readableDuration }}
-													</p>
-													<p :class="'fs-15 text-center ' + (up.apr == chosenUnbonding.apr ? 'text-primary-dark-700' : 'text-dark')">{{ percentage(up.apr) }} %</p>
-											</div>
-									</div>
-							</div>
-					</div>
-					<div class="flex justify-between items-center q-mb-16">
-							<p class="fs-14 text-dark q-mr-20">Amount to bond</p>
-							<div class="flex fs-12 text-dark">
-								<p class="q-mr-8">
-									Available
-								</p>
-								<p>
-									<span class="text-white">{{ balancedGamm(pool.availableLPTokens) }}</span>
-									GAMM/{{ pool.id }}
-								</p>
-							</div>
-					</div>
-					<Amount v-model="amount" :max="pool.availableLPTokens" class="q-mb-22"></Amount>
-					<div class="flex justify-center">
-						<LargeButton type="submit" fit :padding-y="16" class="q-px-66">
-							<span class="text-uppercase">
-								Bond tokens
-							</span>
-						</LargeButton>
-					</div>
-				</q-form>
-    </ModalWithClose>
+	<ModalWithClose title="Bond LP Tokens">
+		<div class="q-mb-20 inline flex items-center text-dark cursor-pointer">
+			<p class="fs-14 q-mr-10">Select Unbonding Period</p>
+			<q-icon
+				:name="resolveIcon('info', 15, 15)"
+				size="14px"
+				class="cursor-pointer text-dark"
+			/>
+			<InformativeTooltip anchor="center right" self="center left">
+				It indicates a countdown, after the unbonding period you will be able to
+				remove liquidity from the pool. Remember: The longer you leave bonded tokens
+				in the pool, the more rewards you will receive.
+			</InformativeTooltip>
+		</div>
+		<div class="row row-cols-3 row-cols-xs-1 column-xs q-col-gutter-md q-mb-27">
+			<div v-for="up in pool.lockableDurationApr" class="col">
+				<LockableDurationRadio name="chosenUnbounding" :defaultValue="up" />
+			</div>
+		</div>
+		<div class="flex justify-between items-center q-mb-16">
+			<p class="fs-14 text-dark q-mr-20">Amount to bond</p>
+			<div class="flex fs-12 text-dark">
+				<p class="q-mr-8">Available</p>
+				<p>
+					<span class="text-white">{{ balancedGamm(pool.availableLPTokens) }}</span>
+					GAMM/{{ pool.id }}
+				</p>
+			</div>
+		</div>
+		<Amount name="amount" :max="pool.availableLPTokens" class="q-mb-22" />
+		<div class="flex justify-center">
+			<LargeButton
+				type="submit"
+				fit
+				:padding-y="16"
+				class="q-px-66"
+				:disable="!meta.valid"
+				@click="onSubmit"
+			>
+				<span class="text-uppercase"> Bond tokens </span>
+			</LargeButton>
+		</div>
+	</ModalWithClose>
 </template>
+
+<style>
+.total-apr {
+	max-width: 120px;
+}
+</style>

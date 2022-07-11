@@ -1,9 +1,10 @@
-import { MsgTransfer } from 'cosmjs-types/ibc/applications/transfer/v1/tx'
-import { Height } from 'cosmjs-types/ibc/core/client/v1/client'
-import { SignerMessage } from '@/types'
-import { Coin } from '@cosmjs/proto-signing'
-import { osmosis } from './proto'
-import Long from 'long'
+import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx"
+import { Height } from "cosmjs-types/ibc/core/client/v1/client"
+import { OsmosisRoute, SignerMessage } from "@/types"
+import { Coin } from "@cosmjs/proto-signing"
+import { osmosis } from "./proto"
+import { MsgClaim as MerkleDropMsgClaim } from "./codec/bitsong/merkledrop/v1beta1/tx"
+import Long from "long"
 
 export type messageTimestamp = string | number | Long.Long | undefined
 
@@ -14,12 +15,14 @@ export const SendIbcTokens = (
 	sourcePort: string,
 	sourceChannel: string,
 	timeoutHeight?: Height,
-	timeoutTimestamp?: number,
+	timeoutTimestamp?: number
 ): SignerMessage<MsgTransfer> => {
-	const timeoutTimestampNanoseconds: messageTimestamp = timeoutTimestamp ? Long.fromNumber(timeoutTimestamp).multiply(1_000_000_000) : undefined
+	const timeoutTimestampNanoseconds: messageTimestamp = timeoutTimestamp
+		? Long.fromNumber(timeoutTimestamp).multiply(1_000_000_000)
+		: undefined
 
 	return {
-		typeUrl: '/ibc.applications.transfer.v1.MsgTransfer',
+		typeUrl: "/ibc.applications.transfer.v1.MsgTransfer",
 		value: MsgTransfer.fromPartial({
 			sourcePort: sourcePort,
 			sourceChannel: sourceChannel,
@@ -27,7 +30,7 @@ export const SendIbcTokens = (
 			receiver: recipientAddress,
 			token: transferAmount,
 			timeoutTimestamp: timeoutTimestampNanoseconds,
-		})
+		}),
 	}
 }
 
@@ -36,15 +39,15 @@ export const LockTokens = (
 	duration: number, // Duration's unit is expected to be the second.
 	coins: Coin[]
 ): SignerMessage<any> => {
-	const msgDuration = (duration * 1_000_000_000).toString()
+	const msgDuration = duration * 1_000_000_000
 
 	return {
-		typeUrl: '/osmosis.lockup.MsgLockTokens',
+		typeUrl: "/osmosis.lockup.MsgLockTokens",
 		value: {
 			owner: senderAddress,
 			duration: {
-				seconds: Long.fromNumber(Math.floor(parseInt(msgDuration) / 1_000_000_000)),
-				nanos: parseInt(msgDuration) % 1_000_000_000,
+				seconds: Long.fromNumber(Math.floor(msgDuration / 1_000_000_000)),
+				nanos: msgDuration % 1_000_000_000,
 			},
 			coins,
 		},
@@ -55,17 +58,101 @@ export const BeginUnlocking = (
 	senderAddress: string, // Owner
 	id: string
 ): SignerMessage<any> => {
-
-	console.log(senderAddress, id, osmosis.lockup.MsgBeginUnlocking.encode({
-		owner: senderAddress,
-		ID: Long.fromString(id),
-	}).finish())
-
 	return {
-		typeUrl: '/osmosis.lockup.MsgBeginUnlocking',
+		typeUrl: "/osmosis.lockup.MsgBeginUnlocking",
 		value: {
 			owner: senderAddress,
 			ID: Long.fromString(id),
 		},
+	}
+}
+
+export const JoinPool = (
+	senderAddress: string, // Owner
+	poolId: string,
+	shareOutAmount: string,
+	tokenInMaxs: Coin[]
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/osmosis.gamm.v1beta1.MsgJoinPool",
+		value: osmosis.gamm.v1beta1.MsgJoinPool.fromObject({
+			sender: senderAddress,
+			poolId: Long.fromString(poolId),
+			shareOutAmount,
+			tokenInMaxs,
+		}),
+	}
+}
+
+export const JoinSwapExternAmountIn = (
+	senderAddress: string, // Owner
+	poolId: string,
+	tokenIn: Coin,
+	shareOutMinAmount: string
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn",
+		value: osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn.fromObject({
+			sender: senderAddress,
+			poolId: Long.fromString(poolId),
+			tokenIn,
+			shareOutMinAmount,
+		}),
+	}
+}
+
+export const ExitPool = (
+	senderAddress: string, // Owner
+	poolId: string,
+	shareInAmount: string,
+	tokenOutMins: Coin[]
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/osmosis.gamm.v1beta1.MsgExitPool",
+		value: {
+			sender: senderAddress,
+			poolId: Long.fromString(poolId),
+			shareInAmount,
+			tokenOutMins,
+		},
+	}
+}
+
+export const SwapExactAmountIn = (
+	senderAddress: string, // Owner
+	routes: OsmosisRoute[],
+	tokenIn: Coin,
+	tokenOutMinAmount: string
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn",
+		value: {
+			sender: senderAddress,
+			routes: routes.map((route) => ({
+				...route,
+				poolId: Long.fromString(route.poolId),
+			})),
+			tokenIn,
+			tokenOutMinAmount,
+		},
+	}
+}
+
+export const MerkledropClaim = (
+	senderAddress: string, // Owner
+	merkledropId: number,
+	index: number,
+	amount: string,
+	proofs: string[]
+): SignerMessage<any> => {
+	return {
+		typeUrl: "/bitsong.merkledrop.v1beta1.MsgClaim",
+		value: MerkleDropMsgClaim.fromJSON({
+			sender: senderAddress,
+			merkledropId: merkledropId.toString(),
+			index: index.toString(),
+			amount,
+			proofs,
+		}),
 	}
 }

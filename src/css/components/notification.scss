@@ -1,4 +1,6 @@
 .q-notification {
+    box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.2);
+
     .q-icon.q-notification__icon,
     .q-spinner.q-spinner-mat.q-notification__spinner {
         margin-right: 34px;
@@ -48,6 +50,18 @@
                     height: 10px;
                     background-image: url("@/assets/images/icons/close.svg");
                     background-size: 100%;
+                }
+            }
+        }
+    }
+
+    &.light {
+        .q-notification__actions {
+            button {
+                .q-btn__content {
+                    &::after {
+                        background-image: url("@/assets/images/icons/close-light.svg");
+                    }
                 }
             }
         }

@@ -1,19 +1,20 @@
 <script setup lang="ts">
-    import Card from './Card.vue'
+import Card from "./Card.vue"
 
-    const props = defineProps<{
-        header?: string,
-        padding?: number,
-    }>()
+defineProps<{
+	header?: string
+	padding?: number
+}>()
 </script>
 
 <template>
-    <Card :padding="padding">
-        <p class="fs-13 opacity-50 q-mb-30 text-uppercase">
-            {{header}}
-        </p>
-        <div>
-            <slot></slot>
-        </div>
-    </Card>
+	<Card class="q-px-40 q-py-30" :padding="padding">
+		<p class="fs-13 opacity-50 q-mb-30 text-uppercase" v-if="!$slots.header">
+			{{ header }}
+		</p>
+		<slot name="header" v-else></slot>
+		<div>
+			<slot></slot>
+		</div>
+	</Card>
 </template>

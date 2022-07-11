@@ -4,30 +4,62 @@
     --text-color: #fff;
 }
 
+.bg-transparent {
+    background-color: transparent;
+}
+
 .border-primary {
     border: 2px solid $primary;
+}
+
+.text-white {
+    color: white !important;
 }
 
 .text-primary-darker {
     color: $primary-darker !important;
 }
+
+.text-primary-darker-half {
+    color: $primary-darker-half !important;
+}
+
 .bg-primary-darker {
     background: $primary-darker !important;
 }
+
+.bg-primary-darker-half {
+    background: $primary-darker-half !important;
+}
+
 .border-primary-darker {
     border: 2px solid $primary-darker;
+}
+
+.border-transparent {
+    border: 2px solid transparent;
+}
+
+.border-primary-darker-half {
+    border: 2px solid $primary-darker-half;
 }
 
 .text-primary-dark {
     color: $primary-dark !important;
 }
+
 .bg-primary-dark {
     background: $primary-dark !important;
+}
+
+.border-dark {
+    border: 1px solid $dark;
 }
 
 .text-primary-dark-700 {
     color: $primary-dark-700 !important;
 }
+
 .bg-primary-dark-700 {
     background: $primary-dark-700 !important;
 }
@@ -35,6 +67,7 @@
 .text-primary-light {
     color: $primary-light !important;
 }
+
 .bg-primary-light {
     background: $primary-light !important;
 }
@@ -46,6 +79,7 @@
 .text-dark-light {
     color: $dark-light !important;
 }
+
 .bg-dark-light {
     background: $dark-light !important;
 }
@@ -53,6 +87,7 @@
 .text-dark-lighter {
     color: $dark-lighter !important;
 }
+
 .bg-dark-lighter {
     background: $dark-lighter !important;
 }
@@ -60,6 +95,7 @@
 .text-gray {
     color: $gray !important;
 }
+
 .bg-gray {
     background: $gray !important;
 }
@@ -67,24 +103,37 @@
 .text-notification-background {
     color: $notification-background;
 }
+
 .bg-notification-background {
     background-color: $notification-background;
 }
 
+.bg-notification-background-light {
+    background-color: $notification-background-light;
+}
+
 .bg-rounded-translucent {
     background: rgba(112, 110, 124, 0.15);
-    box-shadow: 0px 0px 20px #14142E;
+    box-shadow: 0px 0px 20px $alternative;
     backdrop-filter: blur(60px);
     border-radius: 30px;
 }
 
 .bg-gradient {
-    background: linear-gradient(147.07deg, $primary-complementary 21.78%, $primary 79.22%);
+    background: linear-gradient(176deg, $primary-complementary 21.78%, $primary 79.22%);
     border-radius: 30px;
+}
+
+.text-gradient {
+    @include text-gradient();
 }
 
 .shadow-20 {
     box-shadow: 0px 0px 20px rgba(20, 20, 46, 0.2);
+}
+
+.shadow-10 {
+    box-shadow: 0px 0px 20px transparentize($color: $alternative, $amount: 0.9);
 }
 
 .shadow-20-alt {
@@ -104,29 +153,35 @@
 
 [class*="border-gradient-"] {
     position: relative;
+
     &::before {
-        content:"";
-        position:absolute;
-        top:0;
-        left:0;
-        right:0;
-        bottom:0;
-        border-radius:50px;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50px;
         padding: 2px;
         -webkit-mask:
-            linear-gradient(#fff 0 0) content-box, 
+            linear-gradient(#fff 0 0) content-box,
             linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
-                mask-composite: exclude;
+        mask-composite: exclude;
     }
 }
 
 .border-gradient-primary::before {
     background: linear-gradient(to right, $primary-complementary, $primary);
 }
+
 .border-gradient-spinner::before {
     background: linear-gradient(50deg, $primary-complementary 0%, $primary 71%, transparent 72%, transparent 100%);
     background-position: 0;
+}
+
+.border-white {
+    border: 2px solid $white;
 }
 
 .text-overlay-gradient {
@@ -138,10 +193,24 @@
     position: relative;
 }
 
-@for $i from 1 through 8
-{
+.main-page-background-helper {
+    background: $secondary;
+    filter: blur(200px);
+    backdrop-filter: blur(100px);
+}
+
+.complementary-main-page-background {
+    background: linear-gradient(304.1deg, #220D32, rgba(26, 11, 47, 1) 27.13%, rgba(21, 10, 52, 0) 64.84%, #220D32 100%);
+}
+
+.bg-gradient-primary-pink {
+    background: linear-gradient(0deg, rgba(0, 224, 255, 0.4), rgba(0, 224, 255, 0.4)), $primary;
+}
+
+@for $i from 1 through 8 {
     $name: $i*5;
     $val: -(1 - $i/20);
+
     .bg-white-#{$name} {
         background-color: color.adjust(#FFFFFF, $alpha: $val);
     }
@@ -151,24 +220,32 @@
     }
 }
 
-@for $i from 1 through 20
-{
+@for $i from 1 through 20 {
     .opacity-#{$i*5} {
         opacity: #{$i/20};
     }
-    
+
     .hover\:opacity-#{$i*5}:hover {
         opacity: #{$i/20};
     }
-    
+
     .group:hover .group-hover\:opacity-#{$i*5} {
         opacity: #{$i/20};
     }
 }
 
-@for $i from 1 through 10
-{
+@for $i from 1 through 10 {
     .blur-#{$i*10} {
         backdrop-filter: blur(#{$i*10}px);
+    }
+}
+
+@media screen and (max-width: $breakpoint-xs) {
+    .text-xs-secondary {
+        color: $secondary !important;
+    }
+
+    .bg-xs-white {
+        background-color: adjust-color($color: #FFFFFF);
     }
 }

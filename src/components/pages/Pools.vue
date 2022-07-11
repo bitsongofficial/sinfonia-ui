@@ -1,31 +1,40 @@
 <script setup lang="ts">
-	import Title from '@/components/typography/Title.vue'
-	import PoolHeader from '@/components/pools/PoolHeader.vue'
-	import Card from '@/components/cards/Card.vue'
-	import {balancedCurrency} from "@/common/numbers"
-	import { RouterLink } from "vue-router"
-	import usePools from '@/store/pools'
+import Title from "@/components/typography/Title.vue"
+import PoolHeader from "@/components/pools/PoolHeader.vue"
+import Card from "@/components/cards/Card.vue"
+import { balancedCurrency } from "@/common/numbers"
+import { RouterLink } from "vue-router"
+import usePools from "@/store/pools"
 
-	const poolsStore = usePools()
+const poolsStore = usePools()
 </script>
 
 <template>
 	<template v-if="poolsStore.myPools.length > 0">
-		<Title class="q-mb-50">Your Pools</Title>
-		<div class="row q-mb-72 q-col-gutter-x-xl">
-			<div v-for="(userPool, index) in poolsStore.myPools" class="col-8 col-md-4 col-lg-2">
-				<RouterLink :to="'/pools/' + userPool.id" class="block">
-					<Card class="full-width cursor-pointer hover:bg-white-15">
+		<Title class="q-mb-50">My Pools</Title>
+		<div class="row q-mb-72 q-col-gutter-x-xl q-col-gutter-y-md">
+			<div
+				v-for="(userPool, index) in poolsStore.myPools"
+				class="col-8 col-md-4 col-lg-2"
+			>
+				<RouterLink :to="'/pools/' + userPool.id" class="block full-height">
+					<Card class="full-width text-white cursor-pointer hover:bg-white-15 full-height !flex column justify-between no-wrap">
 						<PoolHeader :pool="userPool" />
 						<div class="separator-light q-my-20"></div>
-						<div class="row">
+						<div class="row q-col-gutter-x-sm">
 							<div class="col-4">
 								<p class="fs-10 text-weight-medium opacity-40 q-pb-10">My Liquidity</p>
-								<p class="fs-16 text-weight-medium text-no-wrap">{{balancedCurrency(userPool.userLiquidity)}} $</p>
+								<p class="fs-16 text-weight-medium work-break-all">
+									{{ balancedCurrency(userPool.userLiquidity) }} $
+								</p>
 							</div>
 							<div class="col-4">
-								<p class="fs-10 text-weight-medium opacity-40 q-pb-10">My Bonded Tokens</p>
-								<p class="fs-16 text-weight-medium text-no-wrap">{{balancedCurrency(userPool.bonded)}} $</p>
+								<p class="fs-10 text-weight-medium opacity-40 q-pb-10">
+									My Bonded Tokens
+								</p>
+								<p class="fs-16 text-weight-medium work-break-all">
+									{{ balancedCurrency(userPool.bonded) }} $
+								</p>
 							</div>
 						</div>
 					</Card>
@@ -34,10 +43,10 @@
 		</div>
 	</template>
 	<Title class="q-mb-50" :font-size="18">All Pools</Title>
-	<div class="row q-col-gutter-x-xl">
-		<div v-for="(pool) in poolsStore.pools" class="col-8 col-md-4 col-lg-2">
-			<RouterLink :to="'/pools/' + pool.id" class="block">
-				<Card class="full-width cursor-pointer hover:bg-white-15">
+	<div class="row q-col-gutter-x-xl q-col-gutter-y-md">
+		<div v-for="pool in poolsStore.pools" class="col-8 col-md-4 col-lg-2">
+			<RouterLink :to="'/pools/' + pool.id" class="block full-height">
+				<Card class="full-width text-white cursor-pointer hover:bg-white-15 full-height !flex column justify-between no-wrap">
 					<PoolHeader :pool="pool" />
 				</Card>
 			</RouterLink>

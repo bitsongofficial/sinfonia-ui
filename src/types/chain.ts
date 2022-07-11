@@ -15,8 +15,8 @@ export interface ChainPagination {
 }
 
 export interface ChainPaginationParams {
-	'pagination.limit'?: string
-	'pagination.key'?: string
+	"pagination.limit"?: string
+	"pagination.key"?: string
 }
 
 export type ChainData<T extends string, K> = {

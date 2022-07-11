@@ -1,4 +1,9 @@
-export type Social = 'instagram' | 'facebook' | 'website' | 'twitter' | 'spotify'
+export type Social =
+	| "instagram"
+	| "facebook"
+	| "website"
+	| "twitter"
+	| "spotify"
 
 export interface FantokenSocialLink {
 	type: Social
@@ -45,10 +50,21 @@ export interface FantokenRoadmap {
 	list: FantokenRoadmapEntry[]
 }
 
+export interface FantokenAirdrop {
+	url: string
+}
+
 export interface FantokenWhitePaper {
+	url: string
 	biography: FantokenContentBlock
 	project: FantokenContentBlock
 	useCases: FantokenUseCases[]
 	tokenomics: FantokenTokenomics
 	roadmap: FantokenRoadmap
+}
+
+export interface FantokenTab {
+	label: string
+	name?: string
+	url?: string
 }

@@ -1,0 +1,23 @@
+.pagination-btn {
+  background: rgba(255, 255, 255, 0.05);
+  width: 21px;
+  height: 28px;
+  min-height: unset !important;
+  min-width: unset !important;
+}
+
+.pagination-btn-icon {
+  font-size: 8px !important;
+}
+
+.q-pagination {
+  .q-btn {
+    margin-left: 4px;
+    margin-right: 4px;
+    border-radius: 30px;
+  
+    &::before {
+      box-shadow: none;
+    }
+  }
+}

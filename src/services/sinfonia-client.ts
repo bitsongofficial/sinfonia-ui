@@ -1,319 +1,383 @@
-import OsmosisClient from './osmosis-client'
-import ConfigClient from './config-client'
-import BitsongClient from './bitsong-client'
-import { AssetListConfig, ChainData, ExtraGaugeList, OsmosisPool } from '@/types'
-import { AxiosResponse } from 'axios'
-import { Coin } from '@cosmjs/proto-signing'
-import { mapTokensWithDefaults, tokenWithDefaults } from '@/common'
-import ChainClient from './chain-client'
-import { compact } from 'lodash'
+import OsmosisClient from "./osmosis-client"
+import ConfigClient from "./config-client"
+import BitsongClient from "./bitsong-client"
+import {
+	AssetListConfig,
+	BitsongMerkledrop,
+	ChainData,
+	OsmosisPool,
+} from "@/types"
+import { AxiosResponse } from "axios"
+import { Coin } from "@cosmjs/proto-signing"
+import { mapTokensWithDefaults, tokenWithDefaults } from "@/common"
+import ChainClient from "./chain-client"
+import { compact } from "lodash"
 
 export default class SinfoniaClient {
-  private assetListsConfig?: AssetListConfig
+	private assetListsConfig?: AssetListConfig
 	private osmosisClient?: OsmosisClient
 	private bitsongClient?: BitsongClient
 	private configClient: ConfigClient
 
-  public constructor(configUrl: string) {
-    this.configClient = new ConfigClient(configUrl)
-  }
+	public constructor(configUrl: string) {
+		this.configClient = new ConfigClient(configUrl)
+	}
 
-  public totalBurnedFantokens = async () => {
-    try {
-      if (this.bitsongClient) {
-        const response = await this.bitsongClient.totalBurnedFantokens()
+	public bitsongBlocks = async (block?: string) => {
+		try {
+			if (this.bitsongClient) {
+				const response = await this.bitsongClient.blocks(block)
 
-        return response.data.burned_coins
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
+				return response.data
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
 
-    return []
-  }
+	public merkledrops = async (ids: number[]): Promise<BitsongMerkledrop[]> => {
+		try {
+			if (this.bitsongClient) {
+				const requests: Promise<
+					AxiosResponse<ChainData<"merkledrop", BitsongMerkledrop>>
+				>[] = []
 
-  public totalMintedFantokens = async (): Promise<Coin[]> => {
-    try {
-      if (this.bitsongClient && this.assetListsConfig) {
-        const requests: Promise<AxiosResponse<ChainData<'amount', Coin>>>[] = []
+				for (const id of ids) {
+					requests.push(this.bitsongClient.merkledrop(id))
+				}
 
-        for (const fantokenDenom of this.allowedFantokenDenom) {
-          requests.push(this.bitsongClient.supplyByDenom(fantokenDenom))
-        }
+				const merkledropsResponse = await Promise.all(requests)
 
-        const supplyResponses = await Promise.all(requests)
+				return merkledropsResponse.map((el) => el.data.merkledrop)
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 
-        return supplyResponses.map(el => el.data.amount)
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
+		return []
+	}
 
-    return []
-  }
+	public totalMintedFantokens = async (): Promise<Coin[]> => {
+		try {
+			if (this.bitsongClient && this.assetListsConfig) {
+				const requests: Promise<AxiosResponse<ChainData<"amount", Coin>>>[] = []
 
-  public lockableDurations = async () => {
-    try {
-      if (this.osmosisClient) {
-        const response = await this.osmosisClient.lockableDurations()
+				for (const fantokenDenom of this.allowedFantokenDenom) {
+					requests.push(this.bitsongClient.supplyByDenom(fantokenDenom))
+				}
 
-        return response.data.lockable_durations
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
+				const supplyResponses = await Promise.all(requests)
 
-    return []
-  }
+				return supplyResponses.map((el) => el.data.amount)
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 
-  public epochProvisions = async () => {
-    try {
-      if (this.osmosisClient) {
-        const response = await this.osmosisClient.epochProvisions()
+		return []
+	}
 
-        return response.data.epoch_provisions
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
+	public lockableDurations = async () => {
+		try {
+			if (this.osmosisClient) {
+				const response = await this.osmosisClient.lockableDurations()
 
-    return '0'
-  }
+				return response.data.lockable_durations
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 
-  public poolIncentivesDistrInfo = async () => {
-    try {
-      if (this.osmosisClient) {
-        const response = await this.osmosisClient.poolIncentivesDistrInfo()
+		return []
+	}
 
-        return response.data.distr_info
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
+	public epochProvisions = async () => {
+		try {
+			if (this.osmosisClient) {
+				const response = await this.osmosisClient.epochProvisions()
 
-  public epochs = async () => {
-    try {
-      if (this.osmosisClient) {
-        const response = await this.osmosisClient.epochs()
+				return response.data.epoch_provisions
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 
-        return response.data.epochs
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
+		return "0"
+	}
 
-    return []
-  }
+	public poolIncentivesDistrInfo = async () => {
+		try {
+			if (this.osmosisClient) {
+				const response = await this.osmosisClient.poolIncentivesDistrInfo()
 
-  public mintParams = async () => {
-    try {
-      if (this.osmosisClient) {
-        const response = await this.osmosisClient.mintParams()
+				return response.data.distr_info
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
 
-        return response.data.params
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
+	public epochs = async () => {
+		try {
+			if (this.osmosisClient) {
+				const response = await this.osmosisClient.epochs()
 
-  public incentivizedPools = async () => {
-    try {
-      if (this.osmosisClient && this.assetListsConfig) {
-        const response = await this.osmosisClient.incentivizedPools()
+				return response.data.epochs
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 
-        return response.data.incentivized_pools.filter(
-          pool => this.allowedPoolIDs.includes(pool.pool_id)
-        )
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
+		return []
+	}
 
-    return []
-  }
+	public mintParams = async () => {
+		try {
+			if (this.osmosisClient) {
+				const response = await this.osmosisClient.mintParams()
+
+				return response.data.params
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public incentivizedPools = async () => {
+		try {
+			if (this.osmosisClient && this.assetListsConfig) {
+				const response = await this.osmosisClient.incentivizedPools()
+
+				return response.data.incentivized_pools.filter((pool) =>
+					this.allowedPoolIDs.includes(pool.pool_id)
+				)
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+
+		return []
+	}
 
 	public pools = async (): Promise<OsmosisPool[]> => {
-    try {
-      if (this.osmosisClient && this.assetListsConfig) {
-        const requests: Promise<AxiosResponse<ChainData<"pool", OsmosisPool>>>[] = []
+		try {
+			if (this.osmosisClient && this.assetListsConfig) {
+				const requests: Promise<AxiosResponse<ChainData<"pool", OsmosisPool>>>[] =
+					[]
 
-        for (const pool of this.assetListsConfig.pools) {
-          requests.push(this.osmosisClient.poolDetails(pool.id))
-        }
+				for (const pool of this.assetListsConfig.pools) {
+					requests.push(this.osmosisClient.poolDetails(pool.id))
+				}
 
-        const poolResponses = await Promise.all(requests)
+				const poolResponses = await Promise.all(requests)
 
-        return poolResponses.map(el => el.data.pool)
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
+				return poolResponses.map((el) => el.data.pool)
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 
-    return []
-  }
+		return []
+	}
 
-  public extraGauges = async () => {
-    try {
-      const response = await this.configClient.extraGauges()
+	public extraGauges = async () => {
+		try {
+			const response = await this.configClient.extraGauges()
 
-      return response.data
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
+			return response.data
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
 
-  public extraGaugesDetails = async (ids: string[]) => {
-    try {
-      if (this.osmosisClient) {
-        const gaugeRequests = ids.map(id => this.osmosisClient?.gaugeById(id))
-        const responses = await Promise.all(gaugeRequests)
+	public extraGaugesDetails = async (ids: string[]) => {
+		try {
+			if (this.osmosisClient) {
+				const gaugeRequests = ids.map((id) => this.osmosisClient?.gaugeById(id))
+				const responses = await Promise.all(gaugeRequests)
 
-        return compact(responses.map(response => response?.data.gauge))
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
+				return compact(responses.map((response) => response?.data.gauge))
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 
-    return []
-  }
+		return []
+	}
+
+	public lockedGaugesByIds = async (ids: string[]) => {
+		try {
+			if (this.osmosisClient) {
+				const lockedGaugeRequests = ids.map((id) =>
+					this.osmosisClient?.lockedByGaugeId(id)
+				)
+				const responses = await Promise.all(lockedGaugeRequests)
+
+				return compact(responses)
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+
+		return []
+	}
 
 	public assetLists = async () => {
-    try {
-      const response = await this.configClient.assetLists()
+		try {
+			const response = await this.configClient.assetLists()
 
-      this.assetListsConfig = {
-        ...response.data,
-        bitsongToken: tokenWithDefaults(response.data.bitsongToken),
-        osmosisToken: tokenWithDefaults(response.data.osmosisToken),
-        tokens: mapTokensWithDefaults(response.data.tokens),
-        fantokens: mapTokensWithDefaults(response.data.fantokens).map(fantoken => ({
-          ...response.data.bitsongToken,
-          ...fantoken
-        }))
-      }
+			this.assetListsConfig = {
+				...response.data,
+				bitsongToken: tokenWithDefaults(response.data.bitsongToken),
+				osmosisToken: tokenWithDefaults(response.data.osmosisToken),
+				tokens: mapTokensWithDefaults(response.data.tokens),
+				fantokens: mapTokensWithDefaults(response.data.fantokens).map(
+					(fantoken) => ({
+						...response.data.bitsongToken,
+						...fantoken,
+					})
+				),
+			}
 
-      this.osmosisClient = new OsmosisClient(this.assetListsConfig.osmosisToken.apiURL)
-      this.bitsongClient = new BitsongClient(this.assetListsConfig.bitsongToken.apiURL)
+			this.osmosisClient = new OsmosisClient(
+				this.assetListsConfig.osmosisToken.apiURL
+			)
+			this.bitsongClient = new BitsongClient(
+				this.assetListsConfig.bitsongToken.apiURL
+			)
 
-      return this.assetListsConfig
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
+			return this.assetListsConfig
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
 
-  public balance = async (address: string, url: string) => {
-    try {
-      const chainClient = new ChainClient(url)
-      const response = await chainClient.bankBalances(address)
+	public balance = async (address: string, url: string) => {
+		try {
+			const chainClient = new ChainClient(url)
+			const response = await chainClient.bankBalances(address)
 
-      return response.data.balances
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
+			return response.data.balances
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
 
-  public balances = async (bitsongAddress: string, osmosisAddress: string) => {
-    try {
-      if (this.bitsongClient && this.osmosisClient && this.assetListsConfig) {
-        const [bitsongResponse, osmosisResponse, lockedCoinsResponse, lockedLongerDurationResponse] = await Promise.all([
-          this.bitsongClient.bankBalances(bitsongAddress),
-          this.osmosisClient.bankBalances(osmosisAddress),
-          this.osmosisClient.accountLockedCoins(osmosisAddress),
-          this.osmosisClient.accountLockedLongerDuration(osmosisAddress)
-        ])
+	public balances = async (bitsongAddress: string, osmosisAddress: string) => {
+		try {
+			if (this.bitsongClient && this.osmosisClient && this.assetListsConfig) {
+				const [
+					bitsongResponse,
+					osmosisResponse,
+					lockedCoinsResponse,
+					lockedLongerDurationResponse,
+				] = await Promise.all([
+					this.bitsongClient.bankBalances(bitsongAddress),
+					this.osmosisClient.bankBalances(osmosisAddress),
+					this.osmosisClient.accountLockedCoins(osmosisAddress),
+					this.osmosisClient.accountLockedLongerDuration(osmosisAddress),
+				])
 
-        return {
-          osmosisBalance: osmosisResponse.data.balances,
-          bitsongBalance: bitsongResponse.data.balances.filter(
-            el => !this.allowedFantokenDenom.includes(el.denom)
-          ),
-          fantokensBalance: bitsongResponse.data.balances.filter(
-            el => this.allowedFantokenDenom.includes(el.denom)
-          ),
-          lockedCoinsBalance: lockedCoinsResponse.data.coins,
-          lockedLongerDuration: lockedLongerDurationResponse.data.locks
-        }
-      }
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
+				return {
+					osmosisBalance: osmosisResponse.data.balances,
+					bitsongBalance: bitsongResponse.data.balances.filter((el) =>
+						this.allowedFantokenDenom.includes(el.denom)
+					),
+					fantokensBalance: bitsongResponse.data.balances.filter((el) =>
+						this.allowedFantokenDenom.includes(el.denom)
+					),
+					lockedCoinsBalance: lockedCoinsResponse.data.coins,
+					lockedLongerDuration: lockedLongerDurationResponse.data.locks,
+				}
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
 
-  get allowedIbcDenomOsmosis() {
-    const assetListsConfig = this.assetListsConfig
+	get allowedIbcDenomOsmosis() {
+		const assetListsConfig = this.assetListsConfig
 
-    if (assetListsConfig) {
-      const denoms: string[] = []
+		if (assetListsConfig) {
+			const denoms: string[] = []
 
-      denoms.push(assetListsConfig.bitsongToken.ibc.osmosis.destDenom)
+			denoms.push(assetListsConfig.bitsongToken.ibc.osmosis.destDenom)
 
-      const coinLookup = assetListsConfig.osmosisToken.coinLookup.find(
-        (coin) => coin.viewDenom === assetListsConfig.osmosisToken.symbol
-      )
+			const coinLookup = assetListsConfig.osmosisToken.coinLookup.find(
+				(coin) => coin.viewDenom === assetListsConfig.osmosisToken.symbol
+			)
 
-      if (coinLookup) {
-        denoms.push(coinLookup.viewDenom)
-      }
+			if (coinLookup) {
+				denoms.push(coinLookup.viewDenom)
+			}
 
-      for (const token of assetListsConfig.tokens) {
-        denoms.push(token.ibc.osmosis.destDenom)
-      }
+			for (const token of assetListsConfig.tokens) {
+				denoms.push(token.ibc.osmosis.destDenom)
+			}
 
-      for (const fantoken of assetListsConfig.fantokens) {
-        denoms.push(fantoken.ibc.osmosis.destDenom)
-      }
+			for (const fantoken of assetListsConfig.fantokens) {
+				denoms.push(fantoken.ibc.osmosis.destDenom)
+			}
 
-      return denoms
-    }
+			return denoms
+		}
 
-    return []
-  }
+		return []
+	}
 
-  get allowedFantokenDenom() {
-    const assetListsConfig = this.assetListsConfig
+	get allowedFantokenDenom() {
+		const assetListsConfig = this.assetListsConfig
 
-    if (assetListsConfig) {
-      const denoms: string[] = []
+		if (assetListsConfig) {
+			const denoms: string[] = []
 
-      for (const fantoken of assetListsConfig.fantokens) {
-        const coinLookup = fantoken.coinLookup.find(
-          (coin) => coin.viewDenom === fantoken.symbol
-        );
+			const bitsongLookup = assetListsConfig.bitsongToken.coinLookup.find(
+				(coin) => coin.viewDenom === assetListsConfig.bitsongToken.symbol
+			)
 
-        if (coinLookup && coinLookup.fantokenDenom) {
-          denoms.push(coinLookup.fantokenDenom)
-        }
-      }
+			if (bitsongLookup) {
+				denoms.push(bitsongLookup.chainDenom)
+			}
 
-      return denoms
-    }
+			for (const fantoken of assetListsConfig.fantokens) {
+				const coinLookup = fantoken.coinLookup.find(
+					(coin) => coin.viewDenom === fantoken.symbol
+				)
 
-    return []
-  }
+				if (coinLookup && coinLookup.fantokenDenom) {
+					denoms.push(coinLookup.fantokenDenom)
+				}
+			}
 
-  get allowedPoolIDs() {
-    const assetListsConfig = this.assetListsConfig
+			return denoms
+		}
 
-    if (assetListsConfig) {
-      return assetListsConfig.pools.map(el => el.id)
-    }
+		return []
+	}
 
-    return []
-  }
+	get allowedPoolIDs() {
+		const assetListsConfig = this.assetListsConfig
+
+		if (assetListsConfig) {
+			return assetListsConfig.pools.map((el) => el.id)
+		}
+
+		return []
+	}
 }
