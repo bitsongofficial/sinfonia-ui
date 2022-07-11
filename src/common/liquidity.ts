@@ -18,7 +18,7 @@ export const amountBalancer = (
 
 	if (asset) {
 		const amount = new BigNumber(rawAmount)
-		const totalShare = new BigNumber(pool.totalShares.amount)
+		const totalShare = new BigNumber(pool.total_shares.amount)
 
 		if (!amount.eq(0) && !totalShare.eq(0) && !amount.isNaN()) {
 			const share = amount.div(asset.token.amount)
