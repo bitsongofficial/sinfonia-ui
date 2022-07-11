@@ -59,7 +59,7 @@ const columns: TableColumn[] = [
 		label: "",
 		field: "price",
 		sortable: false,
-		format: (val: any) => `${smallNumber(val)} $`,
+		format: (val: any) => `${balancedCurrency(val)} $`,
 	},
 ]
 
