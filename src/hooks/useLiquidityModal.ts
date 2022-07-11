@@ -263,7 +263,7 @@ const useLiquidityModal = (
 		transactionManagerStore.exitPool(
 			pool.value.id,
 			shareInAmount,
-			compact(tokenOutMins).slice(0, 1)
+			compact(tokenOutMins)
 		)
 	}
 
