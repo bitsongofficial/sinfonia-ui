@@ -9,6 +9,9 @@ import {
 } from "@/common"
 import { MerkledropWithProof } from "@/types"
 import { computed } from "vue"
+import useTransactionManager from "@/store/transaction-manager"
+
+const transactionManagerStore = useTransactionManager()
 
 const props = defineProps<{
 	airdrop: MerkledropWithProof
@@ -27,6 +30,17 @@ const unavailableText = computed(() => {
 		return "Claimed"
 	}
 })
+
+const onClaim = (merkledrop: MerkledropWithProof) => {
+	if (merkledrop.proof) {
+		transactionManagerStore.merkledropClaim(
+			merkledrop.merkledrop_id,
+			merkledrop.proof?.index,
+			merkledrop.proof.amount.toString(),
+			merkledrop.proof?.proofs
+		)
+	}
+}
 </script>
 
 <template>
@@ -88,6 +102,15 @@ const unavailableText = computed(() => {
 			disable
 			class="q-px-22 q-py-18 fs-16 full-width text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
 		/>
-		<LargeButton label="Claim" :padding-y="18" v-else="!airdrop.proof.claimed" />
+		<LargeButton
+			label="Claim"
+			:padding-y="18"
+			v-else="!airdrop.proof.claimed"
+			@click="onClaim(airdrop)"
+			:disable="
+				transactionManagerStore.loadingBroadcasting ||
+				transactionManagerStore.loadingSign
+			"
+		/>
 	</Card>
 </template>

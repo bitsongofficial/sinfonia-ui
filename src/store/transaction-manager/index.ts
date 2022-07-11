@@ -95,6 +95,9 @@ const useTransactionManager = defineStore("transactionManager", {
 							}
 
 							notifyError("Transaction Failed", (error as Error).message)
+
+							this.loadingBroadcasting = false
+							this.loadingSign = false
 						})
 
 						manager.sendIbcTokens(
@@ -116,6 +119,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				throw error
 			} finally {
 				this.loadingSign = false
+				this.loadingBroadcasting = false
 			}
 		},
 		async lockTokens(duration: LockableDurationWithApr, coins: Coin[]) {
@@ -169,6 +173,9 @@ const useTransactionManager = defineStore("transactionManager", {
 						}
 
 						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
 					})
 
 					manager.lockTokens(authStore.osmosisAddress, duration.duration, coins)
@@ -184,6 +191,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				throw error
 			} finally {
 				this.loadingSign = false
+				this.loadingBroadcasting = false
 			}
 		},
 		async joinPool(poolId: string, shareOutAmount: string, tokenInMaxs: Coin[]) {
@@ -238,6 +246,9 @@ const useTransactionManager = defineStore("transactionManager", {
 						}
 
 						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
 					})
 
 					manager.joinPool(
@@ -258,6 +269,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				throw error
 			} finally {
 				this.loadingSign = false
+				this.loadingBroadcasting = false
 			}
 		},
 		async joinSwapExternAmountIn(
@@ -316,6 +328,9 @@ const useTransactionManager = defineStore("transactionManager", {
 						}
 
 						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
 					})
 
 					manager.joinSwapExternAmountIn(
@@ -336,6 +351,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				throw error
 			} finally {
 				this.loadingSign = false
+				this.loadingBroadcasting = false
 			}
 		},
 		async exitPool(poolId: string, shareInAmount: string, tokenOutMins: Coin[]) {
@@ -390,6 +406,9 @@ const useTransactionManager = defineStore("transactionManager", {
 						}
 
 						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
 					})
 
 					manager.exitPool(
@@ -410,6 +429,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				throw error
 			} finally {
 				this.loadingSign = false
+				this.loadingBroadcasting = false
 			}
 		},
 		async swapExactAmountIn(
@@ -481,6 +501,9 @@ const useTransactionManager = defineStore("transactionManager", {
 						}
 
 						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
 					})
 
 					manager.swapExactAmountIn(
@@ -501,6 +524,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				throw error
 			} finally {
 				this.loadingSign = false
+				this.loadingBroadcasting = false
 			}
 		},
 		async beginUnlocking(id: string) {
@@ -555,6 +579,9 @@ const useTransactionManager = defineStore("transactionManager", {
 						}
 
 						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
 					})
 
 					manager.beginUnlocking(authStore.osmosisAddress, id)
@@ -566,6 +593,87 @@ const useTransactionManager = defineStore("transactionManager", {
 				throw error
 			} finally {
 				this.loadingSign = false
+				this.loadingBroadcasting = false
+			}
+		},
+		async merkledropClaim(
+			merkledropId: number,
+			index: number,
+			amount: string,
+			proofs: string[]
+		) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+			let loader
+
+			try {
+				this.loadingSign = true
+				const bitsongToken = configStore.bitsongToken
+
+				if (window.keplr && bitsongToken && authStore.bitsongAddress) {
+					const signer = await window.keplr.getOfflineSignerAuto(
+						bitsongToken.chainID
+					)
+
+					const manager = new TransactionManager(signer, bitsongToken)
+
+					let txId
+
+					manager.on("ontxsigned", () => {
+						loader = notifyLoading(
+							"Transaction Broadcasting",
+							"Waiting for transaction to be included in the block"
+						)
+
+						txId = this.addBroadcastingTx(
+							bitsongToken,
+							TransactionType.MERKLEDROP_CLAIM,
+							loader
+						)
+
+						this.loadingBroadcasting = true
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+						}
+
+						this.loadingBroadcasting = false
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
+					})
+
+					manager.merkledropClaim(
+						authStore.bitsongAddress,
+						merkledropId,
+						index,
+						amount,
+						proofs
+					)
+				}
+			} catch (error) {
+				console.error(error)
+				loader()
+				notifyError("Transaction Failed", (error as Error).message)
+				throw error
+			} finally {
+				this.loadingSign = false
+				this.loadingBroadcasting = false
 			}
 		},
 		addBroadcastingTx(

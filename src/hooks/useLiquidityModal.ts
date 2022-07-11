@@ -172,10 +172,10 @@ const useLiquidityModal = (
 					const shareOutAmount = calcPoolOutGivenSingleIn(
 						singlePoolAsset.value.token.amount,
 						singlePoolAsset.value.weight,
-						pool.value.total_shares.amount,
-						pool.value.total_weight,
+						pool.value.totalShares.amount,
+						pool.value.totalWeight,
 						singleAssetAmount.value,
-						pool.value.pool_params.swap_fee
+						pool.value.poolParams.swapFee
 					)
 
 					const outRatio = new BigNumber(1).minus(
@@ -239,7 +239,7 @@ const useLiquidityModal = (
 
 		const shareInAmount = poolShareWithPercentage.toFixed(0)
 		const shareRatio = new BigNumber(poolShareWithPercentage).div(
-			new BigNumber(pool.value.total_shares.amount)
+			new BigNumber(pool.value.totalShares.amount)
 		)
 
 		const tokenOutMins = pool.value.coins.map((coin) => {

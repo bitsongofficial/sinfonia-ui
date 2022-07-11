@@ -16,6 +16,7 @@ export enum TransactionType {
 	EXIT_POOL = "exitPool",
 	SWAP_EXACT_AMOUNT_IN = "swapExactAmountIn",
 	BEGIN_UNLOCKING = "beginUnlocking",
+	MERKLEDROP_CLAIM = "merkledropClaim",
 }
 
 export interface Transaction {

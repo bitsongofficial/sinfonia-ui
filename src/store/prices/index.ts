@@ -66,11 +66,11 @@ const usePrices = defineStore("prices", {
 						)
 
 						if (pool) {
-							const btsgAsset = pool.pool_assets.find(
+							const btsgAsset = pool.poolAssets.find(
 								(asset) => asset.token.denom === bitsongToken.ibc.osmosis.destDenom
 							)
 
-							const fantokenAsset = pool.pool_assets.find(
+							const fantokenAsset = pool.poolAssets.find(
 								(asset) => asset.token.denom === fantoken.ibc.osmosis.destDenom
 							)
 

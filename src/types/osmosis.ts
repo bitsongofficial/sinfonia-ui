@@ -2,9 +2,9 @@ import { Coin } from "@cosmjs/proto-signing"
 import { Token } from "./config"
 
 export interface PoolParams {
-	swap_fee: string
-	exit_fee: string
-	smooth_weight_change_params: string | null
+	swapFee: string
+	exitFee: string
+	smoothWeightChangeParams: string | null
 }
 
 export interface OsmosisPoolAsset {
@@ -15,11 +15,11 @@ export interface OsmosisPoolAsset {
 export interface OsmosisPool {
 	address: string
 	id: string
-	pool_params: PoolParams
+	poolParams: PoolParams
 	future_pool_governor: string
-	total_shares: Coin
-	pool_assets: OsmosisPoolAsset[]
-	total_weight: string
+	totalShares: Coin
+	poolAssets: OsmosisPoolAsset[]
+	totalWeight: string
 }
 
 export interface OsmosisLock {
@@ -99,7 +99,7 @@ export interface DistrInfoGauge {
 }
 
 export interface DistrInfo {
-	total_weight: string
+	totalWeight: string
 	records: DistrInfoGauge[]
 }
 

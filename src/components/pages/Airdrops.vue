@@ -5,7 +5,7 @@ import {
 	percentage,
 	formatShortAddress,
 } from "@/common"
-import { TableColumn } from "@/types"
+import { MerkledropWithProof, TableColumn } from "@/types"
 import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import { until } from "@vueuse/core"
@@ -16,9 +16,11 @@ import AirdropCard from "@/components/cards/AirdropCard.vue"
 import useMerkledrops from "@/store/merkledrops"
 import useConfig from "@/store/config"
 import useAuth from "@/store/auth"
+import useTransactionManager from "@/store/transaction-manager"
 
 const merkledrops = useMerkledrops()
 const authStore = useAuth()
+const transactionManagerStore = useTransactionManager()
 const configStore = useConfig()
 const $q = useQuasar()
 
@@ -88,6 +90,17 @@ const addressWatcher = watch(
 		}
 	}
 )
+
+const onClaim = (merkledrop: MerkledropWithProof) => {
+	if (merkledrop.proof) {
+		transactionManagerStore.merkledropClaim(
+			merkledrop.merkledrop_id,
+			merkledrop.proof?.index,
+			merkledrop.proof.amount.toString(),
+			merkledrop.proof?.proofs
+		)
+	}
+}
 
 onUnmounted(() => {
 	addressWatcher()
@@ -260,6 +273,11 @@ onUnmounted(() => {
 					label="Claim"
 					no-padding
 					v-else-if="!slotProps.row.proof.claimed"
+					@click="onClaim(slotProps.row)"
+					:disable="
+						transactionManagerStore.loadingBroadcasting ||
+						transactionManagerStore.loadingSign
+					"
 				/>
 				<q-btn
 					v-else

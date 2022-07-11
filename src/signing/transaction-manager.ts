@@ -14,6 +14,7 @@ import {
 	JoinSwapExternAmountIn,
 	ExitPool,
 	SwapExactAmountIn,
+	MerkledropClaim,
 } from "./messages"
 import {
 	AminoTypes,
@@ -106,6 +107,30 @@ export class TransactionManager extends SignerEventEmitter {
 
 		return this.createSignBroadcast(
 			"SendIbcTokens",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public merkledropClaim(
+		senderAddress: string, // Owner
+		merkledropId: number,
+		index: number,
+		amount: string,
+		proofs: string[],
+		memo?: string
+	) {
+		const message = MerkledropClaim(
+			senderAddress,
+			merkledropId,
+			index,
+			amount,
+			proofs
+		)
+
+		return this.createSignBroadcast(
+			"MerkledropClaim",
 			[message],
 			senderAddress,
 			memo ?? ""

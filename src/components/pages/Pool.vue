@@ -361,7 +361,7 @@ const onSwapClick = () => {
 					{{ balancedCurrency(pool.userLiquidity) }} $
 				</InfoCard>
 				<InfoCard header="Swap fee">
-					{{ percentage(pool.pool_params.swap_fee) }} %
+					{{ percentage(pool.poolParams.swapFee) }} %
 				</InfoCard>
 			</div>
 		</div>
