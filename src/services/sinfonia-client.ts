@@ -36,6 +36,24 @@ export default class SinfoniaClient {
 		}
 	}
 
+	public merkledropClaimed = async (
+		id: number,
+		index: number
+	): Promise<boolean> => {
+		try {
+			if (this.bitsongClient) {
+				const response = await this.bitsongClient.merkledropClaimed(id, index)
+
+				return response.data.is_claimed
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+
+		return true
+	}
+
 	public merkledrops = async (ids: number[]): Promise<BitsongMerkledrop[]> => {
 		try {
 			if (this.bitsongClient) {

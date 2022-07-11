@@ -22,4 +22,9 @@ export default class BitsongClient extends ChainClient {
 		this.instance.get<ChainData<"merkledrop", BitsongMerkledrop>>(
 			`bitsong/merkledrop/v1beta1/markledrops/${id}`
 		)
+
+	public merkledropClaimed = (id: number, index: number) =>
+		this.instance.get<ChainData<"is_claimed", boolean>>(
+			`/bitsong/merkledrop/v1beta1/markledrops/${id}/index_claimed/${index}`
+		)
 }
