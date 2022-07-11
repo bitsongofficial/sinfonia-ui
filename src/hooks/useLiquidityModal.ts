@@ -220,7 +220,7 @@ const useLiquidityModal = (
 		transactionManagerStore.joinPool(
 			pool.value.id,
 			new BigNumber(shareOutAmount.value).toFixed(0),
-			tokenInMaxs.slice(0, 1)
+			tokenInMaxs
 		)
 	}
 
