@@ -217,10 +217,22 @@ const useLiquidityModal = (
 			}
 		}
 
+		const tokenInMaxsSort: Coin[] = []
+
+		for (const assetPool of pool.value.poolAssets) {
+			const tokenInMax = tokenInMaxs.find(
+				(token) => token.denom === assetPool.token.denom
+			)
+
+			if (tokenInMax) {
+				tokenInMaxsSort.push(tokenInMax)
+			}
+		}
+
 		transactionManagerStore.joinPool(
 			pool.value.id,
 			new BigNumber(shareOutAmount.value).toFixed(0),
-			tokenInMaxs
+			tokenInMaxsSort
 		)
 	}
 
@@ -260,10 +272,22 @@ const useLiquidityModal = (
 			}
 		})
 
+		const tokenOutMinsSort: Coin[] = []
+
+		for (const assetPool of pool.value.poolAssets) {
+			const tokenOut = compact(tokenOutMins).find(
+				(token) => token.denom === assetPool.token.denom
+			)
+
+			if (tokenOut) {
+				tokenOutMinsSort.push(tokenOut)
+			}
+		}
+
 		transactionManagerStore.exitPool(
 			pool.value.id,
 			shareInAmount,
-			compact(tokenOutMins)
+			tokenOutMinsSort
 		)
 	}
 
