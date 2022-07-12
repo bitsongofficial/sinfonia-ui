@@ -33,7 +33,7 @@ const airdropColumns: TableColumn[] = [
 	},
 	{
 		name: "amount",
-		label: "amount",
+		label: "total amount",
 		align: "center",
 		field: "amount",
 	},
@@ -51,7 +51,7 @@ const airdropColumns: TableColumn[] = [
 	},
 	{
 		name: "endTime",
-		label: "datetime",
+		label: "due date",
 		field: "endTime",
 		align: "right",
 	},
