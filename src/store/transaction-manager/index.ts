@@ -789,7 +789,7 @@ const useTransactionManager = defineStore("transactionManager", {
 										if (merkledropsStore.merkledrops.length > 0) {
 											merkledropsStore.loadAirdrops(authStore.bitsongAddress)
 										}
-									}, 1000)
+									}, 2000)
 								}
 
 								return {
