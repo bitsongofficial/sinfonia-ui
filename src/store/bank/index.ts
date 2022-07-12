@@ -60,7 +60,9 @@ const useBank = defineStore("bank", {
 				this.loading = true
 
 				if (token) {
-					this.otherBalance = await sinfoniaClient.balance(address, token.apiURL)
+					const otherBalance = await sinfoniaClient.balance(address, token.apiURL)
+
+					this.otherBalance = [...this.otherBalance, ...otherBalance]
 				}
 			} catch (error) {
 				console.error(error)
@@ -72,9 +74,19 @@ const useBank = defineStore("bank", {
 		async loadBalances() {
 			try {
 				const authStore = useAuth()
+				const configStore = useConfig()
 				const bitsongAddress = authStore.bitsongAddress
 				const osmosisAddress = authStore.osmosisAddress
 				this.loading = true
+				this.otherBalance = []
+
+				for (const token of configStore.tokens) {
+					const address = authStore.getAddress(token.addressPrefix)
+
+					if (address) {
+						this.loadBalance(address, token.chainID)
+					}
+				}
 
 				if (bitsongAddress && osmosisAddress) {
 					const data = await sinfoniaClient.balances(bitsongAddress, osmosisAddress)

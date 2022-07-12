@@ -61,6 +61,15 @@ const useAuth = defineStore("auth", {
 				)
 			}
 		},
+		getAddress({ session }) {
+			return (addressPrefix: string) => {
+				if (session) {
+					return session.addresses.find((address) =>
+						isValidAddress(address, addressPrefix)
+					)
+				}
+			}
+		},
 	},
 })
 
