@@ -298,7 +298,7 @@ const openTransfer = (from: TokenBalance) => {
 		<TransferModal
 			v-model="openTransferDialog"
 			:coin="transferFrom"
-			v-if="transferFrom"
+			v-if="transferFrom && openTransferDialog"
 		/>
 	</div>
 </template>

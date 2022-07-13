@@ -46,18 +46,39 @@ const model = computed({
 	},
 })
 
+const fantoken = computed(() => {
+	const token = configStore.findTokenBySymbol(props.coin.symbol)
+
+	if (token) {
+		return token.fantoken
+	}
+
+	return false
+})
+
+const getToken = (coin: Token) => {
+	const token = configStore.allMainTokens.find(
+		(token) => token.chainID === coin.chainID
+	)
+
+	if (token) {
+		return {
+			...token,
+			fantoken: fantoken.value,
+		}
+	}
+
+	return undefined
+}
+
 watch(
 	() => props.coin,
 	(coin) => {
-		fromChain.value = configStore.allMainTokens.find(
-			(token) => token.chainID === coin.chainID
-		)
+		fromChain.value = getToken(coin)
 	}
 )
 
-const fromChain = ref<TokenWithAddress | undefined>(
-	configStore.allMainTokens.find((token) => token.chainID === props.coin.chainID)
-)
+const fromChain = ref<TokenWithAddress | undefined>(getToken(props.coin))
 
 const toChain = ref<TokenWithAddress | undefined>(configStore.osmosisToken)
 
