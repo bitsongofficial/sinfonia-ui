@@ -128,15 +128,15 @@ const tabs = computed(() => {
 
 	if (fantoken.value) {
 		const airdrop = fantoken.value.airdrop
-		/* const whitepaper = fantoken.value.whitepaper */
+		const whitepaper = fantoken.value.whitepaper
 
 		if (airdrop) {
 			links.push({ label: "Airdrop", url: airdrop.url })
 		}
 
-		/* if (whitepaper) {
+		if (whitepaper) {
 			links.push({ label: "Whitepaper", url: whitepaper.url })
-		} */
+		}
 	}
 
 	return links
