@@ -573,7 +573,13 @@ const onSubmit = handleSubmit(() => {
 					fit
 					type="submit"
 					@click="onSubmit"
-					:disable="!authStore.session || !meta.valid"
+					:disable="
+						!authStore.session ||
+						!meta.valid ||
+						transactionManagerStore.loadingBroadcasting ||
+						transactionManagerStore.loadingSign ||
+						transactionManagerStore.pendingTransactions.length > 0
+					"
 					class="q-px-xs-70"
 				>
 					Swap Tokens

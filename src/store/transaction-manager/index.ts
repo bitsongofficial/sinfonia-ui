@@ -820,6 +820,11 @@ const useTransactionManager = defineStore("transactionManager", {
 				(transaction) => transaction.type === TransactionType.SWAP_EXACT_AMOUNT_IN
 			)
 		},
+		pendingTransactions: ({ transactions }) => {
+			return transactions.filter(
+				(transaction) => transaction.status === TransactionStatus.PENDING
+			)
+		},
 	},
 	persistedState: {
 		persist: true,
