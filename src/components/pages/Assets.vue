@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ImagePair from "@/components/ImagePair.vue"
-import { TableColumn, GammBalance } from "@/types"
+import { TableColumn, GammBalance, Pool } from "@/types"
 import { balancedCurrency, balancedGamm, toDecimalGamm } from "@/common/numbers"
 import { computed, ref, watch, onUnmounted } from "vue"
 import { TokenBalance } from "@/types"
@@ -14,12 +14,18 @@ import usePrices from "@/store/prices"
 import usePools from "@/store/pools"
 import useAuth from "@/store/auth"
 import useTransactionManager from "@/store/transaction-manager"
+import PoolContextMenu from "../navigation/PoolContextMenu.vue"
+import { useRouter } from "vue-router"
+import IconButton from "../buttons/IconButton.vue"
+import LiquidityModal from "../modals/LiquidityModal.vue"
 
 const bankStore = useBank()
 const pricesStore = usePrices()
 const poolsStore = usePools()
 const transactionManagerStore = useTransactionManager()
 const authStore = useAuth()
+const router = useRouter()
+
 const openTransferDialog = ref(false)
 const transferFrom = ref<TokenBalance>()
 
@@ -70,6 +76,14 @@ const gammPoolsColumns = computed<TableColumn[]>(() => [
 		field: (row: GammBalance) => row.pool.lpLiquidity,
 		sortable: true,
 		format: (val: any) => `${balancedCurrency(val)} $`,
+	},
+	{
+		name: "actions",
+		label: "",
+		field: "",
+		sortable: false,
+		headerClasses: "w-5",
+		classes: "w-5",
 	},
 ])
 
@@ -154,6 +168,16 @@ const openTransfer = (from: TokenBalance) => {
 	transferFrom.value = from
 	openTransferDialog.value = true
 }
+
+const onSwapClick = (pool: Pool) => {
+	const coins = [...pool.coins]
+	const fromCoin = coins.shift()
+	const toCoin = coins.shift()
+
+	if (fromCoin && toCoin) {
+		router.push(`/swap?from=${fromCoin.token.symbol}&to=${toCoin.token.symbol}`)
+	}
+}
 </script>
 
 <template>
@@ -214,7 +238,7 @@ const openTransfer = (from: TokenBalance) => {
 			class="q-mb-66"
 			@row-click="
 				(_, row) => {
-					$router.push(`/pools/${row.id}`)
+					$router.push(`/pools/${row.pool.id}`)
 				}
 			"
 		>
@@ -245,6 +269,29 @@ const openTransfer = (from: TokenBalance) => {
 							</template>
 						</p>
 					</div>
+				</q-td>
+			</template>
+			<template v-slot:body-cell-actions="slotProps">
+				<q-td :props="slotProps">
+					<IconButton
+						icon="vertical-dots"
+						width="4"
+						height="16"
+						class="fs-14 s-28 q-mr--4 opacity-30 hover:opacity-100"
+						@click.stop=""
+					>
+						<PoolContextMenu
+							:no-parent-event="false"
+							:touch-position="false"
+							@swap="onSwapClick(slotProps.row.pool)"
+							@liquidity="slotProps.expand = true"
+						/>
+					</IconButton>
+					<LiquidityModal
+						v-model="slotProps.expand"
+						:pool="slotProps.row.pool"
+						v-if="slotProps.expand"
+					/>
 				</q-td>
 			</template>
 		</LightTable>
