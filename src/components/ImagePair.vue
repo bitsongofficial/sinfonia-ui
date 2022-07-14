@@ -8,6 +8,7 @@ const props = defineProps<{
 	size?: number
 	smallerSize?: number
 	offset?: number[]
+	inline?: boolean
 }>()
 
 const sizeClass = computed(() => "s-" + (props.size ? props.size : 60))
@@ -50,13 +51,19 @@ const tokenLogos = computed(() => {
 				:class="'rounded cover ' + sizeClass"
 				fit="cover"
 			/>
-			<div class="absolute right-0 bottom-0" :style="style" v-else>
+			<div class="absolute right-0 bottom-0" :style="style" v-else-if="!inline">
 				<q-img
 					:src="logos.default"
 					:class="'rounded cover ' + smallerSizeClass"
 					fit="cover"
 				/>
 			</div>
+			<q-img
+				v-else
+				:src="logos.default"
+				:class="'rounded cover q-ml-22 ' + smallerSizeClass"
+				fit="cover"
+			/>
 		</template>
 	</div>
 </template>

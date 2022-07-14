@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { TableColumn } from "@/types/table"
-import { balancedCurrency } from "@/common/numbers"
+import ImagePair from "@/components/ImagePair.vue"
+import { TableColumn, GammBalance } from "@/types"
+import { balancedCurrency, balancedGamm, toDecimalGamm } from "@/common/numbers"
 import { computed, ref, watch, onUnmounted } from "vue"
 import { TokenBalance } from "@/types"
 import { resolveIcon } from "@/common/resolvers"
@@ -34,6 +35,43 @@ const broadcastingWatcher = watch(
 onUnmounted(() => {
 	broadcastingWatcher()
 })
+
+const gammPoolsColumns = computed<TableColumn[]>(() => [
+	{
+		name: "id",
+		align: "left",
+		label: "",
+		field: "id",
+		sortable: true,
+		headerClasses: "w-5",
+		classes: "w-5",
+	},
+	{
+		name: "tokenPair",
+		align: "left",
+		label: "Pool",
+		field: "name",
+		sortable: true,
+	},
+	{
+		name: "gamm",
+		align: "right",
+		label: "GAMM",
+		field: (row: GammBalance) => {
+			return row
+		},
+		format: (row: GammBalance) =>
+			`${balancedGamm(toDecimalGamm(row.coin.amount))} GAMM/${row.pool.id ?? "0"}`,
+		sortable: true,
+	},
+	{
+		name: "value",
+		label: "value",
+		field: (row: GammBalance) => row.pool.lpLiquidity,
+		sortable: true,
+		format: (val: any) => `${balancedCurrency(val)} $`,
+	},
+])
 
 const columns: TableColumn[] = [
 	{
@@ -167,6 +205,51 @@ const openTransfer = (from: TokenBalance) => {
 			</InfoCard>
 		</div>
 	</div>
+	<template v-if="bankStore.gammPoolBalances.length > 0">
+		<p class="q-mb-21 fs-21 text-weight-medium">GAMM Pool</p>
+
+		<LightTable
+			:rows="bankStore.gammPoolBalances"
+			:columns="gammPoolsColumns"
+			class="q-mb-66"
+			@row-click="
+				(_, row) => {
+					$router.push(`/pools/${row.id}`)
+				}
+			"
+		>
+			<template v-slot:body-cell-id="slotProps">
+				<q-td :props="slotProps">
+					<div class="flex no-wrap items-center">
+						<span class="opacity-40 q-mr-10">
+							{{ slotProps.row.pool.id }}
+						</span>
+					</div>
+				</q-td>
+			</template>
+			<template v-slot:body-cell-tokenPair="slotProps">
+				<q-td :props="slotProps">
+					<div class="flex no-wrap items-center">
+						<ImagePair
+							:coins="slotProps.row.pool.coins"
+							class="q-mr-30"
+							:size="30"
+							:smaller-size="24"
+							:offset="[0, 0]"
+							inline
+						/>
+						<p class="fs-14 text-weight-medium">
+							<template v-for="(coin, index) of slotProps.row.pool.coins" :key="index">
+								{{ coin.token.symbol
+								}}{{ index === slotProps.row.pool.coins.length - 1 ? "" : " · " }}
+							</template>
+						</p>
+					</div>
+				</q-td>
+			</template>
+		</LightTable>
+	</template>
+
 	<p class="q-mb-21 fs-21 text-weight-medium">Tokens</p>
 	<div>
 		<LightTable

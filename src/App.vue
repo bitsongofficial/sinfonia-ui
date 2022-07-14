@@ -38,7 +38,7 @@ const disclaimerUpdate = (value: boolean) => {
 
 <template>
 	<div
-		class="min-h-window-height q-pt-70 q-pb-60 q-pt-md-64 q-mt-xs-56 q-pb-xs-150 column"
+		class="min-h-window-height q-pt-70 q-pb-60 q-pt-md-64 q-mt-xs-10 q-pt-xs-40 q-pb-xs-150 column"
 	>
 		<div class="container q-px-xs-0 q-px-md-0">
 			<div class="column col-grow">

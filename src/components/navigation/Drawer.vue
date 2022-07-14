@@ -69,7 +69,7 @@ const drawerWidth = computed(() => {
 				</div>
 			</div>
 		</q-drawer>
-		<q-page-container class="container !q-pt-0">
+		<q-page-container class="container">
 			<RouterView />
 		</q-page-container>
 	</q-layout>

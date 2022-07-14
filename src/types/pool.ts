@@ -37,6 +37,7 @@ export interface Pool extends OsmosisPool {
 	APR: string
 	liquidity: string
 	userLiquidity: string
+	lpLiquidity: string
 	bonded: string
 	availableLPTokens: string
 	availableLPBalances: Coin[]

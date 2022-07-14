@@ -92,16 +92,6 @@ const broadcastingWatcher = watch(
 	}
 )
 
-const lpLiquidity = computed(() => {
-	if (pool.value) {
-		return new BigNumber(pool.value.userLiquidity)
-			.minus(pool.value.bonded)
-			.toString()
-	}
-
-	return "0"
-})
-
 const unbondedCoins = computed(() => {
 	let coins: LockCoin[] = []
 
@@ -386,7 +376,7 @@ const onSwapClick = () => {
 						LP tokens represent a crypto liquidity provider’s share of a pool.
 					</InformativeTooltip>
 				</div>
-				<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
+				<p class="fs-24 q-mb-14">{{ balancedCurrency(pool.lpLiquidity) }} $</p>
 				<StandardButton @click="openBondModal = true" :disable="!authStore.session">
 					Start Earning
 				</StandardButton>
