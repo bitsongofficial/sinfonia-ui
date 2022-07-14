@@ -307,6 +307,10 @@
     display: flex !important;
 }
 
+.\!q-pt-0 {
+    padding-top: 0 !important;
+}
+
 @for $border from 0 to 10 {
     $val: $border * 5;
 
