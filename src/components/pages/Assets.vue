@@ -27,6 +27,7 @@ const authStore = useAuth()
 const router = useRouter()
 
 const openTransferDialog = ref(false)
+const currentGammPool = ref<Pool | undefined>(undefined)
 const transferFrom = ref<TokenBalance>()
 
 const broadcastingWatcher = watch(
@@ -40,6 +41,15 @@ const broadcastingWatcher = watch(
 
 onUnmounted(() => {
 	broadcastingWatcher()
+})
+
+const showGammPoolModal = computed({
+	get: () => currentGammPool.value !== undefined,
+	set: (value) => {
+		if (!value) {
+			currentGammPool.value = undefined
+		}
+	},
 })
 
 const gammPoolsColumns = computed<TableColumn[]>(() => [
@@ -284,17 +294,18 @@ const onSwapClick = (pool: Pool) => {
 							:no-parent-event="false"
 							:touch-position="false"
 							@swap="onSwapClick(slotProps.row.pool)"
-							@liquidity="slotProps.expand = true"
+							@liquidity="currentGammPool = slotProps.row.pool"
 						/>
 					</IconButton>
-					<LiquidityModal
-						v-model="slotProps.expand"
-						:pool="slotProps.row.pool"
-						v-if="slotProps.expand"
-					/>
 				</q-td>
 			</template>
 		</LightTable>
+		<LiquidityModal
+			@hide="currentGammPool = undefined"
+			v-model="showGammPoolModal"
+			:pool="currentGammPool"
+			v-if="currentGammPool"
+		/>
 	</template>
 
 	<p class="q-mb-21 fs-21 text-weight-medium">Tokens</p>
