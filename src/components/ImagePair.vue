@@ -2,24 +2,29 @@
 import { PoolAsset, Token } from "@/types"
 import { computed } from "vue"
 
-const props = defineProps<{
-	coins?: PoolAsset[]
-	tokens?: Token[]
-	size?: number
-	smallerSize?: number
-	offset?: number[]
-	inline?: boolean
-}>()
+const props = withDefaults(
+	defineProps<{
+		coins?: PoolAsset[]
+		tokens?: Token[]
+		size?: number
+		smallerSize?: number
+		offset?: number[]
+		inline?: boolean
+		spacing?: number
+	}>(),
+	{
+		spacing: 22,
+	}
+)
 
 const sizeClass = computed(() => "s-" + (props.size ? props.size : 60))
 
 const smallerSizeClass = computed(() => {
-	return (
-		"s-" +
-		(props.smallerSize
+	return `s-${
+		props.smallerSize
 			? props.smallerSize
-			: Math.round((props.size ? props.size : 60) / 2.9))
-	)
+			: Math.round((props.size ? props.size : 60) / 2.9)
+	} q-ml-${props.spacing}`
 })
 
 const style = props.offset
@@ -61,7 +66,7 @@ const tokenLogos = computed(() => {
 			<q-img
 				v-else
 				:src="logos.default"
-				:class="'rounded cover q-ml-22 ' + smallerSizeClass"
+				:class="'rounded cover ' + smallerSizeClass"
 				fit="cover"
 			/>
 		</template>

@@ -5,6 +5,7 @@ import Card from "@/components/cards/Card.vue"
 import { balancedCurrency } from "@/common/numbers"
 import { RouterLink } from "vue-router"
 import usePools from "@/store/pools"
+import PoolCard from "../cards/PoolCard.vue"
 
 const poolsStore = usePools()
 </script>
@@ -12,44 +13,30 @@ const poolsStore = usePools()
 <template>
 	<template v-if="poolsStore.myPools.length > 0">
 		<Title class="q-mb-50">My Pools</Title>
-		<div class="row q-mb-72 q-col-gutter-x-xl q-col-gutter-y-md">
-			<div
+		<div
+			class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
+		>
+			<RouterLink
 				v-for="(userPool, index) in poolsStore.myPools"
-				class="col-8 col-md-4 col-lg-2"
+				:key="index"
+				:to="'/pools/' + userPool.id"
+				class="block full-height"
 			>
-				<RouterLink :to="'/pools/' + userPool.id" class="block full-height">
-					<Card class="full-width text-white cursor-pointer hover:bg-white-15 full-height !flex column justify-between no-wrap">
-						<PoolHeader :pool="userPool" />
-						<div class="separator-light q-my-20"></div>
-						<div class="row q-col-gutter-x-sm">
-							<div class="col-4">
-								<p class="fs-10 text-weight-medium opacity-40 q-pb-10">My Liquidity</p>
-								<p class="fs-16 text-weight-medium work-break-all">
-									{{ balancedCurrency(userPool.userLiquidity) }} $
-								</p>
-							</div>
-							<div class="col-4">
-								<p class="fs-10 text-weight-medium opacity-40 q-pb-10">
-									My Bonded Tokens
-								</p>
-								<p class="fs-16 text-weight-medium work-break-all">
-									{{ balancedCurrency(userPool.bonded) }} $
-								</p>
-							</div>
-						</div>
-					</Card>
-				</RouterLink>
-			</div>
+				<PoolCard :pool="userPool" user-pool />
+			</RouterLink>
 		</div>
 	</template>
 	<Title class="q-mb-50" :font-size="18">All Pools</Title>
-	<div class="row q-col-gutter-x-xl q-col-gutter-y-md">
-		<div v-for="pool in poolsStore.pools" class="col-8 col-md-4 col-lg-2">
-			<RouterLink :to="'/pools/' + pool.id" class="block full-height">
-				<Card class="full-width text-white cursor-pointer hover:bg-white-15 full-height !flex column justify-between no-wrap">
-					<PoolHeader :pool="pool" />
-				</Card>
-			</RouterLink>
-		</div>
+	<div
+		class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30"
+	>
+		<RouterLink
+			v-for="(pool, index) in poolsStore.pools"
+			:key="index"
+			:to="'/pools/' + pool.id"
+			class="block full-height"
+		>
+			<PoolCard :pool="pool" />
+		</RouterLink>
 	</div>
 </template>

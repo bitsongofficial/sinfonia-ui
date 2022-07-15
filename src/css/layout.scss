@@ -311,6 +311,10 @@
     padding-top: 0 !important;
 }
 
+.grid {
+    display: grid;
+}
+
 @for $border from 0 to 10 {
     $val: $border * 5;
 
@@ -339,9 +343,21 @@ $s in $custom-sizes {
         height: $s;
     }
 
+    .-right-#{$k}{
+        right: -$s;
+    }
+
+    .right-#{$k}{
+        right: $s;
+    }
+
     .grid-gap-#{$k} {
         --grid-gap-offset: #{$s};
         gap: $s;
+    }
+
+    .grid-cols-#{$k} {
+        grid-template-columns: repeat($k, minmax(0, 1fr))
     }
 }
 
@@ -538,6 +554,18 @@ $s in $custom-sizes {
         width: 100vw !important;
         margin-left: -30px !important;
     }
+
+    @each $k,
+    $s in $custom-sizes {
+        .grid-gap-min-xs-#{$k} {
+            --grid-gap-offset: #{$s};
+            gap: $s;
+        }
+
+        .grid-cols-min-xs-#{$k} {
+            grid-template-columns: repeat($k, minmax(0, 1fr))
+        }
+    }
 }
 
 @media screen and (max-width: $breakpoint-sm) {
@@ -660,6 +688,18 @@ $s in $custom-sizes {
     .q-mb-md-32 {
         margin-bottom: 32px;
     }
+
+    @each $k,
+    $s in $custom-sizes {
+        .grid-gap-md-#{$k} {
+            --grid-gap-offset: #{$s};
+            gap: $s;
+        }
+
+        .grid-cols-md-#{$k} {
+            grid-template-columns: repeat($k, minmax(0, 1fr))
+        }
+    }
 }
 
 @media screen and (min-width: $breakpoint-lg) {
@@ -677,5 +717,17 @@ $s in $custom-sizes {
 
     .flex-lg-1 {
         flex: 1;
+    }
+
+    @each $k,
+    $s in $custom-sizes {
+        .grid-gap-lg-#{$k} {
+            --grid-gap-offset: #{$s};
+            gap: $s;
+        }
+
+        .grid-cols-lg-#{$k} {
+            grid-template-columns: repeat($k, minmax(0, 1fr))
+        }
     }
 }
