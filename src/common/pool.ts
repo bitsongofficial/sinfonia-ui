@@ -487,7 +487,7 @@ export const getExternalPoolApr = (
 	liquidityPool: string,
 	tokens: TokenBalance[]
 ): string => {
-	const poolTVL = new BigNumber(liquidityPool).multipliedBy(2)
+	const poolTVL = new BigNumber(liquidityPool)
 	const daysInYear = getDaysInYear(new Date())
 	const daysInYearToSeconds = toSeconds({ days: daysInYear })
 
