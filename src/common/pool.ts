@@ -243,7 +243,10 @@ export const mapPools = (
 				totalApr: totalApr.toString(),
 			})
 
-			prevDurationApr = durationApr
+			prevDurationApr = {
+				...durationApr,
+				totalApr: totalApr.toString(),
+			}
 		}
 
 		const maxIncentivizedApr = max(
