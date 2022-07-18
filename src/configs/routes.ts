@@ -8,6 +8,7 @@ import Pool from "@/components/pages/Pool.vue"
 import FanToken from "@/components/pages/FanToken.vue"
 import Leaderboard from "@/components/pages/Leaderboard.vue"
 import Airdrops from "@/components/pages/Airdrops.vue"
+import NotFound from "@/components/pages/NotFound.vue"
 import { RouteRecordRaw } from "vue-router"
 import { externalWebsites } from "./config"
 
@@ -80,7 +81,12 @@ const routes: RouteRecordRaw[] = [
 	},
 	{
 		path: "/:pathMatch(.*)",
-		redirect: "/fantokens",
+		redirect: "/404",
+	},
+	{
+		path: "/404",
+		name: "NotFound",
+		component: NotFound,
 	},
 ]
 

@@ -248,6 +248,24 @@ const poolWatcher = watch(
 	{ immediate: true }
 )
 
+const poolsWatcher = watch(
+	() => poolsStore.rawPools,
+	(rawPools) => {
+		if (rawPools.length > 0 && !poolsStore.loading) {
+			const rawPool = rawPools.find((rawPool) => rawPool.id === id)
+
+			if (!rawPool) {
+				router.replace({
+					name: "NotFound",
+				})
+			}
+		}
+	},
+	{
+		immediate: true,
+	}
+)
+
 onMounted(() => {
 	window.addEventListener("resize", setSize)
 	untilSetSize()
@@ -257,6 +275,7 @@ onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
 	broadcastingWatcher()
 	poolWatcher()
+	poolsWatcher()
 })
 
 const onSwapClick = () => {
