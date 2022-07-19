@@ -10,7 +10,7 @@ onMounted(() => {
 <template>
 	<div class="row justify-center">
 		<q-img
-			class="col-5 col-md-2 q-mt-md-34 q-mb-48"
+			class="col-5 col-md-2 q-mt-md-34 q-mb-48 opacity-90"
 			src="@/assets/images/microphone.png"
 			alt="404 Not Found"
 			title="404 Not Found"
@@ -26,7 +26,7 @@ onMounted(() => {
 		</h1>
 
 		<p
-			class="col-8 col-md-4 col-lg-3 fs-16 !leading-24 opacity-40 text-center q-mb-62"
+			class="col-8 col-md-4 col-xl-3 fs-16 !leading-24 opacity-40 text-center q-mb-62"
 		>
 			Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many
 			international hits, among which the best-known is undoubtedly.

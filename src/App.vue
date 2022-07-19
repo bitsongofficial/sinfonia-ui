@@ -9,7 +9,6 @@ import useBootstrap from "@/hooks/useBootstrap"
 import useSettings from "@/store/settings"
 import LightModeSwitch from "@/components/inputs/LightModeSwitch.vue"
 import DisclaimerModal from "@/components/modals/DisclaimerModal.vue"
-import apolloClient from "./services/sinfonia-gql"
 
 const settingsStore = useSettings()
 const $q = useQuasar()
@@ -40,6 +39,7 @@ const disclaimerUpdate = (value: boolean) => {
 	<div
 		class="min-h-window-height q-pt-70 q-pb-60 q-pt-md-64 q-mt-xs-10 q-pt-xs-40 q-pb-xs-150 column"
 	>
+		<div class="spot bg-blur-white-700 absolute"></div>
 		<div class="container q-px-xs-0 q-px-md-0">
 			<div class="column col-grow">
 				<Header></Header>
@@ -83,8 +83,13 @@ const disclaimerUpdate = (value: boolean) => {
 	</div>
 </template>
 
-<style>
-#app {
-	color: white;
+<style lang="scss" scoped>
+.spot {
+	width: 970px;
+	height: 70px;
+	top: -50px;
+	left: 50%;
+	transform: translate(-50%, -100%);
+	pointer-events: none;
 }
 </style>

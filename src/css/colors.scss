@@ -124,6 +124,11 @@
     border-radius: 30px;
 }
 
+.bg-blur-white-700 {
+    background-color: $white-700;
+    filter: blur(300px);
+}
+
 .text-gradient {
     @include text-gradient();
 }
