@@ -359,6 +359,14 @@ $s in $custom-sizes {
     .grid-cols-#{$k} {
         grid-template-columns: repeat($k, minmax(0, 1fr))
     }
+
+    .col-span-#{$k} {
+        grid-column: span $k / span $k;
+    }
+
+    .col-start-#{$k} {
+        grid-column-start: $k;
+    }
 }
 
 @media screen and (min-height: 600px) {
@@ -687,6 +695,10 @@ $s in $custom-sizes {
 
     .q-mb-md-32 {
         margin-bottom: 32px;
+    }
+
+    .q-mt-md-34 {
+        margin-top: 34px !important;
     }
 
     @each $k,

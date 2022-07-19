@@ -50,6 +50,22 @@ const fantokenWatcher = watch(
 	{ immediate: true }
 )
 
+const fantokensWatcher = watch(
+	() => configStore.rawFantokens,
+	(rawFantokens) => {
+		if (rawFantokens.length > 0 && !configStore.loading) {
+			if (!fantoken.value) {
+				router.replace({
+					name: "NotFound",
+				})
+			}
+		}
+	},
+	{
+		immediate: true,
+	}
+)
+
 const balance = computed(() => {
 	if (fantoken.value) {
 		return bankStore.balanceBySymbol(fantoken.value.symbol)
@@ -238,6 +254,7 @@ onMounted(() => {
 onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
 	fantokenWatcher()
+	fantokensWatcher()
 })
 
 const subscribeMailchimp = () => {
