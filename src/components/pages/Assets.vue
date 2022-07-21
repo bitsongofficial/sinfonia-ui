@@ -97,7 +97,22 @@ const gammPoolsColumns = computed<TableColumn[]>(() => [
 	},
 ])
 
-const columns: TableColumn[] = [
+const haveMultiChainBalances = computed(() => {
+	return (
+		bankStore.balances.find((b) => b.chains && b.chains?.length > 0) !== undefined
+	)
+})
+
+const columns = computed<TableColumn[]>(() => [
+	{
+		name: "id",
+		align: "left",
+		label: "",
+		field: "id",
+		sortable: true,
+		headerClasses: "w-5",
+		classes: "w-5",
+	},
 	{
 		name: "token",
 		align: "left",
@@ -106,16 +121,8 @@ const columns: TableColumn[] = [
 		sortable: true,
 	},
 	{
-		name: "symbol",
-		align: "center",
-		label: "Symbol",
-		field: (row: TokenBalance) => row.symbol,
-		sortable: false,
-		format: (val: any) => `${val}`,
-	},
-	{
 		name: "price",
-		align: "center",
+		align: "right",
 		label: "Price",
 		field: (row: TokenBalance) => row.price,
 		sortable: false,
@@ -128,6 +135,7 @@ const columns: TableColumn[] = [
 		name: "availableFiat",
 		label: "Available",
 		field: "availableFiat",
+		align: "right",
 		sortable: true,
 		sort: (a, b, rowA, rowB) => {
 			return parseFloat(a) - parseFloat(b)
@@ -137,25 +145,30 @@ const columns: TableColumn[] = [
 		name: "available",
 		label: "QTY",
 		field: "available",
+		align: "right",
 		sortable: true,
+		headerClasses: haveMultiChainBalances.value ? "" : "!q-pr-32",
+		classes: haveMultiChainBalances.value ? "" : "!q-pr-32",
 		sort: (a, b, rowA, rowB) => {
 			return parseFloat(a) - parseFloat(b)
 		},
 	},
-	{ name: "arrows", label: "", field: "", sortable: false },
-]
-
-const haveMultiChainBalances = computed(() => {
-	return (
-		bankStore.balances.find((b) => b.chains && b.chains?.length > 0) !== undefined
-	)
-})
+	{
+		name: "arrows",
+		label: "Move",
+		align: "right",
+		field: "move",
+		sortable: false,
+		headerClasses: "w-5",
+		classes: "w-5",
+	},
+])
 
 const columnsWrapper = computed(() => {
-	const cols = [...columns]
+	const cols = [...columns.value]
 
 	if (haveMultiChainBalances.value) {
-		cols.splice(3, 0, {
+		cols.splice(5, 0, {
 			name: "chain",
 			align: "center",
 			label: "Chain",
@@ -318,36 +331,29 @@ const onSwapClick = (pool: Pool) => {
 			<template v-slot:body="rowProps">
 				<q-tr :props="rowProps">
 					<q-td>
+						<div class="flex no-wrap items-center">
+							<span class="opacity-40 q-mr-10">
+								{{ rowProps.rowIndex + 1 }}
+							</span>
+						</div>
+					</q-td>
+					<q-td>
 						<div class="row items-center no-wrap">
-							<q-avatar size="sm" class="q-mr-22">
+							<q-avatar size="30px" class="q-mr-22">
 								<img :src="rowProps.row.logos.default" :alt="rowProps.row.name" />
 							</q-avatar>
-							<p class="text-weight-medium fs-14">
+							<p class="text-weight-medium fs-15 q-mr-22">
+								{{ rowProps.row.symbol }}
+							</p>
+							<p class="text-weight-medium fs-13 opacity-40">
 								{{ rowProps.row.name }}
 							</p>
 						</div>
 					</q-td>
 					<q-td>
-						<p class="text-white text-center">
-							{{ rowProps.row.symbol }}
-						</p>
-					</q-td>
-					<q-td>
-						<p class="text-white text-center">
+						<p class="text-white text-right">
 							{{ balancedCurrency(rowProps.row.price) }} $
 						</p>
-					</q-td>
-					<q-td v-if="haveMultiChainBalances">
-						<div class="flex justify-center">
-							<q-avatar
-								v-for="(chain, i) in rowProps.row.chains"
-								:key="i"
-								size="20px"
-								:class="i > 0 ? 'q-ml-8' : ''"
-							>
-								<img :src="chain.logos.default" />
-							</q-avatar>
-						</div>
 					</q-td>
 					<q-td>
 						<p
@@ -364,7 +370,11 @@ const onSwapClick = (pool: Pool) => {
 					</q-td>
 					<q-td>
 						<p
-							:class="'text-right ' + (rowProps.row.available > 0 ? '' : 'opacity-40')"
+							class="text-right"
+							:class="{
+								'q-pr-16': !haveMultiChainBalances,
+								'opacity-40': rowProps.row.available <= 0,
+							}"
 						>
 							{{
 								rowProps.row.available
@@ -373,9 +383,21 @@ const onSwapClick = (pool: Pool) => {
 							}}
 						</p>
 					</q-td>
+					<q-td v-if="haveMultiChainBalances">
+						<div class="flex justify-center q-mx-50">
+							<q-avatar
+								v-for="(chain, i) in rowProps.row.chains"
+								:key="i"
+								size="20px"
+								:class="i > 0 ? 'q-ml-8' : ''"
+							>
+								<img :src="chain.logos.default" />
+							</q-avatar>
+						</div>
+					</q-td>
 					<q-td>
 						<div
-							class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right light:hover:text-primary"
+							class="cursor-pointer fs-21 text-right light:hover:text-primary text-dark"
 							@click="openTransfer(rowProps.row)"
 							v-if="rowProps.row.ibcEnabled && authStore.session"
 						>
@@ -384,7 +406,7 @@ const onSwapClick = (pool: Pool) => {
 					</q-td>
 					<q-td v-if="haveMultiChainBalances">
 						<div
-							class="opacity-40 flex justify-end hover:opacity-100 cursor-pointer fs-12"
+							class="flex justify-end hover:opacity-100 cursor-pointer fs-12"
 							@click="rowProps.expand = !rowProps.expand"
 							v-if="rowProps.row.chains.length > 0"
 						>
@@ -400,20 +422,14 @@ const onSwapClick = (pool: Pool) => {
 					no-hover
 					v-show="rowProps.expand"
 				>
+					<q-td> </q-td>
 					<q-td>
-						<div class="flex justify-start q-ml-46">
-							<div class="text-capitalize text-primary-light flex items-center">
-								<p>
-									{{ chain.name }}
-								</p>
-								<q-avatar size="20px" class="q-ml-10">
-									<img :src="chain.logos.default" />
-								</q-avatar>
+						<div class="flex justify-start q-ml-52">
+							<div class="text-capitalize text-white fs-13 flex">
+								<p>{{ chain.name }} Chain</p>
 							</div>
 						</div>
 					</q-td>
-					<q-td> </q-td>
-					<q-td> </q-td>
 					<q-td> </q-td>
 					<q-td>
 						<p :class="'text-right ' + (chain.availableFiat > 0 ? '' : 'opacity-40')">
@@ -431,7 +447,8 @@ const onSwapClick = (pool: Pool) => {
 							}}
 						</p>
 					</q-td>
-					<q-td></q-td>
+					<q-td> </q-td>
+					<q-td> </q-td>
 					<q-td v-if="haveMultiChainBalances"></q-td>
 				</q-tr>
 			</template>
