@@ -1,10 +1,43 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
+import { sample } from "lodash"
 
 onMounted(() => {
 	document.title = "404 - Page Not Found"
 })
+
+const messages = [
+	{
+		artist: "Lost and insecure",
+		text: "Where were you? Where were you?",
+	},
+	{
+		artist: "Bob Dylan",
+		text: "Lost, I was lost, I was lost 'til you loved me",
+	},
+	{
+		artist: "Bob Marley",
+		text: `There's no one around,
+There's no one around,
+There's no one around,
+There's no one around`,
+	},
+	{
+		artist: "Chase & Status",
+		text: `You're the only one that I want
+But we're not working (no)
+Yeah, I told you from the start
+I'm not perfect (oh)`,
+	},
+	{
+		artist: "Tate McRae, Khalid",
+		text: `Somebody holds the key.
+But I can't find my way home.`,
+	},
+]
+
+const message = sample(messages)
 </script>
 
 <template>
@@ -26,10 +59,11 @@ onMounted(() => {
 		</h1>
 
 		<p
-			class="col-8 col-md-4 col-xl-3 fs-16 !leading-24 opacity-40 text-center q-mb-62"
+			class="col-8 col-md-4 col-xl-3 fs-16 !leading-24 opacity-40 text-center q-mb-62 white-space-pre-line"
+			v-if="message"
 		>
-			Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many
-			international hits, among which the best-known is undoubtedly.
+			{{ message.text }}<br />
+			{{ message.artist }}
 		</p>
 
 		<div class="col-8 flex justify-center">
