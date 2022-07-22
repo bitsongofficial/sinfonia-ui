@@ -447,7 +447,13 @@ const onSwapClick = (pool: Pool) => {
 							}}
 						</p>
 					</q-td>
-					<q-td> </q-td>
+					<q-td>
+						<div class="flex justify-center q-mx-50">
+							<q-avatar size="16px">
+								<img :src="chain.logos.default" />
+							</q-avatar>
+						</div>
+					</q-td>
 					<q-td> </q-td>
 					<q-td v-if="haveMultiChainBalances"></q-td>
 				</q-tr>

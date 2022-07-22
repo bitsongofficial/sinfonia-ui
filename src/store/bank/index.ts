@@ -188,6 +188,29 @@ const useBank = defineStore("bank", {
 							: coin.denom === coinLookup.chainDenom
 					)
 
+					if (bitsongBalance && configStore.bitsongToken) {
+						const bitsongAvailable = toViewDenom(
+							bitsongBalance.amount,
+							coinLookup.chainToViewConversionFactor
+						)
+						const bitsongTotal = new BigNumber(bitsongAvailable)
+
+						bitsongChain = {
+							name: configStore.bitsongToken.name,
+							symbol: token.symbol,
+							denom: token.ibc.osmosis.sourceDenom,
+							logos: configStore.bitsongToken.logos,
+							total: bitsongTotal.toString(),
+							available: bitsongAvailable.toString(),
+							totalFiat: price.multipliedBy(bitsongTotal.toString()).toString(),
+							availableFiat: price
+								.multipliedBy(bitsongAvailable.toString())
+								.toString(),
+						}
+
+						chains.push(bitsongChain)
+					}
+
 					if (osmosisBalance && configStore.osmosisToken) {
 						const osmosisAvailable = toViewDenom(
 							osmosisBalance.amount,
@@ -211,29 +234,6 @@ const useBank = defineStore("bank", {
 						}
 
 						chains.push(osmosisChain)
-					}
-
-					if (bitsongBalance && configStore.bitsongToken) {
-						const bitsongAvailable = toViewDenom(
-							bitsongBalance.amount,
-							coinLookup.chainToViewConversionFactor
-						)
-						const bitsongTotal = new BigNumber(bitsongAvailable)
-
-						bitsongChain = {
-							name: configStore.bitsongToken.name,
-							symbol: token.symbol,
-							denom: token.ibc.osmosis.sourceDenom,
-							logos: configStore.bitsongToken.logos,
-							total: bitsongTotal.toString(),
-							available: bitsongAvailable.toString(),
-							totalFiat: price.multipliedBy(bitsongTotal.toString()).toString(),
-							availableFiat: price
-								.multipliedBy(bitsongAvailable.toString())
-								.toString(),
-						}
-
-						chains.push(bitsongChain)
 					}
 				}
 
