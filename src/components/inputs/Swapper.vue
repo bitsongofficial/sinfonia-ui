@@ -360,7 +360,7 @@ const invert = () => {
 }
 
 const slippageExpanded = ref(false)
-const maxSlippage = ref("1")
+const maxSlippage = ref("3")
 const maxSlippageOption = ["1", "3", "5"]
 const customSelected = ref(false)
 
