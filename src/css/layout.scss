@@ -194,6 +194,10 @@
     max-width: 582px;
 }
 
+.max-w-316 {
+    max-width: 316px;
+}
+
 .max-h-360 {
     max-height: 360px;
 }
@@ -369,7 +373,7 @@ $s in $custom-sizes {
     }
 
     .col-start-#{$k} {
-        grid-column-start: $k;
+        grid-column-start: $k !important;
     }
 }
 
@@ -714,6 +718,14 @@ $s in $custom-sizes {
 
         .grid-cols-md-#{$k} {
             grid-template-columns: repeat($k, minmax(0, 1fr))
+        }
+
+        .col-span-md-#{$k} {
+            grid-column: span $k / span $k;
+        }
+    
+        .col-start-md-#{$k} {
+            grid-column-start: $k !important;
         }
     }
 }

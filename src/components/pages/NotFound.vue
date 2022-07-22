@@ -41,35 +41,37 @@ const message = sample(messages)
 </script>
 
 <template>
-	<div class="row justify-center">
-		<q-img
-			class="col-5 col-md-2 q-mt-md-34 q-mb-48 opacity-90"
-			src="@/assets/images/microphone.png"
-			alt="404 Not Found"
-			title="404 Not Found"
-			width="316px"
-			height="316px"
-			no-spinner
-		/>
-
-		<h1
-			class="col-8 fs-36 !leading-46 font-weight-medium text-center q-mt-0 q-mb-32"
+	<div class="grid grid-cols-12 gap-40">
+		<div
+			class="col-span-12 col-start-md-4 col-span-md-5 flex items-center column"
 		>
-			Ops, something is missing.
-		</h1>
+			<q-img
+				class="q-mt-md-34 q-mb-48 opacity-90 max-w-316 full-width"
+				src="@/assets/images/microphone.png"
+				alt="404 Not Found"
+				title="404 Not Found"
+				width="316px"
+				height="316px"
+				no-spinner
+			/>
 
-		<p
-			class="col-8 col-md-4 col-xl-3 fs-16 !leading-24 opacity-40 text-center q-mb-62 white-space-pre-line"
-			v-if="message"
-		>
-			{{ message.text }}<br />
-			{{ message.artist }}
-		</p>
+			<h1 class="fs-36 !leading-46 font-weight-medium text-center q-mt-0 q-mb-32">
+				Ops, something is missing.
+			</h1>
 
-		<div class="col-8 flex justify-center">
-			<LargeButton fit class="q-px-64 q-py-22" to="/pools">
-				Go to Pools List
-			</LargeButton>
+			<p
+				class="fs-16 !leading-24 opacity-40 text-center q-mb-62 white-space-pre-line"
+				v-if="message"
+			>
+				{{ message.text }}<br />
+				{{ message.artist }}
+			</p>
+
+			<div class="flex justify-center">
+				<LargeButton fit class="q-px-64 q-py-22" to="/pools">
+					Go to Pools List
+				</LargeButton>
+			</div>
 		</div>
 	</div>
 </template>
