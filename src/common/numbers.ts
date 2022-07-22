@@ -398,7 +398,6 @@ export const singleAmountInPriceImpact = (
 
 		return new BigNumber(1)
 			.minus(poolAssetAmount.div(poolAssetAmount.plus(coin.amount)))
-			.multipliedBy(100)
 			.toString()
 	}
 
