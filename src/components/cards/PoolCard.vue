@@ -20,7 +20,7 @@ withDefaults(
 		:padding="30"
 		:transparency="5"
 		shadow="none"
-		class="full-width text-white cursor-pointer transition-all hover:bg-white-10 full-height !flex column justify-between no-wrap"
+		class="full-width text-white cursor-pointer transition-all hover:bg-white-10 light:bg-white full-height !flex column justify-between no-wrap"
 	>
 		<PoolHeader :pool="pool" />
 		<div class="grid grid-cols-2 grid-gap-16">
