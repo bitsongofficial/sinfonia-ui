@@ -194,6 +194,10 @@
     max-width: 582px;
 }
 
+.max-w-600 {
+    max-width: 600px;
+}
+
 .max-w-316 {
     max-width: 316px;
 }
@@ -707,6 +711,10 @@ $s in $custom-sizes {
 
     .q-pa-md-36 {
         padding: 36px !important;
+    }
+
+    .q-mr-md-none {
+        margin-right: none;
     }
 
     .q-mb-md-32 {

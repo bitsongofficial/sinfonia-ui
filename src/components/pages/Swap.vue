@@ -146,11 +146,9 @@ const onRowClick = (index: number, row: TokenBalance) => {
 </script>
 <template>
 	<div class="text-weight-medium">
-		<div class="row q-col-gutter-x-xl">
-			<div
-				class="col-8 col-lg-4 col-xl-5 q-mb-40 q-mb-md-none flex justify-center"
-			>
-				<div class="max-w-582">
+		<div class="grid grid-cols-8">
+			<div class="col-span-12 col-span-md-4 col-start-md-2">
+				<div class="max-w-600 q-ml-auto q-mr-auto q-mr-md-none">
 					<Title class="q-mb-24">Swap Tokens</Title>
 					<div class="flex row no-wrap items-start q-mb-24">
 						<q-icon :name="resolveIcon('info', 15, 15)" size="15px" color="primary" />
@@ -178,7 +176,7 @@ const onRowClick = (index: number, row: TokenBalance) => {
 					</Card>
 				</div>
 			</div>
-			<div class="col-8 col-lg-4 col-xl-3">
+			<!-- <div class="col-8 col-lg-4 col-xl-3">
 				<div class="max-w-582 q-mx-auto">
 					<div class="flex justify-between items-center q-mb-30">
 						<p class="fs-18">FanTokens</p>
@@ -299,7 +297,7 @@ const onRowClick = (index: number, row: TokenBalance) => {
 						</LightTable>
 					</Card>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </template>
