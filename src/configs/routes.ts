@@ -116,15 +116,6 @@ if (!disabledAirdrops) {
 	})
 }
 
-if (!disabledTransactions) {
-	menuItems.push({
-		icon: { name: "swap", width: 21, height: 16 },
-		label: "Transactions",
-		path: `${externalWebsites.mintscan}bitsong/txs`,
-		isLink: true,
-	})
-}
-
 if (!disabledPlayground) {
 	menuItems.push({
 		icon: { name: "clubs", width: 21, height: 22 },
@@ -135,7 +126,16 @@ if (!disabledPlayground) {
 	routes.push({
 		path: "/playground",
 		name: "Playground",
-		component: () => import("@/components/pages/Leaderboard.vue"),
+		component: () => import("@/components/pages/PlaygroundWIP.vue"),
+	})
+}
+
+if (!disabledTransactions) {
+	menuItems.push({
+		icon: { name: "swap", width: 21, height: 16 },
+		label: "Transactions",
+		path: `${externalWebsites.mintscan}bitsong/txs`,
+		isLink: true,
 	})
 }
 
