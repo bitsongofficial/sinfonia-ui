@@ -375,6 +375,14 @@ $s in $custom-sizes {
     .col-start-#{$k} {
         grid-column-start: $k !important;
     }
+
+    .col-start-span-#{$k} {
+        grid-column-start: span $k !important;
+    }
+
+    .col-end-#{$k} {
+        grid-column-end: $k !important;
+    }
 }
 
 @media screen and (min-height: 600px) {
@@ -726,6 +734,14 @@ $s in $custom-sizes {
     
         .col-start-md-#{$k} {
             grid-column-start: $k !important;
+        }
+
+        .col-start-span-md-#{$k} {
+            grid-column-start: span $k !important;
+        }
+
+        .col-end-md-#{$k} {
+            grid-column-end: $k !important;
         }
     }
 }

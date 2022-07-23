@@ -21,8 +21,13 @@ body.body--light {
     }
   }
 
+  .\!text-white,
   .text-white {
     color: $secondary !important;
+  }
+
+  .\!bg-white-10 {
+    background: $white;
   }
 
   .q-tab.q-tab--active {
@@ -359,7 +364,11 @@ body.body--light {
   }
 
   .q-menu {
-    background-color: white;
+    background: white;
+
+    &.alternative {
+      box-shadow: 0px 0px 20px rgb(23 8 33 / 10%);
+    }
 
     .q-item:hover {
       color: $secondary;
