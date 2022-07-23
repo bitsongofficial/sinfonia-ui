@@ -30,7 +30,7 @@ body.body--light {
     background: $white;
   }
 
-  .q-tab.q-tab--active {
+  .q-tab:not(.border).q-tab--active {
     color: unset !important;
 
     .q-tab__label {

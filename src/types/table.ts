@@ -65,4 +65,6 @@ export interface TableColumn {
 	 * Classes to add on header cells of the column
 	 */
 	headerClasses?: string
+
+	colspan?: string
 }
