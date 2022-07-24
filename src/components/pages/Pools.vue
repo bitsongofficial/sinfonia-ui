@@ -117,10 +117,12 @@ const poolsColumns = computed<TableColumn[]>(() => [
 		<Title class="q-mb-32 col-span-12 col-span-md-4" :font-size="21">
 			All Pools
 		</Title>
-		<p class="fs-16 q-mb-32 q-mb-md-none opacity-40 col-span-12 col-span-md-5">
-			Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many
-			international hits, among which the best-known is undoubtedly Born Again
-			(Babylonia).
+		<p
+			class="fs-16 !leading-24 q-mb-32 q-mb-md-none opacity-40 col-span-12 col-span-md-5"
+		>
+			On this page you can become a Liquidity Provider participating on the
+			Sinfonia Pools. Bond your tokens to provide security to the network and earn
+			rewards
 		</p>
 
 		<FillSelect
