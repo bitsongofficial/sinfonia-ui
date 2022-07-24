@@ -729,6 +729,10 @@ $s in $custom-sizes {
         margin-top: 34px !important;
     }
 
+    .justify-end-md {
+        justify-content: flex-end !important;
+    }
+
     @each $k,
     $s in $custom-sizes {
         .grid-gap-md-#{$k} {
@@ -773,6 +777,10 @@ $s in $custom-sizes {
 
     .flex-lg-1 {
         flex: 1;
+    }
+
+    .justify-end-lg {
+        justify-content: flex-end !important;
     }
 
     @each $k,
