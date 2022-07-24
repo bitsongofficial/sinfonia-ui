@@ -214,7 +214,7 @@ const onSwapClick = (pool: Pool) => {
 				transfers.
 			</p>
 		</div>
-		<div class="column col-12 col-md-6 col-lg-3">
+		<div class="column col-12 col-md-6 col-lg-3 items-start align-items-end-md">
 			<p
 				class="fs-12 text-weight-medium text-gradient !leading-24 q-mb-none text-right q-mt-xs-10 q-mt-md-10 text-left-xs text-left-md"
 			>
@@ -229,10 +229,7 @@ const onSwapClick = (pool: Pool) => {
 				{{ hours }}h <span class="opacity-20">:</span> {{ minutes }}m
 			</vue-countdown>
 
-			<div
-				class="row items-center justify-start justify-end-md"
-				v-if="poolsStore.payoutTime <= 0"
-			>
+			<div class="row items-center" v-if="poolsStore.payoutTime <= 0">
 				<p class="fs-12 !leading-16 opacity-40 q-mr-10">
 					Now we’re distributing rewards. Things could be delayed.
 				</p>

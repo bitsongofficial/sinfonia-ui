@@ -733,6 +733,10 @@ $s in $custom-sizes {
         justify-content: flex-end !important;
     }
 
+    .align-items-end-md {
+        align-items: flex-end !important;
+    }
+
     @each $k,
     $s in $custom-sizes {
         .grid-gap-md-#{$k} {
