@@ -243,6 +243,10 @@ const poolWatcher = watch(
 			if (catalystOptions.value.length > 0) {
 				catalystSelection.value = catalystOptions.value[0]
 			}
+
+			document.title = `#${newPool.id} | ${poolTokensName.value}`
+
+			route.meta.title = newPool.id
 		}
 	},
 	{ immediate: true }

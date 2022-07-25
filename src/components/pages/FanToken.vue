@@ -45,6 +45,8 @@ const fantokenWatcher = watch(
 	(current) => {
 		if (current) {
 			document.title = `${current.symbol} | ${current.name}'s Fantoken`
+
+			route.meta.title = current.name
 		}
 	},
 	{ immediate: true }

@@ -21,11 +21,17 @@ const routes: RouteRecordRaw[] = [
 	{
 		path: "/fantokens",
 		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Fantokens",
+		},
 		children: [
 			{
 				path: "",
 				component: () => import("@/components/pages/Dex.vue"),
 				name: "Fantokens Dex",
+				meta: {
+					breadcrumbHide: true,
+				},
 			},
 			{
 				path: ":id",
@@ -42,15 +48,24 @@ const routes: RouteRecordRaw[] = [
 			from: route.query.from ?? "BTSG",
 			to: route.query.to ?? "CLAY",
 		}),
+		meta: {
+			title: "Swap",
+		},
 	},
 	{
 		path: "/pools",
 		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Pools",
+		},
 		children: [
 			{
 				path: "",
 				name: "Pools",
 				component: () => import("@/components/pages/Pools.vue"),
+				meta: {
+					breadcrumbHide: true,
+				},
 			},
 			{
 				path: ":id",
@@ -63,11 +78,17 @@ const routes: RouteRecordRaw[] = [
 		path: "/assets",
 		name: "Assets",
 		component: () => import("@/components/pages/Assets.vue"),
+		meta: {
+			title: "Assets",
+		},
 	},
 	{
 		path: "/airdrops",
 		name: "Airdrops",
 		component: () => import("@/components/pages/Airdrops.vue"),
+		meta: {
+			title: "Airdrops",
+		},
 	},
 	{
 		path: "/:pathMatch(.*)",
@@ -77,6 +98,9 @@ const routes: RouteRecordRaw[] = [
 		path: "/404",
 		name: "NotFound",
 		component: () => import("@/components/pages/NotFound.vue"),
+		meta: {
+			title: "404",
+		},
 	},
 ]
 
@@ -127,6 +151,9 @@ if (!disabledPlayground) {
 		path: "/playground",
 		name: "Playground",
 		component: () => import("@/components/pages/PlaygroundWIP.vue"),
+		meta: {
+			title: "Playground",
+		},
 	})
 }
 
