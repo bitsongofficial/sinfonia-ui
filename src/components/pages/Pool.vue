@@ -32,8 +32,10 @@ import LightTable from "@/components/LightTable.vue"
 import BondModal from "@/components/modals/BondModal.vue"
 import LiquidityModal from "@/components//modals/LiquidityModal.vue"
 import StandardSelect from "@/components/inputs/StandardSelect.vue"
+import useSettings from "@/store/settings"
 
 const transactionManagerStore = useTransactionManager()
+const settingsStore = useSettings()
 const poolsStore = usePools()
 const authStore = useAuth()
 const configStore = useConfig()
@@ -246,7 +248,7 @@ const poolWatcher = watch(
 
 			document.title = `#${newPool.id} | ${poolTokensName.value}`
 
-			route.meta.title = newPool.id
+			settingsStore.breadcrumbPageTitle = newPool.id
 		}
 	},
 	{ immediate: true }

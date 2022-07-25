@@ -1,30 +1,33 @@
 <script setup lang="ts">
-import { watchDebounced } from "@vueuse/core"
+import useSettings from "@/store/settings"
 import { compact } from "lodash"
-import { computed, onUnmounted, ref } from "vue"
+import { computed, ref } from "vue"
 import { RouterLink, useRoute, useRouter } from "vue-router"
 
+const settingsStore = useSettings()
 const router = useRouter()
 const route = useRoute()
-const pageTitle = ref("")
-
-const watcher = watchDebounced(
-	() => router.currentRoute.value.meta,
-	(meta) => {
-		pageTitle.value = meta.title as string
-	},
-	{
-		debounce: 250,
-	}
-)
 
 const breadcrumb = computed(() => {
 	const routes = router.currentRoute.value.matched
 		.filter((el) => !el.meta.breadcrumbHide)
-		.map((el) => ({
-			label: route.name !== el.name ? el.meta.title : pageTitle.value,
-			to: route.name !== el.name ? el.path : undefined,
-		}))
+		.map((el, index) => {
+			let label = el.meta.title
+			let to: string | undefined = el.path
+
+			if (route.name === el.name) {
+				to = undefined
+
+				if (index > 0) {
+					label = settingsStore.breadcrumbPageTitle
+				}
+			}
+
+			return {
+				label,
+				to,
+			}
+		})
 
 	const parent = router.currentRoute.value.meta.parent as string
 
@@ -46,10 +49,6 @@ const breadcrumb = computed(() => {
 	}
 
 	return compact([...routes, currentRoute])
-})
-
-onUnmounted(() => {
-	watcher()
 })
 </script>
 

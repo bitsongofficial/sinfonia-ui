@@ -29,10 +29,12 @@ import useConfig from "@/store/config"
 import useBank from "@/store/bank"
 import BigNumber from "bignumber.js"
 import useMailchimp from "@/store/mailchimp"
+import useSettings from "@/store/settings"
 
 const poolsStore = usePools()
 const bankStore = useBank()
 const configStore = useConfig()
+const settingsStore = useSettings()
 const mailchimpStore = useMailchimp()
 const route = useRoute()
 const router = useRouter()
@@ -46,7 +48,7 @@ const fantokenWatcher = watch(
 		if (current) {
 			document.title = `${current.symbol} | ${current.name}'s Fantoken`
 
-			route.meta.title = current.name
+			settingsStore.breadcrumbPageTitle = current.name
 		}
 	},
 	{ immediate: true }
