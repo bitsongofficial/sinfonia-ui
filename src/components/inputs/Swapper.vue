@@ -576,9 +576,7 @@ const onSubmit = handleSubmit(() => {
 					:disable="
 						!authStore.session ||
 						!meta.valid ||
-						transactionManagerStore.loadingBroadcasting ||
-						transactionManagerStore.loadingSign ||
-						transactionManagerStore.pendingTransactions.length > 0
+						transactionManagerStore.loadingAndSign
 					"
 					class="q-px-xs-70"
 				>

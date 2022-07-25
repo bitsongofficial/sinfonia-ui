@@ -101,7 +101,7 @@ const useTransactionManager = defineStore("transactionManager", {
 							this.loadingSign = false
 						})
 
-						manager.sendIbcTokens(
+						await manager.sendIbcTokens(
 							senderAddress,
 							recipientAddress,
 							transferAmount,
@@ -179,7 +179,11 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.lockTokens(authStore.osmosisAddress, duration.duration, coins)
+					await manager.lockTokens(
+						authStore.osmosisAddress,
+						duration.duration,
+						coins
+					)
 				}
 			} catch (error) {
 				console.error(error)
@@ -252,7 +256,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.joinPool(
+					await manager.joinPool(
 						authStore.osmosisAddress,
 						poolId,
 						shareOutAmount,
@@ -334,7 +338,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.joinSwapExternAmountIn(
+					await manager.joinSwapExternAmountIn(
 						authStore.osmosisAddress,
 						poolId,
 						tokenIn,
@@ -412,7 +416,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.exitPool(
+					await manager.exitPool(
 						authStore.osmosisAddress,
 						poolId,
 						shareInAmount,
@@ -507,7 +511,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.swapExactAmountIn(
+					await manager.swapExactAmountIn(
 						authStore.osmosisAddress,
 						osmosisRoutes,
 						tokenIn,
@@ -585,7 +589,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.beginUnlocking(authStore.osmosisAddress, id)
+					await manager.beginUnlocking(authStore.osmosisAddress, id)
 				}
 			} catch (error) {
 				console.error(error)
@@ -659,7 +663,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.merkledropClaim(
+					await manager.merkledropClaim(
 						authStore.bitsongAddress,
 						merkledropId,
 						index,
@@ -833,6 +837,11 @@ const useTransactionManager = defineStore("transactionManager", {
 			const pendingTransactions = this.pendingTransactions as Transaction[]
 
 			return pendingTransactions.length > 0 || loadingBroadcasting
+		},
+		loadingAndSign({ loadingSign }) {
+			const loading = this.loading as boolean
+
+			return loading || loadingSign
 		},
 	},
 	persistedState: {

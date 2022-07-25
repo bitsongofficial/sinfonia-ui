@@ -99,7 +99,7 @@ const onSubmit = handleSubmit(() => {
 				fit
 				:padding-y="16"
 				class="q-px-66"
-				:disable="!meta.valid"
+				:disable="!meta.valid || transactionManagerStore.loadingAndSign"
 				@click="onSubmit"
 			>
 				<span class="text-uppercase"> Bond tokens </span>

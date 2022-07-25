@@ -266,7 +266,7 @@ const availableGtnZero = computed(() => gtnZero(available.value))
 				fit
 				class="q-px-80"
 				:padding-y="14"
-				:disable="!meta.valid"
+				:disable="!meta.valid || transactionManagerStore.loadingAndSign"
 				@click="onSubmit"
 			>
 				<div class="text-uppercase">Transfer</div>

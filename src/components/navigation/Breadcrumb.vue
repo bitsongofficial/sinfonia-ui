@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import useSettings from "@/store/settings"
 import { compact } from "lodash"
-import { computed, ref } from "vue"
+import { computed } from "vue"
 import { RouterLink, useRoute, useRouter } from "vue-router"
+import useSettings from "@/store/settings"
 
 const settingsStore = useSettings()
 const router = useRouter()
