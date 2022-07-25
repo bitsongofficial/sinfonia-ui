@@ -3,12 +3,14 @@ import { acceptHMRUpdate, defineStore } from "pinia"
 export interface SettingsState {
 	darkMode: boolean
 	disclaimerApprove: boolean
+	breadcrumbPageTitle?: string
 }
 
 const useSettings = defineStore("settings", {
 	state: (): SettingsState => ({
 		darkMode: true,
 		disclaimerApprove: false,
+		breadcrumbPageTitle: undefined,
 	}),
 	actions: {
 		setDarkMode(darkMode: boolean) {

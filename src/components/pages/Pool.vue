@@ -32,8 +32,10 @@ import LightTable from "@/components/LightTable.vue"
 import BondModal from "@/components/modals/BondModal.vue"
 import LiquidityModal from "@/components//modals/LiquidityModal.vue"
 import StandardSelect from "@/components/inputs/StandardSelect.vue"
+import useSettings from "@/store/settings"
 
 const transactionManagerStore = useTransactionManager()
+const settingsStore = useSettings()
 const poolsStore = usePools()
 const authStore = useAuth()
 const configStore = useConfig()
@@ -91,16 +93,6 @@ const broadcastingWatcher = watch(
 		}
 	}
 )
-
-const lpLiquidity = computed(() => {
-	if (pool.value) {
-		return new BigNumber(pool.value.userLiquidity)
-			.minus(pool.value.bonded)
-			.toString()
-	}
-
-	return "0"
-})
 
 const unbondedCoins = computed(() => {
 	let coins: LockCoin[] = []
@@ -253,9 +245,31 @@ const poolWatcher = watch(
 			if (catalystOptions.value.length > 0) {
 				catalystSelection.value = catalystOptions.value[0]
 			}
+
+			document.title = `#${newPool.id} | ${poolTokensName.value}`
+
+			settingsStore.breadcrumbPageTitle = newPool.id
 		}
 	},
 	{ immediate: true }
+)
+
+const poolsWatcher = watch(
+	() => poolsStore.rawPools,
+	(rawPools) => {
+		if (rawPools.length > 0 && !poolsStore.loading) {
+			const rawPool = rawPools.find((rawPool) => rawPool.id === id)
+
+			if (!rawPool) {
+				router.replace({
+					name: "NotFound",
+				})
+			}
+		}
+	},
+	{
+		immediate: true,
+	}
 )
 
 onMounted(() => {
@@ -267,6 +281,7 @@ onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
 	broadcastingWatcher()
 	poolWatcher()
+	poolsWatcher()
 })
 
 const onSwapClick = () => {
@@ -386,7 +401,7 @@ const onSwapClick = () => {
 						LP tokens represent a crypto liquidity provider’s share of a pool.
 					</InformativeTooltip>
 				</div>
-				<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
+				<p class="fs-24 q-mb-14">{{ balancedCurrency(pool.lpLiquidity) }} $</p>
 				<StandardButton @click="openBondModal = true" :disable="!authStore.session">
 					Start Earning
 				</StandardButton>

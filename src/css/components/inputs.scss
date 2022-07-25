@@ -119,6 +119,20 @@
     background: $primary-dark;
     border: 0;
     padding: 20px;
+
+    &.alternative {
+        background: linear-gradient(0deg, #26173A, #26173A), linear-gradient(0deg, #1F0C32, #1F0C32), rgba(255, 255, 255, 0.2);
+        box-shadow: 0px 0px 20px #170821;
+        backdrop-filter: blur(40px);
+        border-radius: 15px;
+        transform: translateY(15px);
+        padding: 10px 14px;
+
+        & .q-item {
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+    }
 }
 
 .q-field__marginal {

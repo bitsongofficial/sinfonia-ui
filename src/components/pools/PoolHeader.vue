@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { Pool } from "@/types/pool"
-import { balancedCurrency, percentage } from "@/common/numbers"
-import { resolveIcon } from "@/common/resolvers"
 import { ref, watch, onUnmounted } from "vue"
 import { useRouter } from "vue-router"
 
@@ -9,6 +7,7 @@ import PoolContextMenu from "@/components/navigation/PoolContextMenu.vue"
 import ImagePair from "@/components/ImagePair.vue"
 import LiquidityModal from "../modals/LiquidityModal.vue"
 import useTransactionManager from "@/store/transaction-manager"
+import IconButton from "../buttons/IconButton.vue"
 
 const router = useRouter()
 const transactionManagerStore = useTransactionManager()
@@ -45,56 +44,49 @@ const onSwapClick = () => {
 </script>
 
 <template>
-	<div class="row q-mb-34 q-col-gutter-x-sm">
-		<div class="col-4">
-			<div class="q-pr-24">
-				<ImagePair :coins="pool.coins"> </ImagePair>
-			</div>
-		</div>
-		<div class="col-4">
-			<div class="row justify-between no-wrap">
-				<div>
+	<div class="row q-mb-28 justify-between">
+		<div class="column w-full">
+			<div class="row items-center justify-between q-mb-14 relative-position">
+				<div class="row items-center">
+					<template v-for="(coin, index) in pool.coins" :key="index">
+						<p class="fs-18 !leading-24 text-weight-medium">
+							{{ coin.token.symbol }}
+						</p>
+						<span
+							class="fs-18 !leading-24 text-weight-medium white-space-break-spaces"
+							v-if="index < pool.coins.length - 1"
+						>
+							·
+						</span>
+					</template>
 					<p
-						class="fs-12 opacity-40 text-weight-medium q-mb-10 light:text-primary light:opacity-100"
+						class="fs-12 opacity-40 text-weight-medium light:text-primary light:opacity-100 q-ml-16"
 					>
 						Pool {{ pool.id }}
 					</p>
-					<template v-for="(coin, index) in pool.coins" :key="index">
-						<p class="fs-16 text-weight-bold w-fit">
-							{{ coin.token.symbol }}
-						</p>
-						<div
-							class="separator q-mt-4 q-mb-6"
-							v-if="index !== pool.coins.length - 1"
-						></div>
-					</template>
 				</div>
-				<div class="q-mr--4" @click.native.prevent="show = true">
-					<q-icon
-						:name="resolveIcon('vertical-dots', 4, 16)"
-						class="fs-14 s-28 q-mr--4 opacity-30 hover:opacity-100"
-					></q-icon>
+
+				<IconButton
+					icon="vertical-dots"
+					width="4"
+					height="16"
+					class="fs-16 s-28 q-mr--4 opacity-30 hover:opacity-100 absolute -right-8"
+					@click.native.prevent="show = true"
+				>
 					<PoolContextMenu
 						v-model="show"
 						@swap="onSwapClick"
 						@liquidity="openAddRemoveModal = true"
 					></PoolContextMenu>
-				</div>
+				</IconButton>
 			</div>
-		</div>
-	</div>
-	<div class="row q-col-gutter-x-sm">
-		<div class="col-4">
-			<p class="fs-12 text-weight-medium opacity-40 q-pb-10">APR</p>
-			<p class="fs-16 text-weight-medium work-break-all">
-				{{ percentage(pool.APR) }} %
-			</p>
-		</div>
-		<div class="col-4">
-			<p class="fs-12 text-weight-medium opacity-40 q-pb-10">Liquidity</p>
-			<p class="fs-16 text-weight-medium work-break-all">
-				{{ balancedCurrency(pool.liquidity) }} $
-			</p>
+			<ImagePair
+				:size="31"
+				:smaller-size="31"
+				:spacing="8"
+				:coins="pool.coins"
+				inline
+			/>
 		</div>
 	</div>
 	<LiquidityModal v-model="openAddRemoveModal" :pool="pool" />

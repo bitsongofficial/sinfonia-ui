@@ -12,21 +12,25 @@ export const useMaxAmount = (
 		if (network.value) {
 			const feeData = getFees(network.value, transactionType)
 
-			if (feeData && availableCoins.value) {
-				const feeOption = feeData.fee.find(
-					(feeType) => feeType.type === FeeType.AVERAGE
-				)
+			if (availableCoins.value) {
+				if (feeData && !network.value.fantoken) {
+					const feeOption = feeData.fee.find(
+						(feeType) => feeType.type === FeeType.AVERAGE
+					)
 
-				if (feeOption) {
-					const coinLookup = getCoinLookup(network.value, feeOption.denom)
+					if (feeOption) {
+						const coinLookup = getCoinLookup(network.value, feeOption.denom)
 
-					if (coinLookup) {
-						const coinDecimals = new BigNumber(feeOption.amount).times(
-							coinLookup.chainToViewConversionFactor
-						)
+						if (coinLookup) {
+							const coinDecimals = new BigNumber(feeOption.amount).times(
+								coinLookup.chainToViewConversionFactor
+							)
 
-						return new BigNumber(availableCoins.value).minus(coinDecimals).toString()
+							return new BigNumber(availableCoins.value).minus(coinDecimals).toString()
+						}
 					}
+				} else {
+					return new BigNumber(availableCoins.value).toString()
 				}
 			}
 		}

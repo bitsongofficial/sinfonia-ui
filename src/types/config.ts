@@ -4,6 +4,7 @@ import {
 	FantokenMedia,
 	FantokenSocial,
 	FantokenWhitePaper,
+	FantokenMetadata,
 } from "./fantoken"
 
 export type TokenLogo = "default" | "svg" | "png"
@@ -71,6 +72,7 @@ export interface Token extends BaseToken {
 	media?: FantokenMedia
 	airdrop?: FantokenAirdrop
 	whitepaper?: FantokenWhitePaper
+	metadata?: FantokenMetadata
 }
 
 export interface TokenWithAddress extends Token {

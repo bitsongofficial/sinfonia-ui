@@ -6,10 +6,14 @@ withDefaults(
 		rows: any[]
 		columns: TableColumn[]
 		alternative?: boolean
+		alternativeIndex?: boolean
+		headerBorder?: boolean
 		noBackground?: boolean
 	}>(),
 	{
 		alternative: false,
+		alternativeIndex: false,
+		headerBorder: false,
 	}
 )
 
@@ -27,7 +31,9 @@ const pagination = {
 		class="footer-h-0"
 		:class="{
 			'table-no-background': noBackground || alternative,
-			alternative: alternative,
+			'table-header-border': headerBorder,
+			alternative,
+			'alternative-index': alternativeIndex,
 			'table-empty': rows.length === 0,
 		}"
 		hide-bottom
@@ -39,6 +45,7 @@ const pagination = {
 					:key="col.name"
 					:props="slotProps"
 					class="fs-13 text-uppercase text-weight-medium transactions-table-head-row"
+					:colspan="col.colspan"
 				>
 					{{ col.label }}
 				</q-th>

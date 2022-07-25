@@ -1,13 +1,4 @@
 import { MenuItem } from "@/types"
-import Wrapper from "@/components/pages/Wrapper.vue"
-import Dex from "@/components/pages/Dex.vue"
-import Pools from "@/components/pages/Pools.vue"
-import Assets from "@/components/pages/Assets.vue"
-import Swap from "@/components/pages/Swap.vue"
-import Pool from "@/components/pages/Pool.vue"
-import FanToken from "@/components/pages/FanToken.vue"
-import Leaderboard from "@/components/pages/Leaderboard.vue"
-import Airdrops from "@/components/pages/Airdrops.vue"
 import { RouteRecordRaw } from "vue-router"
 import { externalWebsites } from "./config"
 
@@ -29,16 +20,22 @@ const routes: RouteRecordRaw[] = [
 	},
 	{
 		path: "/fantokens",
-		component: Wrapper,
+		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Fantokens",
+		},
 		children: [
 			{
 				path: "",
-				component: Dex,
+				component: () => import("@/components/pages/Dex.vue"),
 				name: "Fantokens Dex",
+				meta: {
+					breadcrumbHide: true,
+				},
 			},
 			{
 				path: ":id",
-				component: FanToken,
+				component: () => import("@/components/pages/FanToken.vue"),
 				name: "Fantoken",
 			},
 		],
@@ -46,41 +43,64 @@ const routes: RouteRecordRaw[] = [
 	{
 		path: "/swap",
 		name: "Swap",
-		component: Swap,
+		component: () => import("@/components/pages/Swap.vue"),
 		props: (route) => ({
 			from: route.query.from ?? "BTSG",
 			to: route.query.to ?? "CLAY",
 		}),
+		meta: {
+			title: "Swap",
+		},
 	},
 	{
 		path: "/pools",
-		component: Wrapper,
+		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Pools",
+		},
 		children: [
 			{
 				path: "",
 				name: "Pools",
-				component: Pools,
+				component: () => import("@/components/pages/Pools.vue"),
+				meta: {
+					breadcrumbHide: true,
+				},
 			},
 			{
 				path: ":id",
 				name: "Pool",
-				component: Pool,
+				component: () => import("@/components/pages/Pool.vue"),
 			},
 		],
 	},
 	{
 		path: "/assets",
 		name: "Assets",
-		component: Assets,
+		component: () => import("@/components/pages/Assets.vue"),
+		meta: {
+			title: "Assets",
+		},
 	},
 	{
 		path: "/airdrops",
 		name: "Airdrops",
-		component: Airdrops,
+		component: () => import("@/components/pages/Airdrops.vue"),
+		meta: {
+			title: "Airdrops",
+		},
 	},
 	{
 		path: "/:pathMatch(.*)",
-		redirect: "/fantokens",
+		redirect: "/404",
+	},
+	{
+		path: "/404",
+		name: "NotFound",
+		component: () => import("@/components/pages/NotFound.vue"),
+		meta: {
+			title: "404",
+		},
 	},
 ]
 
@@ -120,15 +140,6 @@ if (!disabledAirdrops) {
 	})
 }
 
-if (!disabledTransactions) {
-	menuItems.push({
-		icon: { name: "swap", width: 21, height: 16 },
-		label: "Transactions",
-		path: `${externalWebsites.mintscan}bitsong/txs`,
-		isLink: true,
-	})
-}
-
 if (!disabledPlayground) {
 	menuItems.push({
 		icon: { name: "clubs", width: 21, height: 22 },
@@ -139,7 +150,19 @@ if (!disabledPlayground) {
 	routes.push({
 		path: "/playground",
 		name: "Playground",
-		component: Leaderboard,
+		component: () => import("@/components/pages/PlaygroundWIP.vue"),
+		meta: {
+			title: "Playground",
+		},
+	})
+}
+
+if (!disabledTransactions) {
+	menuItems.push({
+		icon: { name: "swap", width: 21, height: 16 },
+		label: "Transactions",
+		path: `${externalWebsites.mintscan}bitsong/txs`,
+		isLink: true,
 	})
 }
 

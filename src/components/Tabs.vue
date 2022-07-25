@@ -1,37 +1,74 @@
 <script setup lang="ts">
 import { resolveIcon } from "@/common/resolvers"
-import { ref } from "vue"
+import { computed, ref, useSlots } from "vue"
 import InformativeTooltip from "./tooltips/InformativeTooltip.vue"
 
-const props = defineProps<{
-	options: {
-		name?: string
-		label?: string
-		tooltip?: string
-		icon?: { name: string; width: number; height: number }
-		url?: string
-	}[]
+const props = withDefaults(
+	defineProps<{
+		modelValue?: any
+		options: {
+			name?: string
+			label?: string
+			tooltip?: string
+			icon?: { name: string; width: number; height: number }
+			url?: string
+		}[]
+		border?: boolean
+	}>(),
+	{
+		border: false,
+	}
+)
+
+const emit = defineEmits<{
+	(e: "update:modelValue", value: any): void
 }>()
+
+const slots = useSlots()
 
 const firstValidOption = props.options.find(
 	(o) => o.icon == undefined && o.url == undefined
 )
 
-const tab = ref(firstValidOption ? firstValidOption.name : null)
+const tabInternal = ref(firstValidOption ? firstValidOption.name : null)
+
+const tab = computed({
+	get: () => {
+		if (props.modelValue) {
+			return props.modelValue
+		}
+
+		return tabInternal.value
+	},
+	set: (value) => {
+		if (props.modelValue) {
+			emit("update:modelValue", value)
+		} else {
+			tabInternal.value = value
+		}
+	},
+})
 
 const isTab = (name): boolean => {
 	return (
 		props.options.find((o) => o.name != undefined && o.name == name) != undefined
 	)
 }
+
+const hasSlots = computed(() => Object.keys(slots).length > 0)
 </script>
 
 <template>
-	<div class="q-mb-26 q-px-60 max-w-full overflow-auto">
+	<div
+		class="max-w-full overflow-auto"
+		:class="{
+			'q-mb-26 q-px-60': !border,
+		}"
+	>
 		<q-tabs
 			v-model="tab"
 			dense
-			:active-color="$q.dark.isActive ? 'primary' : 'gradient'"
+			active-color="white"
 			indicator-color="primary"
 			align="justify"
 			narrow-indicator
@@ -42,8 +79,13 @@ const isTab = (name): boolean => {
 					v-if="option.name && !option.url"
 					:name="option.name"
 					:label="option.label"
-					class="fs-18 opacity-40 w-fit q-mr-50 !flex-0 q-px-0 !transition-none"
+					class="w-fit !flex-0 q-px-0 !transition-none"
 					content-class="q-py-0 !transition-none"
+					:class="{
+						'fs-18 q-mr-50 opacity-40': !border,
+						'fs-21 q-mr-36 opacity-30': border,
+						border,
+					}"
 				/>
 				<a
 					v-if="option.url"
@@ -79,7 +121,11 @@ const isTab = (name): boolean => {
 			</template>
 		</q-tabs>
 	</div>
-	<q-tab-panels v-model="tab" class="bg-white-5 rounded-30 q-py-52 full-width">
+	<q-tab-panels
+		v-model="tab"
+		class="bg-white-5 rounded-30 q-py-52 full-width"
+		v-if="hasSlots"
+	>
 		<template v-for="(_, slot) of $slots">
 			<template v-if="isTab(slot)">
 				<q-tab-panel :name="slot" class="q-px-40 q-px-xs-20">

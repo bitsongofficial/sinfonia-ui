@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { TableColumn } from "@/types/table"
-import { balancedCurrency } from "@/common/numbers"
+import ImagePair from "@/components/ImagePair.vue"
+import { TableColumn, GammBalance, Pool } from "@/types"
+import { balancedCurrency, balancedGamm, toDecimalGamm } from "@/common/numbers"
 import { computed, ref, watch, onUnmounted } from "vue"
 import { TokenBalance } from "@/types"
 import { resolveIcon } from "@/common/resolvers"
@@ -13,13 +14,20 @@ import usePrices from "@/store/prices"
 import usePools from "@/store/pools"
 import useAuth from "@/store/auth"
 import useTransactionManager from "@/store/transaction-manager"
+import PoolContextMenu from "../navigation/PoolContextMenu.vue"
+import { useRouter } from "vue-router"
+import IconButton from "../buttons/IconButton.vue"
+import LiquidityModal from "../modals/LiquidityModal.vue"
 
 const bankStore = useBank()
 const pricesStore = usePrices()
 const poolsStore = usePools()
 const transactionManagerStore = useTransactionManager()
 const authStore = useAuth()
+const router = useRouter()
+
 const openTransferDialog = ref(false)
+const currentGammPool = ref<Pool | undefined>(undefined)
 const transferFrom = ref<TokenBalance>()
 
 const broadcastingWatcher = watch(
@@ -35,7 +43,76 @@ onUnmounted(() => {
 	broadcastingWatcher()
 })
 
-const columns: TableColumn[] = [
+const showGammPoolModal = computed({
+	get: () => currentGammPool.value !== undefined,
+	set: (value) => {
+		if (!value) {
+			currentGammPool.value = undefined
+		}
+	},
+})
+
+const gammPoolsColumns = computed<TableColumn[]>(() => [
+	{
+		name: "id",
+		align: "left",
+		label: "",
+		field: "id",
+		sortable: true,
+		headerClasses: "w-5",
+		classes: "w-5",
+	},
+	{
+		name: "tokenPair",
+		align: "left",
+		label: "Pool",
+		field: "name",
+		sortable: true,
+	},
+	{
+		name: "gamm",
+		align: "right",
+		label: "GAMM",
+		field: (row: GammBalance) => {
+			return row
+		},
+		format: (row: GammBalance) =>
+			`${balancedGamm(toDecimalGamm(row.coin.amount))} GAMM/${row.pool.id ?? "0"}`,
+		sortable: true,
+	},
+	{
+		name: "value",
+		label: "value",
+		field: (row: GammBalance) => row.pool.lpLiquidity,
+		sortable: true,
+		format: (val: any) => `${balancedCurrency(val)} $`,
+	},
+	{
+		name: "actions",
+		label: "",
+		field: "",
+		sortable: false,
+		headerClasses: "w-5",
+		classes: "w-5",
+	},
+])
+
+const haveMultiChainBalances = computed(() => {
+	return (
+		bankStore.balances.find((b) => b.chains && b.chains?.length > 0) !== undefined
+	)
+})
+
+const columns = computed<TableColumn[]>(() => [
+	{
+		name: "id",
+		align: "left",
+		label: "",
+		field: "id",
+		sortable: true,
+		headerClasses: "w-5",
+		classes: "w-5",
+	},
 	{
 		name: "token",
 		align: "left",
@@ -44,16 +121,8 @@ const columns: TableColumn[] = [
 		sortable: true,
 	},
 	{
-		name: "symbol",
-		align: "center",
-		label: "Symbol",
-		field: (row: TokenBalance) => row.symbol,
-		sortable: false,
-		format: (val: any) => `${val}`,
-	},
-	{
 		name: "price",
-		align: "center",
+		align: "right",
 		label: "Price",
 		field: (row: TokenBalance) => row.price,
 		sortable: false,
@@ -66,6 +135,7 @@ const columns: TableColumn[] = [
 		name: "availableFiat",
 		label: "Available",
 		field: "availableFiat",
+		align: "right",
 		sortable: true,
 		sort: (a, b, rowA, rowB) => {
 			return parseFloat(a) - parseFloat(b)
@@ -75,25 +145,30 @@ const columns: TableColumn[] = [
 		name: "available",
 		label: "QTY",
 		field: "available",
+		align: "right",
 		sortable: true,
+		headerClasses: haveMultiChainBalances.value ? "" : "!q-pr-32",
+		classes: haveMultiChainBalances.value ? "" : "!q-pr-32",
 		sort: (a, b, rowA, rowB) => {
 			return parseFloat(a) - parseFloat(b)
 		},
 	},
-	{ name: "arrows", label: "", field: "", sortable: false },
-]
-
-const haveMultiChainBalances = computed(() => {
-	return (
-		bankStore.balances.find((b) => b.chains && b.chains?.length > 0) !== undefined
-	)
-})
+	{
+		name: "arrows",
+		label: "Move",
+		align: "right",
+		field: "move",
+		sortable: false,
+		headerClasses: "w-5",
+		classes: "w-5",
+	},
+])
 
 const columnsWrapper = computed(() => {
-	const cols = [...columns]
+	const cols = [...columns.value]
 
 	if (haveMultiChainBalances.value) {
-		cols.splice(3, 0, {
+		cols.splice(5, 0, {
 			name: "chain",
 			align: "center",
 			label: "Chain",
@@ -116,6 +191,16 @@ const openTransfer = (from: TokenBalance) => {
 	transferFrom.value = from
 	openTransferDialog.value = true
 }
+
+const onSwapClick = (pool: Pool) => {
+	const coins = [...pool.coins]
+	const fromCoin = coins.shift()
+	const toCoin = coins.shift()
+
+	if (fromCoin && toCoin) {
+		router.push(`/swap?from=${fromCoin.token.symbol}&to=${toCoin.token.symbol}`)
+	}
+}
 </script>
 
 <template>
@@ -129,9 +214,9 @@ const openTransfer = (from: TokenBalance) => {
 				transfers.
 			</p>
 		</div>
-		<div class="column col-12 col-md-6 col-lg-3">
+		<div class="column col-12 col-md-6 col-lg-3 items-start align-items-end-md">
 			<p
-				class="fs-12 opacity-50 text-white !leading-24 q-mb-none text-right q-mt-xs-10 q-mt-md-10 text-left-xs text-left-md"
+				class="fs-12 text-weight-medium text-gradient !leading-24 q-mb-none text-right q-mt-xs-10 q-mt-md-10 text-left-xs text-left-md"
 			>
 				EPOCH END
 			</p>
@@ -143,6 +228,19 @@ const openTransfer = (from: TokenBalance) => {
 			>
 				{{ hours }}h <span class="opacity-20">:</span> {{ minutes }}m
 			</vue-countdown>
+
+			<div class="row items-center" v-if="poolsStore.payoutTime <= 0">
+				<p class="fs-12 !leading-16 opacity-40 q-mr-10">
+					Now we’re distributing rewards. Things could be delayed.
+				</p>
+
+				<q-icon
+					:name="resolveIcon('info', 15, 15)"
+					size="14px"
+					color="white"
+					class="opacity-40"
+				/>
+			</div>
 		</div>
 	</div>
 	<div class="row text-weight-medium q-col-gutter-lg q-mb-75">
@@ -167,6 +265,75 @@ const openTransfer = (from: TokenBalance) => {
 			</InfoCard>
 		</div>
 	</div>
+	<template v-if="bankStore.gammPoolBalances.length > 0">
+		<p class="q-mb-21 fs-21 text-weight-medium">GAMM Pool</p>
+
+		<LightTable
+			:rows="bankStore.gammPoolBalances"
+			:columns="gammPoolsColumns"
+			class="q-mb-66"
+			@row-click="
+				(_, row) => {
+					$router.push(`/pools/${row.pool.id}`)
+				}
+			"
+		>
+			<template v-slot:body-cell-id="slotProps">
+				<q-td :props="slotProps">
+					<div class="flex no-wrap items-center">
+						<span class="opacity-40 q-mr-10">
+							{{ slotProps.row.pool.id }}
+						</span>
+					</div>
+				</q-td>
+			</template>
+			<template v-slot:body-cell-tokenPair="slotProps">
+				<q-td :props="slotProps">
+					<div class="flex no-wrap items-center">
+						<ImagePair
+							:coins="slotProps.row.pool.coins"
+							class="q-mr-30"
+							:size="30"
+							:smaller-size="24"
+							:offset="[0, 0]"
+							inline
+						/>
+						<p class="fs-14 text-weight-medium">
+							<template v-for="(coin, index) of slotProps.row.pool.coins" :key="index">
+								{{ coin.token.symbol
+								}}{{ index === slotProps.row.pool.coins.length - 1 ? "" : " · " }}
+							</template>
+						</p>
+					</div>
+				</q-td>
+			</template>
+			<template v-slot:body-cell-actions="slotProps">
+				<q-td :props="slotProps">
+					<IconButton
+						icon="vertical-dots"
+						width="4"
+						height="16"
+						class="fs-14 s-28 q-mr--4 opacity-30 hover:opacity-100"
+						@click.stop=""
+					>
+						<PoolContextMenu
+							:no-parent-event="false"
+							:touch-position="false"
+							@swap="onSwapClick(slotProps.row.pool)"
+							@liquidity="currentGammPool = slotProps.row.pool"
+						/>
+					</IconButton>
+				</q-td>
+			</template>
+		</LightTable>
+		<LiquidityModal
+			@hide="currentGammPool = undefined"
+			v-model="showGammPoolModal"
+			:pool="currentGammPool"
+			v-if="currentGammPool"
+		/>
+	</template>
+
 	<p class="q-mb-21 fs-21 text-weight-medium">Tokens</p>
 	<div>
 		<LightTable
@@ -177,36 +344,29 @@ const openTransfer = (from: TokenBalance) => {
 			<template v-slot:body="rowProps">
 				<q-tr :props="rowProps">
 					<q-td>
+						<div class="flex no-wrap items-center">
+							<span class="opacity-40 q-mr-10">
+								{{ rowProps.rowIndex + 1 }}
+							</span>
+						</div>
+					</q-td>
+					<q-td>
 						<div class="row items-center no-wrap">
-							<q-avatar size="sm" class="q-mr-22">
+							<q-avatar size="30px" class="q-mr-22">
 								<img :src="rowProps.row.logos.default" :alt="rowProps.row.name" />
 							</q-avatar>
-							<p class="text-weight-medium fs-14">
+							<p class="text-weight-medium fs-15 q-mr-22">
+								{{ rowProps.row.symbol }}
+							</p>
+							<p class="text-weight-medium fs-13 opacity-40">
 								{{ rowProps.row.name }}
 							</p>
 						</div>
 					</q-td>
 					<q-td>
-						<p class="text-white text-center">
-							{{ rowProps.row.symbol }}
-						</p>
-					</q-td>
-					<q-td>
-						<p class="text-white text-center">
+						<p class="text-white text-right">
 							{{ balancedCurrency(rowProps.row.price) }} $
 						</p>
-					</q-td>
-					<q-td v-if="haveMultiChainBalances">
-						<div class="flex justify-center">
-							<q-avatar
-								v-for="(chain, i) in rowProps.row.chains"
-								:key="i"
-								size="20px"
-								:class="i > 0 ? 'q-ml-8' : ''"
-							>
-								<img :src="chain.logos.default" />
-							</q-avatar>
-						</div>
 					</q-td>
 					<q-td>
 						<p
@@ -223,7 +383,11 @@ const openTransfer = (from: TokenBalance) => {
 					</q-td>
 					<q-td>
 						<p
-							:class="'text-right ' + (rowProps.row.available > 0 ? '' : 'opacity-40')"
+							class="text-right"
+							:class="{
+								'q-pr-16': !haveMultiChainBalances,
+								'opacity-40': rowProps.row.available <= 0,
+							}"
 						>
 							{{
 								rowProps.row.available
@@ -232,9 +396,21 @@ const openTransfer = (from: TokenBalance) => {
 							}}
 						</p>
 					</q-td>
+					<q-td v-if="haveMultiChainBalances">
+						<div class="flex justify-center q-mx-50">
+							<q-avatar
+								v-for="(chain, i) in rowProps.row.chains"
+								:key="i"
+								size="20px"
+								:class="i > 0 ? 'q-ml-8' : ''"
+							>
+								<img :src="chain.logos.default" />
+							</q-avatar>
+						</div>
+					</q-td>
 					<q-td>
 						<div
-							class="opacity-40 hover:opacity-100 cursor-pointer fs-15 text-right light:hover:text-primary"
+							class="cursor-pointer fs-21 text-right light:hover:text-primary text-dark"
 							@click="openTransfer(rowProps.row)"
 							v-if="rowProps.row.ibcEnabled && authStore.session"
 						>
@@ -243,7 +419,7 @@ const openTransfer = (from: TokenBalance) => {
 					</q-td>
 					<q-td v-if="haveMultiChainBalances">
 						<div
-							class="opacity-40 flex justify-end hover:opacity-100 cursor-pointer fs-12"
+							class="flex justify-end hover:opacity-100 cursor-pointer fs-12"
 							@click="rowProps.expand = !rowProps.expand"
 							v-if="rowProps.row.chains.length > 0"
 						>
@@ -259,20 +435,14 @@ const openTransfer = (from: TokenBalance) => {
 					no-hover
 					v-show="rowProps.expand"
 				>
+					<q-td> </q-td>
 					<q-td>
-						<div class="flex justify-start q-ml-46">
-							<div class="text-capitalize text-primary-light flex items-center">
-								<p>
-									{{ chain.name }}
-								</p>
-								<q-avatar size="20px" class="q-ml-10">
-									<img :src="chain.logos.default" />
-								</q-avatar>
+						<div class="flex justify-start q-ml-52">
+							<div class="text-capitalize text-white fs-13 flex">
+								<p>{{ chain.name }} Chain</p>
 							</div>
 						</div>
 					</q-td>
-					<q-td> </q-td>
-					<q-td> </q-td>
 					<q-td> </q-td>
 					<q-td>
 						<p :class="'text-right ' + (chain.availableFiat > 0 ? '' : 'opacity-40')">
@@ -290,7 +460,14 @@ const openTransfer = (from: TokenBalance) => {
 							}}
 						</p>
 					</q-td>
-					<q-td></q-td>
+					<q-td>
+						<div class="flex justify-center q-mx-50">
+							<q-avatar size="16px">
+								<img :src="chain.logos.default" />
+							</q-avatar>
+						</div>
+					</q-td>
+					<q-td> </q-td>
 					<q-td v-if="haveMultiChainBalances"></q-td>
 				</q-tr>
 			</template>
@@ -298,7 +475,7 @@ const openTransfer = (from: TokenBalance) => {
 		<TransferModal
 			v-model="openTransferDialog"
 			:coin="transferFrom"
-			v-if="transferFrom"
+			v-if="transferFrom && openTransferDialog"
 		/>
 	</div>
 </template>

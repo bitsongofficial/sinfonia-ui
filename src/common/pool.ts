@@ -255,6 +255,8 @@ export const mapPools = (
 			)
 		)
 
+		const lpLiquidity = new BigNumber(userLiquidity).minus(bonded).toString()
+
 		return {
 			...pool,
 			coins: compact(coins),
@@ -262,6 +264,7 @@ export const mapPools = (
 			APR: new BigNumber(maxIncentivizedApr ?? "0").toString(),
 			liquidity: liquidity.toString(),
 			userLiquidity: userLiquidity.toString(),
+			lpLiquidity,
 			bonded: bonded.toString(),
 			availableLPTokens: toDecimalGamm(availableLPTokens.toString()),
 			availableLPBalances: availableBalances,
