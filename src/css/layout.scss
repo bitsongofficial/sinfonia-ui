@@ -71,6 +71,14 @@
     flex: 0 0 100%;
 }
 
+.min-h-18 {
+    min-height: 18px;
+}
+
+.min-h-auto {
+    min-height: auto;
+}
+
 .min-h-fit {
     min-height: fit-content;
 }
@@ -110,6 +118,10 @@
     .col {
         width: 33.33%;
     }
+}
+
+.\!w-16 {
+    width: 16px !important;
 }
 
 .w-1 {
@@ -165,6 +177,10 @@
     height: 21px;
 }
 
+.\!h-16 {
+    height: 16px !important;
+}
+
 .hv-1\/2 {
     height: 50vh;
 }
@@ -212,6 +228,10 @@
 
 .min-w-440 {
     min-width: 440px;
+}
+
+.min-w-60 {
+    min-width: 60px;
 }
 
 .z-1 {

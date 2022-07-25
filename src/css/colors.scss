@@ -84,6 +84,10 @@
     background: $dark-light !important;
 }
 
+.bg-dark-30 {
+    background: transparentize($color: $dark, $amount: 0.7);
+}
+
 .text-dark-lighter {
     color: $dark-lighter !important;
 }
@@ -189,6 +193,14 @@
     border: 2px solid $white;
 }
 
+.border-bottom-white {
+    border-bottom: 1px solid $white;
+}
+
+.border-bottom-white-10 {
+    border-bottom: 1px solid transparentize($color: $white, $amount: 0.9);
+}
+
 .text-overlay-gradient {
     background: linear-gradient(180deg, rgba(72, 60, 88, 0) 0%, #483B58 100%);
 }
@@ -231,10 +243,18 @@
     .hover\:bg-white-#{$name}:hover {
         background-color: color.adjust(#FFFFFF, $alpha: $val);
     }
+
+    .hover\:text-white:hover {
+        color: $white !important;
+    }
 }
 
 @for $i from 1 through 20 {
     .opacity-#{$i*5} {
+        opacity: #{$i/20};
+    }
+
+    .\!opacity-#{$i*5} {
         opacity: #{$i/20};
     }
 

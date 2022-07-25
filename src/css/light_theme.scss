@@ -26,6 +26,10 @@ body.body--light {
     color: $secondary !important;
   }
 
+  .hover\:text-white:hover {
+    color: $secondary !important;
+  }
+
   .\!bg-white-10 {
     background: $white;
   }
@@ -126,6 +130,10 @@ body.body--light {
 
     &text-white {
       color: #FFFFFF !important;
+    }
+    
+    &border-bottom-secondary-10 {
+        border-bottom: 1px solid transparentize($color: $secondary, $amount: 0.9);
     }
 
     &text-secondary-320 {

@@ -17,7 +17,7 @@ import {
 import { Coin } from "@cosmjs/proto-signing"
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { DeliverTxResponse } from "@cosmjs/stargate"
-import { notifyError, notifySuccess, notifyLoading } from "@/common"
+import { notifyError, notifySuccess } from "@/common"
 import ChainClient from "@/services/chain-client"
 
 export interface TransactionManagerState {
@@ -64,10 +64,10 @@ const useTransactionManager = defineStore("transactionManager", {
 						let txId
 
 						manager.on("ontxsigned", () => {
-							loader = notifyLoading(
+							/* loader = notifyLoading(
 								"Transaction Broadcasting",
 								"Waiting for transaction to be included in the block"
-							)
+							) */
 
 							txId = this.addBroadcastingTx(
 								from,
@@ -142,10 +142,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
+						/* loader = notifyLoading(
 							"Transaction Broadcasting",
 							"Waiting for transaction to be included in the block"
-						)
+						) */
 
 						txId = this.addBroadcastingTx(
 							osmosisToken,
@@ -215,10 +215,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
+						/* loader = notifyLoading(
 							"Transaction Broadcasting",
 							"Waiting for transaction to be included in the block"
-						)
+						) */
 
 						txId = this.addBroadcastingTx(
 							osmosisToken,
@@ -297,10 +297,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
+						/* loader = notifyLoading(
 							"Transaction Broadcasting",
 							"Waiting for transaction to be included in the block"
-						)
+						) */
 
 						txId = this.addBroadcastingTx(
 							osmosisToken,
@@ -375,10 +375,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
+						/* loader = notifyLoading(
 							"Transaction Broadcasting",
 							"Waiting for transaction to be included in the block"
-						)
+						) */
 
 						txId = this.addBroadcastingTx(
 							osmosisToken,
@@ -466,10 +466,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
+						/* loader = notifyLoading(
 							"Transaction Broadcasting",
 							"Waiting for transaction to be included in the block"
-						)
+						) */
 
 						txId = this.addBroadcastingTx(
 							osmosisToken,
@@ -548,10 +548,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
+						/* loader = notifyLoading(
 							"Transaction Broadcasting",
 							"Waiting for transaction to be included in the block"
-						)
+						) */
 
 						txId = this.addBroadcastingTx(
 							osmosisToken,
@@ -622,10 +622,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
+						/* loader = notifyLoading(
 							"Transaction Broadcasting",
 							"Waiting for transaction to be included in the block"
-						)
+						) */
 
 						txId = this.addBroadcastingTx(
 							bitsongToken,
@@ -813,6 +813,10 @@ const useTransactionManager = defineStore("transactionManager", {
 		clearSubscription() {
 			clearInterval(subscription)
 		},
+		reset() {
+			this.clearSubscription()
+			this.transactions = []
+		},
 	},
 	getters: {
 		swapTransactions: ({ transactions }) => {
@@ -824,6 +828,11 @@ const useTransactionManager = defineStore("transactionManager", {
 			return transactions.filter(
 				(transaction) => transaction.status === TransactionStatus.PENDING
 			)
+		},
+		loading({ loadingBroadcasting }) {
+			const pendingTransactions = this.pendingTransactions as Transaction[]
+
+			return pendingTransactions.length > 0 || loadingBroadcasting
 		},
 	},
 	persistedState: {
