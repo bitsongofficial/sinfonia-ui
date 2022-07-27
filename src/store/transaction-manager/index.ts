@@ -24,6 +24,7 @@ export interface TransactionManagerState {
 	loadingSign: boolean
 	loadingBroadcasting: boolean
 	transactions: Transaction[]
+	notificationUnread: boolean
 }
 
 const pollingTime = 5000
@@ -34,6 +35,7 @@ const useTransactionManager = defineStore("transactionManager", {
 		loadingSign: false,
 		loadingBroadcasting: false,
 		transactions: [],
+		notificationUnread: false,
 	}),
 	actions: {
 		// IBC Transfer from Token to Osmosis or viceversa
@@ -707,6 +709,7 @@ const useTransactionManager = defineStore("transactionManager", {
 			})
 
 			this.transactions = transactions.slice(0, 10)
+			this.notificationUnread = true
 
 			this.clearSubscription()
 

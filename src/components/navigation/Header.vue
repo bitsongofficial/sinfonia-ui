@@ -54,6 +54,7 @@ const otherSwapTransactions = computed(() =>
 					:class="{
 						active: transactionStore.loading,
 					}"
+					@click="transactionStore.notificationUnread = false"
 				>
 					<div class="notification-icon">
 						<q-icon
@@ -62,7 +63,12 @@ const otherSwapTransactions = computed(() =>
 							:name="resolveIcon('bell', 18, 18)"
 						/>
 
-						<q-badge class="bg-gradient small-notification-badge" floating rounded />
+						<q-badge
+							class="bg-gradient small-notification-badge"
+							floating
+							rounded
+							v-if="transactionStore.notificationUnread"
+						/>
 					</div>
 
 					<Spinner class="notification-spinner" />
