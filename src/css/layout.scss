@@ -753,12 +753,24 @@ $s in $custom-sizes {
         margin-top: 34px !important;
     }
 
+    .q-mt-md-none {
+        margin-top: 0 !important;
+    }
+
     .justify-end-md {
         justify-content: flex-end !important;
     }
 
     .align-items-end-md {
         align-items: flex-end !important;
+    }
+
+    .items-center-md {
+        align-items: center !important;
+    }
+
+    .row-md {
+        flex-direction: row !important;
     }
 
     @each $k,

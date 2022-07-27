@@ -131,13 +131,15 @@ const fantokens = computed(() =>
 )
 </script>
 <template>
-	<Title class="q-mb-8">FanTokens</Title>
-	<div class="row items-center q-mb-24">
-		<p class="fs-16 !leading-24 q-mr-14 opacity-40">The total market cap is</p>
+	<div class="column row-md items-center-md q-mb-42">
+		<Title class="q-mr-32">FanTokens</Title>
+		<div class="row items-center q-mt-24 q-mt-md-none">
+			<p class="fs-16 !leading-24 q-mr-14 opacity-40">The total market cap is</p>
 
-		<p class="fs-21 !leading-24 text-weight-medium text-gradient">
-			$ {{ totalMarketCap }}
-		</p>
+			<p class="fs-21 !leading-24 text-weight-medium text-gradient">
+				$ {{ totalMarketCap }}
+			</p>
+		</div>
 	</div>
 	<div class="row items-center justify-between q-mb-42">
 		<div class="q-mt-8">
@@ -147,7 +149,7 @@ const fantokens = computed(() =>
 		<div
 			@click="focussed"
 			@focusout="searchFocussed = false"
-			:class="'relative-position cursor-pointer group'"
+			class="relative-position cursor-pointer group q-mt-24 q-mt-md-none"
 		>
 			<div
 				class="absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md"

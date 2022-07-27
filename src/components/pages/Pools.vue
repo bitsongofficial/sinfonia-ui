@@ -3,13 +3,14 @@ import { computed, ref } from "vue"
 import { RouterLink } from "vue-router"
 import { Pool, TableColumn } from "@/types"
 import { balancedCurrency, percentage } from "@/common"
+import { reduce } from "lodash"
+import { BigNumber } from "bignumber.js"
 import Title from "@/components/typography/Title.vue"
 import usePools from "@/store/pools"
 import PoolCard from "@/components/cards/PoolCard.vue"
 import FillSelect from "@/components/inputs/FillSelect.vue"
 import LightTable from "@/components/LightTable.vue"
 import ImagePair from "@/components/ImagePair.vue"
-
 const poolsStore = usePools()
 
 const poolsViewType = ref("GRID")
@@ -95,11 +96,25 @@ const poolsColumns = computed<TableColumn[]>(() => [
 		},
 	},
 ])
+
+const totalLiquidity = computed(() => {
+	const liquidity = reduce(
+		poolsStore.pools,
+		(prev, pool) => {
+			const currLiquidity = new BigNumber(pool.liquidity)
+
+			return prev.plus(currLiquidity)
+		},
+		new BigNumber(0)
+	)
+
+	return balancedCurrency(liquidity.toString())
+})
 </script>
 
 <template>
 	<template v-if="poolsStore.myPools.length > 0">
-		<Title class="q-mb-50">My Pools</Title>
+		<Title class="q-mb-42">My Pools</Title>
 		<div
 			class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
 		>
@@ -114,9 +129,16 @@ const poolsColumns = computed<TableColumn[]>(() => [
 		</div>
 	</template>
 	<div class="grid grid-cols-8 q-mb-42">
-		<Title class="q-mb-32 col-span-12 col-span-md-4" :font-size="21">
-			All Pools
-		</Title>
+		<div class="row items-center col-span-8 q-mb-32">
+			<Title class="q-mr-32">All Pools</Title>
+			<div class="row items-center q-mt-24 q-mt-md-none">
+				<p class="fs-16 !leading-24 q-mr-14 opacity-40">The total liquidity is</p>
+
+				<p class="fs-21 !leading-24 text-weight-medium text-gradient">
+					$ {{ totalLiquidity }}
+				</p>
+			</div>
+		</div>
 		<p
 			class="fs-16 !leading-24 q-mb-32 q-mb-md-none opacity-40 col-span-12 col-span-md-5"
 		>
@@ -126,7 +148,7 @@ const poolsColumns = computed<TableColumn[]>(() => [
 		</p>
 
 		<FillSelect
-			class="col-start-6 col-start-span-md-1 col-span-6 col-span-md-1 col-end-md-9"
+			class="col-start-span-md-1 col-span-8 col-span-md-1 col-end-md-9"
 			v-model="poolsViewType"
 			:options="poolsViewTypes"
 		/>
