@@ -17,15 +17,14 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 				no-spinner
 			/>
 
-			<h1 class="fs-36 !leading-46 font-weight-medium text-center q-mt-0 q-mb-32">
-				Ops, lorem ipsum is missing.
+			<h1 class="fs-36 !leading-42 font-weight-medium text-center q-mt-0 q-mb-32">
+				I'm coming home, I'm<br />coming home
 			</h1>
 
 			<p
 				class="fs-16 !leading-24 opacity-40 text-center q-mb-62 white-space-pre-line"
 			>
-				Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many
-				international hits, among which the best-known is undoubtedly.
+				Nothing to do here at moment, more prizes coming soon!<br />Stay updated
 			</p>
 
 			<div class="flex justify-center">
