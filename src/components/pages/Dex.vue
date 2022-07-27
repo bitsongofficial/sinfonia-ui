@@ -152,7 +152,7 @@ const fantokens = computed(() =>
 			<div
 				class="absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md"
 			></div>
-			<div class="flex items-center q-px-28 q-py-14">
+			<div class="flex items-center q-px-28 q-py-8 min-h-44">
 				<q-input
 					class="q-mr-4 min-size-input"
 					input-class="q-py-0"
@@ -163,7 +163,11 @@ const fantokens = computed(() =>
 					:debounce="500"
 					dense
 				/>
-				<q-icon size="15px" :name="resolveIcon('search', 13, 13)"></q-icon>
+				<q-icon
+					class="opacity-40"
+					size="15px"
+					:name="resolveIcon('search', 13, 13)"
+				></q-icon>
 			</div>
 		</div>
 	</div>
