@@ -294,7 +294,7 @@ const onSwapClick = () => {
 			:style="$q.dark.isActive ? topImageStyle : topImageStyleLight"
 		>
 			<div
-				class="absolute left-0 top-100 full-width window-height main-page-background-helper"
+				class="absolute left-0 top-99 full-width window-height main-page-background-helper"
 			></div>
 		</div>
 		<div class="row q-mb-70">
