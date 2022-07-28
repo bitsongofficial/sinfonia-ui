@@ -386,7 +386,7 @@ const setMaxAmount = () => {
 }
 
 const setHalfAmount = () => {
-	const halfAmount = new BigNumber(available.value).div(2).toString()
+	const halfAmount = new BigNumber(available.value).div(2).toFixed(6, 8)
 
 	setFieldValue("fromAmount", halfAmount, { force: true })
 	fromAmountChange(halfAmount)
