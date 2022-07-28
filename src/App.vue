@@ -73,7 +73,11 @@ const disclaimerUpdate = (value: boolean) => {
 					<div
 						class="full-width q-ml-auto !w-xs-2/3 !w-sm-3/4 !w-md-5/6 q-pt-42 all-pointer-events"
 					>
-						<RouterView></RouterView>
+						<router-view v-slot="{ Component }">
+							<Transition name="fade" mode="out-in">
+								<component :is="Component"></component>
+							</Transition>
+						</router-view>
 					</div>
 				</div>
 			</div>

@@ -113,98 +113,100 @@ const totalLiquidity = computed(() => {
 </script>
 
 <template>
-	<template v-if="poolsStore.myPools.length > 0">
-		<Title class="q-mb-42">My Pools</Title>
-		<div
-			class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
-		>
-			<RouterLink
-				v-for="(userPool, index) in poolsStore.myPools"
-				:key="index"
-				:to="'/pools/' + userPool.id"
-				class="block full-height"
+	<div>
+		<template v-if="poolsStore.myPools.length > 0">
+			<Title class="q-mb-42">My Pools</Title>
+			<div
+				class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
 			>
-				<PoolCard :pool="userPool" user-pool />
-			</RouterLink>
-		</div>
-	</template>
-	<div class="grid grid-cols-8 q-mb-42">
-		<div class="column row-md align-items-end-md col-span-8 q-mb-32">
-			<Title class="q-mr-32">All Pools</Title>
-			<div class="row items-end q-mt-24 q-mt-md-none">
-				<p class="fs-16 !leading-22 q-mr-14 opacity-40">The total liquidity is</p>
-
-				<p class="fs-21 !leading-24 text-weight-medium text-gradient">
-					$ {{ totalLiquidity }}
-				</p>
+				<RouterLink
+					v-for="(userPool, index) in poolsStore.myPools"
+					:key="index"
+					:to="'/pools/' + userPool.id"
+					class="block full-height"
+				>
+					<PoolCard :pool="userPool" user-pool />
+				</RouterLink>
 			</div>
-		</div>
-		<p
-			class="fs-16 !leading-24 q-mb-md-none opacity-40 col-span-12 col-span-md-5"
-		>
-			On this page you can become a Liquidity Provider participating on the
-			Sinfonia Pools. Bond your tokens to provide security to the network and earn
-			rewards
-		</p>
-
-		<FillSelect
-			class="col-start-span-md-1 col-span-8 col-span-md-1 col-end-md-9"
-			v-model="poolsViewType"
-			:options="poolsViewTypes"
-		/>
-	</div>
-	<div
-		class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30"
-		v-if="poolsViewType === 'GRID'"
-	>
-		<RouterLink
-			v-for="(pool, index) in poolsStore.pools"
-			:key="index"
-			:to="'/pools/' + pool.id"
-			class="block full-height"
-		>
-			<PoolCard :pool="pool" />
-		</RouterLink>
-	</div>
-	<LightTable
-		v-else
-		:pagination="pagination"
-		:rows="poolsStore.pools"
-		:columns="poolsColumns"
-		@row-click="
-			(_, row) => {
-				$router.push(`/pools/${row.id}`)
-			}
-		"
-	>
-		<template v-slot:body-cell-id="slotProps">
-			<q-td :props="slotProps">
-				<div class="flex no-wrap items-center">
-					<span class="opacity-40 q-mr-10">
-						{{ slotProps.row.id }}
-					</span>
-				</div>
-			</q-td>
 		</template>
-		<template v-slot:body-cell-tokenPair="slotProps">
-			<q-td :props="slotProps">
-				<div class="flex no-wrap items-center">
-					<ImagePair
-						:coins="slotProps.row.coins"
-						class="q-mr-30"
-						:size="30"
-						:smaller-size="24"
-						:offset="[0, 0]"
-						inline
-					/>
-					<p class="fs-14 text-weight-medium">
-						<template v-for="(coin, index) of slotProps.row.coins" :key="index">
-							{{ coin.token.symbol
-							}}{{ index === slotProps.row.coins.length - 1 ? "" : " · " }}
-						</template>
+		<div class="grid grid-cols-8 q-mb-42">
+			<div class="column row-md align-items-end-md col-span-8 q-mb-32">
+				<Title class="q-mr-32">All Pools</Title>
+				<div class="row items-end q-mt-24 q-mt-md-none">
+					<p class="fs-16 !leading-22 q-mr-14 opacity-40">The total liquidity is</p>
+
+					<p class="fs-21 !leading-24 text-weight-medium text-gradient">
+						$ {{ totalLiquidity }}
 					</p>
 				</div>
-			</q-td>
-		</template>
-	</LightTable>
+			</div>
+			<p
+				class="fs-16 !leading-24 q-mb-md-none opacity-40 col-span-12 col-span-md-5"
+			>
+				On this page you can become a Liquidity Provider participating on the
+				Sinfonia Pools. Bond your tokens to provide security to the network and earn
+				rewards
+			</p>
+
+			<FillSelect
+				class="col-start-span-md-1 col-span-8 col-span-md-1 col-end-md-9"
+				v-model="poolsViewType"
+				:options="poolsViewTypes"
+			/>
+		</div>
+		<div
+			class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30"
+			v-if="poolsViewType === 'GRID'"
+		>
+			<RouterLink
+				v-for="(pool, index) in poolsStore.pools"
+				:key="index"
+				:to="'/pools/' + pool.id"
+				class="block full-height"
+			>
+				<PoolCard :pool="pool" />
+			</RouterLink>
+		</div>
+		<LightTable
+			v-else
+			:pagination="pagination"
+			:rows="poolsStore.pools"
+			:columns="poolsColumns"
+			@row-click="
+				(_, row) => {
+					$router.push(`/pools/${row.id}`)
+				}
+			"
+		>
+			<template v-slot:body-cell-id="slotProps">
+				<q-td :props="slotProps">
+					<div class="flex no-wrap items-center">
+						<span class="opacity-40 q-mr-10">
+							{{ slotProps.row.id }}
+						</span>
+					</div>
+				</q-td>
+			</template>
+			<template v-slot:body-cell-tokenPair="slotProps">
+				<q-td :props="slotProps">
+					<div class="flex no-wrap items-center">
+						<ImagePair
+							:coins="slotProps.row.coins"
+							class="q-mr-30"
+							:size="30"
+							:smaller-size="24"
+							:offset="[0, 0]"
+							inline
+						/>
+						<p class="fs-14 text-weight-medium">
+							<template v-for="(coin, index) of slotProps.row.coins" :key="index">
+								{{ coin.token.symbol
+								}}{{ index === slotProps.row.coins.length - 1 ? "" : " · " }}
+							</template>
+						</p>
+					</div>
+				</q-td>
+			</template>
+		</LightTable>
+	</div>
 </template>

@@ -131,52 +131,54 @@ const fantokens = computed(() =>
 )
 </script>
 <template>
-	<div class="column row-md align-items-end-md q-mb-42">
-		<Title class="q-mr-32">FanTokens</Title>
-		<div class="row items-end q-mt-24 q-mt-md-none">
-			<p class="fs-16 !leading-22 q-mr-14 opacity-40">The total market cap is</p>
+	<div>
+		<div class="column row-md align-items-end-md q-mb-42">
+			<Title class="q-mr-32">FanTokens</Title>
+			<div class="row items-end q-mt-24 q-mt-md-none">
+				<p class="fs-16 !leading-22 q-mr-14 opacity-40">The total market cap is</p>
 
-			<p class="fs-21 !leading-24 text-weight-medium text-gradient">
-				$ {{ totalMarketCap }}
-			</p>
-		</div>
-	</div>
-	<div class="row items-center justify-between q-mb-42">
-		<div class="q-mt-8">
-			<Tabs v-model="fantokensType" :options="tabs" border />
-		</div>
-
-		<div
-			@click="focussed"
-			@focusout="searchFocussed = false"
-			class="relative-position cursor-pointer group q-mt-24 q-mt-md-none"
-		>
-			<div
-				class="absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md"
-			></div>
-			<div class="flex items-center q-px-28 q-py-8 min-h-44">
-				<q-input
-					class="q-mr-4 min-size-input"
-					input-class="q-py-0"
-					hide-bottom-space
-					borderless
-					v-show="searchActive"
-					v-model="searchValue"
-					:debounce="500"
-					dense
-				/>
-				<q-icon
-					class="opacity-40"
-					size="15px"
-					:name="resolveIcon('search', 13, 13)"
-				></q-icon>
+				<p class="fs-21 !leading-24 text-weight-medium text-gradient">
+					$ {{ totalMarketCap }}
+				</p>
 			</div>
 		</div>
+		<div class="row items-center justify-between q-mb-42">
+			<div class="q-mt-8">
+				<Tabs v-model="fantokensType" :options="tabs" border />
+			</div>
+
+			<div
+				@click="focussed"
+				@focusout="searchFocussed = false"
+				class="relative-position cursor-pointer group q-mt-24 q-mt-md-none"
+			>
+				<div
+					class="absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md"
+				></div>
+				<div class="flex items-center q-px-28 q-py-8 min-h-44">
+					<q-input
+						class="q-mr-4 min-size-input"
+						input-class="q-py-0"
+						hide-bottom-space
+						borderless
+						v-show="searchActive"
+						v-model="searchValue"
+						:debounce="500"
+						dense
+					/>
+					<q-icon
+						class="opacity-40"
+						size="15px"
+						:name="resolveIcon('search', 13, 13)"
+					></q-icon>
+				</div>
+			</div>
+		</div>
+		<CryptoTable
+			:columns="columns"
+			:rows="fantokens"
+			:pagination="pagination"
+			@row-click="onRowClick"
+		/>
 	</div>
-	<CryptoTable
-		:columns="columns"
-		:rows="fantokens"
-		:pagination="pagination"
-		@row-click="onRowClick"
-	/>
 </template>

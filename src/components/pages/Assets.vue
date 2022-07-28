@@ -204,278 +204,287 @@ const onSwapClick = (pool: Pool) => {
 </script>
 
 <template>
-	<Title class="q-mb-16">Assets</Title>
-	<div class="row q-mb-46">
-		<div class="col-12 col-md-6 col-lg-5">
-			<p class="fs-16 opacity-40 !leading-24 q-mb-none q-mt-16">
-				Sinfonia is a multi chain platform. On this app you might have assets on
-				different chains (ex. BitSong, Osmosis, Cosmos etc.). In order to be able to
-				provide liquidity on the pools, you might need to perform interchain
-				transfers.
-			</p>
-		</div>
-		<div class="column col-12 col-md-6 col-lg-3 items-start align-items-end-md">
-			<p
-				class="fs-12 text-weight-medium text-gradient !leading-24 q-mb-none text-right q-mt-xs-10 q-mt-md-10 text-left-xs text-left-md"
-			>
-				EPOCH END
-			</p>
-
-			<vue-countdown
-				:time="poolsStore.payoutTime"
-				v-slot="{ hours, minutes }"
-				class="fs-32 !leading-48 text-white text-weight-medium text-right text-left-xs text-left-md"
-			>
-				{{ hours }}h <span class="opacity-20">:</span> {{ minutes }}m
-			</vue-countdown>
-
-			<div class="row items-center" v-if="poolsStore.payoutTime <= 0">
-				<p class="fs-12 !leading-16 opacity-40 q-mr-10">
-					Now we’re distributing rewards. Things could be delayed.
+	<div>
+		<Title class="q-mb-16">Assets</Title>
+		<div class="row q-mb-46">
+			<div class="col-12 col-md-6 col-lg-5">
+				<p class="fs-16 opacity-40 !leading-24 q-mb-none q-mt-16">
+					Sinfonia is a multi chain platform. On this app you might have assets on
+					different chains (ex. BitSong, Osmosis, Cosmos etc.). In order to be able
+					to provide liquidity on the pools, you might need to perform interchain
+					transfers.
+				</p>
+			</div>
+			<div class="column col-12 col-md-6 col-lg-3 items-start align-items-end-md">
+				<p
+					class="fs-12 text-weight-medium text-gradient !leading-24 q-mb-none text-right q-mt-xs-10 q-mt-md-10 text-left-xs text-left-md"
+				>
+					EPOCH END
 				</p>
 
-				<q-icon
-					:name="resolveIcon('info', 15, 15)"
-					size="14px"
-					color="white"
-					class="opacity-40"
-				/>
+				<vue-countdown
+					:time="poolsStore.payoutTime"
+					v-slot="{ hours, minutes }"
+					class="fs-32 !leading-48 text-white text-weight-medium text-right text-left-xs text-left-md"
+				>
+					{{ hours }}h <span class="opacity-20">:</span> {{ minutes }}m
+				</vue-countdown>
+
+				<div class="row items-center" v-if="poolsStore.payoutTime <= 0">
+					<p class="fs-12 !leading-16 opacity-40 q-mr-10">
+						Now we’re distributing rewards. Things could be delayed.
+					</p>
+
+					<q-icon
+						:name="resolveIcon('info', 15, 15)"
+						size="14px"
+						color="white"
+						class="opacity-40"
+					/>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row text-weight-medium q-col-gutter-lg q-mb-75">
-		<div class="col-8 col-md-4 col-lg-2">
-			<InfoCard header="Total assets">
-				{{ balancedCurrency(bankStore.total) }} $
-			</InfoCard>
+		<div class="row text-weight-medium q-col-gutter-lg q-mb-75">
+			<div class="col-8 col-md-4 col-lg-2">
+				<InfoCard header="Total assets">
+					{{ balancedCurrency(bankStore.total) }} $
+				</InfoCard>
+			</div>
+			<div class="col-8 col-md-4 col-lg-2">
+				<InfoCard header="Available assets">
+					{{ balancedCurrency(bankStore.available) }} $
+				</InfoCard>
+			</div>
+			<div class="col-8 col-md-4 col-lg-2">
+				<InfoCard header="Bonded assets">
+					{{ balancedCurrency(poolsStore.totalBondedFiat) }} $
+				</InfoCard>
+			</div>
+			<div class="col-8 col-md-4 col-lg-2">
+				<InfoCard header="BTSG price">
+					{{ balancedCurrency(pricesStore.btsgPrice) }} $
+				</InfoCard>
+			</div>
 		</div>
-		<div class="col-8 col-md-4 col-lg-2">
-			<InfoCard header="Available assets">
-				{{ balancedCurrency(bankStore.available) }} $
-			</InfoCard>
-		</div>
-		<div class="col-8 col-md-4 col-lg-2">
-			<InfoCard header="Bonded assets">
-				{{ balancedCurrency(poolsStore.totalBondedFiat) }} $
-			</InfoCard>
-		</div>
-		<div class="col-8 col-md-4 col-lg-2">
-			<InfoCard header="BTSG price">
-				{{ balancedCurrency(pricesStore.btsgPrice) }} $
-			</InfoCard>
-		</div>
-	</div>
-	<template v-if="bankStore.gammPoolBalances.length > 0">
-		<p class="q-mb-21 fs-21 text-weight-medium">GAMM Pool</p>
+		<template v-if="bankStore.gammPoolBalances.length > 0">
+			<p class="q-mb-21 fs-21 text-weight-medium">GAMM Pool</p>
 
-		<LightTable
-			:rows="bankStore.gammPoolBalances"
-			:columns="gammPoolsColumns"
-			class="q-mb-66"
-			@row-click="
-				(_, row) => {
-					$router.push(`/pools/${row.pool.id}`)
-				}
-			"
-		>
-			<template v-slot:body-cell-id="slotProps">
-				<q-td :props="slotProps">
-					<div class="flex no-wrap items-center">
-						<span class="opacity-40 q-mr-10">
-							{{ slotProps.row.pool.id }}
-						</span>
-					</div>
-				</q-td>
-			</template>
-			<template v-slot:body-cell-tokenPair="slotProps">
-				<q-td :props="slotProps">
-					<div class="flex no-wrap items-center">
-						<ImagePair
-							:coins="slotProps.row.pool.coins"
-							class="q-mr-30"
-							:size="30"
-							:smaller-size="24"
-							:offset="[0, 0]"
-							inline
-						/>
-						<p class="fs-14 text-weight-medium">
-							<template v-for="(coin, index) of slotProps.row.pool.coins" :key="index">
-								{{ coin.token.symbol
-								}}{{ index === slotProps.row.pool.coins.length - 1 ? "" : " · " }}
-							</template>
-						</p>
-					</div>
-				</q-td>
-			</template>
-			<template v-slot:body-cell-actions="slotProps">
-				<q-td :props="slotProps">
-					<IconButton
-						icon="vertical-dots"
-						width="4"
-						height="16"
-						class="fs-14 s-28 q-mr--4 opacity-30 hover:opacity-100"
-						@click.stop=""
-					>
-						<PoolContextMenu
-							:no-parent-event="false"
-							:touch-position="false"
-							@swap="onSwapClick(slotProps.row.pool)"
-							@liquidity="currentGammPool = slotProps.row.pool"
-						/>
-					</IconButton>
-				</q-td>
-			</template>
-		</LightTable>
-		<LiquidityModal
-			@hide="currentGammPool = undefined"
-			v-model="showGammPoolModal"
-			:pool="currentGammPool"
-			v-if="currentGammPool"
-		/>
-	</template>
-
-	<p class="q-mb-21 fs-21 text-weight-medium">Tokens</p>
-	<div>
-		<LightTable
-			:pagination="pagination"
-			:columns="columnsWrapper"
-			:rows="bankStore.balances"
-		>
-			<template v-slot:body="rowProps">
-				<q-tr :props="rowProps">
-					<q-td>
+			<LightTable
+				:rows="bankStore.gammPoolBalances"
+				:columns="gammPoolsColumns"
+				class="q-mb-66"
+				@row-click="
+					(_, row) => {
+						$router.push(`/pools/${row.pool.id}`)
+					}
+				"
+			>
+				<template v-slot:body-cell-id="slotProps">
+					<q-td :props="slotProps">
 						<div class="flex no-wrap items-center">
 							<span class="opacity-40 q-mr-10">
-								{{ rowProps.rowIndex + 1 }}
+								{{ slotProps.row.pool.id }}
 							</span>
 						</div>
 					</q-td>
-					<q-td>
-						<div class="row items-center no-wrap">
-							<q-avatar size="30px" class="q-mr-22">
-								<img :src="rowProps.row.logos.default" :alt="rowProps.row.name" />
-							</q-avatar>
-							<p class="text-weight-medium fs-15 q-mr-22">
-								{{ rowProps.row.symbol }}
-							</p>
-							<p class="text-weight-medium fs-13 opacity-40">
-								{{ rowProps.row.name }}
+				</template>
+				<template v-slot:body-cell-tokenPair="slotProps">
+					<q-td :props="slotProps">
+						<div class="flex no-wrap items-center">
+							<ImagePair
+								:coins="slotProps.row.pool.coins"
+								class="q-mr-30"
+								:size="30"
+								:smaller-size="24"
+								:offset="[0, 0]"
+								inline
+							/>
+							<p class="fs-14 text-weight-medium">
+								<template
+									v-for="(coin, index) of slotProps.row.pool.coins"
+									:key="index"
+								>
+									{{ coin.token.symbol
+									}}{{ index === slotProps.row.pool.coins.length - 1 ? "" : " · " }}
+								</template>
 							</p>
 						</div>
 					</q-td>
-					<q-td>
-						<p class="text-white text-right">
-							{{ balancedCurrency(rowProps.row.price) }} $
-						</p>
-					</q-td>
-					<q-td>
-						<p
-							:class="
-								'text-right ' + (rowProps.row.availableFiat > 0 ? '' : 'opacity-40')
-							"
+				</template>
+				<template v-slot:body-cell-actions="slotProps">
+					<q-td :props="slotProps">
+						<IconButton
+							icon="vertical-dots"
+							width="4"
+							height="16"
+							class="fs-14 s-28 q-mr--4 opacity-30 hover:opacity-100"
+							@click.stop=""
 						>
-							{{
-								rowProps.row.availableFiat
-									? `${balancedCurrency(rowProps.row.availableFiat)} $`
-									: "-"
-							}}
-						</p>
+							<PoolContextMenu
+								:no-parent-event="false"
+								:touch-position="false"
+								@swap="onSwapClick(slotProps.row.pool)"
+								@liquidity="currentGammPool = slotProps.row.pool"
+							/>
+						</IconButton>
 					</q-td>
-					<q-td>
-						<p
-							class="text-right"
-							:class="{
-								'q-pr-16': !haveMultiChainBalances,
-								'opacity-40': rowProps.row.available <= 0,
-							}"
-						>
-							{{
-								rowProps.row.available
-									? `${balancedCurrency(rowProps.row.available)} ${rowProps.row.symbol}`
-									: "-"
-							}}
-						</p>
-					</q-td>
-					<q-td v-if="haveMultiChainBalances">
-						<div class="flex justify-center">
-							<q-avatar
-								v-for="(chain, i) in rowProps.row.chains"
-								:key="i"
-								size="20px"
-								:class="i > 0 ? 'q-ml-8' : ''"
+				</template>
+			</LightTable>
+			<LiquidityModal
+				@hide="currentGammPool = undefined"
+				v-model="showGammPoolModal"
+				:pool="currentGammPool"
+				v-if="currentGammPool"
+			/>
+		</template>
+
+		<p class="q-mb-21 fs-21 text-weight-medium">Tokens</p>
+		<div>
+			<LightTable
+				:pagination="pagination"
+				:columns="columnsWrapper"
+				:rows="bankStore.balances"
+			>
+				<template v-slot:body="rowProps">
+					<q-tr :props="rowProps">
+						<q-td>
+							<div class="flex no-wrap items-center">
+								<span class="opacity-40 q-mr-10">
+									{{ rowProps.rowIndex + 1 }}
+								</span>
+							</div>
+						</q-td>
+						<q-td>
+							<div class="row items-center no-wrap">
+								<q-avatar size="30px" class="q-mr-22">
+									<img :src="rowProps.row.logos.default" :alt="rowProps.row.name" />
+								</q-avatar>
+								<p class="text-weight-medium fs-15 q-mr-22">
+									{{ rowProps.row.symbol }}
+								</p>
+								<p class="text-weight-medium fs-13 opacity-40">
+									{{ rowProps.row.name }}
+								</p>
+							</div>
+						</q-td>
+						<q-td>
+							<p class="text-white text-right">
+								{{ balancedCurrency(rowProps.row.price) }} $
+							</p>
+						</q-td>
+						<q-td>
+							<p
+								:class="
+									'text-right ' + (rowProps.row.availableFiat > 0 ? '' : 'opacity-40')
+								"
 							>
-								<img :src="chain.logos.default" />
-							</q-avatar>
-						</div>
-					</q-td>
-					<q-td>
-						<div
-							class="cursor-pointer fs-21 text-right light:hover:text-primary text-dark"
-							@click="openTransfer(rowProps.row)"
-							v-if="rowProps.row.ibcEnabled && authStore.session"
-						>
-							<q-icon :name="resolveIcon('swap', 21, 16)"></q-icon>
-						</div>
-					</q-td>
-					<q-td v-if="haveMultiChainBalances">
-						<div
-							class="flex justify-end hover:opacity-100 cursor-pointer fs-12"
-							@click="rowProps.expand = !rowProps.expand"
-							v-if="rowProps.row.chains.length > 0"
-						>
-							<div :class="'w-fit ' + (rowProps.expand ? 'rotate-180' : '')">
-								<q-icon :name="resolveIcon('keyboard-arrow-down', 10, 6)"></q-icon>
+								{{
+									rowProps.row.availableFiat
+										? `${balancedCurrency(rowProps.row.availableFiat)} $`
+										: "-"
+								}}
+							</p>
+						</q-td>
+						<q-td>
+							<p
+								class="text-right"
+								:class="{
+									'q-pr-16': !haveMultiChainBalances,
+									'opacity-40': rowProps.row.available <= 0,
+								}"
+							>
+								{{
+									rowProps.row.available
+										? `${balancedCurrency(rowProps.row.available)} ${rowProps.row.symbol}`
+										: "-"
+								}}
+							</p>
+						</q-td>
+						<q-td v-if="haveMultiChainBalances">
+							<div class="flex justify-center">
+								<q-avatar
+									v-for="(chain, i) in rowProps.row.chains"
+									:key="i"
+									size="20px"
+									:class="i > 0 ? 'q-ml-8' : ''"
+								>
+									<img :src="chain.logos.default" />
+								</q-avatar>
 							</div>
-						</div>
-					</q-td>
-				</q-tr>
-				<q-tr
-					v-for="chain in rowProps.row.chains"
-					:props="rowProps"
-					no-hover
-					v-show="rowProps.expand"
-				>
-					<q-td> </q-td>
-					<q-td>
-						<div class="flex justify-start q-ml-52">
-							<div class="text-capitalize text-white fs-13 flex">
-								<p>{{ chain.name }} Chain</p>
+						</q-td>
+						<q-td>
+							<div
+								class="cursor-pointer fs-21 text-right light:hover:text-primary text-dark"
+								@click="openTransfer(rowProps.row)"
+								v-if="rowProps.row.ibcEnabled && authStore.session"
+							>
+								<q-icon :name="resolveIcon('swap', 21, 16)"></q-icon>
 							</div>
-						</div>
-					</q-td>
-					<q-td> </q-td>
-					<q-td>
-						<p :class="'text-right ' + (chain.availableFiat > 0 ? '' : 'opacity-40')">
-							{{
-								chain.availableFiat ? `${balancedCurrency(chain.availableFiat)} $` : "-"
-							}}
-						</p>
-					</q-td>
-					<q-td>
-						<p :class="'text-right ' + (chain.available > 0 ? '' : 'opacity-40')">
-							{{
-								chain.available
-									? `${balancedCurrency(chain.available)} ${rowProps.row.symbol}`
-									: "-"
-							}}
-						</p>
-					</q-td>
-					<q-td>
-						<div class="flex justify-center">
-							<q-avatar size="16px">
-								<img :src="chain.logos.default" />
-							</q-avatar>
-						</div>
-					</q-td>
-					<q-td> </q-td>
-					<q-td v-if="haveMultiChainBalances"></q-td>
-				</q-tr>
-			</template>
-		</LightTable>
-		<TransferModal
-			v-model="openTransferDialog"
-			:coin="transferFrom"
-			v-if="transferFrom && openTransferDialog"
-		/>
+						</q-td>
+						<q-td v-if="haveMultiChainBalances">
+							<div
+								class="flex justify-end hover:opacity-100 cursor-pointer fs-12"
+								@click="rowProps.expand = !rowProps.expand"
+								v-if="rowProps.row.chains.length > 0"
+							>
+								<div :class="'w-fit ' + (rowProps.expand ? 'rotate-180' : '')">
+									<q-icon :name="resolveIcon('keyboard-arrow-down', 10, 6)"></q-icon>
+								</div>
+							</div>
+						</q-td>
+					</q-tr>
+					<q-tr
+						v-for="chain in rowProps.row.chains"
+						:props="rowProps"
+						no-hover
+						v-show="rowProps.expand"
+					>
+						<q-td> </q-td>
+						<q-td>
+							<div class="flex justify-start q-ml-52">
+								<div class="text-capitalize text-white fs-13 flex">
+									<p>{{ chain.name }} Chain</p>
+								</div>
+							</div>
+						</q-td>
+						<q-td> </q-td>
+						<q-td>
+							<p
+								:class="'text-right ' + (chain.availableFiat > 0 ? '' : 'opacity-40')"
+							>
+								{{
+									chain.availableFiat
+										? `${balancedCurrency(chain.availableFiat)} $`
+										: "-"
+								}}
+							</p>
+						</q-td>
+						<q-td>
+							<p :class="'text-right ' + (chain.available > 0 ? '' : 'opacity-40')">
+								{{
+									chain.available
+										? `${balancedCurrency(chain.available)} ${rowProps.row.symbol}`
+										: "-"
+								}}
+							</p>
+						</q-td>
+						<q-td>
+							<div class="flex justify-center">
+								<q-avatar size="16px">
+									<img :src="chain.logos.default" />
+								</q-avatar>
+							</div>
+						</q-td>
+						<q-td> </q-td>
+						<q-td v-if="haveMultiChainBalances"></q-td>
+					</q-tr>
+				</template>
+			</LightTable>
+			<TransferModal
+				v-model="openTransferDialog"
+				:coin="transferFrom"
+				v-if="transferFrom && openTransferDialog"
+			/>
+		</div>
 	</div>
 </template>
