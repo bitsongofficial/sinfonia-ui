@@ -333,11 +333,11 @@ const onSwapClick = () => {
 				</div>
 			</div>
 			<div class="col-8 col-md-4 col-xl-2">
-				<div ref="heightRef">
+				<div ref="heightRef" class="full-height">
 					<CardWithHeader
 						header="Pool composition"
 						:padding="0"
-						class="q-px-30 q-py-20"
+						class="q-px-30 q-py-20 full-height"
 					>
 						<div
 							class="flex justify-between"
