@@ -14,6 +14,7 @@ import ImagePair from "@/components/ImagePair.vue"
 const poolsStore = usePools()
 
 const poolsViewType = ref("GRID")
+const myPoolsViewType = ref("GRID")
 
 const poolsViewTypes = [
 	{
@@ -115,9 +116,20 @@ const totalLiquidity = computed(() => {
 <template>
 	<div>
 		<template v-if="poolsStore.myPools.length > 0">
-			<Title class="q-mb-42">My Pools</Title>
+			<div class="grid grid-cols-8 q-mb-42">
+				<div class="column row-md align-items-end-md col-span-8 col-span-md-4">
+					<Title class="q-mr-42">My Pools</Title>
+				</div>
+
+				<FillSelect
+					class="col-start-span-md-1 col-span-8 col-span-md-1 col-start-md-8"
+					v-model="myPoolsViewType"
+					:options="poolsViewTypes"
+				/>
+			</div>
 			<div
 				class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
+				v-if="myPoolsViewType === 'GRID'"
 			>
 				<RouterLink
 					v-for="(userPool, index) in poolsStore.myPools"
@@ -128,6 +140,48 @@ const totalLiquidity = computed(() => {
 					<PoolCard :pool="userPool" user-pool />
 				</RouterLink>
 			</div>
+			<LightTable
+				v-else
+				:pagination="pagination"
+				:rows="poolsStore.myPools"
+				:columns="poolsColumns"
+				class="q-mb-74"
+				@row-click="
+					(_, row) => {
+						$router.push(`/pools/${row.id}`)
+					}
+				"
+			>
+				<template v-slot:body-cell-id="slotProps">
+					<q-td :props="slotProps">
+						<div class="flex no-wrap items-center">
+							<span class="opacity-40 q-mr-10">
+								{{ slotProps.row.id }}
+							</span>
+						</div>
+					</q-td>
+				</template>
+				<template v-slot:body-cell-tokenPair="slotProps">
+					<q-td :props="slotProps">
+						<div class="flex no-wrap items-center">
+							<ImagePair
+								:coins="slotProps.row.coins"
+								class="q-mr-30"
+								:size="30"
+								:smaller-size="24"
+								:offset="[0, 0]"
+								inline
+							/>
+							<p class="fs-14 text-weight-medium">
+								<template v-for="(coin, index) of slotProps.row.coins" :key="index">
+									{{ coin.token.symbol
+									}}{{ index === slotProps.row.coins.length - 1 ? "" : " · " }}
+								</template>
+							</p>
+						</div>
+					</q-td>
+				</template>
+			</LightTable>
 		</template>
 		<div class="grid grid-cols-8 q-mb-42">
 			<div class="column row-md align-items-end-md col-span-8 q-mb-32">
