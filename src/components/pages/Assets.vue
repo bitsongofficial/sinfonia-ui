@@ -397,7 +397,7 @@ const onSwapClick = (pool: Pool) => {
 						</p>
 					</q-td>
 					<q-td v-if="haveMultiChainBalances">
-						<div class="flex justify-center q-mx-50">
+						<div class="flex justify-center">
 							<q-avatar
 								v-for="(chain, i) in rowProps.row.chains"
 								:key="i"
@@ -461,7 +461,7 @@ const onSwapClick = (pool: Pool) => {
 						</p>
 					</q-td>
 					<q-td>
-						<div class="flex justify-center q-mx-50">
+						<div class="flex justify-center">
 							<q-avatar size="16px">
 								<img :src="chain.logos.default" />
 							</q-avatar>

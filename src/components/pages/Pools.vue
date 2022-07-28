@@ -140,7 +140,7 @@ const totalLiquidity = computed(() => {
 			</div>
 		</div>
 		<p
-			class="fs-16 !leading-24 q-mb-32 q-mb-md-none opacity-40 col-span-12 col-span-md-5"
+			class="fs-16 !leading-24 q-mb-md-none opacity-40 col-span-12 col-span-md-5"
 		>
 			On this page you can become a Liquidity Provider participating on the
 			Sinfonia Pools. Bond your tokens to provide security to the network and earn
