@@ -216,12 +216,12 @@ const nextPage = () => {
 	</div>
 	<div class="flex items-center justify-between q-mb-36">
 		<div class="flex items-center row">
-			<p class="fs-18 font-weight-medium">Registered Accounts</p>
-			<p class="fs-18 font-weight-medium q-ml-20">
+			<p class="fs-18 text-weight-medium">Registered Accounts</p>
+			<p class="fs-18 text-weight-medium q-ml-20">
 				{{ twitterStore.totalAccounts }}
 			</p>
-			<p class="fs-18 font-weight-medium text-primary q-ml-64">Eligible</p>
-			<p class="fs-18 font-weight-medium text-primary q-ml-12">
+			<p class="fs-18 text-weight-medium text-primary q-ml-64">Eligible</p>
+			<p class="fs-18 text-weight-medium text-primary q-ml-12">
 				{{ twitterStore.totalEligibles }}
 			</p>
 		</div>

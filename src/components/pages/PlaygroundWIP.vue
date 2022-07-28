@@ -17,7 +17,7 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 				no-spinner
 			/>
 
-			<h1 class="fs-36 !leading-42 font-weight-medium text-center q-mt-0 q-mb-32">
+			<h1 class="fs-36 !leading-42 text-weight-medium text-center q-mt-0 q-mb-32">
 				I'm coming home, I'm<br />coming home
 			</h1>
 

@@ -78,7 +78,7 @@ const swapperTokenChange = () => {
 					<Card
 						ref="heightRef"
 						:padding="0"
-						class="q-px-12 q-pt-32 q-pb-20 q-pa-sm-20 q-pa-md-36"
+						class="q-px-12 q-pt-32 q-pb-20 q-pa-sm-20 q-px-md-30 q-py-md-40"
 						transparency="5"
 					>
 						<Swapper

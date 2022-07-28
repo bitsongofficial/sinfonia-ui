@@ -136,12 +136,20 @@ body.body--light {
         border-bottom: 1px solid transparentize($color: $secondary, $amount: 0.9);
     }
 
+    &bg-primary-dark-500-5 {
+      background: transparentize($color: $primary-dark-500, $amount: 0.95) !important;
+    }
+
     &text-secondary-320 {
       color: $secondary-320 !important;
     }
 
     &border-secondary-350 {
       border-color: $secondary-350 !important;
+    }
+
+    &border-white {
+      border: 2px solid $white;
     }
 
     &bg-secondary-320 {

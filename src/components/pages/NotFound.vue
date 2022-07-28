@@ -55,7 +55,7 @@ const message = sample(messages)
 				no-spinner
 			/>
 
-			<h1 class="fs-36 !leading-46 font-weight-medium text-center q-mt-0 q-mb-32">
+			<h1 class="fs-36 !leading-46 text-weight-medium text-center q-mt-0 q-mb-32">
 				Ops, something is missing.
 			</h1>
 

@@ -63,7 +63,7 @@ onUnmounted(() => {
 		:options="options"
 		:dropdown-icon="resolveIcon('dropdown', 11, 7)"
 		borderless
-		class="text-white q-px-select-20 w-full"
+		class="coin-select text-white w-full bg-primary-dark-500 light:bg-primary-dark-500-5 rounded-30 q-px-20"
 		input-class="q-px-20 q-py-20"
 		popup-content-class="rounded-20 q-px-10 q-py-0"
 		:menu-offset="[0, 30]"
@@ -84,3 +84,23 @@ onUnmounted(() => {
 		</template>
 	</q-select>
 </template>
+
+<style lang="scss" scoped>
+.coin-select {
+	&:deep(.q-field__marginal) {
+		color: inherit;
+	}
+
+	@media screen and (max-width: $breakpoint-xs) {
+		background: none !important;
+		padding: 0 !important;
+
+		&:deep(.q-field__control),
+		&:deep(.q-field__native) {
+			min-height: 24px;
+			height: 24px;
+			padding: 0;
+		}
+	}
+}
+</style>

@@ -194,14 +194,14 @@ const distributionAmount = (amount: string) => {
 		</div>
 	</div>
 	<div class="flex row items-center justify-between q-mb-34">
-		<p class="fs-18 font-weight-medium">Rules</p>
+		<p class="fs-18 text-weight-medium">Rules</p>
 
 		<div class="column items-end" v-if="!leaderboardLoadingDisabled">
-			<p class="fs-16 font-weight-medium">
+			<p class="fs-16 text-weight-medium">
 				<span class="opacity-50 q-mr-20">Snapshot</span>
 				{{ twitterStore.snapshotDateFormatted }}
 			</p>
-			<p class="fs-12 font-weight-medium opacity-50 q-mt-4">
+			<p class="fs-12 text-weight-medium opacity-50 q-mt-4">
 				(block height: {{ twitterStore.blockHeight }})
 			</p>
 		</div>
@@ -264,7 +264,7 @@ const distributionAmount = (amount: string) => {
 	</div>
 	<div class="flex items-center justify-between">
 		<div class="flex items-center row">
-			<p class="fs-18 font-weight-medium">Leaderboard</p>
+			<p class="fs-18 text-weight-medium">Leaderboard</p>
 		</div>
 		<div
 			@click="focussed"

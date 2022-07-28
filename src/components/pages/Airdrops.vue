@@ -140,7 +140,7 @@ onUnmounted(() => {
 	</div>
 	<div class="row items-start justify-between q-mb-30">
 		<div class="flex items-center col-8 col-md-6 col-lg-5">
-			<p class="fs-16 opacity-40 font-weight-medium !leading-24">
+			<p class="fs-16 opacity-40 text-weight-medium !leading-24">
 				Artists, Record Labels, Festivals and Clubs are waiting for you!<br />Discover
 				free giveaways of FanTokens to the community.
 			</p>

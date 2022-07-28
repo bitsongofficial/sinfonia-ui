@@ -7,10 +7,14 @@ const props = withDefaults(
 		noPadding?: boolean
 		color?: string
 		textTransform?: string
+		fontSize?: string
+		minHeight?: boolean
 	}>(),
 	{
 		color: "gradient",
 		textTransform: "capitalize",
+		fontSize: "12",
+		minHeight: true,
 	}
 )
 
@@ -20,7 +24,9 @@ const lightModeClasses = computed(() =>
 
 const classes = computed(
 	() =>
-		`fs-12 text-weight-medium text-${props.textTransform} ${
+		`fs-${props.fontSize} ${
+			props.minHeight ? "" : "min-h-auto"
+		} text-weight-medium text-${props.textTransform} ${
 			lightModeClasses.value
 		} bg-${props.color} ${props.noPadding ? "" : "q-py-12 q-px-22"} ${
 			props.withIcon ? "btn-with-icon" : ""

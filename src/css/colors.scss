@@ -76,6 +76,22 @@
     border: 2px solid rgba(122, 110, 124, 0.15);
 }
 
+.border-white-8 {
+    border: 2px solid transparentize($color: $white, $amount: 0.92);
+}
+
+.text-dark {
+    color: $dark !important;
+}
+
+.bg-primary-dark-500 {
+    background: $primary-dark-500 !important;
+}
+
+.bg-primary-dark-500-5 {
+    background: transparentize($color: $primary-dark-500, $amount: 0.95) !important;
+}
+
 .text-dark-light {
     color: $dark-light !important;
 }
