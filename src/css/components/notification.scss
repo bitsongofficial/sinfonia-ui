@@ -104,6 +104,13 @@
         & .notification-spinner {
             display: block;
         }
+
+        &.fantoken {
+            &::before {
+                @extend .\!bg-white-20;
+                @extend .\!shadow-10;
+            }
+        }
     }
 }
 

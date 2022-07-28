@@ -81,6 +81,10 @@
     border-radius: 20px;
     padding: 40px 25px 10px;
 
+    &.fantoken {
+        background: rgb(21 5 29 / 20%);
+    }
+
     .q-item {
         padding-top: 11px;
         padding-bottom: 11px;

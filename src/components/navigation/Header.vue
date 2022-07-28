@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router"
+import { RouterLink, useRoute } from "vue-router"
 import { useQuasar } from "quasar"
 import { resolveIcon, balancedCurrency } from "@/common"
 import { formatDistanceToNow } from "date-fns"
@@ -17,6 +17,7 @@ import useAuth from "@/store/auth"
 import useTransactionManager from "@/store/transaction-manager"
 
 const $q = useQuasar()
+const route = useRoute()
 const bankStore = useBank()
 const authStore = useAuth()
 const transactionStore = useTransactionManager()
@@ -32,6 +33,8 @@ const previewSwapTransactions = computed(() =>
 const otherSwapTransactions = computed(() =>
 	transactionStore.swapTransactions.slice(5, 10)
 )
+
+const fantoken = computed(() => route.name === "Fantoken")
 </script>
 <template>
 	<div v-if="$q.screen.gt.md" class="row justify-between items-center">
@@ -53,6 +56,7 @@ const otherSwapTransactions = computed(() =>
 					class="notification-wrapper column items-center justify-center position-relative cursor-pointer q-mr-32"
 					:class="{
 						active: transactionStore.loading,
+						fantoken,
 					}"
 					@click="transactionStore.notificationUnread = false"
 				>
@@ -78,6 +82,9 @@ const otherSwapTransactions = computed(() =>
 						anchor="bottom middle"
 						self="top middle"
 						:offset="[0, 32]"
+						:class="{
+							fantoken,
+						}"
 					>
 						<div
 							class="row items-center justify-between q-pb-16 q-mb-14 border-bottom-white-10 light:border-bottom-secondary-10"

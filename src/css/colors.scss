@@ -161,6 +161,10 @@
     box-shadow: 0px 0px 20px transparentize($color: $alternative, $amount: 0.9);
 }
 
+.\!shadow-10 {
+    box-shadow: 0px 0px 20px transparentize($color: $alternative, $amount: 0.9) !important;
+}
+
 .shadow-20-alt {
     box-shadow: 0px 0px 20px 20px rgba(34, 13, 51, 0.3);
 }
@@ -227,8 +231,7 @@
 }
 
 .main-page-background-helper {
-    background: $secondary;
-    filter: blur(200px);
+    background: $accent;
     backdrop-filter: blur(100px);
 }
 
