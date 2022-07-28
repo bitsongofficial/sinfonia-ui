@@ -129,10 +129,10 @@ const totalLiquidity = computed(() => {
 		</div>
 	</template>
 	<div class="grid grid-cols-8 q-mb-42">
-		<div class="row items-center col-span-8 q-mb-32">
+		<div class="column row-md align-items-end-md col-span-8 q-mb-32">
 			<Title class="q-mr-32">All Pools</Title>
-			<div class="row items-center q-mt-24 q-mt-md-none">
-				<p class="fs-16 !leading-24 q-mr-14 opacity-40">The total liquidity is</p>
+			<div class="row items-end q-mt-24 q-mt-md-none">
+				<p class="fs-16 !leading-22 q-mr-14 opacity-40">The total liquidity is</p>
 
 				<p class="fs-21 !leading-24 text-weight-medium text-gradient">
 					$ {{ totalLiquidity }}
