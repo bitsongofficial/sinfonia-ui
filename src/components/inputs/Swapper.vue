@@ -201,7 +201,12 @@ const balancesWatcher = watch(
 
 const fromSwappableBalances = computed(() => {
 	if (toCoin.value) {
-		return bankStore.swappableBalancesByRouteDenom(toCoin.value)
+		return bankStore
+			.swappableBalancesByRouteDenom(toCoin.value)
+			.sort(
+				(left, right) =>
+					parseFloat(right.available ?? "0") - parseFloat(left.available ?? "0")
+			)
 	}
 
 	return []
@@ -209,7 +214,12 @@ const fromSwappableBalances = computed(() => {
 
 const toSwappableBalances = computed(() => {
 	if (fromCoin.value) {
-		return bankStore.swappableBalancesByRouteDenom(fromCoin.value)
+		return bankStore
+			.swappableBalancesByRouteDenom(fromCoin.value)
+			.sort(
+				(left, right) =>
+					parseFloat(right.available ?? "0") - parseFloat(left.available ?? "0")
+			)
 	}
 
 	return []

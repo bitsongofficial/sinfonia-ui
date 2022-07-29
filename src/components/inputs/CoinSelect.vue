@@ -53,7 +53,7 @@ onUnmounted(() => {
 			class="w-full cursor-pointer position-relative z-1"
 			@click="openMenu = !openMenu"
 			:class="{
-				'no-pointer-events z-20': openMenu,
+				'no-pointer-events z-30': openMenu,
 			}"
 		>
 			<q-select
@@ -62,6 +62,9 @@ onUnmounted(() => {
 				:dropdown-icon="resolveIcon('dropdown', 11, 7)"
 				borderless
 				class="coin-select text-white w-full bg-primary-dark-500 light:bg-primary-dark-500-5 rounded-30 q-px-20 no-pointer-events"
+				:class="{
+					'light:bg-white': openMenu,
+				}"
 				input-class="q-px-20 q-py-20"
 				ref="select"
 			>
@@ -71,7 +74,11 @@ onUnmounted(() => {
 			</q-select>
 		</div>
 
-		<CoinSelectMenu v-model="openMenu" />
+		<CoinSelectMenu
+			v-model="openMenu"
+			v-model:option="value"
+			:options="options"
+		/>
 	</div>
 </template>
 

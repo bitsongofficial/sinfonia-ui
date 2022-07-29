@@ -1,23 +1,39 @@
 <script setup lang="ts">
+import { balancedCurrency } from "@/common"
 import { TokenBalance } from "@/types"
 
 defineProps<{
 	coin: TokenBalance
 }>()
+
+defineEmits<{
+	(e: "click", value: TokenBalance): void
+}>()
 </script>
 
 <template>
-	<q-item class="full-width q-pa-0 text-white text-weight-medium light:group">
+	<div
+		class="full-width q-pa-0 text-white text-weight-medium light:group cursor-pointer"
+		@click="$emit('click', coin)"
+	>
 		<div class="flex-1 flex justify-between items-center q-py-0 no-wrap">
-			<div class="q-mr-20">
-				<p class="fs-12">{{ coin.name }}</p>
+			<q-avatar class="q-mr-18" size="24px">
+				<img :src="coin.logos.default" :alt="coin.name" />
+			</q-avatar>
+
+			<div class="column no-wrap q-mr-auto">
+				<p class="fs-14 !leading-18 text-weight-medium text-uppercase q-mb-2">
+					{{ coin.symbol }}
+				</p>
+
+				<p class="fs-13 !leading-16 text-weight-medium opacity-40">
+					{{ coin.name }}
+				</p>
 			</div>
-			<div class="flex items-center no-wrap">
-				<p class="fs-10 q-mr-20 q-mt-2 light:group-hover:text-primary">{{ coin.symbol }}</p>
-				<q-avatar size="24px">
-					<img :src="coin.logos.default" alt="" />
-				</q-avatar>
-			</div>
+
+			<p class="fs-14 !leading-18 text-weight-medium">
+				{{ balancedCurrency(coin.available ?? 0) }}
+			</p>
 		</div>
-	</q-item>
+	</div>
 </template>

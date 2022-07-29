@@ -140,6 +140,10 @@ body.body--light {
       background: transparentize($color: $primary-dark-500, $amount: 0.95) !important;
     }
 
+    &bg-gray-900 {
+      background: $gray-900 !important;
+    }
+
     &text-secondary-320 {
       color: $secondary-320 !important;
     }

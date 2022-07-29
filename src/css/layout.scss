@@ -7,6 +7,10 @@
     padding: 0 30px;
 }
 
+.overscroll-behavior-y-contain {
+    overscroll-behavior-y: contain;
+}
+
 .reserve-scrollbar {
     scrollbar-gutter: stable;
 }
@@ -263,7 +267,11 @@
 }
 
 .z-20 {
-    z-index: 20;
+    z-index: 20 !important;
+}
+
+.z-30 {
+    z-index: 30;
 }
 
 .-z-1 {
