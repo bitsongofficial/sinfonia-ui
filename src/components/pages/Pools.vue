@@ -118,7 +118,7 @@ const totalLiquidity = computed(() => {
 		<template v-if="poolsStore.myPools.length > 0">
 			<div class="grid grid-cols-8 q-mb-42">
 				<div class="column row-md align-items-end-md col-span-8 col-span-md-4">
-					<Title class="q-mr-42">My Pools</Title>
+					<Title class="q-mr-42 q-mb-xs-24">My Pools</Title>
 				</div>
 
 				<FillSelect
@@ -195,7 +195,7 @@ const totalLiquidity = computed(() => {
 				</div>
 			</div>
 			<p
-				class="fs-16 !leading-24 q-mb-md-none opacity-40 col-span-12 col-span-md-5"
+				class="fs-16 !leading-24 q-mb-md-none opacity-40 col-span-12 col-span-md-5 q-mb-xs-24"
 			>
 				On this page you can become a Liquidity Provider participating on the
 				Sinfonia Pools. Bond your tokens to provide security to the network and earn

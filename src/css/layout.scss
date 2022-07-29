@@ -600,6 +600,10 @@ $s in $custom-sizes {
         justify-content: center !important;
     }
 
+    .justify-between-xs {
+        justify-content: space-between !important;
+    }
+
     .relative-position-xs {
         position: relative;
     }
