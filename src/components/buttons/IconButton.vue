@@ -13,5 +13,7 @@ const color = props.color ? props.color : "white"
 		:icon="icon"
 		:size="props.size"
 		class="no-hover"
-	/>
+	>
+		<slot></slot>
+	</q-btn>
 </template>

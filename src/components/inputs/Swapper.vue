@@ -14,18 +14,17 @@ import {
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
 import { useForm } from "vee-validate"
-import InlineButton from "@/components/buttons/InlineButton.vue"
+import { BigNumber } from "bignumber.js"
+import { Decimal } from "decimal.js"
+import { coin } from "@cosmjs/proto-signing"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import InformativeTooltip from "@/components/tooltips/InformativeTooltip.vue"
 import useBank from "@/store/bank"
 import usePools from "@/store/pools"
-import BigNumber from "bignumber.js"
-import Decimal from "decimal.js"
 import useConfig from "@/store/config"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 import SwapperField from "@/components/inputs/SwapperField.vue"
-import { coin } from "@cosmjs/proto-signing"
 
 const bankStore = useBank()
 const poolsStore = usePools()
@@ -200,9 +199,32 @@ const balancesWatcher = watch(
 	}
 )
 
+const getOsmosisBalance = (coin: TokenBalance) => {
+	const osmosisToken = configStore.osmosisToken
+
+	if (osmosisToken && coin.chains) {
+		const chain = coin.chains.find((el) => el.symbol === osmosisToken.symbol)
+
+		if (chain) {
+			return chain.available ?? "0"
+		}
+	}
+
+	return "0"
+}
+
 const fromSwappableBalances = computed(() => {
 	if (toCoin.value) {
-		return bankStore.swappableBalancesByRouteDenom(toCoin.value)
+		const tokens = bankStore.swappableBalancesByRouteDenom(toCoin.value)
+
+		tokens.push(toCoin.value)
+
+		return tokens.sort((left, right) => {
+			const rightAvailable = getOsmosisBalance(right)
+			const leftAvailable = getOsmosisBalance(left)
+
+			return parseFloat(rightAvailable) - parseFloat(leftAvailable)
+		})
 	}
 
 	return []
@@ -210,7 +232,16 @@ const fromSwappableBalances = computed(() => {
 
 const toSwappableBalances = computed(() => {
 	if (fromCoin.value) {
-		return bankStore.swappableBalancesByRouteDenom(fromCoin.value)
+		const tokens = bankStore.swappableBalancesByRouteDenom(fromCoin.value)
+
+		tokens.push(fromCoin.value)
+
+		return tokens.sort((left, right) => {
+			const rightAvailable = getOsmosisBalance(right)
+			const leftAvailable = getOsmosisBalance(left)
+
+			return parseFloat(rightAvailable) - parseFloat(leftAvailable)
+		})
 	}
 
 	return []
@@ -386,6 +417,13 @@ const setMaxAmount = () => {
 	fromAmountChange(available.value)
 }
 
+const setHalfAmount = () => {
+	const halfAmount = new BigNumber(available.value).div(2).toFixed(6, 8)
+
+	setFieldValue("fromAmount", halfAmount, { force: true })
+	fromAmountChange(halfAmount)
+}
+
 const onSubmit = handleSubmit(() => {
 	if (
 		swapCoin.value &&
@@ -421,43 +459,52 @@ const onSubmit = handleSubmit(() => {
 
 <template>
 	<div>
-		<div class="flex justify-between items-center q-mb-20">
-			<p class="fs-14 opacity-30">Swap from</p>
-			<InlineButton @click="invert" class="lt-sm">
-				<p class="fs-12 q-mr-12">Swap tokens</p>
-				<span class="fs-10 text-primary">
-					<q-icon :name="resolveIcon('swap', 21, 16)" />
-				</span>
-			</InlineButton>
+		<div
+			class="flex justify-between q-mb-12 items-center q-pr-md-5 hidden block-xs q-pl-9"
+		>
+			<p
+				class="fs-15 text-weight-medium !leading-20 opacity-30 light:text-secondary light:opacity-100"
+			>
+				Swap From
+			</p>
 		</div>
 		<SwapperField
+			class="q-mb-16 q-mb-xs-20"
+			label="Swap from"
 			name="fromAmount"
 			v-model:coin="fromCoin"
+			:other-coin="toCoin"
 			show-max
 			:swap-amount-fiat="swapAmountFiat"
 			:options="fromSwappableBalances"
 			:disable-max="!gtnZero(available)"
 			@max-click="setMaxAmount"
+			@half-click="setHalfAmount"
 			@update:model-value="fromAmountChange"
-		/>
-		<div class="flex justify-between q-mt-20 q-mb-16 items-center">
-			<p class="fs-14 opacity-30">Swap to</p>
-			<InlineButton @click="invert" class="gt-xs">
-				<p class="fs-12 q-mr-12">Swap tokens</p>
-				<span class="fs-10 text-primary">
-					<q-icon :name="resolveIcon('swap', 21, 16)" />
-				</span>
-			</InlineButton>
-		</div>
-		<SwapperField
-			name="toAmount"
-			v-model:coin="toCoin"
-			class="q-mb-24"
-			:options="toSwappableBalances"
-			@update:model-value="toAmountChange"
+			@invert="invert"
 		/>
 		<div
-			class="q-py-15 q-px-20 q-px-md-30 bg-white-5 light:bg-gray-light rounded-25 fs-14 q-mb-57 q-mb-xs-27"
+			class="flex justify-between q-mb-12 items-center q-pr-md-5 hidden block-xs q-pl-9"
+		>
+			<p
+				class="fs-15 text-weight-medium !leading-20 opacity-30 light:text-secondary light:opacity-100"
+			>
+				Swap To
+			</p>
+		</div>
+		<SwapperField
+			label="Swap to"
+			name="toAmount"
+			v-model:coin="toCoin"
+			:other-coin="fromCoin"
+			class="q-mb-16 q-mb-xs-20"
+			:options="toSwappableBalances"
+			@update:model-value="toAmountChange"
+			@invert="invert"
+			swap-button
+		/>
+		<div
+			class="q-py-15 q-px-20 q-px-md-30 border-white-8 light:border-white rounded-25 fs-14 q-mb-57 q-mb-xs-27"
 		>
 			<div
 				class="cursor-pointer flex justify-between items-center"
@@ -573,7 +620,11 @@ const onSubmit = handleSubmit(() => {
 					fit
 					type="submit"
 					@click="onSubmit"
-					:disable="!authStore.session || !meta.valid"
+					:disable="
+						!authStore.session ||
+						!meta.valid ||
+						transactionManagerStore.loadingAndSign
+					"
 					class="q-px-xs-70"
 				>
 					Swap Tokens

@@ -45,6 +45,8 @@ const useLiquidityModal = (
 		pool.value.coins.map((el) => el.token.denom)
 	)
 
+	const loading = computed(() => transactionManagerStore.loadingAndSign)
+
 	const balances = computed(() => {
 		const balancesMap = {}
 
@@ -351,6 +353,7 @@ const useLiquidityModal = (
 		removePercent,
 		priceImpact,
 		meta,
+		loading,
 		onSubmit,
 		onExitPool,
 		changeToken,

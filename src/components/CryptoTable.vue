@@ -9,10 +9,18 @@ defineProps<{
 </script>
 
 <template>
-	<LightTable :rows="rows" :columns="columns">
+	<LightTable
+		class="q-px-0 q-py-0 table-no-padding"
+		:rows="rows"
+		:columns="columns"
+		no-background
+		header-border
+		alternative-index
+		:hide-bottom="false"
+	>
 		<template v-slot:body-cell-rank="slotProps">
 			<q-td :props="slotProps">
-				<span>{{ slotProps.row.rank }}</span>
+				<span class="fs-13 opacity-40 text-white">{{ slotProps.row.rank }}</span>
 			</q-td>
 		</template>
 		<template v-slot:body-cell-symbol="slotProps">
@@ -42,5 +50,6 @@ defineProps<{
 		<template v-for="(_, slot) of $slots" v-slot:[slot]="scope">
 			<slot :name="slot" v-bind="scope"></slot>
 		</template>
+		<template v-slot:bottom></template>
 	</LightTable>
 </template>

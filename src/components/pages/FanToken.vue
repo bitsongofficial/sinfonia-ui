@@ -5,14 +5,18 @@ import {
 	percentageRange,
 	smallNumber,
 } from "@/common/numbers"
-import { computed, onMounted, onUnmounted, ref, watch } from "vue"
-import { resolveIcon } from "@/common/resolvers"
+import {
+	computed,
+	ComputedGetter,
+	onMounted,
+	onUnmounted,
+	ref,
+	watch,
+} from "vue"
 import { TableColumn } from "@/types/table"
 import { Pool, FantokenTab } from "@/types"
 import { useRoute, useRouter } from "vue-router"
-import StandardSelect from "@/components/inputs/StandardSelect.vue"
 import Tabs from "@/components/Tabs.vue"
-import Progress from "@/components/Progress.vue"
 import ImagePair from "@/components/ImagePair.vue"
 import InfoCard from "@/components/cards/InfoCard.vue"
 import CardWithHeader from "@/components/cards/CardWithHeader.vue"
@@ -20,16 +24,17 @@ import PercentageWithImage from "@/components/infographics/PercentageWithImage.v
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import Socials from "@/components/Socials.vue"
 import LightTable from "@/components/LightTable.vue"
-import WorkInProgress from "@/components/WorkInProgress.vue"
 import usePools from "@/store/pools"
 import useConfig from "@/store/config"
 import useBank from "@/store/bank"
 import BigNumber from "bignumber.js"
 import useMailchimp from "@/store/mailchimp"
+import useSettings from "@/store/settings"
 
 const poolsStore = usePools()
 const bankStore = useBank()
 const configStore = useConfig()
+const settingsStore = useSettings()
 const mailchimpStore = useMailchimp()
 const route = useRoute()
 const router = useRouter()
@@ -42,9 +47,27 @@ const fantokenWatcher = watch(
 	(current) => {
 		if (current) {
 			document.title = `${current.symbol} | ${current.name}'s Fantoken`
+
+			settingsStore.breadcrumbPageTitle = current.name
 		}
 	},
 	{ immediate: true }
+)
+
+const fantokensWatcher = watch(
+	() => configStore.rawFantokens,
+	(rawFantokens) => {
+		if (rawFantokens.length > 0 && !configStore.loading) {
+			if (!fantoken.value) {
+				router.replace({
+					name: "NotFound",
+				})
+			}
+		}
+	},
+	{
+		immediate: true,
+	}
 )
 
 const balance = computed(() => {
@@ -128,15 +151,15 @@ const tabs = computed(() => {
 
 	if (fantoken.value) {
 		const airdrop = fantoken.value.airdrop
-		/* const whitepaper = fantoken.value.whitepaper */
+		const whitepaper = fantoken.value.whitepaper
 
 		if (airdrop) {
 			links.push({ label: "Airdrop", url: airdrop.url })
 		}
 
-		/* if (whitepaper) {
+		if (whitepaper) {
 			links.push({ label: "Whitepaper", url: whitepaper.url })
-		} */
+		}
 	}
 
 	return links
@@ -148,7 +171,16 @@ const selectedStat = ref(stats[0])
 const email = ref("")
 const newsletter = ref(false)
 
-const poolsColumns: TableColumn[] = [
+const poolsColumns = computed<TableColumn[]>(() => [
+	{
+		name: "id",
+		align: "left",
+		label: "",
+		field: "id",
+		sortable: true,
+		headerClasses: "w-5",
+		classes: "w-5",
+	},
 	{
 		name: "tokenPair",
 		align: "left",
@@ -184,7 +216,7 @@ const poolsColumns: TableColumn[] = [
 		sortable: true,
 		format: (val: any) => `${balancedCurrency(val)} $`,
 	},
-]
+])
 
 const topImageStyle = computed(
 	() =>
@@ -226,6 +258,7 @@ onMounted(() => {
 onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
 	fantokenWatcher()
+	fantokensWatcher()
 })
 
 const subscribeMailchimp = () => {
@@ -261,7 +294,7 @@ const onSwapClick = () => {
 			:style="$q.dark.isActive ? topImageStyle : topImageStyleLight"
 		>
 			<div
-				class="absolute left-0 top-98 full-width full-height main-page-background-helper"
+				class="absolute left-0 top-99 full-width window-height main-page-background-helper"
 			></div>
 		</div>
 		<div class="row q-mb-70">
@@ -294,15 +327,6 @@ const onSwapClick = () => {
 				</div>
 			</div>
 			<div class="col-8 col-md-4 column items-end items-center-xs">
-				<!-- <div class="flex items-center q-mb-42">
-					<StandardSelect
-						color="dark"
-						v-model="selected"
-						:options="timeOptions"
-						class="q-mr-30 text-uppercase"
-					></StandardSelect>
-					<p class="fs-24">{{ percentage(coin.lastDayGain) }} %</p>
-				</div> -->
 				<div class="flex">
 					<div class="column items-end items-center-xs">
 						<p
@@ -324,101 +348,12 @@ const onSwapClick = () => {
 							{{ balancedCurrency(balance.availableFiat ?? "0") }} $
 						</p>
 					</div>
-					<!-- <div>
-						<p class="fs-12 text-dark q-mb-10 text-uppercase text-right">Backers</p>
-						<p class="fs-32">547</p>
-					</div> -->
 				</div>
 			</div>
 		</div>
 		<Tabs :options="tabs">
 			<template v-slot:info> </template>
 			<template v-slot:analytics>
-				<!-- <p class="fs-16 opacity-30 q-mb-12">Token</p>
-				<div class="flex justify-between items-center q-mb-30">
-					<p class="fs-32 text-weight-bold">
-						{{ fantoken.symbol }}
-					</p>
-					<div class="flex items-center">
-						<StandardSelect
-							v-model="selectedStat"
-							:options="stats"
-							class="q-mr-42"
-						></StandardSelect>
-						<q-btn-group
-							rounded
-							class="bg-dark-light light:bg-none light:before:fill light:before:bg-dark-light light:before:opacity-5 fs-12 opacity-40 text-lowercase"
-						>
-							<q-btn label="daily" class="opacity-100q-px-10 q-pl-12 q-py-8" />
-							<q-btn label="weekly" class="q-px-10" />
-							<q-btn label="monthly" class="q-px-10" />
-							<q-btn label="ytd" class="q-px-10" />
-							<q-btn label="all" class="q-px-10 q-pr-12 q-py-8" />
-						</q-btn-group>
-					</div>
-				</div>
-				<div class="row q-col-gutter-xl q-mb-44">
-					<div class="col-8 col-md-4 col-lg-6">
-						<img
-							src="@/assets/images/expanded_chart_placeholder.png"
-							alt=""
-							class="full-width"
-						/>
-					</div>
-					<div class="col-8 col-md-4 col-lg-2 relative-position q-pr-10 q-pb-10">
-						<div class="q-px-8">
-							<div class="flex justify-between q-mb-24">
-								<div>
-									<p class="fs-10 q-mb-12 text-uppercase opacity-60">min</p>
-									<p class="fs-18">{{ smallNumber(fantoken.price ?? "0") }} $</p>
-								</div>
-								<div>
-									<p class="fs-10 q-mb-12 text-uppercase opacity-60 text-right">max</p>
-									<p class="fs-18">{{ smallNumber(fantoken.price ?? "0") }} $</p>
-								</div>
-							</div>
-							<Progress :percentage="50" class="q-mb-34"></Progress>
-							<div class="flex justify-between items-center q-mb-20">
-								<p class="opacity-60 text-uppercase">volume</p>
-								<p class="fs-16">{{ balancedCurrency(0) }}</p>
-							</div>
-							<div class="flex justify-between items-center q-mb-20">
-								<p class="opacity-60 text-uppercase">volume</p>
-								<p class="fs-16">{{ balancedCurrency(0) }}</p>
-							</div>
-							<div class="flex justify-between items-center q-mb-20">
-								<p class="opacity-60 text-uppercase">volume</p>
-								<p class="fs-16">{{ balancedCurrency(0) }}</p>
-							</div>
-							<div class="flex justify-between items-center">
-								<p class="opacity-60 text-uppercase">volume</p>
-								<p class="fs-16">{{ balancedCurrency(0) }}</p>
-							</div>
-							<div class="separator-light q-my-28"></div>
-							<div class="flex justify-between items-center q-mb-10">
-								<p class="opacity-60">volume</p>
-								<div class="flex items-center">
-									<p class="fs-16 q-mr-18">{{ smallNumber(0) }}</p>
-									<q-icon
-										class="fs-12 opacity-30"
-										:name="resolveIcon('arrow-up', 14, 14)"
-									></q-icon>
-								</div>
-							</div>
-							<div class="flex justify-between items-center">
-								<p class="opacity-60">volume</p>
-								<div class="flex items-center">
-									<p class="fs-16 q-mr-18">{{ smallNumber(0) }}</p>
-									<q-icon
-										class="rotate-180 fs-12 opacity-30"
-										:name="resolveIcon('arrow-up', 14, 14)"
-									></q-icon>
-								</div>
-							</div>
-						</div>
-						<WorkInProgress> Price Data will be provided soon. </WorkInProgress>
-					</div>
-				</div> -->
 				<div class="q-mb-52">
 					<p class="fs-16 opacity-30 q-mb-24">Tokenomics</p>
 					<div class="row q-col-gutter-xl">
@@ -429,7 +364,7 @@ const onSwapClick = () => {
 						</div>
 						<div class="col-8 col-md-4 col-lg-2 overflow-down">
 							<InfoCard header="MARKET CAP" class="q-py-34">
-								{{ balancedCurrency(balance?.marketCap ?? "0") }}
+								{{ balancedCurrency(balance?.marketCap ?? "0") }} $
 							</InfoCard>
 						</div>
 					</div>
@@ -437,19 +372,6 @@ const onSwapClick = () => {
 				<div class="q-mb-52">
 					<p class="fs-16 opacity-30 q-mb-24">Pool Stats</p>
 					<div class="row q-col-gutter-xl">
-						<!-- <div class="col-8 col-lg-4">
-							<Card class="q-py-34">
-								<div class="flex justify-between items-stretch">
-									<div class="column justify-between">
-										<p class="fs-12 opacity-50 text-uppercase">liquidity</p>
-										<p class="fs-21">{{ balancedCurrency(154298) }} $</p>
-									</div>
-									<div>
-										<img src="@/assets/images/liquidity_chart_placeholder.png" alt="" />
-									</div>
-								</div>
-							</Card>
-						</div> -->
 						<div class="col-8 col-md-4 col-lg-2">
 							<InfoCard header="LIQUIDITY" class="q-py-34">
 								{{ balancedCurrency(poolsStats.liquidity) }} $
@@ -515,66 +437,8 @@ const onSwapClick = () => {
 							</div>
 						</div>
 					</div>
-					<!-- <div class="col-8 col-lg-4">
-						<p class="fs-16 opacity-30 q-mb-24">Community</p>
-						<Card class="q-mb-22" :padding="20">
-							<div class="flex justify-between items-stretch">
-								<div class="column justify-between">
-									<p class="fs-12 opacity-50 text-uppercase">liquidity</p>
-									<p class="fs-21">{{ balancedCurrency(154298) }} $</p>
-								</div>
-								<div>
-									<img src="@/assets/images/liquidity_chart_placeholder.png" alt="" />
-								</div>
-							</div>
-						</Card>
-						<div class="row q-col-gutter-lg">
-							<div class="col-8 col-md-4">
-								<InfoCard header="CLAY CIRCULATING " :padding="20">
-									{{ balancedCurrency(21600000) }}
-								</InfoCard>
-							</div>
-							<div class="col-8 col-md-4">
-								<InfoCard header="CLAY CIRCULATING " :padding="20">
-									{{ balancedCurrency(21600000) }}
-								</InfoCard>
-							</div>
-						</div>
-					</div> -->
 				</div>
 			</template>
-			<!-- <template v-slot:whitepaper>
-                <Sections :sections="sections">
-                    <template v-slot:bio>
-                        <div class="q-mb-60">
-                            <p class="fs-21 q-mb-48">BitSong introduces: Adam Clay</p>
-                            <p class="fs-14 text-weight-medium opacity-40">
-                                Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many international hits, among which the best-known is undoubtedly Born Again (Babylonia). Recognized as a dance music anthem worldwide, the song has been played and supported for more than a decade by the greatest international DJs, TVs and radio stations across the globe.
-    Other tracks such as Beautiful Life, Be Together, Shake It and Follow My Pamp (Gold record award in Italy and awarded Best Song at Italy’s Dance Music Awards 2018) have cemented the international caliber of Adam as an artist, topping the charts in many countries and collecting millions of views on YouTube and as many streamings on Spotify.
-
-    Adam Clay’s DJ set and live show is regarded as one of the most engaging and energetic performances in the world dance scene, with hundreds of shows under his belt in more than 20 countries spanning Europe, America, North Africa, Asia and the Middle East. Adam has shared the stage with numerous super stars, including the likes of Sean Paul, Snoop Dogg, 50 Cent, Pitbull, Craig David, Bob Sinclar, Fat Man Scoop, Willy William, Don Omar, Ferry Corsten and many, many more.
-
-    In addition to numerous live performances, he has notched up several television appearances as a guest star, including the opening night of the eighth season of Star Academy, one of the most popular talent shows worldwide broadcast by French-Lebanese TV channel LBC, with audience peaks of over 35,000,000. Adam has also featured on other famous TV fashion formats like "Model Look Of The Year," "World’s Next Top Model,” ”Miss Europe 2019," and “Miss Globe 2019.”
-    In 2017, 2018, and 2019 he was awarded Best Italian Dance Singer at the prestigious EnModa Music Awards on the beautiful island of Cyprus, which saw the participation of dozens of other international artists.
-                            </p>
-                        </div>
-                    </template>
-                    <template v-slot:altro>
-                        <div class="q-mb-60">
-                            <p class="fs-21 q-mb-48">BitSong introduces: Adam Clay</p>
-                            <p class="fs-14 text-weight-medium opacity-40">
-                                Adam Clay is a Barbadian-Italian singer, producer, DJ, and author of many international hits, among which the best-known is undoubtedly Born Again (Babylonia). Recognized as a dance music anthem worldwide, the song has been played and supported for more than a decade by the greatest international DJs, TVs and radio stations across the globe.
-    Other tracks such as Beautiful Life, Be Together, Shake It and Follow My Pamp (Gold record award in Italy and awarded Best Song at Italy’s Dance Music Awards 2018) have cemented the international caliber of Adam as an artist, topping the charts in many countries and collecting millions of views on YouTube and as many streamings on Spotify.
-
-    Adam Clay’s DJ set and live show is regarded as one of the most engaging and energetic performances in the world dance scene, with hundreds of shows under his belt in more than 20 countries spanning Europe, America, North Africa, Asia and the Middle East. Adam has shared the stage with numerous super stars, including the likes of Sean Paul, Snoop Dogg, 50 Cent, Pitbull, Craig David, Bob Sinclar, Fat Man Scoop, Willy William, Don Omar, Ferry Corsten and many, many more.
-
-    In addition to numerous live performances, he has notched up several television appearances as a guest star, including the opening night of the eighth season of Star Academy, one of the most popular talent shows worldwide broadcast by French-Lebanese TV channel LBC, with audience peaks of over 35,000,000. Adam has also featured on other famous TV fashion formats like "Model Look Of The Year," "World’s Next Top Model,” ”Miss Europe 2019," and “Miss Globe 2019.”
-    In 2017, 2018, and 2019 he was awarded Best Italian Dance Singer at the prestigious EnModa Music Awards on the beautiful island of Cyprus, which saw the participation of dozens of other international artists.
-                            </p>
-                        </div>
-                    </template>
-                </Sections>
-            </template> -->
 			<template v-slot:pools v-if="fantokenPools.length > 0">
 				<LightTable
 					:rows="fantokenPools"
@@ -587,23 +451,30 @@ const onSwapClick = () => {
 						}
 					"
 				>
+					<template v-slot:body-cell-id="slotProps">
+						<q-td :props="slotProps">
+							<div class="flex no-wrap items-center">
+								<span class="opacity-40 q-mr-10">
+									{{ slotProps.row.id }}
+								</span>
+							</div>
+						</q-td>
+					</template>
 					<template v-slot:body-cell-tokenPair="slotProps">
 						<q-td :props="slotProps">
 							<div class="flex no-wrap items-center">
-								<span class="opacity-40 q-mr-42">
-									{{ slotProps.rowIndex + 1 }}
-								</span>
 								<ImagePair
 									:coins="slotProps.row.coins"
 									class="q-mr-30"
-									:size="32"
-									:smaller-size="26"
-									:offset="[-8, -1]"
+									:size="30"
+									:smaller-size="24"
+									:offset="[0, 0]"
+									inline
 								/>
 								<p class="fs-14 text-weight-medium">
 									<template v-for="(coin, index) of slotProps.row.coins" :key="index">
 										{{ coin.token.symbol
-										}}{{ index === slotProps.row.coins.length - 1 ? "" : "/" }}
+										}}{{ index === slotProps.row.coins.length - 1 ? "" : " · " }}
 									</template>
 								</p>
 							</div>
@@ -652,8 +523,9 @@ const onSwapClick = () => {
 								fit
 								type="submit"
 								:disable="mailchimpStore.loading || !newsletter"
-								>Get notified</LargeButton
 							>
+								Get notified
+							</LargeButton>
 						</div>
 					</div>
 				</q-form>

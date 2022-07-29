@@ -50,6 +50,7 @@ const {
 	removePercent,
 	removeValues,
 	priceImpact,
+	loading,
 	onAmountChange,
 	onSubmit,
 	onExitPool,
@@ -181,7 +182,12 @@ const inputChangeEvent = (coin, value) => {
 							<p class="q-mr-6 text-gradient">Price Impact</p>
 							<p>{{ priceImpact }} %</p>
 						</div>
-						<LargeButton type="submit" fit :padding-y="14" :disable="!meta.valid">
+						<LargeButton
+							type="submit"
+							fit
+							:padding-y="14"
+							:disable="!meta.valid || loading"
+						>
 							<span class="text-uppercase"> Add liquidity </span>
 						</LargeButton>
 					</div>
@@ -246,7 +252,7 @@ const inputChangeEvent = (coin, value) => {
 						fit
 						:padding-y="14"
 						class="q-px-52"
-						:disable="!lpAvailable"
+						:disable="!lpAvailable || loading"
 						@click="onExitPool"
 					>
 						<span class="text-uppercase"> Remove liquidity </span>

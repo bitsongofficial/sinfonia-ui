@@ -107,6 +107,12 @@ export const toDecimalGamm = (value: string) => {
 		.toString()
 }
 
+export const toDecimalGammFixed = (value: string) => {
+	return new BigNumber(value)
+		.multipliedBy(coinsConfig.shareCoinPoolDecimals)
+		.toFixed(6)
+}
+
 export const fromDecimalGamm = (value: string) => {
 	return new BigNumber(value).div(coinsConfig.shareCoinPoolDecimals).toString()
 }

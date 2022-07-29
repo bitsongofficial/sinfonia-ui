@@ -13,3 +13,17 @@
 .quasar-transition-duration-0 {
   --q-transition-duration: 0ms;
 }
+
+.transition-all {
+  transition: all 250ms ease-in-out;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 150ms ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}

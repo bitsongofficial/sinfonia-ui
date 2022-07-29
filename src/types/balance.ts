@@ -1,4 +1,6 @@
+import { Coin } from "@cosmjs/proto-signing"
 import { BaseToken, Token } from "./config"
+import { Pool } from "./pool"
 
 export interface Balance {
 	total?: string
@@ -21,4 +23,9 @@ export interface TokenBalance extends Token, Balance {
 
 export interface FantokenRank extends TokenBalance {
 	rank: number
+}
+
+export interface GammBalance {
+	coin: Coin
+	pool: Pool
 }

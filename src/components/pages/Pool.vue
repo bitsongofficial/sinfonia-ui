@@ -32,8 +32,10 @@ import LightTable from "@/components/LightTable.vue"
 import BondModal from "@/components/modals/BondModal.vue"
 import LiquidityModal from "@/components//modals/LiquidityModal.vue"
 import StandardSelect from "@/components/inputs/StandardSelect.vue"
+import useSettings from "@/store/settings"
 
 const transactionManagerStore = useTransactionManager()
+const settingsStore = useSettings()
 const poolsStore = usePools()
 const authStore = useAuth()
 const configStore = useConfig()
@@ -91,16 +93,6 @@ const broadcastingWatcher = watch(
 		}
 	}
 )
-
-const lpLiquidity = computed(() => {
-	if (pool.value) {
-		return new BigNumber(pool.value.userLiquidity)
-			.minus(pool.value.bonded)
-			.toString()
-	}
-
-	return "0"
-})
 
 const unbondedCoins = computed(() => {
 	let coins: LockCoin[] = []
@@ -222,7 +214,7 @@ const unbondingsColumn: TableColumn[] = [
 ]
 
 const beginUnlocking = (id: string) => {
-	transactionManagerStore.beginUnlocking(id)
+	transactionManagerStore.beginUnlocking(id, pool.value?.id ?? "")
 }
 
 const compositionGraphStyle = ref({ width: "0" })
@@ -253,9 +245,31 @@ const poolWatcher = watch(
 			if (catalystOptions.value.length > 0) {
 				catalystSelection.value = catalystOptions.value[0]
 			}
+
+			document.title = `#${newPool.id} | ${poolTokensName.value}`
+
+			settingsStore.breadcrumbPageTitle = newPool.id
 		}
 	},
 	{ immediate: true }
+)
+
+const poolsWatcher = watch(
+	() => poolsStore.rawPools,
+	(rawPools) => {
+		if (rawPools.length > 0 && !poolsStore.loading) {
+			const rawPool = rawPools.find((rawPool) => rawPool.id === id)
+
+			if (!rawPool) {
+				router.replace({
+					name: "NotFound",
+				})
+			}
+		}
+	},
+	{
+		immediate: true,
+	}
 )
 
 onMounted(() => {
@@ -267,6 +281,7 @@ onUnmounted(() => {
 	window.removeEventListener("resize", setSize)
 	broadcastingWatcher()
 	poolWatcher()
+	poolsWatcher()
 })
 
 const onSwapClick = () => {
@@ -287,7 +302,9 @@ const onSwapClick = () => {
 		<div class="q-mb-90 flex justify-between justify-sm-center items-center">
 			<div class="flex q-mb-sm-30">
 				<ImagePair :coins="pool.coins" class="q-mr-20" />
-				<h1 class="fs-27">#{{ pool.id }}: {{ poolTokensName }}</h1>
+				<h1 class="fs-27 text-weight-medium">
+					#{{ pool.id }}: {{ poolTokensName }}
+				</h1>
 			</div>
 			<div class="flex items-center">
 				<OutlineButton class="q-mr-12" @click="onSwapClick">
@@ -316,11 +333,11 @@ const onSwapClick = () => {
 				</div>
 			</div>
 			<div class="col-8 col-md-4 col-xl-2">
-				<div ref="heightRef">
+				<div ref="heightRef" class="full-height">
 					<CardWithHeader
 						header="Pool composition"
 						:padding="0"
-						class="q-px-30 q-py-20"
+						class="q-px-30 q-py-20 full-height"
 					>
 						<div
 							class="flex justify-between"
@@ -367,7 +384,7 @@ const onSwapClick = () => {
 		</div>
 		<div class="row q-mb-42">
 			<div class="col-3">
-				<h3 class="fs-21 q-mb-20 q-mt-0">Liquidity Mining</h3>
+				<h3 class="fs-21 q-mb-20 q-mt-0 text-weight-medium">Liquidity Mining</h3>
 				<p class="fs-16 opacity-40 !leading-20">
 					Liquidity mining is a decentralized finance mechanism wherein participants
 					provide some of their crypto assets into various liquidity pools, from
@@ -386,7 +403,7 @@ const onSwapClick = () => {
 						LP tokens represent a crypto liquidity provider’s share of a pool.
 					</InformativeTooltip>
 				</div>
-				<p class="fs-24 q-mb-14">{{ balancedCurrency(lpLiquidity) }} $</p>
+				<p class="fs-24 q-mb-14">{{ balancedCurrency(pool.lpLiquidity) }} $</p>
 				<StandardButton @click="openBondModal = true" :disable="!authStore.session">
 					Start Earning
 				</StandardButton>
@@ -433,7 +450,8 @@ const onSwapClick = () => {
 							</div>
 						</div>
 						<p class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20">
-							Bond Assets to earn liquidity rewards and swap fees.
+							Bond Assets for {{ unbonding.readableDuration }} to earn low rewards and
+							swap fees.
 						</p>
 						<div
 							class="flex no-wrap items-center text-weight-medium"
