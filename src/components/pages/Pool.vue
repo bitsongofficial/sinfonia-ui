@@ -214,7 +214,7 @@ const unbondingsColumn: TableColumn[] = [
 ]
 
 const beginUnlocking = (id: string) => {
-	transactionManagerStore.beginUnlocking(id)
+	transactionManagerStore.beginUnlocking(id, pool.value?.id ?? "")
 }
 
 const compositionGraphStyle = ref({ width: "0" })

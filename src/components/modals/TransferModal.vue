@@ -209,13 +209,16 @@ const onSubmit = handleSubmit(() => {
 			transferAmount = amountIBCFromCoin(values.amount, props.coin)
 		}
 
-		transactionManagerStore.sendIbcTokens(
-			fromAddress.value,
-			toAddress.value,
-			fromChain.value,
-			toChain.value,
-			transferAmount
-		)
+		if (transferAmount) {
+			transactionManagerStore.sendIbcTokens(
+				fromAddress.value,
+				toAddress.value,
+				fromChain.value,
+				toChain.value,
+				transferAmount,
+				props.coin
+			)
+		}
 	}
 })
 

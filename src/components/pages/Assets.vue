@@ -267,7 +267,7 @@ const onSwapClick = (pool: Pool) => {
 			</div>
 		</div>
 		<template v-if="bankStore.gammPoolBalances.length > 0">
-			<p class="q-mb-21 fs-21 text-weight-medium">GAMM Pool</p>
+			<p class="q-mb-21 fs-21 text-weight-medium">Pool Tokens (Not bonded)</p>
 
 			<LightTable
 				:rows="bankStore.gammPoolBalances"

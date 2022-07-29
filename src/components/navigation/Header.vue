@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, useRoute } from "vue-router"
 import { useQuasar } from "quasar"
-import { resolveIcon, balancedCurrency } from "@/common"
-import { formatDistanceToNow } from "date-fns"
-import { externalWebsites } from "@/configs/config"
+import { resolveIcon } from "@/common"
 import { computed, ref } from "vue"
 import useBank from "@/store/bank"
 import Logo from "@/components/Logo.vue"
@@ -15,6 +13,7 @@ import Spinner from "@/components/Spinner"
 import Title from "@/components/typography/Title.vue"
 import useAuth from "@/store/auth"
 import useTransactionManager from "@/store/transaction-manager"
+import TransactionItem from "./TransactionItem.vue"
 
 const $q = useQuasar()
 const route = useRoute()
@@ -27,11 +26,11 @@ const expanded = ref(false)
 const isProduction = import.meta.env.VITE_MODE
 
 const previewSwapTransactions = computed(() =>
-	transactionStore.swapTransactions.slice(0, 5)
+	transactionStore.transactions.slice(0, 5)
 )
 
 const otherSwapTransactions = computed(() =>
-	transactionStore.swapTransactions.slice(5, 10)
+	transactionStore.transactions.slice(5, 10)
 )
 
 const fantoken = computed(() => route.name === "Fantoken")
@@ -103,116 +102,24 @@ const fantoken = computed(() => route.name === "Fantoken")
 						</div>
 						<p
 							class="text-white opacity-50 fs-14 text-center q-pt-10 q-pb-14"
-							v-if="transactionStore.swapTransactions.length === 0"
+							v-if="transactionStore.transactions.length === 0"
 						>
 							No transactions yet.
 						</p>
 
 						<template v-else>
-							<q-item
+							<TransactionItem
 								v-for="(tx, index) in previewSwapTransactions"
 								:key="index"
-								:href="
-									tx.tx
-										? `${externalWebsites.mintscan}${tx.from.coinGeckoId}/txs/${tx.tx.transactionHash}`
-										: undefined
-								"
-								:clickable="tx.tx !== undefined"
-								target="_blank"
-								class="row items-center justify-between w-full !opacity-100"
-							>
-								<span
-									class="fs-12 !leading-18 text-white"
-									v-if="tx.status === 'broadcasting' || tx.status === 'pending'"
-									:class="{
-										'text-white': tx.status === 'broadcasting' || tx.status === 'pending',
-										'text-gray': tx.status !== 'broadcasting' && tx.status !== 'pending',
-									}"
-								>
-									You’re swapping {{ balancedCurrency(tx.fromAmount ?? 0) }}
-									{{ tx.fromSwap?.symbol }} in {{ balancedCurrency(tx.toAmount ?? 0) }}
-									{{ tx.toSwap?.symbol }}
-								</span>
-								<span
-									class="fs-12 !leading-18 text-gray hover:text-white"
-									v-else-if="tx.status === 'success'"
-								>
-									You swapped {{ balancedCurrency(tx.fromAmount ?? 0) }}
-									{{ tx.fromSwap?.symbol }} in {{ balancedCurrency(tx.toAmount ?? 0) }}
-									{{ tx.toSwap?.symbol }}
-								</span>
-								<span class="fs-12 !leading-18 text-gray hover:text-white" v-else>
-									Error swapping {{ balancedCurrency(tx.fromAmount ?? 0) }}
-									{{ tx.fromSwap?.symbol }} in {{ balancedCurrency(tx.toAmount ?? 0) }}
-									{{ tx.toSwap?.symbol }}
-								</span>
-
-								<Spinner
-									v-if="tx.status === 'broadcasting' || tx.status === 'pending'"
-									class="!w-16 !h-16 q-ml-12"
-								/>
-
-								<span
-									class="fs-10 text-weight-medium text-right opacity-40 q-ml-12 min-w-60"
-									v-else
-								>
-									{{ formatDistanceToNow(new Date(tx.time)) }}
-								</span>
-							</q-item>
+								:transaction="tx"
+							/>
 							<q-slide-transition v-if="otherSwapTransactions.length > 0">
 								<div v-show="expanded">
-									<q-item
+									<TransactionItem
 										v-for="(tx, index) in otherSwapTransactions"
 										:key="index"
-										:href="
-											tx.tx
-												? `${externalWebsites.mintscan}${tx.from.coinGeckoId}/txs/${tx.tx.transactionHash}`
-												: undefined
-										"
-										:clickable="tx.tx !== undefined"
-										target="_blank"
-										class="row items-center justify-between w-full !opacity-100"
-									>
-										<span
-											class="fs-12 !leading-18 text-white"
-											v-if="tx.status === 'broadcasting' || tx.status === 'pending'"
-											:class="{
-												'text-white':
-													tx.status === 'broadcasting' || tx.status === 'pending',
-												'text-gray':
-													tx.status !== 'broadcasting' && tx.status !== 'pending',
-											}"
-										>
-											You’re swapping {{ balancedCurrency(tx.fromAmount ?? 0) }}
-											{{ tx.fromSwap?.symbol }} in {{ balancedCurrency(tx.toAmount ?? 0) }}
-											{{ tx.toSwap?.symbol }}
-										</span>
-										<span
-											class="fs-12 !leading-18 text-gray hover:text-white"
-											v-else-if="tx.status === 'success'"
-										>
-											You swapped {{ balancedCurrency(tx.fromAmount ?? 0) }}
-											{{ tx.fromSwap?.symbol }} in {{ balancedCurrency(tx.toAmount ?? 0) }}
-											{{ tx.toSwap?.symbol }}
-										</span>
-										<span class="fs-12 !leading-18 text-gray hover:text-white" v-else>
-											Error swapping {{ balancedCurrency(tx.fromAmount ?? 0) }}
-											{{ tx.fromSwap?.symbol }} in {{ balancedCurrency(tx.toAmount ?? 0) }}
-											{{ tx.toSwap?.symbol }}
-										</span>
-
-										<Spinner
-											v-if="tx.status === 'broadcasting' || tx.status === 'pending'"
-											class="!w-16 !h-16 q-ml-12"
-										/>
-
-										<span
-											class="fs-10 text-weight-medium text-right opacity-40 q-ml-12 min-w-60"
-											v-else
-										>
-											{{ formatDistanceToNow(new Date(tx.time)) }}
-										</span>
-									</q-item>
+										:transaction="tx"
+									/>
 								</div>
 							</q-slide-transition>
 
