@@ -34,6 +34,7 @@ const model = computed({
 		standout="!bg-white-10 !text-white"
 		:dark="false"
 		:dropdown-icon="resolveIcon('dropdown', 11, 7)"
+		behavior="menu"
 	>
 		<template v-slot:selected-item="scope">
 			<div class="flex row items-center">

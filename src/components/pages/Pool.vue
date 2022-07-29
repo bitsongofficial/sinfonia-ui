@@ -410,7 +410,10 @@ const onSwapClick = () => {
 			</div>
 		</div>
 		<div class="row q-col-gutter-xl items-start q-mb-80">
-			<div class="col-8 !w-md-1/3" v-for="unbonding in pool.lockableDurationApr">
+			<div
+				class="col-8 !w-md-1/3"
+				v-for="(unbonding, index) in pool.lockableDurationApr"
+			>
 				<ExpandableCard
 					:padding="14"
 					transparency="5"
@@ -450,8 +453,9 @@ const onSwapClick = () => {
 							</div>
 						</div>
 						<p class="fs-12 opacity-40 text-weight-regular q-mb-20 !leading-20">
-							Bond Assets for {{ unbonding.readableDuration }} to earn low rewards and
-							swap fees.
+							Bond Assets for {{ unbonding.readableDuration }} to earn
+							{{ index === 0 ? "low" : "" }}{{ index === 1 ? "medium" : ""
+							}}{{ index === 2 ? "high" : "" }} rewards and swap fees.
 						</p>
 						<div
 							class="flex no-wrap items-center text-weight-medium"
