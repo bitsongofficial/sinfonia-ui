@@ -189,7 +189,7 @@ const totalLiquidity = computed(() => {
 				<div class="row items-end q-mt-24 q-mt-md-none">
 					<p class="fs-16 !leading-22 q-mr-14 opacity-40">The total liquidity is</p>
 
-					<p class="fs-21 !leading-24 text-weight-medium text-gradient">
+					<p class="fs-24 !leading-24 text-weight-medium text-gradient">
 						$ {{ totalLiquidity }}
 					</p>
 				</div>

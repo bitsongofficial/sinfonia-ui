@@ -201,12 +201,14 @@ const balancesWatcher = watch(
 
 const fromSwappableBalances = computed(() => {
 	if (toCoin.value) {
-		return bankStore
-			.swappableBalancesByRouteDenom(toCoin.value)
-			.sort(
-				(left, right) =>
-					parseFloat(right.available ?? "0") - parseFloat(left.available ?? "0")
-			)
+		const tokens = bankStore.swappableBalancesByRouteDenom(toCoin.value)
+
+		tokens.push(toCoin.value)
+
+		return tokens.sort(
+			(left, right) =>
+				parseFloat(right.available ?? "0") - parseFloat(left.available ?? "0")
+		)
 	}
 
 	return []
@@ -214,12 +216,14 @@ const fromSwappableBalances = computed(() => {
 
 const toSwappableBalances = computed(() => {
 	if (fromCoin.value) {
-		return bankStore
-			.swappableBalancesByRouteDenom(fromCoin.value)
-			.sort(
-				(left, right) =>
-					parseFloat(right.available ?? "0") - parseFloat(left.available ?? "0")
-			)
+		const tokens = bankStore.swappableBalancesByRouteDenom(fromCoin.value)
+
+		tokens.push(fromCoin.value)
+
+		return tokens.sort(
+			(left, right) =>
+				parseFloat(right.available ?? "0") - parseFloat(left.available ?? "0")
+		)
 	}
 
 	return []
@@ -451,6 +455,7 @@ const onSubmit = handleSubmit(() => {
 			label="Swap from"
 			name="fromAmount"
 			v-model:coin="fromCoin"
+			:other-coin="toCoin"
 			show-max
 			:swap-amount-fiat="swapAmountFiat"
 			:options="fromSwappableBalances"
@@ -458,6 +463,7 @@ const onSubmit = handleSubmit(() => {
 			@max-click="setMaxAmount"
 			@half-click="setHalfAmount"
 			@update:model-value="fromAmountChange"
+			@invert="invert"
 		/>
 		<div
 			class="flex justify-between q-mb-12 items-center q-pr-md-5 hidden block-xs q-pl-9"
@@ -472,6 +478,7 @@ const onSubmit = handleSubmit(() => {
 			label="Swap to"
 			name="toAmount"
 			v-model:coin="toCoin"
+			:other-coin="fromCoin"
 			class="q-mb-16 q-mb-xs-20"
 			:options="toSwappableBalances"
 			@update:model-value="toAmountChange"

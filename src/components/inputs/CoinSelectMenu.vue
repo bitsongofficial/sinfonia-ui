@@ -68,8 +68,18 @@ const { left, width } = useElementBounding(selectParent)
 
 const options = toRef(props, "options")
 
-const { search, results } = useVueFuse(options, {
-	keys: ["name", "symbol"],
+const { search, resultsRaw, results } = useVueFuse(options, {
+	useExtendedSearch: true,
+	keys: [
+		{
+			name: "name",
+			weight: 0.8,
+		},
+		{
+			name: "symbol",
+			weight: 0.2,
+		},
+	],
 })
 
 const searchValue = ref("")

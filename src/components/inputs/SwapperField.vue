@@ -15,6 +15,7 @@ const props = withDefaults(
 		placeholder?: string
 		value?: string
 		coin: TokenBalance | null
+		otherCoin: TokenBalance | null
 		options: TokenBalance[]
 		swapAmountFiat?: string
 		showInput?: boolean
@@ -43,7 +44,11 @@ const coinWrapper = computed<TokenBalance | null>({
 		return props.coin
 	},
 	set(value) {
-		emit("update:coin", value)
+		if (value && value.symbol === props.otherCoin?.symbol) {
+			emit("invert")
+		} else {
+			emit("update:coin", value)
+		}
 	},
 })
 
