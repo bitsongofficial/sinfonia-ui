@@ -210,7 +210,7 @@ const menuPosition = computed(() => {
 				</p>
 
 				<div
-					class="row items-center justify-between q-mb-24 q-pl-2 q-pr-16"
+					class="row items-center grid-gap-12 q-mb-24 q-pl-2 q-pr-16"
 					v-if="settingsStore.recentTokenSelections.length > 0"
 				>
 					<q-avatar

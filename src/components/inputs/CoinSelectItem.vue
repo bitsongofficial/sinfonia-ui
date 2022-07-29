@@ -1,14 +1,34 @@
 <script setup lang="ts">
 import { balancedCurrency } from "@/common"
+import useConfig from "@/store/config"
 import { TokenBalance } from "@/types"
+import { computed } from "vue"
 
-defineProps<{
+const configStore = useConfig()
+
+const props = defineProps<{
 	coin: TokenBalance
 }>()
 
 defineEmits<{
 	(e: "click", value: TokenBalance): void
 }>()
+
+const available = computed(() => {
+	const osmosisToken = configStore.osmosisToken
+
+	if (osmosisToken && props.coin.chains) {
+		const chain = props.coin.chains.find(
+			(el) => el.symbol === osmosisToken.symbol
+		)
+
+		if (chain) {
+			return balancedCurrency(chain.available ?? "0", 6)
+		}
+	}
+
+	return "0"
+})
 </script>
 
 <template>
@@ -32,7 +52,7 @@ defineEmits<{
 			</div>
 
 			<p class="fs-14 !leading-18 text-weight-medium">
-				{{ balancedCurrency(coin.available ?? 0) }}
+				{{ available }}
 			</p>
 		</div>
 	</div>

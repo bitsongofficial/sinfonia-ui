@@ -199,16 +199,32 @@ const balancesWatcher = watch(
 	}
 )
 
+const getOsmosisBalance = (coin: TokenBalance) => {
+	const osmosisToken = configStore.osmosisToken
+
+	if (osmosisToken && coin.chains) {
+		const chain = coin.chains.find((el) => el.symbol === osmosisToken.symbol)
+
+		if (chain) {
+			return chain.available ?? "0"
+		}
+	}
+
+	return "0"
+}
+
 const fromSwappableBalances = computed(() => {
 	if (toCoin.value) {
 		const tokens = bankStore.swappableBalancesByRouteDenom(toCoin.value)
 
 		tokens.push(toCoin.value)
 
-		return tokens.sort(
-			(left, right) =>
-				parseFloat(right.available ?? "0") - parseFloat(left.available ?? "0")
-		)
+		return tokens.sort((left, right) => {
+			const rightAvailable = getOsmosisBalance(right)
+			const leftAvailable = getOsmosisBalance(left)
+
+			return parseFloat(rightAvailable) - parseFloat(leftAvailable)
+		})
 	}
 
 	return []
@@ -220,10 +236,12 @@ const toSwappableBalances = computed(() => {
 
 		tokens.push(fromCoin.value)
 
-		return tokens.sort(
-			(left, right) =>
-				parseFloat(right.available ?? "0") - parseFloat(left.available ?? "0")
-		)
+		return tokens.sort((left, right) => {
+			const rightAvailable = getOsmosisBalance(right)
+			const leftAvailable = getOsmosisBalance(left)
+
+			return parseFloat(rightAvailable) - parseFloat(leftAvailable)
+		})
 	}
 
 	return []
