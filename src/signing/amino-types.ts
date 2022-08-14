@@ -1,25 +1,19 @@
 import { AminoConverters } from "@cosmjs/stargate"
 import { Coin } from "@cosmjs/proto-signing"
-import Long from "long"
 import { OsmosisPool } from "@/types"
+import { AminoMsg } from "@cosmjs/amino"
+import { MsgClaim } from "./codec/bitsong/merkledrop/v1beta1/tx"
+import Long from "long"
 
-export interface AminoMsgMerkleDropClaim {
-	readonly type: "go-bitsong/merkledrop/MsgClaim"
-	readonly value: {
-		sender: string // Owner
-		merkledropId: number
-		index: number
+export interface AminoMsgClaim extends AminoMsg {
+	type: "/bitsong.merkledrop.v1beta1.MsgClaim"
+	value: {
+		sender: string
+		merkledrop_id: string
+		index: string
 		amount: string
 		proofs: string[]
 	}
-}
-
-export interface MsgMerkleDropClaim {
-	sender: string // Owner
-	merkledropId: Long
-	index: Long
-	amount: string
-	proofs: string[]
 }
 
 export interface AminoMsgSwapExactAmountIn {
@@ -108,11 +102,6 @@ export interface MsgExitPool {
 	tokenOutMins: Coin[]
 }
 
-/* sender: string, // Owner
-		merkledropId: number,
-		index: number,
-		amount: string,
-		proofs: string[] */
 export const createOsmosisAminoConverters = (): AminoConverters => {
 	return {
 		"/bitsong.merkledrop.v1beta1.MsgClaim": {
@@ -123,10 +112,10 @@ export const createOsmosisAminoConverters = (): AminoConverters => {
 				index,
 				amount,
 				proofs,
-			}: MsgMerkleDropClaim) => {
+			}: MsgClaim): AminoMsgClaim["value"] => {
 				return {
 					sender,
-					merkledropId: merkledropId.toString(),
+					merkledrop_id: merkledropId.toString(),
 					index: index.toString(),
 					amount,
 					proofs,
@@ -134,15 +123,15 @@ export const createOsmosisAminoConverters = (): AminoConverters => {
 			},
 			fromAmino: ({
 				sender,
-				merkledropId,
+				merkledrop_id,
 				index,
 				amount,
 				proofs,
-			}: AminoMsgMerkleDropClaim["value"]) => {
+			}: AminoMsgClaim["value"]): MsgClaim => {
 				return {
 					sender,
-					merkledropId,
-					index,
+					merkledropId: Long.fromString(merkledrop_id),
+					index: Long.fromString(index),
 					amount,
 					proofs,
 				}

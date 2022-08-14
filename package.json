@@ -23,6 +23,7 @@
 		"@apollo/client": "^3.6.5",
 		"@bitsongjs/sdk": "^1.0.0-dev-14",
 		"@chenfengyuan/vue-countdown": "2",
+		"@cosmjs/amino": "^0.28.11",
 		"@cosmjs/encoding": "^0.28.0",
 		"@cosmjs/launchpad": "^0.27.1",
 		"@cosmjs/proto-signing": "^0.28.0",
