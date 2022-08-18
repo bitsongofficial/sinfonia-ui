@@ -4,6 +4,7 @@ specifiers:
   '@apollo/client': ^3.6.5
   '@bitsongjs/sdk': ^1.0.0-dev-14
   '@chenfengyuan/vue-countdown': '2'
+  '@cosmjs/amino': ^0.28.11
   '@cosmjs/encoding': ^0.28.0
   '@cosmjs/launchpad': ^0.27.1
   '@cosmjs/proto-signing': ^0.28.0
@@ -57,6 +58,7 @@ dependencies:
   '@apollo/client': 3.6.5_graphql@16.5.0
   '@bitsongjs/sdk': 1.0.0-dev-14
   '@chenfengyuan/vue-countdown': 2.0.0_vue@3.2.31
+  '@cosmjs/amino': 0.28.11
   '@cosmjs/encoding': 0.28.0
   '@cosmjs/launchpad': 0.27.1
   '@cosmjs/proto-signing': 0.28.0
@@ -238,6 +240,15 @@ packages:
       '@cosmjs/utils': 0.28.0
     dev: false
 
+  /@cosmjs/amino/0.28.11:
+    resolution: {integrity: sha512-WJkQQq8gbk5doJJ/3Gcax26I+VC4HdbbSlNdyT5hc6T+U2Jmyry9RLSE+wEZyFMgEabhr43SbIxf64gWZeR8YA==}
+    dependencies:
+      '@cosmjs/crypto': 0.28.11
+      '@cosmjs/encoding': 0.28.11
+      '@cosmjs/math': 0.28.11
+      '@cosmjs/utils': 0.28.11
+    dev: false
+
   /@cosmjs/crypto/0.24.1:
     resolution: {integrity: sha512-GPhaWmQO06mXldKj/b+oKF5o3jMNfRKpAw+Q8XQhrD7ItinVPDMu8Xgl6frUXWTUdgpYwqpvqOcpm85QUsYV0Q==}
     dependencies:
@@ -282,6 +293,18 @@ packages:
       libsodium-wrappers: 0.7.9
     dev: false
 
+  /@cosmjs/crypto/0.28.11:
+    resolution: {integrity: sha512-oJXOeBX4FP8bp0ZVydJFcRplErHp8cC6vNoULRck+7hcLuvp9tyv3SBOkBkwxTv81VcQyGCgn7WE0NYEKrpUbw==}
+    dependencies:
+      '@cosmjs/encoding': 0.28.11
+      '@cosmjs/math': 0.28.11
+      '@cosmjs/utils': 0.28.11
+      '@noble/hashes': 1.0.0
+      bn.js: 5.2.0
+      elliptic: 6.5.4
+      libsodium-wrappers: 0.7.9
+    dev: false
+
   /@cosmjs/encoding/0.24.1:
     resolution: {integrity: sha512-PMr+gaXAuM0XgjeXwB1zdX1QI0t+PgVhbmjgI/RSgswDzdExNH97qUopecL0/HG3p64vhIT/6ZjXYYTljZL7WA==}
     dependencies:
@@ -300,6 +323,14 @@ packages:
 
   /@cosmjs/encoding/0.28.0:
     resolution: {integrity: sha512-MKpEPg1g49PWiW9DMo4/PkHODYTR4kDveJqrYpGLucj3kipjzNe0C84K5cpc6Pfzwu0x56qnTq5J0b45v1z+ng==}
+    dependencies:
+      base64-js: 1.5.1
+      bech32: 1.1.4
+      readonly-date: 1.0.0
+    dev: false
+
+  /@cosmjs/encoding/0.28.11:
+    resolution: {integrity: sha512-J7pvlzAt8hBZn316wGRmUlK3xwMgNXUvj4v56DK4fA0fv6VfGwMvVtHCXaqNQtzOGkC6EQcshzA/fL5MBIwu6A==}
     dependencies:
       base64-js: 1.5.1
       bech32: 1.1.4
@@ -361,6 +392,12 @@ packages:
 
   /@cosmjs/math/0.28.0:
     resolution: {integrity: sha512-W2BQCMt75ZG93ijtOGpC7K6tgLxQq/oIxyXOF5QHG3MtcKVvUlJgMTqLz7+YbDZEw/cr1COqYqKag9oXG21s0Q==}
+    dependencies:
+      bn.js: 5.2.0
+    dev: false
+
+  /@cosmjs/math/0.28.11:
+    resolution: {integrity: sha512-MyhPnC4sYu86c2/0PpEeynaPl4nvAmLZH3acPh96SzcjERONbGZjjKtBFPq1avBrev2CCSPrZ4O8u9xpQ4aSvg==}
     dependencies:
       bn.js: 5.2.0
     dev: false
@@ -521,6 +558,10 @@ packages:
 
   /@cosmjs/utils/0.28.0:
     resolution: {integrity: sha512-1Um7h2a20ipbvEw0dzKPHL8qTbH5YY9ND0u5XxlVaCxaYDMTpzjjPiQD+Offxx/28afi8cuHWDbJc45dJXoCAg==}
+    dev: false
+
+  /@cosmjs/utils/0.28.11:
+    resolution: {integrity: sha512-FXVEr7Pg6MX9VbY5NemuKbtFVabSlUlArWIV+R74FQg5LIuSa+0QkxSpNldCuOLBEU4/GlrzybT4uEl338vSzg==}
     dev: false
 
   /@emmetio/abbreviation/2.2.3:
