@@ -28,6 +28,7 @@
 		"@cosmjs/launchpad": "^0.27.1",
 		"@cosmjs/proto-signing": "^0.29.0",
 		"@cosmjs/stargate": "^0.29.0",
+		"@osmonauts/helpers": "^0.6.0",
 		"@quasar/extras": "^1.12.5",
 		"@storipress/apollo-vue-devtool": "^0.0.4",
 		"@vee-validate/rules": "^4.5.11",
