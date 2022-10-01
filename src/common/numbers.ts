@@ -264,7 +264,7 @@ export const calculateRouteSpotPrice = (
 		let poolAssetIn: OsmosisPoolAsset | undefined = undefined
 		let poolAssetOut: OsmosisPoolAsset | undefined = undefined
 
-		for (const poolAsset of swapRoute.pool.poolAssets) {
+		for (const poolAsset of swapRoute.pool.pool_assets) {
 			if (poolAsset.token.denom === from) {
 				poolAssetIn = poolAsset
 			} else if (poolAsset.token.denom === to) {
@@ -277,7 +277,7 @@ export const calculateRouteSpotPrice = (
 				calculateSpotPrice(
 					poolAssetIn,
 					poolAssetOut,
-					swapRoute.pool.poolParams.swapFee
+					swapRoute.pool.pool_params.swap_fee
 				).toString()
 			)
 		}
@@ -336,7 +336,7 @@ export const calcOutAmtGivenIn = (
 		let poolAssetIn: OsmosisPoolAsset | undefined = undefined
 		let poolAssetOut: OsmosisPoolAsset | undefined = undefined
 
-		for (const poolAsset of swapRoute.pool.poolAssets) {
+		for (const poolAsset of swapRoute.pool.pool_assets) {
 			if (poolAsset.token.denom === from) {
 				poolAssetIn = poolAsset
 			} else if (poolAsset.token.denom === to) {
@@ -346,7 +346,7 @@ export const calcOutAmtGivenIn = (
 
 		if (poolAssetIn && poolAssetOut) {
 			const tokenAmountInAfterFee = new Decimal(tokenAmountOut).mul(
-				oneDec.sub(swapRoute.pool.poolParams.swapFee)
+				oneDec.sub(swapRoute.pool.pool_params.swap_fee)
 			)
 			const poolTokenInBalance = new Decimal(poolAssetIn.token.amount)
 			const poolPostSwapInBalance = poolTokenInBalance.plus(tokenAmountInAfterFee)
@@ -370,11 +370,11 @@ export const calcPoolOutGivenSingleIn = (
 	tokenBalanceIn: string,
 	tokenWeightIn: string,
 	poolSupply: string,
-	totalWeight: string,
+	total_weight: string,
 	tokenAmountIn: string,
 	swapFee: string
 ) => {
-	const normalizedWeight = new Decimal(tokenWeightIn).div(totalWeight)
+	const normalizedWeight = new Decimal(tokenWeightIn).div(total_weight)
 	const zaz = new Decimal(1).minus(normalizedWeight).mul(swapFee)
 	const tokenAmountInAfterFee = new Decimal(tokenAmountIn).mul(
 		new Decimal(1).minus(zaz)
@@ -550,7 +550,7 @@ export const estimateHopSwapExactAmountIn = (
 		let poolAssetIn: OsmosisPoolAsset | undefined = undefined
 		let poolAssetOut: OsmosisPoolAsset | undefined = undefined
 
-		for (const poolAsset of swapRoute.pool.poolAssets) {
+		for (const poolAsset of swapRoute.pool.pool_assets) {
 			if (poolAsset.token.denom === from) {
 				poolAssetIn = poolAsset
 			} else if (poolAsset.token.denom === to) {
@@ -566,7 +566,7 @@ export const estimateHopSwapExactAmountIn = (
 				tokenInput,
 				poolAssetIn,
 				poolAssetOut,
-				swapRoute.pool.poolParams.swapFee
+				swapRoute.pool.pool_params.swap_fee
 			)
 
 			if (estimated && from) {
