@@ -4,6 +4,7 @@ import {
 	coins,
 	OfflineDirectSigner,
 	OfflineSigner,
+	Registry,
 } from "@cosmjs/proto-signing"
 import { BigNumber } from "bignumber.js"
 import {
@@ -20,11 +21,13 @@ import {
 	AminoTypes,
 	assertIsDeliverTxSuccess,
 	createIbcAminoConverters,
+	defaultRegistryTypes,
 	SigningStargateClient,
 } from "@cosmjs/stargate"
-import { osmosisRegistry } from "./registry"
-import { createOsmosisAminoConverters } from "./amino-types"
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx"
+import { osmosis } from "osmojs"
+import { bitsongRegistry } from "./registry"
+import { createBitsongAminoConverters } from "./amino-types"
 import SignerEventEmitter from "./events"
 
 export class TransactionManager extends SignerEventEmitter {
@@ -265,15 +268,24 @@ export class TransactionManager extends SignerEventEmitter {
 				gas: transactionData.gasEstimate || "350000",
 			}
 
+			const registry = bitsongRegistry()
+
+			osmosis.gamm.v1beta1.load(registry)
+			osmosis.lockup.load(registry)
+
+			const aminoTypes = new AminoTypes({
+				...createIbcAminoConverters(),
+				...createBitsongAminoConverters(),
+				...osmosis.gamm.v1beta1.AminoConverter,
+				...osmosis.lockup.AminoConverter,
+			})
+
 			const client = await SigningStargateClient.connectWithSigner(
 				this.network.rpcURL,
 				this.signer,
 				{
-					registry: osmosisRegistry(),
-					aminoTypes: new AminoTypes({
-						...createIbcAminoConverters(),
-						...createOsmosisAminoConverters(),
-					}),
+					registry,
+					aminoTypes,
 				}
 			)
 
