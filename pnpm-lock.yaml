@@ -11,6 +11,7 @@ specifiers:
   '@cosmjs/stargate': ^0.29.0
   '@kelchy/pre-commit': ^1.2.4
   '@keplr-wallet/types': ^0.9.12
+  '@osmonauts/helpers': ^0.6.0
   '@quasar/extras': ^1.12.5
   '@quasar/vite-plugin': ^1.0.5
   '@storipress/apollo-vue-devtool': ^0.0.4
@@ -64,6 +65,7 @@ dependencies:
   '@cosmjs/launchpad': registry.npmjs.org/@cosmjs/launchpad/0.27.1
   '@cosmjs/proto-signing': registry.npmjs.org/@cosmjs/proto-signing/0.29.0
   '@cosmjs/stargate': registry.npmjs.org/@cosmjs/stargate/0.29.0
+  '@osmonauts/helpers': registry.npmjs.org/@osmonauts/helpers/0.6.0
   '@quasar/extras': 1.12.5
   '@storipress/apollo-vue-devtool': 0.0.4_ejomppoal27decenylxcpmdrdq
   '@vee-validate/rules': 4.5.11
@@ -221,7 +223,7 @@ packages:
     resolution: {integrity: sha512-wB6uo+3A50m0sW/EWcU64xpV/8wShZ6bMTa7pF8eYsTrSkQA7oLUIJcs/wb8g4y2Oyq701BaGiO6n/ak5WXO1w==}
     dependencies:
       '@noble/hashes': 1.0.0
-      protobufjs: 6.11.2
+      protobufjs: registry.npmjs.org/protobufjs/6.11.3
     dev: false
 
   /@cosmjs/crypto/0.24.1:

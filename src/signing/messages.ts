@@ -4,7 +4,7 @@ import { OsmosisRoute, SignerMessage } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
 import { MsgClaim as MerkleDropMsgClaim } from "./codec/bitsong/merkledrop/v1beta1/tx"
 import { osmosis } from "osmojs"
-import Long from "long"
+import { Long } from "@osmonauts/helpers"
 
 const { joinPool, exitPool, joinSwapExternAmountIn, swapExactAmountIn } =
 	osmosis.gamm.v1beta1.MessageComposer.withTypeUrl

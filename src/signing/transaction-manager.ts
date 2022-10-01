@@ -4,7 +4,6 @@ import {
 	coins,
 	OfflineDirectSigner,
 	OfflineSigner,
-	Registry,
 } from "@cosmjs/proto-signing"
 import { BigNumber } from "bignumber.js"
 import {
@@ -275,9 +274,9 @@ export class TransactionManager extends SignerEventEmitter {
 
 			const aminoTypes = new AminoTypes({
 				...createIbcAminoConverters(),
-				...createBitsongAminoConverters(),
 				...osmosis.gamm.v1beta1.AminoConverter,
 				...osmosis.lockup.AminoConverter,
+				...createBitsongAminoConverters(),
 			})
 
 			const client = await SigningStargateClient.connectWithSigner(
