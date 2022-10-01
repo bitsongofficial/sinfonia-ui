@@ -6,6 +6,7 @@ import { MsgClaim as MerkleDropMsgClaim } from "./codec/bitsong/merkledrop/v1bet
 import { osmosis } from "osmojs"
 import Long from "long"
 
+// Get osmosis messages
 const { joinPool, exitPool, joinSwapExternAmountIn, swapExactAmountIn } =
 	osmosis.gamm.v1beta1.MessageComposer.withTypeUrl
 
