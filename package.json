@@ -13,7 +13,7 @@
 		"format": "prettier --ignore-path .prettierignore --write ."
 	},
 	"engines": {
-		"node": ">=16.14.0"
+		"node": ">=16.16.0"
 	},
 	"precommit": [
 		"type-check",
@@ -23,11 +23,11 @@
 		"@apollo/client": "^3.6.5",
 		"@bitsongjs/sdk": "^1.0.0-dev-14",
 		"@chenfengyuan/vue-countdown": "2",
-		"@cosmjs/amino": "^0.28.11",
-		"@cosmjs/encoding": "^0.28.0",
+		"@cosmjs/amino": "^0.29.0",
+		"@cosmjs/encoding": "^0.29.0",
 		"@cosmjs/launchpad": "^0.27.1",
-		"@cosmjs/proto-signing": "^0.28.0",
-		"@cosmjs/stargate": "^0.28.0",
+		"@cosmjs/proto-signing": "^0.29.0",
+		"@cosmjs/stargate": "^0.29.0",
 		"@quasar/extras": "^1.12.5",
 		"@storipress/apollo-vue-devtool": "^0.0.4",
 		"@vee-validate/rules": "^4.5.11",
@@ -45,6 +45,7 @@
 		"graphql-tag": "^2.12.6",
 		"lodash": "^4.17.21",
 		"long": "^5.2.0",
+		"osmojs": "^0.25.0",
 		"path": "^0.12.7",
 		"pinia": "^2.0.11",
 		"pinia-plugin-persistedstate-2": "^1.0.0",
