@@ -174,10 +174,10 @@ const useLiquidityModal = (
 					const shareOutAmount = calcPoolOutGivenSingleIn(
 						singlePoolAsset.value.token.amount,
 						singlePoolAsset.value.weight,
-						pool.value.totalShares.amount,
-						pool.value.totalWeight,
+						pool.value.total_shares.amount,
+						pool.value.total_weight,
 						singleAssetAmount.value,
-						pool.value.poolParams.swapFee
+						pool.value.pool_params.swap_fee
 					)
 
 					const outRatio = new BigNumber(1).minus(
@@ -221,7 +221,7 @@ const useLiquidityModal = (
 
 		const tokenInMaxsSort: Coin[] = []
 
-		for (const assetPool of pool.value.poolAssets) {
+		for (const assetPool of pool.value.pool_assets) {
 			const tokenInMax = tokenInMaxs.find(
 				(token) => token.denom === assetPool.token.denom
 			)
@@ -253,7 +253,7 @@ const useLiquidityModal = (
 
 		const shareInAmount = poolShareWithPercentage.toFixed(0)
 		const shareRatio = new BigNumber(poolShareWithPercentage).div(
-			new BigNumber(pool.value.totalShares.amount)
+			new BigNumber(pool.value.total_shares.amount)
 		)
 
 		const tokenOutMins = pool.value.coins.map((coin) => {
@@ -276,7 +276,7 @@ const useLiquidityModal = (
 
 		const tokenOutMinsSort: Coin[] = []
 
-		for (const assetPool of pool.value.poolAssets) {
+		for (const assetPool of pool.value.pool_assets) {
 			const tokenOut = compact(tokenOutMins).find(
 				(token) => token.denom === assetPool.token.denom
 			)

@@ -48,10 +48,10 @@ export const tokenToPoolAsset = (
 ): PoolAsset | undefined => {
 	const bankStore = useBank()
 	const token = findTokenByIBCDenom(tokens, rawCoin.token.denom)
-	const totalPoolGamm = new BigNumber(pool.totalShares.amount)
+	const totalPoolGamm = new BigNumber(pool.total_shares.amount)
 	const totalTokenGamm = new BigNumber(rawCoin.token.amount) // For example, total BTSG inside the pool
 	const weightPercentage = new BigNumber(rawCoin.weight)
-		.div(pool.totalWeight)
+		.div(pool.total_weight)
 		.toNumber()
 
 	if (token) {
@@ -134,13 +134,13 @@ export const mapPools = (
 	const bankStore = useBank()
 
 	return rawPools.map((pool) => {
-		const poolAssets = [...pool.poolAssets]
+		const pool_assets = [...pool.pool_assets]
 		let liquidity = new BigNumber("0")
 		let userLiquidity = new BigNumber("0")
 		let bonded = new BigNumber("0")
 
 		const coins = sortBy(
-			poolAssets.map((asset) => {
+			pool_assets.map((asset) => {
 				const coin = tokenToPoolAsset(pool, asset, tokens)
 
 				if (coin) {
@@ -392,7 +392,7 @@ export const getPoolApr = (
 			const epoch = poolsStore.epochByIdentifier(epochIdentifier)
 
 			if (epoch && epoch.duration && distrInfo) {
-				const totalWeight = new BigNumber(distrInfo.total_weight)
+				const total_weight = new BigNumber(distrInfo.total_weight)
 				const poolTVL = new BigNumber(liquidityPool)
 				const potWeightRecord = distrInfo.records.find(
 					(record) => record.gauge_id === gaugeId.gauge_id
@@ -407,7 +407,7 @@ export const getPoolApr = (
 					)
 
 					if (
-						totalWeight.gt(0) &&
+						total_weight.gt(0) &&
 						potWeight.gt(0) &&
 						poolTVL.gt(0) &&
 						poolsStore.epochProvisions &&
@@ -429,7 +429,7 @@ export const getPoolApr = (
 						)
 
 						const yearProvisionToPot = yearProvisionToPots.multipliedBy(
-							potWeight.div(totalWeight)
+							potWeight.div(total_weight)
 						)
 
 						const yearProvisionToPotPrice = new BigNumber(osmosisPrice).multipliedBy(
@@ -523,7 +523,7 @@ export const getExternalPoolApr = (
 						)
 
 					const lpLockedRatio = new BigNumber(lpLockedForGauge.lockSum).div(
-						pool.totalShares.amount
+						pool.total_shares.amount
 					)
 
 					const bondedLiquidity = poolTVL.multipliedBy(lpLockedRatio)

@@ -1130,14 +1130,14 @@ export namespace osmosis {
 				/** MsgCreateBalancerPool sender */
 				sender?: string | null;
 
-				/** MsgCreateBalancerPool poolParams */
-				poolParams?: osmosis.gamm.v1beta1.IPoolParams | null;
+				/** MsgCreateBalancerPool pool_params */
+				pool_params?: osmosis.gamm.v1beta1.IPoolParams | null;
 
-				/** MsgCreateBalancerPool poolAssets */
-				poolAssets?: osmosis.gamm.v1beta1.IPoolAsset[] | null;
+				/** MsgCreateBalancerPool pool_assets */
+				pool_assets?: osmosis.gamm.v1beta1.IPoolAsset[] | null;
 
-				/** MsgCreateBalancerPool futurePoolGovernor */
-				futurePoolGovernor?: string | null;
+				/** MsgCreateBalancerPool future_pool_governor */
+				future_pool_governor?: string | null;
 			}
 
 			/** Represents a MsgCreateBalancerPool. */
@@ -1151,14 +1151,14 @@ export namespace osmosis {
 				/** MsgCreateBalancerPool sender. */
 				public sender: string;
 
-				/** MsgCreateBalancerPool poolParams. */
-				public poolParams?: osmosis.gamm.v1beta1.IPoolParams | null;
+				/** MsgCreateBalancerPool pool_params. */
+				public pool_params?: osmosis.gamm.v1beta1.IPoolParams | null;
 
-				/** MsgCreateBalancerPool poolAssets. */
-				public poolAssets: osmosis.gamm.v1beta1.IPoolAsset[];
+				/** MsgCreateBalancerPool pool_assets. */
+				public pool_assets: osmosis.gamm.v1beta1.IPoolAsset[];
 
-				/** MsgCreateBalancerPool futurePoolGovernor. */
-				public futurePoolGovernor: string;
+				/** MsgCreateBalancerPool future_pool_governor. */
+				public future_pool_governor: string;
 
 				/**
 				 * Creates a new MsgCreateBalancerPool instance using the specified properties.
@@ -2788,14 +2788,14 @@ export namespace osmosis {
 
 			/** Properties of a PoolParams. */
 			interface IPoolParams {
-				/** PoolParams swapFee */
-				swapFee?: string | null;
+				/** PoolParams swap_fee */
+				swap_fee?: string | null;
 
-				/** PoolParams exitFee */
-				exitFee?: string | null;
+				/** PoolParams exit_fee */
+				exit_fee?: string | null;
 
-				/** PoolParams smoothWeightChangeParams */
-				smoothWeightChangeParams?: osmosis.gamm.v1beta1.ISmoothWeightChangeParams | null;
+				/** PoolParams smooth_weight_change_params */
+				smooth_weight_change_params?: osmosis.gamm.v1beta1.ISmoothWeightChangeParams | null;
 			}
 
 			/** Represents a PoolParams. */
@@ -2806,14 +2806,14 @@ export namespace osmosis {
 				 */
 				constructor(p?: osmosis.gamm.v1beta1.IPoolParams);
 
-				/** PoolParams swapFee. */
-				public swapFee: string;
+				/** PoolParams swap_fee. */
+				public swap_fee: string;
 
-				/** PoolParams exitFee. */
-				public exitFee: string;
+				/** PoolParams exit_fee. */
+				public exit_fee: string;
 
-				/** PoolParams smoothWeightChangeParams. */
-				public smoothWeightChangeParams?: osmosis.gamm.v1beta1.ISmoothWeightChangeParams | null;
+				/** PoolParams smooth_weight_change_params. */
+				public smooth_weight_change_params?: osmosis.gamm.v1beta1.ISmoothWeightChangeParams | null;
 
 				/**
 				 * Creates a new PoolParams instance using the specified properties.
@@ -2873,20 +2873,20 @@ export namespace osmosis {
 				/** Pool id */
 				id?: Long | null;
 
-				/** Pool poolParams */
-				poolParams?: osmosis.gamm.v1beta1.IPoolParams | null;
+				/** Pool pool_params */
+				pool_params?: osmosis.gamm.v1beta1.IPoolParams | null;
 
-				/** Pool futurePoolGovernor */
-				futurePoolGovernor?: string | null;
+				/** Pool future_pool_governor */
+				future_pool_governor?: string | null;
 
-				/** Pool totalShares */
-				totalShares?: cosmos.base.v1beta1.ICoin | null;
+				/** Pool total_shares */
+				total_shares?: cosmos.base.v1beta1.ICoin | null;
 
-				/** Pool poolAssets */
-				poolAssets?: osmosis.gamm.v1beta1.IPoolAsset[] | null;
+				/** Pool pool_assets */
+				pool_assets?: osmosis.gamm.v1beta1.IPoolAsset[] | null;
 
-				/** Pool totalWeight */
-				totalWeight?: string | null;
+				/** Pool total_weight */
+				total_weight?: string | null;
 			}
 
 			/** Represents a Pool. */
@@ -2903,20 +2903,20 @@ export namespace osmosis {
 				/** Pool id. */
 				public id: Long;
 
-				/** Pool poolParams. */
-				public poolParams?: osmosis.gamm.v1beta1.IPoolParams | null;
+				/** Pool pool_params. */
+				public pool_params?: osmosis.gamm.v1beta1.IPoolParams | null;
 
-				/** Pool futurePoolGovernor. */
-				public futurePoolGovernor: string;
+				/** Pool future_pool_governor. */
+				public future_pool_governor: string;
 
-				/** Pool totalShares. */
-				public totalShares?: cosmos.base.v1beta1.ICoin | null;
+				/** Pool total_shares. */
+				public total_shares?: cosmos.base.v1beta1.ICoin | null;
 
-				/** Pool poolAssets. */
-				public poolAssets: osmosis.gamm.v1beta1.IPoolAsset[];
+				/** Pool pool_assets. */
+				public pool_assets: osmosis.gamm.v1beta1.IPoolAsset[];
 
-				/** Pool totalWeight. */
-				public totalWeight: string;
+				/** Pool total_weight. */
+				public total_weight: string;
 
 				/**
 				 * Creates a new Pool instance using the specified properties.

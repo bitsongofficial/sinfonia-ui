@@ -1055,27 +1055,27 @@ export const osmosis = (() => {
 			})();
 			v1beta1.MsgCreateBalancerPool = (function() {
 				function MsgCreateBalancerPool(p) {
-					this.poolAssets = [];
+					this.pool_assets = [];
 					if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
 				}
 				MsgCreateBalancerPool.prototype.sender = '';
-				MsgCreateBalancerPool.prototype.poolParams = null;
-				MsgCreateBalancerPool.prototype.poolAssets = $util.emptyArray;
-				MsgCreateBalancerPool.prototype.futurePoolGovernor = '';
+				MsgCreateBalancerPool.prototype.pool_params = null;
+				MsgCreateBalancerPool.prototype.pool_assets = $util.emptyArray;
+				MsgCreateBalancerPool.prototype.future_pool_governor = '';
 				MsgCreateBalancerPool.create = function create(properties) {
 					return new MsgCreateBalancerPool(properties);
 				};
 				MsgCreateBalancerPool.encode = function encode(m, w) {
 					if (!w) w = $Writer.create();
 					if (m.sender != null && Object.hasOwnProperty.call(m, 'sender')) w.uint32(10).string(m.sender);
-					if (m.poolParams != null && Object.hasOwnProperty.call(m, 'poolParams'))
-						osmosis.gamm.v1beta1.PoolParams.encode(m.poolParams, w.uint32(18).fork()).ldelim();
-					if (m.poolAssets != null && m.poolAssets.length) {
-						for (var i = 0; i < m.poolAssets.length; ++i)
-							osmosis.gamm.v1beta1.PoolAsset.encode(m.poolAssets[i], w.uint32(26).fork()).ldelim();
+					if (m.pool_params != null && Object.hasOwnProperty.call(m, 'pool_params'))
+						osmosis.gamm.v1beta1.PoolParams.encode(m.pool_params, w.uint32(18).fork()).ldelim();
+					if (m.pool_assets != null && m.pool_assets.length) {
+						for (var i = 0; i < m.pool_assets.length; ++i)
+							osmosis.gamm.v1beta1.PoolAsset.encode(m.pool_assets[i], w.uint32(26).fork()).ldelim();
 					}
-					if (m.futurePoolGovernor != null && Object.hasOwnProperty.call(m, 'futurePoolGovernor'))
-						w.uint32(34).string(m.futurePoolGovernor);
+					if (m.future_pool_governor != null && Object.hasOwnProperty.call(m, 'future_pool_governor'))
+						w.uint32(34).string(m.future_pool_governor);
 					return w;
 				};
 				MsgCreateBalancerPool.decode = function decode(r, l) {
@@ -1089,14 +1089,14 @@ export const osmosis = (() => {
 								m.sender = r.string();
 								break;
 							case 2:
-								m.poolParams = osmosis.gamm.v1beta1.PoolParams.decode(r, r.uint32());
+								m.pool_params = osmosis.gamm.v1beta1.PoolParams.decode(r, r.uint32());
 								break;
 							case 3:
-								if (!(m.poolAssets && m.poolAssets.length)) m.poolAssets = [];
-								m.poolAssets.push(osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
+								if (!(m.pool_assets && m.pool_assets.length)) m.pool_assets = [];
+								m.pool_assets.push(osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
 								break;
 							case 4:
-								m.futurePoolGovernor = r.string();
+								m.future_pool_governor = r.string();
 								break;
 							default:
 								r.skipType(t & 7);
@@ -1111,23 +1111,23 @@ export const osmosis = (() => {
 					if (d.sender != null) {
 						m.sender = String(d.sender);
 					}
-					if (d.poolParams != null) {
-						if (typeof d.poolParams !== 'object')
-							throw TypeError('.osmosis.gamm.v1beta1.MsgCreateBalancerPool.poolParams: object expected');
-						m.poolParams = osmosis.gamm.v1beta1.PoolParams.fromObject(d.poolParams);
+					if (d.pool_params != null) {
+						if (typeof d.pool_params !== 'object')
+							throw TypeError('.osmosis.gamm.v1beta1.MsgCreateBalancerPool.pool_params: object expected');
+						m.pool_params = osmosis.gamm.v1beta1.PoolParams.fromObject(d.pool_params);
 					}
-					if (d.poolAssets) {
-						if (!Array.isArray(d.poolAssets))
-							throw TypeError('.osmosis.gamm.v1beta1.MsgCreateBalancerPool.poolAssets: array expected');
-						m.poolAssets = [];
-						for (var i = 0; i < d.poolAssets.length; ++i) {
-							if (typeof d.poolAssets[i] !== 'object')
-								throw TypeError('.osmosis.gamm.v1beta1.MsgCreateBalancerPool.poolAssets: object expected');
-							m.poolAssets[i] = osmosis.gamm.v1beta1.PoolAsset.fromObject(d.poolAssets[i]);
+					if (d.pool_assets) {
+						if (!Array.isArray(d.pool_assets))
+							throw TypeError('.osmosis.gamm.v1beta1.MsgCreateBalancerPool.pool_assets: array expected');
+						m.pool_assets = [];
+						for (var i = 0; i < d.pool_assets.length; ++i) {
+							if (typeof d.pool_assets[i] !== 'object')
+								throw TypeError('.osmosis.gamm.v1beta1.MsgCreateBalancerPool.pool_assets: object expected');
+							m.pool_assets[i] = osmosis.gamm.v1beta1.PoolAsset.fromObject(d.pool_assets[i]);
 						}
 					}
-					if (d.futurePoolGovernor != null) {
-						m.futurePoolGovernor = String(d.futurePoolGovernor);
+					if (d.future_pool_governor != null) {
+						m.future_pool_governor = String(d.future_pool_governor);
 					}
 					return m;
 				};
@@ -1135,27 +1135,27 @@ export const osmosis = (() => {
 					if (!o) o = {};
 					var d = {};
 					if (o.arrays || o.defaults) {
-						d.poolAssets = [];
+						d.pool_assets = [];
 					}
 					if (o.defaults) {
 						d.sender = '';
-						d.poolParams = null;
-						d.futurePoolGovernor = '';
+						d.pool_params = null;
+						d.future_pool_governor = '';
 					}
 					if (m.sender != null && m.hasOwnProperty('sender')) {
 						d.sender = m.sender;
 					}
-					if (m.poolParams != null && m.hasOwnProperty('poolParams')) {
-						d.poolParams = osmosis.gamm.v1beta1.PoolParams.toObject(m.poolParams, o);
+					if (m.pool_params != null && m.hasOwnProperty('pool_params')) {
+						d.pool_params = osmosis.gamm.v1beta1.PoolParams.toObject(m.pool_params, o);
 					}
-					if (m.poolAssets && m.poolAssets.length) {
-						d.poolAssets = [];
-						for (var j = 0; j < m.poolAssets.length; ++j) {
-							d.poolAssets[j] = osmosis.gamm.v1beta1.PoolAsset.toObject(m.poolAssets[j], o);
+					if (m.pool_assets && m.pool_assets.length) {
+						d.pool_assets = [];
+						for (var j = 0; j < m.pool_assets.length; ++j) {
+							d.pool_assets[j] = osmosis.gamm.v1beta1.PoolAsset.toObject(m.pool_assets[j], o);
 						}
 					}
-					if (m.futurePoolGovernor != null && m.hasOwnProperty('futurePoolGovernor')) {
-						d.futurePoolGovernor = m.futurePoolGovernor;
+					if (m.future_pool_governor != null && m.hasOwnProperty('future_pool_governor')) {
+						d.future_pool_governor = m.future_pool_governor;
 					}
 					return d;
 				};
@@ -2711,19 +2711,19 @@ export const osmosis = (() => {
 				function PoolParams(p) {
 					if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
 				}
-				PoolParams.prototype.swapFee = '';
-				PoolParams.prototype.exitFee = '';
-				PoolParams.prototype.smoothWeightChangeParams = null;
+				PoolParams.prototype.swap_fee = '';
+				PoolParams.prototype.exit_fee = '';
+				PoolParams.prototype.smooth_weight_change_params = null;
 				PoolParams.create = function create(properties) {
 					return new PoolParams(properties);
 				};
 				PoolParams.encode = function encode(m, w) {
 					if (!w) w = $Writer.create();
-					if (m.swapFee != null && Object.hasOwnProperty.call(m, 'swapFee')) w.uint32(10).string(m.swapFee);
-					if (m.exitFee != null && Object.hasOwnProperty.call(m, 'exitFee')) w.uint32(18).string(m.exitFee);
-					if (m.smoothWeightChangeParams != null && Object.hasOwnProperty.call(m, 'smoothWeightChangeParams'))
+					if (m.swap_fee != null && Object.hasOwnProperty.call(m, 'swap_fee')) w.uint32(10).string(m.swap_fee);
+					if (m.exit_fee != null && Object.hasOwnProperty.call(m, 'exit_fee')) w.uint32(18).string(m.exit_fee);
+					if (m.smooth_weight_change_params != null && Object.hasOwnProperty.call(m, 'smooth_weight_change_params'))
 						osmosis.gamm.v1beta1.SmoothWeightChangeParams.encode(
-							m.smoothWeightChangeParams,
+							m.smooth_weight_change_params,
 							w.uint32(26).fork()
 						).ldelim();
 					return w;
@@ -2736,13 +2736,13 @@ export const osmosis = (() => {
 						var t = r.uint32();
 						switch (t >>> 3) {
 							case 1:
-								m.swapFee = r.string();
+								m.swap_fee = r.string();
 								break;
 							case 2:
-								m.exitFee = r.string();
+								m.exit_fee = r.string();
 								break;
 							case 3:
-								m.smoothWeightChangeParams = osmosis.gamm.v1beta1.SmoothWeightChangeParams.decode(r, r.uint32());
+								m.smooth_weight_change_params = osmosis.gamm.v1beta1.SmoothWeightChangeParams.decode(r, r.uint32());
 								break;
 							default:
 								r.skipType(t & 7);
@@ -2754,17 +2754,17 @@ export const osmosis = (() => {
 				PoolParams.fromObject = function fromObject(d) {
 					if (d instanceof osmosis.gamm.v1beta1.PoolParams) return d;
 					var m = new osmosis.gamm.v1beta1.PoolParams();
-					if (d.swapFee != null) {
-						m.swapFee = String(d.swapFee);
+					if (d.swap_fee != null) {
+						m.swap_fee = String(d.swap_fee);
 					}
-					if (d.exitFee != null) {
-						m.exitFee = String(d.exitFee);
+					if (d.exit_fee != null) {
+						m.exit_fee = String(d.exit_fee);
 					}
-					if (d.smoothWeightChangeParams != null) {
-						if (typeof d.smoothWeightChangeParams !== 'object')
-							throw TypeError('.osmosis.gamm.v1beta1.PoolParams.smoothWeightChangeParams: object expected');
-						m.smoothWeightChangeParams = osmosis.gamm.v1beta1.SmoothWeightChangeParams.fromObject(
-							d.smoothWeightChangeParams
+					if (d.smooth_weight_change_params != null) {
+						if (typeof d.smooth_weight_change_params !== 'object')
+							throw TypeError('.osmosis.gamm.v1beta1.PoolParams.smooth_weight_change_params: object expected');
+						m.smooth_weight_change_params = osmosis.gamm.v1beta1.SmoothWeightChangeParams.fromObject(
+							d.smooth_weight_change_params
 						);
 					}
 					return m;
@@ -2773,19 +2773,19 @@ export const osmosis = (() => {
 					if (!o) o = {};
 					var d = {};
 					if (o.defaults) {
-						d.swapFee = '';
-						d.exitFee = '';
-						d.smoothWeightChangeParams = null;
+						d.swap_fee = '';
+						d.exit_fee = '';
+						d.smooth_weight_change_params = null;
 					}
-					if (m.swapFee != null && m.hasOwnProperty('swapFee')) {
-						d.swapFee = m.swapFee;
+					if (m.swap_fee != null && m.hasOwnProperty('swap_fee')) {
+						d.swap_fee = m.swap_fee;
 					}
-					if (m.exitFee != null && m.hasOwnProperty('exitFee')) {
-						d.exitFee = m.exitFee;
+					if (m.exit_fee != null && m.hasOwnProperty('exit_fee')) {
+						d.exit_fee = m.exit_fee;
 					}
-					if (m.smoothWeightChangeParams != null && m.hasOwnProperty('smoothWeightChangeParams')) {
-						d.smoothWeightChangeParams = osmosis.gamm.v1beta1.SmoothWeightChangeParams.toObject(
-							m.smoothWeightChangeParams,
+					if (m.smooth_weight_change_params != null && m.hasOwnProperty('smooth_weight_change_params')) {
+						d.smooth_weight_change_params = osmosis.gamm.v1beta1.SmoothWeightChangeParams.toObject(
+							m.smooth_weight_change_params,
 							o
 						);
 					}
@@ -2798,16 +2798,16 @@ export const osmosis = (() => {
 			})();
 			v1beta1.Pool = (function() {
 				function Pool(p) {
-					this.poolAssets = [];
+					this.pool_assets = [];
 					if (p) for (var ks = Object.keys(p), i = 0; i < ks.length; ++i) if (p[ks[i]] != null) this[ks[i]] = p[ks[i]];
 				}
 				Pool.prototype.address = '';
 				Pool.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
-				Pool.prototype.poolParams = null;
-				Pool.prototype.futurePoolGovernor = '';
-				Pool.prototype.totalShares = null;
-				Pool.prototype.poolAssets = $util.emptyArray;
-				Pool.prototype.totalWeight = '';
+				Pool.prototype.pool_params = null;
+				Pool.prototype.future_pool_governor = '';
+				Pool.prototype.total_shares = null;
+				Pool.prototype.pool_assets = $util.emptyArray;
+				Pool.prototype.total_weight = '';
 				Pool.create = function create(properties) {
 					return new Pool(properties);
 				};
@@ -2815,17 +2815,17 @@ export const osmosis = (() => {
 					if (!w) w = $Writer.create();
 					if (m.address != null && Object.hasOwnProperty.call(m, 'address')) w.uint32(10).string(m.address);
 					if (m.id != null && Object.hasOwnProperty.call(m, 'id')) w.uint32(16).uint64(m.id);
-					if (m.poolParams != null && Object.hasOwnProperty.call(m, 'poolParams'))
-						osmosis.gamm.v1beta1.PoolParams.encode(m.poolParams, w.uint32(26).fork()).ldelim();
-					if (m.futurePoolGovernor != null && Object.hasOwnProperty.call(m, 'futurePoolGovernor'))
-						w.uint32(34).string(m.futurePoolGovernor);
-					if (m.totalShares != null && Object.hasOwnProperty.call(m, 'totalShares'))
-						cosmos.base.v1beta1.Coin.encode(m.totalShares, w.uint32(42).fork()).ldelim();
-					if (m.poolAssets != null && m.poolAssets.length) {
-						for (var i = 0; i < m.poolAssets.length; ++i)
-							osmosis.gamm.v1beta1.PoolAsset.encode(m.poolAssets[i], w.uint32(50).fork()).ldelim();
+					if (m.pool_params != null && Object.hasOwnProperty.call(m, 'pool_params'))
+						osmosis.gamm.v1beta1.PoolParams.encode(m.pool_params, w.uint32(26).fork()).ldelim();
+					if (m.future_pool_governor != null && Object.hasOwnProperty.call(m, 'future_pool_governor'))
+						w.uint32(34).string(m.future_pool_governor);
+					if (m.total_shares != null && Object.hasOwnProperty.call(m, 'total_shares'))
+						cosmos.base.v1beta1.Coin.encode(m.total_shares, w.uint32(42).fork()).ldelim();
+					if (m.pool_assets != null && m.pool_assets.length) {
+						for (var i = 0; i < m.pool_assets.length; ++i)
+							osmosis.gamm.v1beta1.PoolAsset.encode(m.pool_assets[i], w.uint32(50).fork()).ldelim();
 					}
-					if (m.totalWeight != null && Object.hasOwnProperty.call(m, 'totalWeight')) w.uint32(58).string(m.totalWeight);
+					if (m.total_weight != null && Object.hasOwnProperty.call(m, 'total_weight')) w.uint32(58).string(m.total_weight);
 					return w;
 				};
 				Pool.decode = function decode(r, l) {
@@ -2842,20 +2842,20 @@ export const osmosis = (() => {
 								m.id = r.uint64();
 								break;
 							case 3:
-								m.poolParams = osmosis.gamm.v1beta1.PoolParams.decode(r, r.uint32());
+								m.pool_params = osmosis.gamm.v1beta1.PoolParams.decode(r, r.uint32());
 								break;
 							case 4:
-								m.futurePoolGovernor = r.string();
+								m.future_pool_governor = r.string();
 								break;
 							case 5:
-								m.totalShares = cosmos.base.v1beta1.Coin.decode(r, r.uint32());
+								m.total_shares = cosmos.base.v1beta1.Coin.decode(r, r.uint32());
 								break;
 							case 6:
-								if (!(m.poolAssets && m.poolAssets.length)) m.poolAssets = [];
-								m.poolAssets.push(osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
+								if (!(m.pool_assets && m.pool_assets.length)) m.pool_assets = [];
+								m.pool_assets.push(osmosis.gamm.v1beta1.PoolAsset.decode(r, r.uint32()));
 								break;
 							case 7:
-								m.totalWeight = r.string();
+								m.total_weight = r.string();
 								break;
 							default:
 								r.skipType(t & 7);
@@ -2877,30 +2877,30 @@ export const osmosis = (() => {
 						else if (typeof d.id === 'object')
 							m.id = new $util.LongBits(d.id.low >>> 0, d.id.high >>> 0).toNumber(true);
 					}
-					if (d.poolParams != null) {
-						if (typeof d.poolParams !== 'object')
-							throw TypeError('.osmosis.gamm.v1beta1.Pool.poolParams: object expected');
-						m.poolParams = osmosis.gamm.v1beta1.PoolParams.fromObject(d.poolParams);
+					if (d.pool_params != null) {
+						if (typeof d.pool_params !== 'object')
+							throw TypeError('.osmosis.gamm.v1beta1.Pool.pool_params: object expected');
+						m.pool_params = osmosis.gamm.v1beta1.PoolParams.fromObject(d.pool_params);
 					}
-					if (d.futurePoolGovernor != null) {
-						m.futurePoolGovernor = String(d.futurePoolGovernor);
+					if (d.future_pool_governor != null) {
+						m.future_pool_governor = String(d.future_pool_governor);
 					}
-					if (d.totalShares != null) {
-						if (typeof d.totalShares !== 'object')
-							throw TypeError('.osmosis.gamm.v1beta1.Pool.totalShares: object expected');
-						m.totalShares = cosmos.base.v1beta1.Coin.fromObject(d.totalShares);
+					if (d.total_shares != null) {
+						if (typeof d.total_shares !== 'object')
+							throw TypeError('.osmosis.gamm.v1beta1.Pool.total_shares: object expected');
+						m.total_shares = cosmos.base.v1beta1.Coin.fromObject(d.total_shares);
 					}
-					if (d.poolAssets) {
-						if (!Array.isArray(d.poolAssets)) throw TypeError('.osmosis.gamm.v1beta1.Pool.poolAssets: array expected');
-						m.poolAssets = [];
-						for (var i = 0; i < d.poolAssets.length; ++i) {
-							if (typeof d.poolAssets[i] !== 'object')
-								throw TypeError('.osmosis.gamm.v1beta1.Pool.poolAssets: object expected');
-							m.poolAssets[i] = osmosis.gamm.v1beta1.PoolAsset.fromObject(d.poolAssets[i]);
+					if (d.pool_assets) {
+						if (!Array.isArray(d.pool_assets)) throw TypeError('.osmosis.gamm.v1beta1.Pool.pool_assets: array expected');
+						m.pool_assets = [];
+						for (var i = 0; i < d.pool_assets.length; ++i) {
+							if (typeof d.pool_assets[i] !== 'object')
+								throw TypeError('.osmosis.gamm.v1beta1.Pool.pool_assets: object expected');
+							m.pool_assets[i] = osmosis.gamm.v1beta1.PoolAsset.fromObject(d.pool_assets[i]);
 						}
 					}
-					if (d.totalWeight != null) {
-						m.totalWeight = String(d.totalWeight);
+					if (d.total_weight != null) {
+						m.total_weight = String(d.total_weight);
 					}
 					return m;
 				};
@@ -2908,7 +2908,7 @@ export const osmosis = (() => {
 					if (!o) o = {};
 					var d = {};
 					if (o.arrays || o.defaults) {
-						d.poolAssets = [];
+						d.pool_assets = [];
 					}
 					if (o.defaults) {
 						d.address = '';
@@ -2916,10 +2916,10 @@ export const osmosis = (() => {
 							var n = new $util.Long(0, 0, true);
 							d.id = o.longs === String ? n.toString() : o.longs === Number ? n.toNumber() : n;
 						} else d.id = o.longs === String ? '0' : 0;
-						d.poolParams = null;
-						d.futurePoolGovernor = '';
-						d.totalShares = null;
-						d.totalWeight = '';
+						d.pool_params = null;
+						d.future_pool_governor = '';
+						d.total_shares = null;
+						d.total_weight = '';
 					}
 					if (m.address != null && m.hasOwnProperty('address')) {
 						d.address = m.address;
@@ -2934,23 +2934,23 @@ export const osmosis = (() => {
 									? new $util.LongBits(m.id.low >>> 0, m.id.high >>> 0).toNumber(true)
 									: m.id;
 					}
-					if (m.poolParams != null && m.hasOwnProperty('poolParams')) {
-						d.poolParams = osmosis.gamm.v1beta1.PoolParams.toObject(m.poolParams, o);
+					if (m.pool_params != null && m.hasOwnProperty('pool_params')) {
+						d.pool_params = osmosis.gamm.v1beta1.PoolParams.toObject(m.pool_params, o);
 					}
-					if (m.futurePoolGovernor != null && m.hasOwnProperty('futurePoolGovernor')) {
-						d.futurePoolGovernor = m.futurePoolGovernor;
+					if (m.future_pool_governor != null && m.hasOwnProperty('future_pool_governor')) {
+						d.future_pool_governor = m.future_pool_governor;
 					}
-					if (m.totalShares != null && m.hasOwnProperty('totalShares')) {
-						d.totalShares = cosmos.base.v1beta1.Coin.toObject(m.totalShares, o);
+					if (m.total_shares != null && m.hasOwnProperty('total_shares')) {
+						d.total_shares = cosmos.base.v1beta1.Coin.toObject(m.total_shares, o);
 					}
-					if (m.poolAssets && m.poolAssets.length) {
-						d.poolAssets = [];
-						for (var j = 0; j < m.poolAssets.length; ++j) {
-							d.poolAssets[j] = osmosis.gamm.v1beta1.PoolAsset.toObject(m.poolAssets[j], o);
+					if (m.pool_assets && m.pool_assets.length) {
+						d.pool_assets = [];
+						for (var j = 0; j < m.pool_assets.length; ++j) {
+							d.pool_assets[j] = osmosis.gamm.v1beta1.PoolAsset.toObject(m.pool_assets[j], o);
 						}
 					}
-					if (m.totalWeight != null && m.hasOwnProperty('totalWeight')) {
-						d.totalWeight = m.totalWeight;
+					if (m.total_weight != null && m.hasOwnProperty('total_weight')) {
+						d.total_weight = m.total_weight;
 					}
 					return d;
 				};
