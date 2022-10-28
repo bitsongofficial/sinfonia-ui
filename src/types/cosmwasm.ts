@@ -33,3 +33,11 @@ export interface CosmWasmContractHistory<T = any> {
 export interface CosmWasmContractSmartQuery<T = any> {
 	data: T
 }
+
+/* BS721 Types */
+export interface BS721InitMsg {
+	minter: string
+	name: string
+	symbol: string
+	uri: string
+}

@@ -1,7 +1,10 @@
 import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx"
+import { MsgInstantiateContract } from "cosmjs-types/cosmwasm/wasm/v1/tx"
 import { Height } from "cosmjs-types/ibc/core/client/v1/client"
 import { OsmosisRoute, SignerMessage } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
+import { toUtf8 } from "@cosmjs/encoding"
+import { Uint53 } from "@cosmjs/math"
 import { MsgClaim as MerkleDropMsgClaim } from "./codec/bitsong/merkledrop/v1beta1/tx"
 import { osmosis } from "osmojs"
 import { Long } from "@osmonauts/helpers"
@@ -142,6 +145,23 @@ export const MerkledropClaim = (
 			index: index.toString(),
 			amount,
 			proofs,
+		}),
+	}
+}
+
+export const ExecuteContract = (
+	senderAddress: string,
+	codeId: number,
+	label: string,
+	msg: Record<string, unknown>
+) => {
+	return {
+		typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract",
+		value: MsgInstantiateContract.fromPartial({
+			sender: senderAddress,
+			codeId,
+			label,
+			msg: toUtf8(JSON.stringify(msg)),
 		}),
 	}
 }

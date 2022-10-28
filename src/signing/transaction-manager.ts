@@ -15,19 +15,26 @@ import {
 	ExitPool,
 	SwapExactAmountIn,
 	MerkledropClaim,
+	ExecuteContract,
 } from "./messages"
 import {
 	AminoTypes,
 	assertIsDeliverTxSuccess,
 	createIbcAminoConverters,
-	defaultRegistryTypes,
 	SigningStargateClient,
 } from "@cosmjs/stargate"
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx"
 import { osmosis } from "osmojs"
+import { createWasmAminoConverters } from "@cosmjs/cosmwasm-stargate"
 import { bitsongRegistry } from "./registry"
 import { createBitsongAminoConverters } from "./amino-types"
+import { contracts } from "@bitsongjs/contracts"
 import SignerEventEmitter from "./events"
+
+const { CW721Base } = contracts
+
+// TODO: Add message composer for NFT operations
+const { CW721BaseMessageComposer } = CW721Base
 
 export class TransactionManager extends SignerEventEmitter {
 	signer: OfflineSigner | OfflineDirectSigner
@@ -109,6 +116,23 @@ export class TransactionManager extends SignerEventEmitter {
 
 		return this.createSignBroadcast(
 			"SendIbcTokens",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public executeContract(
+		senderAddress: string,
+		codeId: number,
+		label: string,
+		msg: Record<string, unknown>,
+		memo?: string
+	) {
+		const message = ExecuteContract(senderAddress, codeId, label, msg)
+
+		return this.createSignBroadcast(
+			"ExecuteContract",
 			[message],
 			senderAddress,
 			memo ?? ""
@@ -277,6 +301,7 @@ export class TransactionManager extends SignerEventEmitter {
 				...osmosis.gamm.v1beta1.AminoConverter,
 				...osmosis.lockup.AminoConverter,
 				...createBitsongAminoConverters(),
+				...createWasmAminoConverters(),
 			})
 
 			const client = await SigningStargateClient.connectWithSigner(

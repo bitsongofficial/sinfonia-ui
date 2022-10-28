@@ -2,7 +2,6 @@ import { AminoConverters } from "@cosmjs/stargate"
 import { AminoMsg } from "@cosmjs/amino"
 import { MsgClaim } from "./codec/bitsong/merkledrop/v1beta1/tx"
 import { Coin } from "@cosmjs/launchpad"
-import { osmosis } from "osmojs"
 import Long from "long"
 
 export interface AminoMsgClaim extends AminoMsg {
