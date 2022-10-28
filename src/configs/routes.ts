@@ -82,6 +82,14 @@ const routes: RouteRecordRaw[] = [
 			title: "Assets",
 		},
 	},
+	{
+		path: "/collections",
+		name: "Collections",
+		component: () => import("@/components/pages/Collections.vue"),
+		meta: {
+			title: "Collections",
+		},
+	},
 	/* {
 		path: "/airdrops",
 		name: "Airdrops",
