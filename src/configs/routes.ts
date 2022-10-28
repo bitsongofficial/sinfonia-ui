@@ -16,9 +16,9 @@ export const disabledAirdrops = import.meta.env.VITE_AIRDROPS_DISABLE === "true"
 const routes: RouteRecordRaw[] = [
 	{
 		path: "/",
-		redirect: "/swap",
+		redirect: "/assets",
 	},
-	{
+	/* {
 		path: "/fantokens",
 		component: () => import("@/components/pages/Wrapper.vue"),
 		meta: {
@@ -51,8 +51,8 @@ const routes: RouteRecordRaw[] = [
 		meta: {
 			title: "Swap",
 		},
-	},
-	{
+	}, */
+	/* {
 		path: "/pools",
 		component: () => import("@/components/pages/Wrapper.vue"),
 		meta: {
@@ -73,7 +73,7 @@ const routes: RouteRecordRaw[] = [
 				component: () => import("@/components/pages/Pool.vue"),
 			},
 		],
-	},
+	}, */
 	{
 		path: "/assets",
 		name: "Assets",
@@ -82,14 +82,14 @@ const routes: RouteRecordRaw[] = [
 			title: "Assets",
 		},
 	},
-	{
+	/* {
 		path: "/airdrops",
 		name: "Airdrops",
 		component: () => import("@/components/pages/Airdrops.vue"),
 		meta: {
 			title: "Airdrops",
 		},
-	},
+	}, */
 	{
 		path: "/:pathMatch(.*)",
 		redirect: "/404",
@@ -105,33 +105,39 @@ const routes: RouteRecordRaw[] = [
 ]
 
 export const menuItems: MenuItem[] = [
-	{
+	/* {
 		icon: { name: "refresh", width: 21, height: 17 },
 		label: "Swap",
 		path: "/swap",
 		disabled: disabledRoutes,
-	},
-	{
+	}, */
+	/* {
 		icon: { name: "list", width: 19, height: 13 },
 		label: "FanTokens",
 		path: "/fantokens",
 		disabled: disabledRoutes,
-	},
-	{
+	}, */
+	/* {
 		icon: { name: "stack", width: 17, height: 17 },
 		label: "Pools",
 		path: "/pools",
 		disabled: disabledRoutes,
-	},
+	}, */
 	{
 		icon: { name: "suitcase", width: 18, height: 16 },
 		label: "Assets",
 		path: "/assets",
 		disabled: disabledRoutes,
 	},
+	{
+		icon: { name: "list", width: 19, height: 13 },
+		label: "Collections",
+		path: "/collections",
+		disabled: disabledRoutes,
+	},
 ]
 
-if (!disabledAirdrops) {
+/* if (!disabledAirdrops) {
 	menuItems.push({
 		icon: { name: "airdrop", width: 20, height: 22 },
 		label: "Airdrops",
@@ -164,6 +170,6 @@ if (!disabledTransactions) {
 		path: `${externalWebsites.mintscan}bitsong/txs`,
 		isLink: true,
 	})
-}
+} */
 
 export default routes
