@@ -12,6 +12,7 @@ import useAuth from "@/store/auth"
 import { useFieldArray, useForm } from "vee-validate"
 import useTransactionManager from "@/store/transaction-manager"
 import { CreateCollectionRequest, CollectionLinkRequest } from "@/types"
+import { FilePondFile } from "filepond"
 import * as yup from "yup"
 
 const route = useRoute()
@@ -25,11 +26,16 @@ const code = route.params.codeId
 	: parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
 
 const validationSchema = yup.object().shape({
-	image: yup.mixed().required("Image is required field"),
-	cover: yup.mixed().required("Cover is required field"),
+	image: yup
+		.array<FilePondFile>()
+		.length(1)
+		.required("Image is a required field"),
+	cover: yup
+		.array<FilePondFile>()
+		.length(1)
+		.required("Cover is a required field"),
 	name: yup.string().required("Name is a required field"),
 	symbol: yup.string().required("Symbol is a required field"),
-	uri: yup.string().required("URI is a required field"),
 	description: yup.string().required("Description is a required field"),
 	links: yup
 		.array()
@@ -43,11 +49,10 @@ const validationSchema = yup.object().shape({
 })
 
 const initialValues: CreateCollectionRequest = {
-	image: undefined,
-	cover: undefined,
+	image: [],
+	cover: [],
 	name: "",
 	symbol: "",
-	uri: "",
 	description: "",
 	links: [],
 }
@@ -80,7 +85,7 @@ const addLink = () => {
 }
 
 const onSubmit = handleSubmit(() => {
-	console.log(values)
+	NFTStore.createCollection(values)
 })
 </script>
 <template>
@@ -115,13 +120,6 @@ const onSubmit = handleSubmit(() => {
 				class="col-span-12 col-span-md-6"
 				name="symbol"
 				placeholder="Symbol"
-				alternative
-			/>
-
-			<StandardInput
-				class="col-span-12 col-span-md-6"
-				name="uri"
-				placeholder="URI"
 				alternative
 			/>
 

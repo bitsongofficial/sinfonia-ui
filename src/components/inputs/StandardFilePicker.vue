@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import vueFilePond from "vue-filepond"
+import { FilePondFile } from "filepond"
 import "filepond/dist/filepond.min.css"
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css"
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
@@ -12,7 +13,7 @@ const props = withDefaults(
 		name: string
 		fileTypes?: string
 		placeholder?: string
-		value?: any[] | File | FileList | null | undefined
+		value?: FilePondFile[] | undefined
 		alternative?: boolean
 		type?:
 			| "number"
@@ -40,24 +41,21 @@ const props = withDefaults(
 const name = toRef(props, "name")
 
 const emit = defineEmits<{
-	(
-		e: "update:modelValue",
-		value: any[] | File | FileList | null | undefined
-	): void
-	(e: "maxClick", value: any[] | File | FileList | null | undefined): void
+	(e: "update:modelValue", value: FilePondFile[] | undefined): void
 }>()
 
-const { value, errorMessage, handleBlur, handleChange } = useField(
-	name,
-	undefined,
-	{
+const { value, errorMessage, meta, handleBlur, handleChange, setTouched } =
+	useField(name, undefined, {
 		initialValue: props.value,
-	}
-)
+	})
 
-const updateModelValue = (e: unknown) => {
+const updateModelValue = (e: FilePondFile[] | undefined) => {
 	handleChange(e)
 	emit("update:modelValue", value.value)
+
+	if (e && e.length > 0) {
+		setTouched(true)
+	}
 }
 
 const FilePond = vueFilePond(
@@ -73,10 +71,12 @@ const FilePond = vueFilePond(
 			:accepted-file-types="fileTypes"
 			v-model="value"
 			@input="updateModelValue($event)"
-			@blur="handleBlur"
 			class="shadow-md light:shadow-10"
 		/>
-		<p class="fs-12 text-primary text-weight-medium min-h-fit">
+		<p
+			class="fs-12 text-primary text-weight-medium min-h-fit q-mt-8"
+			v-if="meta.touched && !meta.valid"
+		>
 			{{ errorMessage }}
 		</p>
 	</div>

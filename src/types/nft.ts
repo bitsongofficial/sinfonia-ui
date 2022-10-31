@@ -1,14 +1,15 @@
+import { FilePondFile } from "filepond"
+
 export interface CollectionLinkRequest {
 	key: string
 	value: string
 }
 
 export interface CreateCollectionRequest {
-	image?: File
-	cover?: File
+	image?: FilePondFile[] | null
+	cover?: FilePondFile[] | null
 	name: string
 	symbol: string
-	uri: string
 	description: string
 	links: CollectionLinkRequest[]
 }
