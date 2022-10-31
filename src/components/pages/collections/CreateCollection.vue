@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Title from "@/components/typography/Title.vue"
 import StandardInput from "@/components/inputs/StandardInput.vue"
+import StandardFilePicker from "@/components/inputs/StandardFilePicker.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import SmallButton from "@/components/buttons/SmallButton.vue"
 import useNFT from "@/store/nft"
@@ -24,6 +25,8 @@ const code = route.params.codeId
 	: parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
 
 const validationSchema = yup.object().shape({
+	image: yup.mixed().required("Image is required field"),
+	cover: yup.mixed().required("Cover is required field"),
 	name: yup.string().required("Name is a required field"),
 	symbol: yup.string().required("Symbol is a required field"),
 	uri: yup.string().required("URI is a required field"),
@@ -40,6 +43,8 @@ const validationSchema = yup.object().shape({
 })
 
 const initialValues: CreateCollectionRequest = {
+	image: undefined,
+	cover: undefined,
 	name: "",
 	symbol: "",
 	uri: "",
@@ -85,6 +90,20 @@ const onSubmit = handleSubmit(() => {
 		</div>
 
 		<div class="grid grid-cols-12 grid-gap-24 q-mb-74">
+			<StandardFilePicker
+				class="col-span-12 col-span-md-6"
+				name="image"
+				placeholder="Drop image file here..."
+				alternative
+			/>
+
+			<StandardFilePicker
+				class="col-span-12 col-span-md-6"
+				name="cover"
+				placeholder="Drop cover file here..."
+				alternative
+			/>
+
 			<StandardInput
 				class="col-span-12 col-span-md-6"
 				name="name"

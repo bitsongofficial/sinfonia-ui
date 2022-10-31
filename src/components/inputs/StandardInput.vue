@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, toRef } from "vue"
+import { toRef } from "vue"
 import { useField } from "vee-validate"
 
 const props = withDefaults(
@@ -51,7 +51,7 @@ const updateModelValue = (e: unknown) => {
 }
 
 const defaultClass = props.alternative
-	? "absolute-full bg-white rounded-30 opacity-5 light:opacity-100 shadow-md light:shadow-10"
+	? `absolute-full bg-white rounded-20 opacity-5 light:opacity-100 shadow-md light:shadow-10`
 	: "absolute-full rounded-20 bg-primary-darker light:bg-white opacity-50"
 </script>
 

@@ -7,6 +7,22 @@ body.body--light {
     color: $secondary;
   }
 
+  .filepond--panel-root {
+    background: $white !important;
+  
+    &::after {
+      background-color: transparent !important;
+    }
+  
+    &::before {
+      background-color: transparent !important;
+    }
+  }
+
+  .filepond--drop-label {
+    color: $secondary !important;
+  }
+
   &.main-page-background {
     background: linear-gradient(338.9deg, rgba(17, 8, 44, 0.1) -14.43%, rgba(21, 10, 52, 0) 70.51%), #F0EDF2 !important;
   }

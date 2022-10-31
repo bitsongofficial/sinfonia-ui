@@ -4,6 +4,8 @@ export interface CollectionLinkRequest {
 }
 
 export interface CreateCollectionRequest {
+	image?: File
+	cover?: File
 	name: string
 	symbol: string
 	uri: string
