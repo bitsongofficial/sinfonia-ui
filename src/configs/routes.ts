@@ -83,12 +83,31 @@ const routes: RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/collections/:codeId?",
-		name: "Collections",
-		component: () => import("@/components/pages/Collections.vue"),
+		path: "/collections",
+		name: "CollectionsWrapper",
+		component: () => import("@/components/pages/Wrapper.vue"),
 		meta: {
 			title: "Collections",
 		},
+		children: [
+			{
+				path: ":codeId?",
+				name: "Collections",
+				component: () => import("@/components/pages/collections/Collections.vue"),
+				meta: {
+					breadcrumbHide: true,
+				},
+			},
+			{
+				path: ":codeId/create",
+				name: "CreateCollection",
+				component: () =>
+					import("@/components/pages/collections/CreateCollection.vue"),
+				meta: {
+					title: "Create Collection",
+				},
+			},
+		],
 	},
 	/* {
 		path: "/airdrops",

@@ -29,7 +29,7 @@ onMounted(() => {
 				<SmallButton
 					class="q-ml-20"
 					label="Create"
-					:to="`/create-collection/${code}`"
+					:to="`/collections/${code}/create`"
 				/>
 			</Title>
 		</div>

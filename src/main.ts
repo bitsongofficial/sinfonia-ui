@@ -35,7 +35,11 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-	document.title = "Sinfonia"
+	if (to.meta.title) {
+		document.title = to.meta.title
+	} else {
+		document.title = "Sinfonia"
+	}
 
 	if (disabledRoutes) {
 		if (to.name !== "Playground") {

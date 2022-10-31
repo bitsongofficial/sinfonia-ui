@@ -440,6 +440,14 @@ $s in $custom-sizes {
         grid-column-start: span $k !important;
     }
 
+    .row-start-#{$k} {
+        grid-row-start: $k !important;
+    }
+
+    .row-start-span-#{$k} {
+        grid-row-start: span $k !important;
+    }
+
     .col-end-#{$k} {
         grid-column-end: $k !important;
     }
@@ -881,6 +889,14 @@ $s in $custom-sizes {
 
         .col-start-span-md-#{$k} {
             grid-column-start: span $k !important;
+        }
+
+        .row-start-md-#{$k} {
+            grid-row-start: $k !important;
+        }
+    
+        .row-start-span-md-#{$k} {
+            grid-row-start: span $k !important;
         }
 
         .col-end-md-#{$k} {
