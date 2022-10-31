@@ -1,4 +1,5 @@
 import { ContractCodeHistoryOperationType } from "cosmjs-types/cosmwasm/wasm/v1/types"
+import { ChainResponse } from "./chain"
 
 export interface CosmWasmCode {
 	id: number
@@ -40,4 +41,9 @@ export interface BS721InitMsg {
 	name: string
 	symbol: string
 	uri: string
+}
+
+/* HTTP Client responses  */
+export interface ContractWithDetails<T = any> extends CosmWasmContractInfo {
+	history?: ChainResponse<CosmWasmContractHistory<T>[]>
 }

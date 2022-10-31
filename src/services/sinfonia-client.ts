@@ -5,6 +5,7 @@ import {
 	AssetListConfig,
 	BitsongMerkledrop,
 	ChainData,
+	ContractWithDetails,
 	OsmosisPool,
 } from "@/types"
 import { AxiosResponse } from "axios"
@@ -21,6 +22,88 @@ export default class SinfoniaClient {
 
 	public constructor(configUrl: string) {
 		this.configClient = new ConfigClient(configUrl)
+	}
+
+	public contractInfo = async (address: string) => {
+		try {
+			const bitsongClient = this.bitsongClient
+
+			if (bitsongClient) {
+				const response = await bitsongClient.contractInfo(address)
+
+				return response.data
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public contractHistory = async (address: string) => {
+		try {
+			const bitsongClient = this.bitsongClient
+
+			if (bitsongClient) {
+				const response = await bitsongClient.contractHistory(address)
+
+				return {
+					...response.data,
+					address,
+				}
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public contractsWithDetails = async <T = any>(
+		codeId: number
+	): Promise<ContractWithDetails<T>[] | undefined> => {
+		try {
+			const bitsongClient = this.bitsongClient
+
+			if (bitsongClient) {
+				const response = await bitsongClient.contracts(codeId)
+
+				const detailsResponses = compact(
+					await Promise.all(
+						response.data.result.map((address) => this.contractInfo(address))
+					)
+				)
+
+				const historyResponse = await Promise.all(
+					response.data.result.map((address) => this.contractHistory(address))
+				)
+
+				return detailsResponses.map(({ result }) => {
+					const relatedHistory = historyResponse.find(
+						(history) => history?.address === result.address
+					)
+
+					return {
+						...result,
+						history: relatedHistory,
+					}
+				})
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public contracts = async (codeId: number) => {
+		try {
+			if (this.bitsongClient) {
+				const response = await this.bitsongClient.contracts(codeId)
+
+				return response.data
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 	}
 
 	public bitsongBlocks = async (block?: string) => {

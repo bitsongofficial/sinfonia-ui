@@ -83,7 +83,7 @@ const routes: RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/collections",
+		path: "/collections/:codeId?",
 		name: "Collections",
 		component: () => import("@/components/pages/Collections.vue"),
 		meta: {
