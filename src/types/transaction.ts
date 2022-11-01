@@ -17,6 +17,7 @@ export enum TransactionType {
 	SWAP_EXACT_AMOUNT_IN = "swapExactAmountIn",
 	BEGIN_UNLOCKING = "beginUnlocking",
 	MERKLEDROP_CLAIM = "merkledropClaim",
+	EXECUTE_CONTRACT = "executeContract",
 }
 
 export interface TransactionPayload {

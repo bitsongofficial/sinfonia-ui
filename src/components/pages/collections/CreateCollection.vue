@@ -85,7 +85,7 @@ const addLink = () => {
 }
 
 const onSubmit = handleSubmit(() => {
-	NFTStore.createCollection(values)
+	NFTStore.createCollection(code, values)
 })
 </script>
 <template>
@@ -179,6 +179,7 @@ const onSubmit = handleSubmit(() => {
 					:disable="
 						!authStore.session ||
 						!meta.valid ||
+						NFTStore.creatingCollection ||
 						transactionManagerStore.loadingAndSign
 					"
 				>

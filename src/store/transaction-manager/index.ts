@@ -581,6 +581,68 @@ const useTransactionManager = defineStore("transactionManager", {
 				this.loadingBroadcasting = false
 			}
 		},
+		async executeContract<T extends object>(
+			codeId: number,
+			label: string,
+			msg: T
+		) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+			let loader
+
+			try {
+				this.loadingSign = true
+				const bitsongToken = configStore.bitsongToken
+
+				if (window.keplr && bitsongToken && authStore.bitsongAddress) {
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
+						bitsongToken.chainID
+					)
+
+					const manager = new TransactionManager(signer, bitsongToken)
+
+					let txId
+
+					manager.on("ontxsigned", () => {
+						txId = this.addBroadcastingTx({
+							from: bitsongToken,
+							type: TransactionType.EXECUTE_CONTRACT,
+						})
+
+						this.loadingBroadcasting = true
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+						}
+
+						this.loadingBroadcasting = false
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
+					})
+
+					await manager.executeContract(authStore.bitsongAddress, codeId, label, msg)
+				}
+			} finally {
+				this.loadingSign = false
+				this.loadingBroadcasting = false
+			}
+		},
 		addBroadcastingTx({
 			type,
 			from,

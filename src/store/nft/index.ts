@@ -6,6 +6,9 @@ import {
 } from "@/types"
 import { compact } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
+import { notifyError } from "@/common"
+import useTransactionManager from "@/store/transaction-manager"
+import useAuth from "@/store/auth"
 
 export interface NFTState {
 	loading: boolean
@@ -20,18 +23,34 @@ const useNFT = defineStore("nft", {
 		collections: [],
 	}),
 	actions: {
-		async createCollection(payload: CreateCollectionRequest) {
+		async createCollection(codeId: number, payload: CreateCollectionRequest) {
+			const transactionManagerStore = useTransactionManager()
+			const authStore = useAuth()
+
 			try {
 				this.creatingCollection = true
 
-				if (payload.cover && payload.image) {
+				if (payload.cover && payload.image && authStore.bitsongAddress) {
 					const [image] = payload.image
 					const imageCID = await ipfsClient.upload(image.file as File)
 
-					console.log(imageCID)
+					const [cover] = payload.cover
+					const coverCID = await ipfsClient.upload(cover.file as File)
+
+					transactionManagerStore.executeContract<BS721InitMsg>(
+						codeId,
+						payload.name,
+						{
+							minter: authStore.bitsongAddress,
+							name: payload.name,
+							symbol: payload.symbol,
+							uri: "",
+						}
+					)
 				}
 			} catch (error) {
 				console.error(error)
+				notifyError("Upload failed", (error as Error).message)
 				throw error
 			} finally {
 				this.creatingCollection = false

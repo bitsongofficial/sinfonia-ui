@@ -122,11 +122,11 @@ export class TransactionManager extends SignerEventEmitter {
 		)
 	}
 
-	public executeContract(
+	public executeContract<T extends object>(
 		senderAddress: string,
 		codeId: number,
 		label: string,
-		msg: Record<string, unknown>,
+		msg: T,
 		memo?: string
 	) {
 		const message = ExecuteContract(senderAddress, codeId, label, msg)

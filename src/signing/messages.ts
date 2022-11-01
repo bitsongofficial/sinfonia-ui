@@ -149,11 +149,11 @@ export const MerkledropClaim = (
 	}
 }
 
-export const ExecuteContract = (
+export const ExecuteContract = <T extends object>(
 	senderAddress: string,
 	codeId: number,
 	label: string,
-	msg: Record<string, unknown>
+	msg: T
 ) => {
 	return {
 		typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract",
