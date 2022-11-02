@@ -36,6 +36,7 @@
 		"@quasar/extras": "^1.12.5",
 		"@storipress/apollo-vue-devtool": "^0.0.4",
 		"@vee-validate/rules": "^4.5.11",
+		"@vee-validate/zod": "^4.7.2",
 		"@vue/apollo-composable": "4.0.0-alpha.17",
 		"@vueuse/core": "^8.9.1",
 		"axios": "^0.26.1",
@@ -64,7 +65,7 @@
 		"vue-fuse": "^4.1.1",
 		"vue-gtag": "^2.0.1",
 		"vue-router": "4",
-		"yup": "^0.32.11"
+		"zod": "^3.19.1"
 	},
 	"devDependencies": {
 		"@kelchy/pre-commit": "^1.2.4",

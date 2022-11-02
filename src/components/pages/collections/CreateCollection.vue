@@ -10,10 +10,10 @@ import useSettings from "@/store/settings"
 import { onBeforeMount } from "vue"
 import useAuth from "@/store/auth"
 import { useFieldArray, useForm } from "vee-validate"
+import { toFormValidator } from "@vee-validate/zod"
 import useTransactionManager from "@/store/transaction-manager"
 import { CreateCollectionRequest, CollectionLinkRequest } from "@/types"
-import { FilePondFile } from "filepond"
-import * as yup from "yup"
+import { z } from "zod"
 
 const route = useRoute()
 const settingsStore = useSettings()
@@ -25,28 +25,21 @@ const code = route.params.codeId
 	? parseInt(route.params.codeId as string, 10)
 	: parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
 
-const validationSchema = yup.object().shape({
-	image: yup
-		.array<FilePondFile>()
-		.length(1)
-		.required("Image is a required field"),
-	cover: yup
-		.array<FilePondFile>()
-		.length(1)
-		.required("Cover is a required field"),
-	name: yup.string().required("Name is a required field"),
-	symbol: yup.string().required("Symbol is a required field"),
-	description: yup.string().required("Description is a required field"),
-	links: yup
-		.array()
-		.of(
-			yup.object().shape({
-				key: yup.string().required().label("key"),
-				value: yup.string().required().label("value"),
+const validationSchema = toFormValidator(
+	z.object({
+		image: z.array(z.any()).length(1),
+		cover: z.array(z.any()).length(1),
+		name: z.string().min(1, "Name is a required field"),
+		symbol: z.string().min(1, "Symbol is a required field"),
+		description: z.string().min(1, "Description is a required field"),
+		links: z.array(
+			z.object({
+				key: z.string().min(1, "Key is a required field"),
+				value: z.string().min(1, "Value is a required field"),
 			})
-		)
-		.strict(),
-})
+		),
+	})
+)
 
 const initialValues: CreateCollectionRequest = {
 	image: [],

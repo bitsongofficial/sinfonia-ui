@@ -18,6 +18,7 @@ export enum TransactionType {
 	BEGIN_UNLOCKING = "beginUnlocking",
 	MERKLEDROP_CLAIM = "merkledropClaim",
 	EXECUTE_CONTRACT = "executeContract",
+	INSTANTIATE_CONTRACT = "instantiateContract",
 }
 
 export interface TransactionPayload {

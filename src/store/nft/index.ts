@@ -5,6 +5,8 @@ import {
 	CreateCollectionRequest,
 	BitsongCollection,
 	NftTokenInfo,
+	CreateNFTRequest,
+	BitsongNFT,
 } from "@/types"
 import { compact } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
@@ -19,6 +21,7 @@ import {
 	CollectionMetadata,
 	CollectionMetadataSchema,
 	NFTMetadata,
+	NFTMetadataSchema,
 } from "@bitsongjs/nft"
 import { ContractCodeHistoryOperationType } from "cosmjs-types/cosmwasm/wasm/v1/types"
 import { getIPFSFile } from "@/services/ipfs"
@@ -30,6 +33,7 @@ export interface NFTState {
 	loadingNFTs: boolean
 	loadingNFTsMetadata: boolean
 	creatingCollection: boolean
+	creatingNFT: boolean
 	collections: ContractWithDetails<BS721InitMsg>[]
 	collectionsMetadata: Record<string, CollectionMetadata>
 	nfts: NftTokenInfo[]
@@ -42,12 +46,73 @@ const useNFT = defineStore("nft", {
 		loadingNFTs: false,
 		loadingNFTsMetadata: false,
 		creatingCollection: false,
+		creatingNFT: false,
 		collections: [],
 		collectionsMetadata: {},
 		nfts: [],
 		nftsMetadata: {},
 	}),
 	actions: {
+		async mintNFT(collectionAddress: string, payload: CreateNFTRequest) {
+			const transactionManagerStore = useTransactionManager()
+			const authStore = useAuth()
+			const loadingNotification = notifyLoading(
+				"Uploading",
+				"Uploading data to IPFS"
+			)
+
+			try {
+				this.creatingCollection = true
+
+				if (payload.cover && payload.media && authStore.bitsongAddress) {
+					const [media] = payload.media
+					const mediaCID = await ipfsClient.upload(media.file as File)
+
+					/* const [cover] = payload.cover
+					const coverCID = await ipfsClient.upload(cover.file as File) */
+
+					const metadata: NFTMetadata = {
+						image: `ipfs://${mediaCID}`,
+						// cover: `ipfs://${coverCID}`,
+						name: payload.name,
+						description: payload.description,
+						attributes: payload.attributes,
+					}
+
+					// Check if metadata schema is valid
+					NFTMetadataSchema.parse(metadata)
+
+					const metadataFile = new File(
+						[JSON.stringify(metadata)],
+						`${payload.name}_metadata`,
+						{
+							type: "application/json",
+						}
+					)
+
+					const metadataCID = await ipfsClient.upload(metadataFile)
+
+					const tokenId = `${Date.now()}-${metadataCID}`
+
+					transactionManagerStore.executeContract(collectionAddress, {
+						mint: {
+							owner: authStore.bitsongAddress,
+							payment_address: payload.paymentAddress,
+							seller_fee: payload.sellerFee,
+							token_id: tokenId,
+							token_uri: `ipfs://${metadataCID}`,
+						},
+					})
+				}
+			} catch (error) {
+				console.error(error)
+				notifyError("Upload failed", (error as Error).message)
+				throw error
+			} finally {
+				this.creatingCollection = false
+				loadingNotification()
+			}
+		},
 		async createCollection(codeId: number, payload: CreateCollectionRequest) {
 			const transactionManagerStore = useTransactionManager()
 			const authStore = useAuth()
@@ -86,7 +151,7 @@ const useNFT = defineStore("nft", {
 
 					const metadataCID = await ipfsClient.upload(metadataFile)
 
-					transactionManagerStore.executeContract<BS721InitMsg>(
+					transactionManagerStore.instantiateContract<BS721InitMsg>(
 						codeId,
 						payload.name,
 						{
@@ -234,6 +299,24 @@ const useNFT = defineStore("nft", {
 		},
 	},
 	getters: {
+		bitsongNFTs: ({ nfts, nftsMetadata }): BitsongNFT[] => {
+			return nfts.map((nft) => {
+				let metadata: NFTMetadata | undefined = undefined
+
+				if (nft.token_uri) {
+					const uri = validateIPFSURI(nft.token_uri)
+
+					if (uri) {
+						metadata = nftsMetadata[uri]
+					}
+				}
+
+				return {
+					...nft,
+					metadata,
+				}
+			})
+		},
 		bitsongCollections: ({
 			collections,
 			collectionsMetadata,

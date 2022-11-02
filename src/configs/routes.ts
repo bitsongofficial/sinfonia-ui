@@ -118,7 +118,7 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: ":address/mint",
 				name: "MintNFT",
-				component: () => import("@/components/pages/collections/Collection.vue"),
+				component: () => import("@/components/pages/collections/MintNFT.vue"),
 				meta: {
 					title: "Mint",
 				},

@@ -127,7 +127,7 @@ const tabs = computed(() => {
 						class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
 					>
 						<RouterLink
-							v-for="(nft, index) in NFTStore.nfts"
+							v-for="(nft, index) in NFTStore.bitsongNFTs"
 							:key="index"
 							:to="`/collections/${address}/details/nft/${nft.token_id}`"
 							class="block full-height"

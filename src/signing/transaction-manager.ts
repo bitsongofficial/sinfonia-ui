@@ -15,6 +15,7 @@ import {
 	ExitPool,
 	SwapExactAmountIn,
 	MerkledropClaim,
+	InstantiateContract,
 	ExecuteContract,
 } from "./messages"
 import {
@@ -122,14 +123,31 @@ export class TransactionManager extends SignerEventEmitter {
 		)
 	}
 
-	public executeContract<T extends object>(
+	public instantiateContract<T extends object>(
 		senderAddress: string,
 		codeId: number,
 		label: string,
 		msg: T,
 		memo?: string
 	) {
-		const message = ExecuteContract(senderAddress, codeId, label, msg)
+		const message = InstantiateContract(senderAddress, codeId, label, msg)
+
+		return this.createSignBroadcast(
+			"InstantiateContract",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public executeContract<T extends object>(
+		senderAddress: string,
+		contract: string,
+		msg: T,
+		funds: Coin[] = [],
+		memo?: string
+	) {
+		const message = ExecuteContract(senderAddress, contract, msg, funds)
 
 		return this.createSignBroadcast(
 			"ExecuteContract",

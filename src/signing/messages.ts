@@ -1,5 +1,8 @@
 import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx"
-import { MsgInstantiateContract } from "cosmjs-types/cosmwasm/wasm/v1/tx"
+import {
+	MsgInstantiateContract,
+	MsgExecuteContract,
+} from "cosmjs-types/cosmwasm/wasm/v1/tx"
 import { Height } from "cosmjs-types/ibc/core/client/v1/client"
 import { OsmosisRoute, SignerMessage } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
@@ -149,7 +152,7 @@ export const MerkledropClaim = (
 	}
 }
 
-export const ExecuteContract = <T extends object>(
+export const InstantiateContract = <T extends object>(
 	senderAddress: string,
 	codeId: number,
 	label: string,
@@ -162,6 +165,23 @@ export const ExecuteContract = <T extends object>(
 			codeId,
 			label,
 			msg: toUtf8(JSON.stringify(msg)),
+		}),
+	}
+}
+
+export const ExecuteContract = <T extends object>(
+	senderAddress: string,
+	contract: string,
+	msg: T,
+	funds: Coin[] = []
+) => {
+	return {
+		typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
+		value: MsgExecuteContract.fromPartial({
+			sender: senderAddress,
+			contract,
+			msg: toUtf8(JSON.stringify(msg)),
+			funds,
 		}),
 	}
 }
