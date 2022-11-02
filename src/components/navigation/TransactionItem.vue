@@ -67,6 +67,8 @@ const loadingMessage = computed(() => {
 			} from ${transaction.value.from.name} to ${transaction.value.to?.name}`
 		case TransactionType.MERKLEDROP_CLAIM:
 			return `You're claiming the airdrop ${transaction.value.merkledropId}`
+		case TransactionType.EXECUTE_CONTRACT:
+			return `You're executing a contract`
 	}
 })
 
@@ -92,6 +94,8 @@ const successMessage = computed(() => {
 			return `You moved ${fromAmountToViewDenom.value} ${transaction.value.transferToken?.symbol} from ${transaction.value.from.name} to ${transaction.value.to?.name}`
 		case TransactionType.MERKLEDROP_CLAIM:
 			return `You claimed the airdrop ${transaction.value.merkledropId}`
+		case TransactionType.EXECUTE_CONTRACT:
+			return `You executed a contract`
 	}
 })
 
@@ -119,6 +123,8 @@ const errorMessage = computed(() => {
 			} from ${transaction.value.from.name} to ${transaction.value.to?.name}`
 		case TransactionType.MERKLEDROP_CLAIM:
 			return `Error claiming the airdrop ${transaction.value.merkledropId}`
+		case TransactionType.EXECUTE_CONTRACT:
+			return `Error executing a contract`
 	}
 })
 </script>

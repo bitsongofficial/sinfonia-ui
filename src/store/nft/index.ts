@@ -3,10 +3,12 @@ import {
 	ContractWithDetails,
 	BS721InitMsg,
 	CreateCollectionRequest,
+	CollectionLinkRequest,
 } from "@/types"
 import { compact } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
-import { notifyError } from "@/common"
+import { convertListToMap, notifyError } from "@/common"
+import { CollectionMetadata, CollectionMetadataSchema } from "@bitsongjs/nft"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 
@@ -37,6 +39,26 @@ const useNFT = defineStore("nft", {
 					const [cover] = payload.cover
 					const coverCID = await ipfsClient.upload(cover.file as File)
 
+					const metadata: CollectionMetadata = {
+						image: `ipfs://${imageCID}`,
+						cover: `ipfs://${coverCID}`,
+						description: payload.description,
+						external_urls: convertListToMap(payload.links, "key", "value"),
+					}
+
+					// Check if metadata schema is valid
+					CollectionMetadataSchema.parse(metadata)
+
+					const metadataFile = new File(
+						[JSON.stringify(metadata)],
+						`${payload.name}_metadata`,
+						{
+							type: "application/json",
+						}
+					)
+
+					const metadataCID = await ipfsClient.upload(metadataFile)
+
 					transactionManagerStore.executeContract<BS721InitMsg>(
 						codeId,
 						payload.name,
@@ -44,7 +66,7 @@ const useNFT = defineStore("nft", {
 							minter: authStore.bitsongAddress,
 							name: payload.name,
 							symbol: payload.symbol,
-							uri: "",
+							uri: `ipfs://${metadataCID}`,
 						}
 					)
 				}
@@ -69,6 +91,19 @@ const useNFT = defineStore("nft", {
 			} finally {
 				this.loading = false
 			}
+		},
+	},
+	getters: {
+		myCollections({ collections }) {
+			const authStore = useAuth()
+
+			if (authStore.bitsongAddress) {
+				return collections.filter(
+					(collection) => collection.creator === authStore.bitsongAddress
+				)
+			}
+
+			return []
 		},
 	},
 	persistedState: {

@@ -22,6 +22,32 @@ onMounted(() => {
 </script>
 <template>
 	<div>
+		<template v-if="NFTStore.myCollections.length > 0">
+			<div class="column row-md align-items-end-md q-mb-42">
+				<Title class="q-mr-32">
+					My Collections
+
+					<SmallButton
+						class="q-ml-20"
+						label="Create"
+						:to="`/collections/${code}/create`"
+					/>
+				</Title>
+			</div>
+			<div
+				v-if="!NFTStore.loading"
+				class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
+			>
+				<RouterLink
+					v-for="(collection, index) in NFTStore.myCollections"
+					:key="index"
+					:to="`/collection/${collection.address}/`"
+					class="block full-height"
+				>
+					<CollectionCard :collection="collection" />
+				</RouterLink>
+			</div>
+		</template>
 		<div class="column row-md align-items-end-md q-mb-42">
 			<Title class="q-mr-32">
 				Collections
