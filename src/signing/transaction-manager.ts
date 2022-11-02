@@ -31,10 +31,10 @@ import { createBitsongAminoConverters } from "./amino-types"
 import { contracts } from "@bitsongjs/contracts"
 import SignerEventEmitter from "./events"
 
-const { CW721Base } = contracts
+const { BS721Base } = contracts
 
 // TODO: Add message composer for NFT operations
-const { CW721BaseMessageComposer } = CW721Base
+const { BS721BaseMessageComposer } = BS721Base
 
 export class TransactionManager extends SignerEventEmitter {
 	signer: OfflineSigner | OfflineDirectSigner

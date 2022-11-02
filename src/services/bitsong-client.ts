@@ -51,7 +51,7 @@ export default class BitsongClient extends ChainClient {
 	) => {
 		const queryParam = btoa(JSON.stringify(query))
 
-		return this.instance.get<ChainResponse<CosmWasmContractSmartQuery<T>>>(
+		return this.instance.get<CosmWasmContractSmartQuery<T>>(
 			`cosmwasm/wasm/v1/contract/${address}/smart/${queryParam}`
 		)
 	}

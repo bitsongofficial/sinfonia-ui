@@ -6,6 +6,7 @@ import {
 	BitsongMerkledrop,
 	ChainData,
 	ContractWithDetails,
+	NftTokenInfo,
 	OsmosisPool,
 } from "@/types"
 import { AxiosResponse } from "axios"
@@ -13,6 +14,10 @@ import { Coin } from "@cosmjs/proto-signing"
 import { mapTokensWithDefaults, tokenWithDefaults } from "@/common"
 import ChainClient from "./chain-client"
 import { compact } from "lodash"
+import {
+	TokensResponse,
+	NftInfoResponse,
+} from "@bitsongjs/contracts/dist/codegen/BS721Base.types"
 
 export default class SinfoniaClient {
 	private assetListsConfig?: AssetListConfig
@@ -110,6 +115,53 @@ export default class SinfoniaClient {
 				const response = await this.bitsongClient.contracts(codeId)
 
 				return response.data
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public nftInfo = async (address: string, tokenId: string) => {
+		try {
+			if (this.bitsongClient) {
+				const response =
+					await this.bitsongClient.contractSmartQuery<NftInfoResponse>(address, {
+						nft_info: {
+							token_id: tokenId,
+						},
+					})
+
+				return {
+					...response.data.data,
+					token_id: tokenId,
+				}
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public nfts = async (address: string): Promise<NftTokenInfo[] | undefined> => {
+		try {
+			if (this.bitsongClient) {
+				const allTokensResponse =
+					await this.bitsongClient.contractSmartQuery<TokensResponse>(address, {
+						all_tokens: {},
+					})
+
+				console.log(allTokensResponse.data)
+
+				const nftsInfoRequests = allTokensResponse.data.data.tokens.map((tokenId) =>
+					this.nftInfo(address, tokenId)
+				)
+
+				console.log(nftsInfoRequests)
+
+				const nftsInfoResponses = compact(await Promise.all(nftsInfoRequests))
+
+				return nftsInfoResponses
 			}
 		} catch (error) {
 			console.error(error)

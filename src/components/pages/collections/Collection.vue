@@ -3,6 +3,10 @@ import useConfig from "@/store/config"
 import useNFT from "@/store/nft"
 import useSettings from "@/store/settings"
 import Tabs from "@/components/Tabs.vue"
+import CollectionSocials from "@/components/CollectionSocials.vue"
+import Title from "@/components/typography/Title.vue"
+import NFTCard from "@/components/cards/NFTCard.vue"
+import LargeButton from "@/components/buttons/LargeButton.vue"
 import { isValidContractAddress } from "@/common"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
@@ -39,6 +43,7 @@ onMounted(() => {
 		router.replace({ name: "NotFound" })
 	} else {
 		NFTStore.loadCollection(address)
+		NFTStore.loadNFTs(address)
 	}
 })
 
@@ -72,7 +77,7 @@ const tabs = computed(() => {
 </script>
 
 <template>
-	<div class="text-white text-weight-medium">
+	<div class="text-white text-weight-medium" v-if="collection">
 		<div
 			class="absolute-top full-width -z-1 hv-3/5 !bg-cover !bg-center"
 			:style="$q.dark.isActive ? topImageStyle : topImageStyleLight"
@@ -94,19 +99,68 @@ const tabs = computed(() => {
 						<p class="fs-60 q-mb-20 text-weight-bold">
 							{{ collection?.init?.symbol }}
 						</p>
+						<div class="flex column-xs row items-center-xs items-end justify-center">
+							<div class="flex column q-mb-xs-14">
+								<p class="text-dark fs-16 text-uppercase q-mb-16">NFTs</p>
+								<p class="fs-32">{{ NFTStore.nfts.length }}</p>
+							</div>
+							<LargeButton
+								:padding-x="30"
+								:padding-y="14"
+								class="q-ml-xs-0 q-ml-46"
+								fit
+								:to="`/collections/${address}/mint`"
+							>
+								Mint NFT
+							</LargeButton>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<Tabs :options="tabs">
 			<template v-slot:nfts>
-				<div></div>
+				<div>
+					<Spinner v-if="NFTStore.loadingNFTs" class="!w-50 !h-50 q-mx-auto" />
+					<div
+						v-else
+						class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
+					>
+						<RouterLink
+							v-for="(nft, index) in NFTStore.nfts"
+							:key="index"
+							:to="`/collections/${address}/details/nft/${nft.token_id}`"
+							class="block full-height"
+						>
+							<NFTCard :nft="nft" />
+						</RouterLink>
+					</div>
+				</div>
 			</template>
-			<template v-slot:social>
-				<div></div>
+			<template
+				v-slot:social
+				v-if="collection.metadata && collection.metadata.external_urls"
+			>
+				<div class="row q-pt-18 q-col-gutter-x-md">
+					<div class="col-8 col-md-2 column justify-between">
+						<p class="fs-18 opacity-50 gt-sm">Follow on socials</p>
+					</div>
+					<div
+						class="col-8 col-md-4"
+						v-if="collection.metadata && collection.metadata.external_urls"
+					>
+						<p class="fs-18 opacity-50 lt-md q-mb-8">Follow on socials</p>
+						<CollectionSocials :external-links="collection.metadata.external_urls" />
+					</div>
+				</div>
 			</template>
 			<template v-slot:details>
-				<div></div>
+				<div v-if="collection.metadata">
+					<Title :font-size="24">Description</Title>
+					<Title class="text-dark q-mt-16" :font-size="16">{{
+						collection.metadata.description
+					}}</Title>
+				</div>
 			</template>
 		</Tabs>
 	</div>

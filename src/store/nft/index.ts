@@ -4,6 +4,7 @@ import {
 	BS721InitMsg,
 	CreateCollectionRequest,
 	BitsongCollection,
+	NftTokenInfo,
 } from "@/types"
 import { compact } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
@@ -14,7 +15,11 @@ import {
 	notifyLoading,
 	validateIPFSURI,
 } from "@/common"
-import { CollectionMetadata, CollectionMetadataSchema } from "@bitsongjs/nft"
+import {
+	CollectionMetadata,
+	CollectionMetadataSchema,
+	NFTMetadata,
+} from "@bitsongjs/nft"
 import { ContractCodeHistoryOperationType } from "cosmjs-types/cosmwasm/wasm/v1/types"
 import { getIPFSFile } from "@/services/ipfs"
 import useTransactionManager from "@/store/transaction-manager"
@@ -22,17 +27,25 @@ import useAuth from "@/store/auth"
 
 export interface NFTState {
 	loading: boolean
+	loadingNFTs: boolean
+	loadingNFTsMetadata: boolean
 	creatingCollection: boolean
 	collections: ContractWithDetails<BS721InitMsg>[]
 	collectionsMetadata: Record<string, CollectionMetadata>
+	nfts: NftTokenInfo[]
+	nftsMetadata: Record<string, NFTMetadata>
 }
 
 const useNFT = defineStore("nft", {
 	state: (): NFTState => ({
 		loading: false,
+		loadingNFTs: false,
+		loadingNFTsMetadata: false,
 		creatingCollection: false,
 		collections: [],
 		collectionsMetadata: {},
+		nfts: [],
+		nftsMetadata: {},
 	}),
 	actions: {
 		async createCollection(codeId: number, payload: CreateCollectionRequest) {
@@ -91,6 +104,60 @@ const useNFT = defineStore("nft", {
 			} finally {
 				this.creatingCollection = false
 				loadingNotification()
+			}
+		},
+		async loadNFTsMetadata() {
+			try {
+				this.loadingNFTsMetadata = true
+
+				const requests = compact(
+					this.nfts.map((nft) => {
+						if (nft.token_uri) {
+							const uri = validateIPFSURI(nft.token_uri)
+
+							if (uri) {
+								return getIPFSFile<NFTMetadata>(uri)
+							}
+						}
+					})
+				)
+
+				const metadataResponses = await Promise.all(requests)
+
+				const nftsMetadata = Object.assign({}, this.nftsMetadata)
+
+				for (const metadataResponse of metadataResponses) {
+					const metadata: NFTMetadata = {
+						...metadataResponse.result,
+						image: fromIPFSURIToHttps(metadataResponse.result.image),
+						animation_url: metadataResponse.result.animation_url
+							? fromIPFSURIToHttps(metadataResponse.result.animation_url)
+							: undefined,
+					}
+
+					nftsMetadata[metadataResponse.CID] = metadata
+				}
+
+				this.nftsMetadata = nftsMetadata
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loadingNFTsMetadata = false
+			}
+		},
+		async loadNFTs(address: string) {
+			try {
+				this.loadingNFTs = true
+
+				this.nfts = compact(await sinfoniaClient.nfts(address))
+
+				await this.loadNFTsMetadata()
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loadingNFTs = false
 			}
 		},
 		async loadCollectionsMetadata() {
