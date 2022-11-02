@@ -88,12 +88,11 @@ export default class SinfoniaClient {
 
 			if (bitsongClient) {
 				const response = await bitsongClient.contracts(codeId)
+				const contracts = response.data.result ? response.data.result : []
 
 				const responses = compact(
 					await Promise.all(
-						response.data.result.map((address) =>
-							this.contractWithDetails<T>(address)
-						)
+						contracts.map((address) => this.contractWithDetails<T>(address))
 					)
 				)
 

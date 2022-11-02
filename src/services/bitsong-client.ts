@@ -26,7 +26,9 @@ export default class BitsongClient extends ChainClient {
 		this.instance.get<ChainResponse<CosmWasmCodeDetails>>(`wasm/code/${codeId}`)
 
 	public contracts = (codeId: number) =>
-		this.instance.get<ChainResponse<string[]>>(`wasm/code/${codeId}/contracts`)
+		this.instance.get<ChainResponse<string[] | null>>(
+			`wasm/code/${codeId}/contracts`
+		)
 
 	public contractInfo = (address: string) =>
 		this.instance.get<ChainResponse<CosmWasmContractInfo>>(
