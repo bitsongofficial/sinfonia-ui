@@ -17,12 +17,8 @@ const address = route.params.address as string
 const collectionWatcher = watch(
 	() => NFTStore.collection(address),
 	(collection) => {
-		if (
-			collection &&
-			collection.history &&
-			collection.history.result.length > 0
-		) {
-			settingsStore.breadcrumbPageTitle = collection.history.result[0].msg.name
+		if (collection && collection.init) {
+			settingsStore.breadcrumbPageTitle = collection.init.name
 		}
 	},
 	{ immediate: true }

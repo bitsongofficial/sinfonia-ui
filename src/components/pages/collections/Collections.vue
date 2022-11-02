@@ -65,7 +65,7 @@ onMounted(() => {
 			class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
 		>
 			<RouterLink
-				v-for="(collection, index) in NFTStore.collections"
+				v-for="(collection, index) in NFTStore.bitsongCollections"
 				:key="index"
 				:to="`/collections/${collection.address}/details`"
 				class="block full-height"

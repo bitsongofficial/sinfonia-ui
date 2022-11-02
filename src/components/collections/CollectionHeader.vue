@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ContractWithDetails, BS721InitMsg } from "@/types"
+import { BitsongCollection } from "@/types"
 
 defineProps<{
-	collection: ContractWithDetails<BS721InitMsg>
+	collection: BitsongCollection
 }>()
 </script>
 
@@ -11,11 +11,8 @@ defineProps<{
 		<div class="column w-full">
 			<div class="row items-center justify-between q-mb-14 relative-position">
 				<div class="row items-center">
-					<p
-						class="fs-18 !leading-24 text-weight-medium"
-						v-if="collection.history && collection.history.result.length > 0"
-					>
-						{{ collection.history.result[0].msg.name }}
+					<p class="fs-18 !leading-24 text-weight-medium" v-if="collection.init">
+						{{ collection.init.name }}
 					</p>
 				</div>
 

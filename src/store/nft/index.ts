@@ -3,11 +3,13 @@ import {
 	ContractWithDetails,
 	BS721InitMsg,
 	CreateCollectionRequest,
+	BitsongCollection,
 } from "@/types"
 import { compact } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { convertListToMap, notifyError, notifyLoading } from "@/common"
 import { CollectionMetadata, CollectionMetadataSchema } from "@bitsongjs/nft"
+import { ContractCodeHistoryOperationType } from "cosmjs-types/cosmwasm/wasm/v1/types"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 
@@ -114,20 +116,38 @@ const useNFT = defineStore("nft", {
 		},
 	},
 	getters: {
-		myCollections({ collections }) {
+		bitsongCollections: ({ collections }): BitsongCollection[] => {
+			return collections.map((collection) => {
+				const initEntry = collection.history?.result.find(
+					(el) =>
+						el.operation ===
+						ContractCodeHistoryOperationType.CONTRACT_CODE_HISTORY_OPERATION_TYPE_INIT
+				)
+
+				return {
+					address: collection.address,
+					code_id: collection.code_id,
+					creator: collection.creator,
+					admin: collection.admin,
+					label: collection.label,
+					init: initEntry?.msg,
+				}
+			})
+		},
+		myCollections(): BitsongCollection[] {
 			const authStore = useAuth()
 
 			if (authStore.bitsongAddress) {
-				return collections.filter(
+				return this.bitsongCollections.filter(
 					(collection) => collection.creator === authStore.bitsongAddress
 				)
 			}
 
 			return []
 		},
-		collection({ collections }) {
+		collection(): (address: string) => BitsongCollection | undefined {
 			return (address: string) =>
-				collections.find((collection) => collection.address === address)
+				this.bitsongCollections.find((collection) => collection.address === address)
 		},
 	},
 	persistedState: {

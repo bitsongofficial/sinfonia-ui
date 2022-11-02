@@ -1,4 +1,6 @@
+import { CollectionMetadata } from "@bitsongjs/nft"
 import { FilePondFile } from "filepond"
+import { BS721InitMsg, CosmWasmContractInfo } from "./cosmwasm"
 
 export interface CollectionLinkRequest {
 	key: string
@@ -12,4 +14,9 @@ export interface CreateCollectionRequest {
 	symbol: string
 	description: string
 	links: CollectionLinkRequest[]
+}
+
+export interface BitsongCollection extends CosmWasmContractInfo {
+	init?: BS721InitMsg
+	metadata?: CollectionMetadata
 }

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import CollectionHeader from "@/components/collections/CollectionHeader.vue"
 import Card from "@/components/cards/Card.vue"
-import { balancedCurrency, percentage } from "@/common/numbers"
-import { ContractWithDetails, BS721InitMsg } from "@/types"
+import { BitsongCollection } from "@/types"
 import { formatShortAddress } from "@/common"
 
 defineProps<{
-	collection: ContractWithDetails<BS721InitMsg>
+	collection: BitsongCollection
 }>()
 </script>
 
