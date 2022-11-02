@@ -7,9 +7,16 @@ import {
 } from "@/types"
 import { compact } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
-import { convertListToMap, notifyError, notifyLoading } from "@/common"
+import {
+	convertListToMap,
+	fromIPFSURIToHttps,
+	notifyError,
+	notifyLoading,
+	validateIPFSURI,
+} from "@/common"
 import { CollectionMetadata, CollectionMetadataSchema } from "@bitsongjs/nft"
 import { ContractCodeHistoryOperationType } from "cosmjs-types/cosmwasm/wasm/v1/types"
+import { getIPFSFile } from "@/services/ipfs"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 
@@ -17,6 +24,7 @@ export interface NFTState {
 	loading: boolean
 	creatingCollection: boolean
 	collections: ContractWithDetails<BS721InitMsg>[]
+	collectionsMetadata: Record<string, CollectionMetadata>
 }
 
 const useNFT = defineStore("nft", {
@@ -24,6 +32,7 @@ const useNFT = defineStore("nft", {
 		loading: false,
 		creatingCollection: false,
 		collections: [],
+		collectionsMetadata: {},
 	}),
 	actions: {
 		async createCollection(codeId: number, payload: CreateCollectionRequest) {
@@ -84,6 +93,44 @@ const useNFT = defineStore("nft", {
 				loadingNotification()
 			}
 		},
+		async loadCollectionsMetadata() {
+			try {
+				this.loading = true
+
+				const requests = compact(
+					this.bitsongCollections.map((collection) => {
+						if (collection.init) {
+							const uri = validateIPFSURI(collection.init.uri)
+
+							if (uri) {
+								return getIPFSFile<CollectionMetadata>(uri)
+							}
+						}
+					})
+				)
+
+				const metadataResponses = await Promise.all(requests)
+
+				const collectionsMetadata = Object.assign({}, this.collectionsMetadata)
+
+				for (const metadataResponse of metadataResponses) {
+					const metadata: CollectionMetadata = {
+						...metadataResponse.result,
+						cover: fromIPFSURIToHttps(metadataResponse.result.cover),
+						image: fromIPFSURIToHttps(metadataResponse.result.image),
+					}
+
+					collectionsMetadata[metadataResponse.CID] = metadata
+				}
+
+				this.collectionsMetadata = collectionsMetadata
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loading = false
+			}
+		},
 		async loadCollection(address: string) {
 			try {
 				this.loading = true
@@ -93,6 +140,8 @@ const useNFT = defineStore("nft", {
 				]
 
 				this.collections = compact(results)
+
+				await this.loadCollectionsMetadata()
 			} catch (error) {
 				console.error(error)
 				throw error
@@ -107,6 +156,8 @@ const useNFT = defineStore("nft", {
 				this.collections = compact(
 					await sinfoniaClient.contractsWithDetails<BS721InitMsg>(codeId)
 				)
+
+				await this.loadCollectionsMetadata()
 			} catch (error) {
 				console.error(error)
 				throw error
@@ -116,13 +167,26 @@ const useNFT = defineStore("nft", {
 		},
 	},
 	getters: {
-		bitsongCollections: ({ collections }): BitsongCollection[] => {
+		bitsongCollections: ({
+			collections,
+			collectionsMetadata,
+		}): BitsongCollection[] => {
 			return collections.map((collection) => {
 				const initEntry = collection.history?.result.find(
 					(el) =>
 						el.operation ===
 						ContractCodeHistoryOperationType.CONTRACT_CODE_HISTORY_OPERATION_TYPE_INIT
 				)
+
+				let metadata: CollectionMetadata | undefined = undefined
+
+				if (initEntry) {
+					const uri = validateIPFSURI(initEntry.msg.uri)
+
+					if (uri) {
+						metadata = collectionsMetadata[uri]
+					}
+				}
 
 				return {
 					address: collection.address,
@@ -131,6 +195,7 @@ const useNFT = defineStore("nft", {
 					admin: collection.admin,
 					label: collection.label,
 					init: initEntry?.msg,
+					metadata,
 				}
 			})
 		},
