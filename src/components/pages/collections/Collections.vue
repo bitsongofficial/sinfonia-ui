@@ -41,7 +41,7 @@ onMounted(() => {
 				<RouterLink
 					v-for="(collection, index) in NFTStore.myCollections"
 					:key="index"
-					:to="`/collection/${collection.address}/`"
+					:to="`/collections/${collection.address}/details`"
 					class="block full-height"
 				>
 					<CollectionCard :collection="collection" />
@@ -67,7 +67,7 @@ onMounted(() => {
 			<RouterLink
 				v-for="(collection, index) in NFTStore.collections"
 				:key="index"
-				:to="`/collection/${collection.address}/`"
+				:to="`/collections/${collection.address}/details`"
 				class="block full-height"
 			>
 				<CollectionCard :collection="collection" />

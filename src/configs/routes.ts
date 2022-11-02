@@ -107,6 +107,14 @@ const routes: RouteRecordRaw[] = [
 					title: "Create Collection",
 				},
 			},
+			{
+				path: ":address/details",
+				name: "CollectionDetails",
+				component: () => import("@/components/pages/collections/Collection.vue"),
+				meta: {
+					title: "Collection",
+				},
+			},
 		],
 	},
 	/* {

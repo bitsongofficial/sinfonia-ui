@@ -39,16 +39,39 @@ export default class SinfoniaClient {
 		}
 	}
 
-	public contractHistory = async (address: string) => {
+	public contractHistory = async <T = any>(address: string) => {
 		try {
 			const bitsongClient = this.bitsongClient
 
 			if (bitsongClient) {
-				const response = await bitsongClient.contractHistory(address)
+				const response = await bitsongClient.contractHistory<T>(address)
 
 				return {
 					...response.data,
 					address,
+				}
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public contractWithDetails = async <T = any>(address: string) => {
+		try {
+			const bitsongClient = this.bitsongClient
+
+			if (bitsongClient) {
+				const detailsResponse = await this.contractInfo(address)
+				const historyResponse = await this.contractHistory<T>(address)
+
+				if (!detailsResponse) {
+					return undefined
+				}
+
+				return {
+					...detailsResponse.result,
+					history: historyResponse,
 				}
 			}
 		} catch (error) {
@@ -66,26 +89,15 @@ export default class SinfoniaClient {
 			if (bitsongClient) {
 				const response = await bitsongClient.contracts(codeId)
 
-				const detailsResponses = compact(
+				const responses = compact(
 					await Promise.all(
-						response.data.result.map((address) => this.contractInfo(address))
+						response.data.result.map((address) =>
+							this.contractWithDetails<T>(address)
+						)
 					)
 				)
 
-				const historyResponse = await Promise.all(
-					response.data.result.map((address) => this.contractHistory(address))
-				)
-
-				return detailsResponses.map(({ result }) => {
-					const relatedHistory = historyResponse.find(
-						(history) => history?.address === result.address
-					)
-
-					return {
-						...result,
-						history: relatedHistory,
-					}
-				})
+				return responses
 			}
 		} catch (error) {
 			console.error(error)

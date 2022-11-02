@@ -3,11 +3,10 @@ import {
 	ContractWithDetails,
 	BS721InitMsg,
 	CreateCollectionRequest,
-	CollectionLinkRequest,
 } from "@/types"
 import { compact } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
-import { convertListToMap, notifyError } from "@/common"
+import { convertListToMap, notifyError, notifyLoading } from "@/common"
 import { CollectionMetadata, CollectionMetadataSchema } from "@bitsongjs/nft"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
@@ -28,6 +27,10 @@ const useNFT = defineStore("nft", {
 		async createCollection(codeId: number, payload: CreateCollectionRequest) {
 			const transactionManagerStore = useTransactionManager()
 			const authStore = useAuth()
+			const loadingNotification = notifyLoading(
+				"Uploading",
+				"Uploading data to IPFS"
+			)
 
 			try {
 				this.creatingCollection = true
@@ -76,6 +79,23 @@ const useNFT = defineStore("nft", {
 				throw error
 			} finally {
 				this.creatingCollection = false
+				loadingNotification()
+			}
+		},
+		async loadCollection(address: string) {
+			try {
+				this.loading = true
+
+				const results = [
+					await sinfoniaClient.contractWithDetails<BS721InitMsg>(address),
+				]
+
+				this.collections = compact(results)
+			} catch (error) {
+				console.error(error)
+				throw error
+			} finally {
+				this.loading = false
 			}
 		},
 		async loadCollections(codeId: number) {
@@ -104,6 +124,10 @@ const useNFT = defineStore("nft", {
 			}
 
 			return []
+		},
+		collection({ collections }) {
+			return (address: string) =>
+				collections.find((collection) => collection.address === address)
 		},
 	},
 	persistedState: {
