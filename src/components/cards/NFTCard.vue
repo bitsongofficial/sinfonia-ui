@@ -10,19 +10,20 @@ defineProps<{
 
 <template>
 	<Card
-		:padding="30"
+		:padding="0"
 		:transparency="5"
 		shadow="none"
-		class="full-width text-white cursor-pointer transition-all hover:bg-white-10 light:bg-white full-height !flex column justify-between no-wrap"
+		class="full-width text-white cursor-pointer transition-all hover:bg-white-10 !rounded-10 light:bg-white full-height !flex column justify-between no-wrap"
 	>
-		<NFTHeader :nft="nft" />
-		<div class="grid grid-cols-2 grid-gap-16">
-			<div class="column">
-				<p class="fs-12 !leading-14 text-weight-medium opacity-40 q-pb-10">
-					Creator
-				</p>
-				<p class="fs-16 !leading-20 text-weight-medium work-break-all">test</p>
-			</div>
+		<q-img
+			:src="nft.metadata?.image"
+			ratio="16/9"
+			width="100%"
+			height="200px"
+			class="rounded-top-left-10 rounded-top-right-10"
+		/>
+		<div class="q-pa-30">
+			<NFTHeader :nft="nft" />
 		</div>
 	</Card>
 </template>

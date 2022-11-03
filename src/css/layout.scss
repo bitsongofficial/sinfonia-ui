@@ -393,6 +393,14 @@
     .\!rounded-#{$val} {
         border-radius: #{$val}px !important;
     }
+
+    .rounded-top-left-#{$val} {
+        border-top-left-radius: #{$val}px;
+    }
+
+    .rounded-top-right-#{$val} {
+        border-top-right-radius: #{$val}px;
+    }
 }
 
 @each $k,
