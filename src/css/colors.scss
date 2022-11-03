@@ -56,6 +56,14 @@
     border: 1px solid $dark;
 }
 
+.border-dark-2 {
+    border: 2px solid $dark;
+}
+
+.border-white-2 {
+    border: 2px solid $white;
+}
+
 .text-primary-dark-700 {
     color: $primary-dark-700 !important;
 }

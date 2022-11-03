@@ -20,11 +20,9 @@ defineProps<{
 			:src="collection.metadata?.cover"
 			ratio="16/9"
 			width="100%"
-			height="200px"
+			height="140px"
 			class="rounded-top-left-10 rounded-top-right-10"
 		/>
-		<div class="q-pa-30">
-			<CollectionHeader :collection="collection" />
-		</div>
+		<CollectionHeader :collection="collection" />
 	</Card>
 </template>
