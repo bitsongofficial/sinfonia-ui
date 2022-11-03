@@ -79,7 +79,7 @@ const { onCopy } = useClipboard()
 				<Title :font-size="32" class="q-mb-16">{{ collection?.init?.name }}</Title>
 
 				<p class="text-dark q-mb-16">
-					<span class="opacity-40">Created by</span>
+					<span class="opacity-40 light:opacity-100">Created by</span>
 					{{ formatShortAddress(collection.creator) }}
 				</p>
 
