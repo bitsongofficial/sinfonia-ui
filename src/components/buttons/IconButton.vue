@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import StandardButton from "./StandardButton.vue"
 import { resolveIcon } from "@/common/resolvers"
-const props = defineProps(["icon", "color", "width", "height", "size"])
+
+const props = defineProps(["icon", "color", "width", "height", "size", "solid"])
+
 const icon = resolveIcon(props.icon, props.width, props.height)
 const color = props.color ? props.color : "white"
 </script>
@@ -13,7 +16,12 @@ const color = props.color ? props.color : "white"
 		:icon="icon"
 		:size="props.size"
 		class="no-hover"
+		v-if="!solid"
 	>
 		<slot></slot>
 	</q-btn>
+	<StandardButton class="q-py-6 q-px-6" :no-padding="true" v-else>
+		<q-icon :name="icon" :color="color" size="size"></q-icon>
+		<slot></slot>
+	</StandardButton>
 </template>

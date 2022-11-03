@@ -8,6 +8,7 @@ import Logo from "@/components/Logo.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import Drawer from "@/components/navigation/Drawer.vue"
 import WalletAddress from "@/components/WalletAddress.vue"
+import IconButton from "@/components/buttons/IconButton.vue"
 import Breadcrumb from "@/components/navigation/Breadcrumb.vue"
 import Spinner from "@/components/Spinner"
 import Title from "@/components/typography/Title.vue"
@@ -20,6 +21,8 @@ const route = useRoute()
 const bankStore = useBank()
 const authStore = useAuth()
 const transactionStore = useTransactionManager()
+
+const code = parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
 
 const expanded = ref(false)
 
@@ -51,6 +54,16 @@ const fantoken = computed(() => route.name === "Fantoken")
 			<Breadcrumb />
 
 			<div class="settings flex items-center no-wrap">
+				<div>
+					<IconButton
+						icon="add"
+						width="12"
+						height="12"
+						class="text-white fs-14 q-mr-32 w-36"
+						:to="`/collections/${code}/create`"
+						:solid="true"
+					/>
+				</div>
 				<div
 					class="notification-wrapper column items-center justify-center position-relative cursor-pointer q-mr-32"
 					:class="{

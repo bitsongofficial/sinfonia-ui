@@ -11,7 +11,6 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 import { formatShortAddress, isValidContractAddress } from "@/common"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { FantokenTab } from "@/types"
 import useClipboard from "@/hooks/useClipboard"
 
 const route = useRoute()
