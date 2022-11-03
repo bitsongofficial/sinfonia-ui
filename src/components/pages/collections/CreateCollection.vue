@@ -87,97 +87,101 @@ const onSubmit = handleSubmit(() => {
 			<Title class="q-mr-32"> Create Collection </Title>
 		</div>
 
-		<div class="grid grid-cols-12 grid-gap-24 q-mb-74">
-			<StandardFilePicker
-				class="col-span-12 col-span-md-6"
-				name="image"
-				placeholder="Drop image file here..."
-				alternative
-			/>
+		<div class="grid grid-cols-12">
+			<div
+				class="col-span-12 col-span-md-6 col-start-md-4 grid grid-cols-12 grid-gap-24 q-mb-74"
+			>
+				<StandardFilePicker
+					class="col-span-12"
+					name="image"
+					placeholder="Drop image file here..."
+					alternative
+				/>
 
-			<StandardFilePicker
-				class="col-span-12 col-span-md-6"
-				name="cover"
-				placeholder="Drop cover file here..."
-				alternative
-			/>
+				<StandardFilePicker
+					class="col-span-12"
+					name="cover"
+					placeholder="Drop cover file here..."
+					alternative
+				/>
 
-			<StandardInput
-				class="col-span-12 col-span-md-6"
-				name="name"
-				placeholder="Name"
-				alternative
-			/>
+				<StandardInput
+					class="col-span-12"
+					name="name"
+					placeholder="Name"
+					alternative
+				/>
 
-			<StandardInput
-				class="col-span-12 col-span-md-6"
-				name="symbol"
-				placeholder="Symbol"
-				alternative
-			/>
+				<StandardInput
+					class="col-span-12"
+					name="symbol"
+					placeholder="Symbol"
+					alternative
+				/>
 
-			<StandardInput
-				class="col-span-12"
-				name="description"
-				placeholder="Description"
-				alternative
-				type="textarea"
-			/>
+				<StandardInput
+					class="col-span-12"
+					name="description"
+					placeholder="Description"
+					alternative
+					type="textarea"
+				/>
 
-			<Title :font-size="20" class="col-span-12">
-				Links
+				<Title :font-size="20" class="col-span-12">
+					Links
 
-				<SmallButton type="button" class="q-ml-20" label="Add" @click="addLink" />
-			</Title>
+					<SmallButton type="button" class="q-ml-20" label="Add" @click="addLink" />
+				</Title>
 
-			<Title :font-size="16" class="col-span-12" v-if="links.length === 0">
-				Hit "add" to add a new link
-			</Title>
+				<Title :font-size="16" class="col-span-12" v-if="links.length === 0">
+					Hit "add" to add a new link
+				</Title>
 
-			<template v-else>
-				<div
-					v-for="(link, idx) in links"
-					:key="link.key"
-					class="col-span-12 grid grid-cols-12 grid-gap-16 items-center"
-				>
-					<div class="col-span-11 grid grid-cols-12 grid-gap-16">
-						<StandardInput
-							class="col-span-12 col-span-md-6"
-							:name="`links[${idx}].key`"
-							placeholder="Key"
-							alternative
-						/>
+				<template v-else>
+					<div
+						v-for="(link, idx) in links"
+						:key="link.key"
+						class="col-span-12 grid grid-cols-12 grid-gap-16 items-center"
+					>
+						<div class="col-span-11 grid grid-cols-12 grid-gap-16">
+							<StandardInput
+								class="col-span-12 col-span-md-6"
+								:name="`links[${idx}].key`"
+								placeholder="Key"
+								alternative
+							/>
 
-						<StandardInput
-							class="col-span-12 col-span-md-6"
-							:name="`links[${idx}].value`"
-							placeholder="Value"
-							alternative
+							<StandardInput
+								class="col-span-12 col-span-md-6"
+								:name="`links[${idx}].value`"
+								placeholder="Value"
+								alternative
+							/>
+						</div>
+
+						<SmallButton
+							class="col-span-12 col-span-md-1 col-start-md-12"
+							type="button"
+							label="Remove"
+							@click="remove(idx)"
 						/>
 					</div>
+				</template>
 
-					<SmallButton
-						class="col-span-12 col-span-md-1 col-start-md-12"
-						type="button"
-						label="Remove"
-						@click="remove(idx)"
-					/>
+				<div class="col-span-12 col-start-md-9 col-span-md-4 row-start-span-md-5">
+					<LargeButton
+						type="submit"
+						@click="onSubmit"
+						:disable="
+							!authStore.session ||
+							!meta.valid ||
+							NFTStore.creatingCollection ||
+							transactionManagerStore.loadingAndSign
+						"
+					>
+						Create
+					</LargeButton>
 				</div>
-			</template>
-
-			<div class="col-span-12 col-start-md-11 col-span-md-2 row-start-span-md-5">
-				<LargeButton
-					type="submit"
-					@click="onSubmit"
-					:disable="
-						!authStore.session ||
-						!meta.valid ||
-						NFTStore.creatingCollection ||
-						transactionManagerStore.loadingAndSign
-					"
-				>
-					Create
-				</LargeButton>
 			</div>
 		</div>
 	</div>

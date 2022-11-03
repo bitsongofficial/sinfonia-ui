@@ -132,109 +132,113 @@ onUnmounted(() => {
 			<Title class="q-mr-32"> Mint NFT </Title>
 		</div>
 
-		<div class="grid grid-cols-12 grid-gap-24 q-mb-74">
-			<StandardFilePicker
-				class="col-span-12 col-span-md-6"
-				name="media"
-				placeholder="Drop media file here..."
-				alternative
-			/>
-
-			<StandardFilePicker
-				class="col-span-12 col-span-md-6"
-				name="cover"
-				placeholder="Drop cover file here..."
-				alternative
-			/>
-
-			<StandardInput
-				class="col-span-12 col-span-md-6"
-				name="name"
-				placeholder="Name"
-				alternative
-			/>
-
-			<StandardInput
-				class="col-span-12 col-span-md-6"
-				name="paymentAddress"
-				placeholder="Payment Address"
-				alternative
-			/>
-
-			<StandardInput
-				class="col-span-12"
-				name="description"
-				placeholder="Description"
-				alternative
-				type="textarea"
-			/>
-
-			<Title :font-size="20" class="col-span-12">
-				Attributes
-
-				<SmallButton
-					type="button"
-					class="q-ml-20"
-					label="Add"
-					@click="addAttribute"
+		<div class="grid grid-cols-12">
+			<div
+				class="col-span-12 col-span-md-6 col-start-md-4 grid grid-cols-12 grid-gap-24 q-mb-74"
+			>
+				<StandardFilePicker
+					class="col-span-12"
+					name="media"
+					placeholder="Drop media file here..."
+					alternative
 				/>
-			</Title>
 
-			<Title :font-size="16" class="col-span-12" v-if="attributes.length === 0">
-				Hit "add" to add a new attribute
-			</Title>
+				<StandardFilePicker
+					class="col-span-12"
+					name="cover"
+					placeholder="Drop cover file here..."
+					alternative
+				/>
 
-			<template v-else>
-				<div
-					v-for="(attribute, idx) in attributes"
-					:key="attribute.key"
-					class="col-span-12 grid grid-cols-12 grid-gap-16 items-center"
-				>
-					<div class="col-span-11 grid grid-cols-12 grid-gap-16">
-						<StandardInput
-							class="col-span-12 col-span-md-4"
-							:name="`attributes[${idx}].display_type`"
-							placeholder="Display Type"
-							alternative
-						/>
+				<StandardInput
+					class="col-span-12"
+					name="name"
+					placeholder="Name"
+					alternative
+				/>
 
-						<StandardInput
-							class="col-span-12 col-span-md-4"
-							:name="`attributes[${idx}].trait_type`"
-							placeholder="Trait Type"
-							alternative
-						/>
+				<StandardInput
+					class="col-span-12"
+					name="paymentAddress"
+					placeholder="Payment Address"
+					alternative
+				/>
 
-						<StandardInput
-							class="col-span-12 col-span-md-4"
-							:name="`attributes[${idx}].value`"
-							placeholder="Value"
-							alternative
-						/>
-					</div>
+				<StandardInput
+					class="col-span-12"
+					name="description"
+					placeholder="Description"
+					alternative
+					type="textarea"
+				/>
+
+				<Title :font-size="20" class="col-span-12">
+					Attributes
 
 					<SmallButton
-						class="col-span-12 col-span-md-1 col-start-md-12"
 						type="button"
-						label="Remove"
-						@click="remove(idx)"
+						class="q-ml-20"
+						label="Add"
+						@click="addAttribute"
 					/>
-				</div>
-			</template>
+				</Title>
 
-			<div class="col-span-12 col-start-md-11 col-span-md-2 row-start-span-md-5">
-				<LargeButton
-					type="submit"
-					@click="onSubmit"
-					:disable="
-						!authStore.session ||
-						!meta.valid ||
-						NFTStore.creatingCollection ||
-						transactionManagerStore.loadingAndSign
-					"
-				>
-					Mint
-				</LargeButton>
+				<Title :font-size="16" class="col-span-12" v-if="attributes.length === 0">
+					Hit "add" to add a new attribute
+				</Title>
+
+				<template v-else>
+					<div
+						v-for="(attribute, idx) in attributes"
+						:key="attribute.key"
+						class="col-span-12 grid grid-cols-12 grid-gap-16 items-center"
+					>
+						<div class="col-span-11 grid grid-cols-12 grid-gap-16">
+							<StandardInput
+								class="col-span-12 col-span-md-4"
+								:name="`attributes[${idx}].display_type`"
+								placeholder="Display Type"
+								alternative
+							/>
+
+							<StandardInput
+								class="col-span-12 col-span-md-4"
+								:name="`attributes[${idx}].trait_type`"
+								placeholder="Trait Type"
+								alternative
+							/>
+
+							<StandardInput
+								class="col-span-12 col-span-md-4"
+								:name="`attributes[${idx}].value`"
+								placeholder="Value"
+								alternative
+							/>
+						</div>
+
+						<SmallButton
+							class="col-span-12 col-span-md-1 col-start-md-12"
+							type="button"
+							label="Remove"
+							@click="remove(idx)"
+						/>
+					</div>
+				</template>
+
+				<div class="col-span-12 col-start-md-9 col-span-md-4 row-start-span-md-5">
+					<LargeButton
+						type="submit"
+						@click="onSubmit"
+						:disable="
+							!authStore.session ||
+							!meta.valid ||
+							NFTStore.creatingCollection ||
+							transactionManagerStore.loadingAndSign
+						"
+					>
+						Mint
+					</LargeButton>
+				</div>
 			</div>
 		</div>
 	</div>
