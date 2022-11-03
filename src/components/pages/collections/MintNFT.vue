@@ -193,23 +193,16 @@ onUnmounted(() => {
 						:key="attribute.key"
 						class="col-span-12 grid grid-cols-12 grid-gap-16 items-center"
 					>
-						<div class="col-span-11 grid grid-cols-12 grid-gap-16">
+						<div class="col-span-10 grid grid-cols-12 grid-gap-16">
 							<StandardInput
-								class="col-span-12 col-span-md-4"
-								:name="`attributes[${idx}].display_type`"
-								placeholder="Display Type"
-								alternative
-							/>
-
-							<StandardInput
-								class="col-span-12 col-span-md-4"
+								class="col-span-12 col-span-md-6"
 								:name="`attributes[${idx}].trait_type`"
 								placeholder="Trait Type"
 								alternative
 							/>
 
 							<StandardInput
-								class="col-span-12 col-span-md-4"
+								class="col-span-12 col-span-md-6"
 								:name="`attributes[${idx}].value`"
 								placeholder="Value"
 								alternative
@@ -217,7 +210,7 @@ onUnmounted(() => {
 						</div>
 
 						<SmallButton
-							class="col-span-12 col-span-md-1 col-start-md-12"
+							class="col-span-12 col-span-md-2 col-start-md-11"
 							type="button"
 							label="Remove"
 							@click="remove(idx)"
