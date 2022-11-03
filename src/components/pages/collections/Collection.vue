@@ -73,7 +73,7 @@ const { onCopy } = useClipboard()
 				:src="collection.metadata?.image"
 			/>
 		</div>
-		<div class="q-mb-70 grid grid-cols-12 gap-24">
+		<div class="q-mb-40 grid grid-cols-12 gap-24">
 			<div class="col-span-12 col-span-md-7">
 				<Title :font-size="32" class="q-mb-16">{{ collection?.init?.name }}</Title>
 
@@ -133,10 +133,6 @@ const { onCopy } = useClipboard()
 					</div>
 				</Card>
 			</div>
-		</div>
-
-		<div class="column row-md align-items-end-md q-mb-42">
-			<Title class="q-mr-32">NFTs</Title>
 		</div>
 
 		<Spinner v-if="NFTStore.loadingNFTs" class="!w-50 !h-50 q-mx-auto" />

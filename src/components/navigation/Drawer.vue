@@ -22,7 +22,7 @@ const drawerWidth = computed(() => {
 	<q-layout view="hHh lpR fFf">
 		<q-header class="bg-transparent text-white z-20">
 			<div class="container bg-primary-dark light:bg-white">
-				<q-toolbar class="flex justify-between q-pt-20 q-pt-md-64 q-pb-20 q-px-0">
+				<q-toolbar class="flex justify-between q-pt-12 q-pt-md-64 q-pb-12 q-px-0">
 					<RouterLink to="/fantokens">
 						<Logo></Logo>
 					</RouterLink>

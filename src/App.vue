@@ -37,7 +37,7 @@ const disclaimerUpdate = (value: boolean) => {
 
 <template>
 	<div
-		class="min-h-window-height q-pt-74 q-pb-60 q-pt-md-64 q-mt-xs-10 q-pt-xs-40 q-pb-xs-150 column"
+		class="min-h-window-height q-pt-28 q-pb-60 q-pt-md-64 q-mt-xs-10 q-pt-xs-40 q-pb-xs-150 column"
 	>
 		<div class="spot bg-blur-white-700 absolute"></div>
 		<div class="container q-px-xs-0 q-px-md-0">
@@ -71,7 +71,7 @@ const disclaimerUpdate = (value: boolean) => {
 						</div>
 					</div>
 					<div
-						class="full-width q-ml-auto !w-xs-2/3 !w-sm-3/4 !w-md-5/6 q-pt-42 all-pointer-events"
+						class="full-width q-ml-auto !w-xs-2/3 !w-sm-3/4 !w-md-5/6 q-pt-30 all-pointer-events"
 					>
 						<router-view v-slot="{ Component }">
 							<Transition name="fade" mode="out-in">
