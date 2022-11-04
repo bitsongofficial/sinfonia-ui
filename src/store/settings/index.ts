@@ -1,4 +1,4 @@
-import { Token, TokenBalance } from "@/types"
+import { Token, BreadcrumbLink } from "@/types"
 import { uniqBy } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
 
@@ -6,6 +6,7 @@ export interface SettingsState {
 	darkMode: boolean
 	disclaimerApprove: boolean
 	recentTokenSelections: Token[]
+	breadcrumbPrepend: BreadcrumbLink[]
 	breadcrumbPageTitle?: string
 }
 
@@ -14,6 +15,7 @@ const useSettings = defineStore("settings", {
 		darkMode: true,
 		disclaimerApprove: false,
 		recentTokenSelections: [],
+		breadcrumbPrepend: [],
 		breadcrumbPageTitle: undefined,
 	}),
 	actions: {

@@ -46,6 +46,12 @@ const nftWatcher = watch(
 			document.title = `${currentNFT.metadata.name} NFT`
 
 			settingsStore.breadcrumbPageTitle = currentNFT.metadata.name
+			settingsStore.breadcrumbPrepend = [
+				{
+					label: collection.value?.init?.name ?? "",
+					to: `/collections/${collection.value?.address}/details`,
+				},
+			]
 		}
 	},
 	{ immediate: true }
@@ -53,6 +59,7 @@ const nftWatcher = watch(
 
 onUnmounted(() => {
 	nftWatcher()
+	settingsStore.breadcrumbPrepend = []
 })
 
 const { onCopy } = useClipboard()

@@ -48,7 +48,7 @@ const breadcrumb = computed(() => {
 		}
 	}
 
-	return compact([...routes, currentRoute])
+	return compact([...routes, ...settingsStore.breadcrumbPrepend, currentRoute])
 })
 </script>
 
