@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import NFTHeader from "@/components/nfts/NFTHeader.vue"
 import Card from "@/components/cards/Card.vue"
-import { BitsongNFT } from "@/types"
+import { BitsongNFT, BitsongCollection } from "@/types"
 
 defineProps<{
 	nft: BitsongNFT
+	collection?: BitsongCollection
 }>()
 </script>
 
@@ -23,7 +24,7 @@ defineProps<{
 			class="rounded-top-left-10 rounded-top-right-10"
 		/>
 		<div class="q-pa-30">
-			<NFTHeader :nft="nft" />
+			<NFTHeader :nft="nft" :collection="collection" />
 		</div>
 	</Card>
 </template>

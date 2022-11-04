@@ -147,7 +147,7 @@ const { onCopy } = useClipboard()
 				:to="`/collections/${address}/nft/${nft.token_id}`"
 				class="block full-height"
 			>
-				<NFTCard :nft="nft" />
+				<NFTCard :nft="nft" :collection="collection" />
 			</RouterLink>
 		</div>
 	</div>
