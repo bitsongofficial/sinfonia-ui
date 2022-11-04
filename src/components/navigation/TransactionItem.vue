@@ -69,6 +69,8 @@ const loadingMessage = computed(() => {
 			return `You're claiming the airdrop ${transaction.value.merkledropId}`
 		case TransactionType.EXECUTE_CONTRACT:
 			return `You're executing a contract`
+		case TransactionType.INSTANTIATE_CONTRACT:
+			return `You're instantiating a contract`
 	}
 })
 
@@ -96,6 +98,8 @@ const successMessage = computed(() => {
 			return `You claimed the airdrop ${transaction.value.merkledropId}`
 		case TransactionType.EXECUTE_CONTRACT:
 			return `You executed a contract`
+		case TransactionType.INSTANTIATE_CONTRACT:
+			return `You instantiated a contract`
 	}
 })
 
@@ -125,6 +129,8 @@ const errorMessage = computed(() => {
 			return `Error claiming the airdrop ${transaction.value.merkledropId}`
 		case TransactionType.EXECUTE_CONTRACT:
 			return `Error executing a contract`
+		case TransactionType.INSTANTIATE_CONTRACT:
+			return `Error instantiating a contract`
 	}
 })
 </script>
