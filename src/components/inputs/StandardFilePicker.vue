@@ -5,7 +5,7 @@ import "filepond/dist/filepond.min.css"
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css"
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginImagePreview from "filepond-plugin-image-preview"
-import { toRef } from "vue"
+import { toRef, ref, watch, onUnmounted } from "vue"
 import { useField } from "vee-validate"
 
 const props = withDefaults(
@@ -39,15 +39,28 @@ const props = withDefaults(
 )
 
 const name = toRef(props, "name")
+const uploader = ref()
 
 const emit = defineEmits<{
 	(e: "update:modelValue", value: FilePondFile[] | undefined): void
 }>()
 
-const { value, errorMessage, meta, handleBlur, handleChange, setTouched } =
-	useField(name, undefined, {
+const { value, errorMessage, meta, handleChange, setTouched } = useField(
+	name,
+	undefined,
+	{
 		initialValue: props.value,
-	})
+	}
+)
+
+const valueWatcher = watch(
+	() => value.value,
+	(v) => {
+		if (!v || v.length === 0) {
+			uploader.value.removeFiles()
+		}
+	}
+)
 
 const updateModelValue = (e: FilePondFile[] | undefined) => {
 	handleChange(e)
@@ -62,11 +75,16 @@ const FilePond = vueFilePond(
 	FilePondPluginFileValidateType,
 	FilePondPluginImagePreview
 )
+
+onUnmounted(() => {
+	valueWatcher()
+})
 </script>
 
 <template>
 	<div>
 		<file-pond
+			ref="uploader"
 			:label-idle="placeholder"
 			:accepted-file-types="fileTypes"
 			v-model="value"

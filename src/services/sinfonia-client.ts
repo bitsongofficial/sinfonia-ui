@@ -151,13 +151,9 @@ export default class SinfoniaClient {
 						all_tokens: {},
 					})
 
-				console.log(allTokensResponse.data)
-
 				const nftsInfoRequests = allTokensResponse.data.data.tokens.map((tokenId) =>
 					this.nftInfo(address, tokenId)
 				)
-
-				console.log(nftsInfoRequests)
 
 				const nftsInfoResponses = compact(await Promise.all(nftsInfoRequests))
 

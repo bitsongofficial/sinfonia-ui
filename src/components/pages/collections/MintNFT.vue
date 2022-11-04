@@ -4,14 +4,15 @@ import StandardInput from "@/components/inputs/StandardInput.vue"
 import StandardFilePicker from "@/components/inputs/StandardFilePicker.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import SmallButton from "@/components/buttons/SmallButton.vue"
+import Tabs from "@/components/Tabs.vue"
 import useNFT from "@/store/nft"
 import { useRoute, useRouter } from "vue-router"
 import useSettings from "@/store/settings"
-import { onMounted, onUnmounted, watch } from "vue"
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import useAuth from "@/store/auth"
 import { useFieldArray, useForm } from "vee-validate"
 import useTransactionManager from "@/store/transaction-manager"
-import { CreateNFTRequest } from "@/types"
+import { CreateNFTRequest, NFTMediaType } from "@/types"
 import { toFormValidator } from "@vee-validate/zod"
 import { z } from "zod"
 import { isValidContractAddress } from "@/common"
@@ -26,7 +27,15 @@ const authStore = useAuth()
 const transactionManagerStore = useTransactionManager()
 const NFTStore = useNFT()
 
+const mediaType = ref<NFTMediaType>("image")
+const mimeTypes = ref<string>("image/jpeg, image/png, image/webp")
 const address = route.params.address as string
+
+const tabs = [
+	{ name: "image", label: "Image" },
+	{ name: "video", label: "Video" },
+	{ name: "audio", label: "Audio" },
+]
 
 const collectionWatcher = watch(
 	() => NFTStore.collection(address),
@@ -40,37 +49,42 @@ const collectionWatcher = watch(
 	{ immediate: true }
 )
 
-const validationSchema = toFormValidator(
-	z.object({
-		name: z.string().min(1, "Payment address is a required field"),
-		paymentAddress: z
-			.string()
-			.min(1, "Payment address is a required field")
-			.refine(
-				(address) =>
-					isValidContractAddress(
-						address,
-						configStore.bitsongToken?.addressPrefix ?? ""
-					),
-				{
-					message: "Invalid address",
-				}
-			),
-		media: z.array(z.any()).length(1),
-		cover: z.array(z.any()).length(1),
-		sellerFee: z.number().int().optional().default(0),
-		description: z.string().optional(),
-		attributes: z
-			.array(
-				z.object({
-					display_type: z.string().optional(),
-					trait_type: z.string().min(1, "Trait type is a required field"),
-					value: z.string().min(1, "Value is a required field"),
-				})
-			)
-			.optional()
-			.default([]),
-	})
+const validationSchema = computed(() =>
+	toFormValidator(
+		z.object({
+			name: z.string().min(1, "Payment address is a required field"),
+			paymentAddress: z
+				.string()
+				.min(1, "Payment address is a required field")
+				.refine(
+					(address) =>
+						isValidContractAddress(
+							address,
+							configStore.bitsongToken?.addressPrefix ?? ""
+						),
+					{
+						message: "Invalid address",
+					}
+				),
+			media: z.array(z.any()).length(1),
+			cover:
+				mediaType.value === "image"
+					? z.any().optional()
+					: z.array(z.any()).length(1),
+			sellerFee: z.number().int().optional().default(0),
+			description: z.string().optional(),
+			attributes: z
+				.array(
+					z.object({
+						display_type: z.string().optional(),
+						trait_type: z.string().min(1, "Trait type is a required field"),
+						value: z.string().min(1, "Value is a required field"),
+					})
+				)
+				.optional()
+				.default([]),
+		})
+	)
 )
 
 const initialValues: CreateNFTRequest = {
@@ -83,10 +97,11 @@ const initialValues: CreateNFTRequest = {
 	attributes: [],
 }
 
-const { handleSubmit, values, validate, meta } = useForm<CreateNFTRequest>({
-	initialValues,
-	validationSchema,
-})
+const { handleSubmit, values, validate, resetForm, meta } =
+	useForm<CreateNFTRequest>({
+		initialValues,
+		validationSchema,
+	})
 
 const {
 	remove,
@@ -104,6 +119,27 @@ const addAttribute = () => {
 		mode: "silent",
 	})
 }
+
+const mediaTypeWatcher = watch(
+	() => mediaType.value,
+	(value) => {
+		resetForm({
+			values: { ...initialValues },
+		})
+
+		switch (value) {
+			case "image":
+				mimeTypes.value = "image/jpeg, image/png, image/webp"
+				break
+			case "audio":
+				mimeTypes.value = "audio/webm, audio/mpeg"
+				break
+			case "video":
+				mimeTypes.value = "video/mp4, video/mpeg, video/ogg"
+				break
+		}
+	}
+)
 
 const onSubmit = handleSubmit(() => {
 	NFTStore.mintNFT(address, values)
@@ -123,6 +159,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+	mediaTypeWatcher()
 	collectionWatcher()
 })
 </script>
@@ -130,6 +167,12 @@ onUnmounted(() => {
 	<div>
 		<div class="column row-md align-items-end-md q-mb-42">
 			<Title class="q-mr-32"> Mint NFT </Title>
+		</div>
+
+		<div class="row items-center justify-between q-mb-42">
+			<div class="q-mt-8">
+				<Tabs v-model="mediaType" :options="tabs" border />
+			</div>
 		</div>
 
 		<div class="grid grid-cols-12">
@@ -141,6 +184,7 @@ onUnmounted(() => {
 					name="media"
 					placeholder="Drop media file here..."
 					alternative
+					:file-types="mimeTypes"
 				/>
 
 				<StandardFilePicker
@@ -148,6 +192,7 @@ onUnmounted(() => {
 					name="cover"
 					placeholder="Drop cover file here..."
 					alternative
+					v-if="mediaType !== 'image'"
 				/>
 
 				<StandardInput

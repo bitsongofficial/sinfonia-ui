@@ -43,3 +43,5 @@ export interface BitsongNFT extends NftTokenInfo {
 export interface NftTokenInfo extends NftInfoResponse {
 	token_id: string
 }
+
+export type NFTMediaType = "audio" | "video" | "image"

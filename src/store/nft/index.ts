@@ -64,19 +64,23 @@ const useNFT = defineStore("nft", {
 			try {
 				this.creatingCollection = true
 
-				if (payload.cover && payload.media && authStore.bitsongAddress) {
+				if (payload.media && authStore.bitsongAddress) {
 					const [media] = payload.media
 					const mediaCID = await ipfsClient.upload(media.file as File)
 
-					/* const [cover] = payload.cover
-					const coverCID = await ipfsClient.upload(cover.file as File) */
+					let coverCID: string | undefined = undefined
+
+					if (payload.cover && payload.cover.length > 0) {
+						const [cover] = payload.cover
+						coverCID = await ipfsClient.upload(cover.file as File)
+					}
 
 					const metadata: NFTMetadata = {
-						image: `ipfs://${mediaCID}`,
-						// cover: `ipfs://${coverCID}`,
+						image: `ipfs://${coverCID ? coverCID : mediaCID}`,
 						name: payload.name,
 						description: payload.description,
 						attributes: payload.attributes,
+						animation_url: coverCID ? `ipfs://${mediaCID}` : undefined,
 					}
 
 					// Check if metadata schema is valid
