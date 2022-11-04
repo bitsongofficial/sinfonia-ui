@@ -116,6 +116,14 @@ const routes: RouteRecordRaw[] = [
 				},
 			},
 			{
+				path: ":address/nft/:tokenId",
+				name: "NFTDetails",
+				component: () => import("@/components/pages/collections/NFT.vue"),
+				meta: {
+					title: "NFT",
+				},
+			},
+			{
 				path: ":address/mint",
 				name: "MintNFT",
 				component: () => import("@/components/pages/collections/MintNFT.vue"),

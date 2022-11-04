@@ -321,6 +321,10 @@ const useNFT = defineStore("nft", {
 				}
 			})
 		},
+		nft(): (tokenId: string) => BitsongNFT | undefined {
+			return (tokenId: string) =>
+				this.bitsongNFTs.find((nft) => nft.token_id === tokenId)
+		},
 		bitsongCollections: ({
 			collections,
 			collectionsMetadata,

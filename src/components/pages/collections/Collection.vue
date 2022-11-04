@@ -144,7 +144,7 @@ const { onCopy } = useClipboard()
 			<RouterLink
 				v-for="(nft, index) in NFTStore.bitsongNFTs"
 				:key="index"
-				:to="`/collections/${address}/details/nft/${nft.token_id}`"
+				:to="`/collections/${address}/nft/${nft.token_id}`"
 				class="block full-height"
 			>
 				<NFTCard :nft="nft" />
