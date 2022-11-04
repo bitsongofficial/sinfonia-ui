@@ -37,6 +37,8 @@
 		"@storipress/apollo-vue-devtool": "^0.0.4",
 		"@vee-validate/rules": "^4.5.11",
 		"@vee-validate/zod": "^4.7.2",
+		"@vime/core": "^5.4.0",
+		"@vime/vue-next": "^5.4.0",
 		"@vue/apollo-composable": "4.0.0-alpha.17",
 		"@vueuse/core": "^8.9.1",
 		"axios": "^0.26.1",

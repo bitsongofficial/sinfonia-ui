@@ -2,6 +2,7 @@
 import { formatShortAddress, isValidContractAddress } from "@/common"
 import useConfig from "@/store/config"
 import Title from "@/components/typography/Title.vue"
+import NFTPlayer from "@/components/nfts/NFTPlayer.vue"
 import Spinner from "@/components/Spinner"
 import useNFT from "@/store/nft"
 import useSettings from "@/store/settings"
@@ -89,8 +90,13 @@ const { onCopy } = useClipboard()
 				</p>
 			</div>
 			<div class="grid grid-cols-12 grid-gap-24">
-				<div class="col-span-12 col-span-md-5 col-start-md-4 q-mb-32">
-					<img class="w-full" :src="nft?.metadata?.image" />
+				<div class="col-span-12 col-span-md-6 col-start-md-4 q-mb-32">
+					<NFTPlayer
+						v-if="nft?.metadata?.animation_url"
+						:src="nft?.metadata?.animation_url"
+						:poster="nft?.metadata?.image"
+					/>
+					<img class="w-full" :src="nft?.metadata?.image" v-else />
 				</div>
 				<div class="col-span-12" v-if="nft && nft.metadata">
 					<div class="q-mb-64" v-if="nft.metadata.description">

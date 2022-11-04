@@ -24,6 +24,8 @@ specifiers:
   '@typescript-eslint/parser': ^5.16.0
   '@vee-validate/rules': ^4.5.11
   '@vee-validate/zod': ^4.7.2
+  '@vime/core': ^5.4.0
+  '@vime/vue-next': ^5.4.0
   '@vitejs/plugin-vue': ^2.2.0
   '@vue/apollo-composable': 4.0.0-alpha.17
   '@vueuse/core': ^8.9.1
@@ -83,6 +85,8 @@ dependencies:
   '@storipress/apollo-vue-devtool': 0.0.4_ejomppoal27decenylxcpmdrdq
   '@vee-validate/rules': 4.5.11
   '@vee-validate/zod': 4.7.2_olw7man5sduolpilxbfknz5edy
+  '@vime/core': 5.4.0
+  '@vime/vue-next': 5.4.0_7ewnqoazlfu5c42kfteud37y5q
   '@vue/apollo-composable': 4.0.0-alpha.17_lof4mviaenfhf4gxytu3a7t57e
   '@vueuse/core': 8.9.1_vue@3.2.31
   axios: 0.26.1
@@ -2424,6 +2428,12 @@ packages:
     resolution: {integrity: sha512-1P1OROm/rdubP5aFDSZQILU0vrLCJ4fvHt6EoqHEM+2D/G5MK3bIaymUKLit8Js9gbns5UyJnkP/TZROLw4tUA==}
     dev: false
 
+  /@stencil/core/2.5.2:
+    resolution: {integrity: sha512-bgjPXkSzzg1WnTgVUm6m5ZzpKt602WmA/QljODAW1xVN40OHJdbGblzF/F6MFzqv2c5Cy30CB41arc8qADIdcQ==}
+    engines: {node: '>=12.10.0', npm: '>=6.0.0'}
+    hasBin: true
+    dev: false
+
   /@storipress/apollo-vue-devtool/0.0.4_ejomppoal27decenylxcpmdrdq:
     resolution: {integrity: sha512-JaarYWZ9cvcrm6YeKoxVvgN5RZI5caoDTaR375qZc36HGrcw00GCbyhbIwDAet8pIOUrThRu11Rv2R64zB9U9Q==}
     peerDependencies:
@@ -2435,6 +2445,10 @@ packages:
       '@vue/devtools-api': 6.0.12
       graphql: 16.5.0
       vue: 3.2.31
+    dev: false
+
+  /@types/fscreen/1.0.1:
+    resolution: {integrity: sha512-hV2d0BreihMGtrg+EdAFOIl/O2EL5vhAheHJUztGE/lPFZIN8ZCpGFL8hCbtyi1CfhKjDRCf47sHjP+FwJ4q0Q==}
     dev: false
 
   /@types/glob/7.2.0:
@@ -2662,6 +2676,27 @@ packages:
     dependencies:
       vee-validate: 4.5.11_vue@3.2.31
       zod: 3.19.1
+    dev: false
+
+  /@vime/core/5.4.0:
+    resolution: {integrity: sha512-ZP19/+9RDeX8q0dPGW1Au77/c7hqb8Lsd/4zV0pAsld+op/cYVMoByu5wd6luQ0R6AKwe/mYdNTDatAHZlhHZw==}
+    dependencies:
+      '@stencil/core': 2.5.2
+      '@types/fscreen': 1.0.1
+      fscreen: 1.2.0
+      mitt: 3.0.0
+      stencil-wormhole: 3.4.1
+    dev: false
+
+  /@vime/vue-next/5.4.0_7ewnqoazlfu5c42kfteud37y5q:
+    resolution: {integrity: sha512-Hs7S1BjQEstNnFCwTWiBtJNYZkkBgEep56s/qTheMIWFE4OiXaYP3uBm9OS34SDwFDSiAw5Wh7kzM7a/7MRjDA==}
+    requiresBuild: true
+    peerDependencies:
+      '@vime/core': 5.4.0
+      vue: ^3.0.0
+    dependencies:
+      '@vime/core': 5.4.0
+      vue: 3.2.31
     dev: false
 
   /@vitejs/plugin-vue/2.2.4_vite@2.8.6+vue@3.2.31:
@@ -4476,6 +4511,10 @@ packages:
   /fs.realpath/1.0.0:
     resolution: {integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=}
 
+  /fscreen/1.2.0:
+    resolution: {integrity: sha512-hlq4+BU0hlPmwsFjwGGzZ+OZ9N/wq9Ljg/sq3pX+2CD7hrJsX9tJgWWK/wiNTFM212CLHWhicOoqwXyZGGetJg==}
+    dev: false
+
   /fsevents/2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -5827,6 +5866,10 @@ packages:
     resolution: {integrity: sha512-fL9KxsQz9BJB2KGPMHFrReioywkiomBiuaLk6EuChijK0BsJsIKJXdVomR+/bPj5mvbFD6wM0CM3bZio9g7OHA==}
     dev: true
 
+  /mitt/3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: false
+
   /mkdirp/1.0.4:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
     engines: {node: '>=10'}
@@ -6935,6 +6978,10 @@ packages:
 
   /sprintf-js/1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
+    dev: false
+
+  /stencil-wormhole/3.4.1:
+    resolution: {integrity: sha512-ppYTcWTJnIl4ZAKwF39LTA9f/ypHfbVefsHdN2hpMQGrR57wt1TieZo9tlCM/r1Y4SFiZ5yz/cjho564C921Xw==}
     dev: false
 
   /stream-to-it/0.2.4:
