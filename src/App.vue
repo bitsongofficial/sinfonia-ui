@@ -5,12 +5,15 @@ import { useQuasar } from "quasar"
 import { onBeforeMount, ref } from "vue"
 import Header from "@/components/navigation/Header.vue"
 import SideMenu from "@/components/navigation/SideMenu.vue"
+import PageLoader from "@/components/PageLoader.vue"
 import useBootstrap from "@/hooks/useBootstrap"
 import useSettings from "@/store/settings"
 import LightModeSwitch from "@/components/inputs/LightModeSwitch.vue"
 import DisclaimerModal from "@/components/modals/DisclaimerModal.vue"
+import useTransactionManager from "@/store/transaction-manager"
 
 const settingsStore = useSettings()
+const transactionManagerStore = useTransactionManager()
 const $q = useQuasar()
 const showDisclaimer = ref(false)
 
@@ -39,6 +42,7 @@ const disclaimerUpdate = (value: boolean) => {
 	<div
 		class="min-h-window-height q-pt-28 q-pb-60 q-pt-md-64 q-mt-xs-10 q-pt-xs-40 q-pb-xs-150 column"
 	>
+		<PageLoader v-if="transactionManagerStore.loadingBroadcastingFull" />
 		<div class="spot bg-blur-white-700 absolute"></div>
 		<div class="container q-px-xs-0 q-px-md-0">
 			<div class="column col-grow">

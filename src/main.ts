@@ -14,41 +14,7 @@ import "./css/main.scss"
 
 import App from "./App.vue"
 
-import routes, { disabledRoutes } from "@/configs/routes"
-
-const router = createRouter({
-	history: createWebHistory(),
-	routes,
-	scrollBehavior: function (to) {
-		if (to.hash.length > 0) {
-			return { el: to.hash }
-		}
-
-		const app = document.getElementById("app")
-
-		if (app) {
-			app.scrollTop = 0
-		}
-
-		return { left: 0, top: 0 }
-	},
-})
-
-router.beforeEach((to) => {
-	if (to.meta.title) {
-		document.title = to.meta.title
-	} else {
-		document.title = "Sinfonia"
-	}
-
-	if (disabledRoutes) {
-		if (to.name !== "Playground") {
-			return { name: "Playground" }
-		}
-	}
-
-	return true
-})
+import { router } from "@/configs/routes"
 
 const app = createApp(App)
 

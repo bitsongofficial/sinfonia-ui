@@ -24,6 +24,7 @@ import ChainClient from "@/services/chain-client"
 export interface TransactionManagerState {
 	loadingSign: boolean
 	loadingBroadcasting: boolean
+	loadingBroadcastingFull: boolean
 	transactions: Transaction[]
 	notificationUnread: boolean
 }
@@ -35,6 +36,7 @@ const useTransactionManager = defineStore("transactionManager", {
 	state: (): TransactionManagerState => ({
 		loadingSign: false,
 		loadingBroadcasting: false,
+		loadingBroadcastingFull: false,
 		transactions: [],
 		notificationUnread: false,
 	}),
@@ -651,7 +653,9 @@ const useTransactionManager = defineStore("transactionManager", {
 		async executeContract<T extends object>(
 			contract: string,
 			msg: T,
-			funds: Coin[] = []
+			funds: Coin[] = [],
+			fullScreen = false,
+			onComplete?: (tx: DeliverTxResponse) => void
 		) {
 			const authStore = useAuth()
 			const configStore = useConfig()
@@ -678,14 +682,26 @@ const useTransactionManager = defineStore("transactionManager", {
 						})
 
 						this.loadingBroadcasting = true
+
+						if (fullScreen) {
+							this.loadingBroadcastingFull = true
+						}
 					})
 
 					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
 						if (txId) {
 							this.updateTx(txId, txs)
+
+							if (onComplete) {
+								onComplete(txs)
+							}
 						}
 
 						this.loadingBroadcasting = false
+
+						if (fullScreen) {
+							this.loadingBroadcastingFull = false
+						}
 					})
 
 					manager.on("onerror", (error: any) => {
@@ -701,6 +717,10 @@ const useTransactionManager = defineStore("transactionManager", {
 
 						this.loadingBroadcasting = false
 						this.loadingSign = false
+
+						if (fullScreen) {
+							this.loadingBroadcastingFull = false
+						}
 					})
 
 					await manager.executeContract(

@@ -1,5 +1,5 @@
 import { MenuItem } from "@/types"
-import { RouteRecordRaw } from "vue-router"
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import { externalWebsites } from "./config"
 
 export const disabledRoutes =
@@ -231,4 +231,38 @@ if (!disabledTransactions) {
 	})
 } */
 
-export default routes
+const router = createRouter({
+	history: createWebHistory(),
+	routes,
+	scrollBehavior: function (to) {
+		if (to.hash.length > 0) {
+			return { el: to.hash }
+		}
+
+		const app = document.getElementById("app")
+
+		if (app) {
+			app.scrollTop = 0
+		}
+
+		return { left: 0, top: 0 }
+	},
+})
+
+router.beforeEach((to) => {
+	if (to.meta.title) {
+		document.title = to.meta.title
+	} else {
+		document.title = "Sinfonia"
+	}
+
+	if (disabledRoutes) {
+		if (to.name !== "Playground") {
+			return { name: "Playground" }
+		}
+	}
+
+	return true
+})
+
+export { routes, router }

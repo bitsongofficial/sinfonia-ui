@@ -27,6 +27,7 @@ import { ContractCodeHistoryOperationType } from "cosmjs-types/cosmwasm/wasm/v1/
 import { getIPFSFile } from "@/services/ipfs"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
+import { router } from "@/configs/routes"
 
 export interface NFTState {
 	loading: boolean
@@ -56,6 +57,7 @@ const useNFT = defineStore("nft", {
 		async mintNFT(collectionAddress: string, payload: CreateNFTRequest) {
 			const transactionManagerStore = useTransactionManager()
 			const authStore = useAuth()
+
 			const loadingNotification = notifyLoading(
 				"Uploading",
 				"Uploading data to IPFS"
@@ -96,15 +98,25 @@ const useNFT = defineStore("nft", {
 
 					const metadataCID = await ipfsClient.upload(metadataFile)
 
-					transactionManagerStore.executeContract(collectionAddress, {
-						mint: {
-							owner: authStore.bitsongAddress,
-							payment_address: payload.paymentAddress,
-							seller_fee: payload.sellerFee,
-							token_id: payload.tokenId,
-							token_uri: `ipfs://${metadataCID}`,
+					const onComplete = () => {
+						router.replace(`/nfts/${collectionAddress}/id/${payload.tokenId}`)
+					}
+
+					transactionManagerStore.executeContract(
+						collectionAddress,
+						{
+							mint: {
+								owner: authStore.bitsongAddress,
+								payment_address: payload.paymentAddress,
+								seller_fee: payload.sellerFee,
+								token_id: payload.tokenId,
+								token_uri: `ipfs://${metadataCID}`,
+							},
 						},
-					})
+						[],
+						true,
+						onComplete
+					)
 				}
 			} catch (error) {
 				console.error(error)

@@ -112,6 +112,10 @@
     background: transparentize($color: $dark, $amount: 0.7);
 }
 
+.bg-secondary-80 {
+    background: transparentize($color: $secondary, $amount: 0.2);
+}
+
 .text-dark-lighter {
     color: $dark-lighter !important;
 }
