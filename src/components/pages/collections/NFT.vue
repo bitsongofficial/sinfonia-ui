@@ -4,6 +4,7 @@ import useConfig from "@/store/config"
 import Title from "@/components/typography/Title.vue"
 import NFTPlayer from "@/components/nfts/NFTPlayer.vue"
 import Spinner from "@/components/Spinner"
+import Card from "@/components/cards/Card.vue"
 import useNFT from "@/store/nft"
 import useSettings from "@/store/settings"
 import { computed, onMounted, onUnmounted, watch } from "vue"
@@ -90,30 +91,55 @@ const { onCopy } = useClipboard()
 				</p>
 			</div>
 			<div class="grid grid-cols-12 grid-gap-24">
-				<div class="col-span-12 col-span-md-6 col-start-md-4 q-mb-32">
+				<div class="col-span-12 q-mb-32 col-span-md-8 col-start-md-1">
 					<NFTPlayer
 						v-if="nft?.metadata?.animation_url"
 						:src="nft?.metadata?.animation_url"
 						:poster="nft?.metadata?.image"
+						class="max-h-400"
 					/>
-					<img class="w-full" :src="nft?.metadata?.image" v-else />
+					<img
+						class="w-full max-h-400 object-contain"
+						:src="nft?.metadata?.image"
+						v-else
+					/>
+				</div>
+				<div
+					class="col-span-12 col-span-md-3 col-start-md-10"
+					v-if="
+						nft?.metadata &&
+						nft.metadata.attributes &&
+						nft.metadata.attributes.length > 0
+					"
+				>
+					<Card
+						:padding="30"
+						:transparency="5"
+						shadow="none"
+						class="full-width text-white transition-all light:bg-white !flex column justify-between no-wrap"
+					>
+						<Title :font-size="18" class="q-mb-16">Attributes</Title>
+						<template v-for="(attribute, index) of nft.metadata.attributes">
+							<div class="column">
+								<p class="fs-12 text-weight-medium opacity-40 q-pb-10 text-capitalize">
+									{{ attribute.trait_type }}
+								</p>
+								<p class="fs-16 !leading-20 text-weight-medium work-break-all">
+									{{ attribute.value }}
+								</p>
+							</div>
+							<q-separator
+								class="q-my-16 opacity-50"
+								v-if="index !== nft.metadata.attributes.length - 1"
+							/>
+						</template>
+					</Card>
 				</div>
 				<div class="col-span-12" v-if="nft && nft.metadata">
 					<div class="q-mb-64" v-if="nft.metadata.description">
 						<Title :font-size="24" class="q-mb-16">Description</Title>
 
 						<p class="opacity-50">{{ nft.metadata.description }}</p>
-					</div>
-					<div
-						class="q-mb-64"
-						v-if="nft.metadata.attributes && nft.metadata.attributes.length > 0"
-					>
-						<Title :font-size="24" class="q-mb-16">Attributes</Title>
-
-						<div v-for="attribute in nft.metadata.attributes" class="column q-mb-16">
-							<Title :font-size="21" class="q-mb-12">{{ attribute.trait_type }}</Title>
-							<p class="opacity-50">{{ attribute.value }}</p>
-						</div>
 					</div>
 				</div>
 			</div>
