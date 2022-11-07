@@ -37,11 +37,7 @@ const tabs = [
 				<Tabs v-model="collectionsType" :options="tabs" border />
 			</div>
 
-			<LargeButton
-				label="Create Collection"
-				:to="`/collections/${code}/create`"
-				fit
-			/>
+			<LargeButton label="Create Collection" :to="`/nfts/${code}/create`" fit />
 		</div>
 
 		<Spinner v-if="NFTStore.loading" class="!w-50 !h-50 q-mx-auto" />
@@ -55,7 +51,7 @@ const tabs = [
 					<RouterLink
 						v-for="(collection, index) in NFTStore.myCollections"
 						:key="index"
-						:to="`/collections/${collection.address}/details`"
+						:to="`/nfts/${collection.address}/details`"
 						class="block full-height"
 					>
 						<CollectionCard :collection="collection" />
@@ -70,7 +66,7 @@ const tabs = [
 			<RouterLink
 				v-for="(collection, index) in NFTStore.bitsongCollections"
 				:key="index"
-				:to="`/collections/${collection.address}/details`"
+				:to="`/nfts/${collection.address}/details`"
 				class="block full-height"
 			>
 				<CollectionCard :collection="collection" />

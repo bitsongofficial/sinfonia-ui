@@ -50,7 +50,7 @@ const nftWatcher = watch(
 			settingsStore.breadcrumbPrepend = [
 				{
 					label: collection.value?.init?.name ?? "",
-					to: `/collections/${collection.value?.address}/details`,
+					to: `/nfts/${collection.value?.address}/details`,
 				},
 			]
 		}
@@ -71,7 +71,7 @@ const { onCopy } = useClipboard()
 		<template v-if="!NFTStore.loadingNFTs">
 			<div class="column q-mb-32">
 				<RouterLink
-					:to="`/collections/${collection.address}/details`"
+					:to="`/nfts/${collection.address}/details`"
 					v-if="collection"
 					class="q-mb-16 row items-center"
 				>

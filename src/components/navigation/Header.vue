@@ -60,7 +60,7 @@ const fantoken = computed(() => route.name === "Fantoken")
 						width="12"
 						height="12"
 						class="text-white fs-14 q-mr-32 w-36"
-						:to="`/collections/${code}/create`"
+						:to="`/nfts/${code}/create`"
 						:solid="true"
 					/>
 				</div>

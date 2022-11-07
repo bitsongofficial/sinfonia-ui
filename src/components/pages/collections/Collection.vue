@@ -93,7 +93,7 @@ const { onCopy } = useClipboard()
 					:padding-x="30"
 					:padding-y="14"
 					fit
-					:to="`/collections/${address}/mint`"
+					:to="`/nfts/${address}/mint`"
 				>
 					Mint NFT
 				</LargeButton>
@@ -144,7 +144,7 @@ const { onCopy } = useClipboard()
 			<RouterLink
 				v-for="(nft, index) in NFTStore.bitsongNFTs"
 				:key="index"
-				:to="`/collections/${address}/nft/${nft.token_id}`"
+				:to="`/nfts/${address}/id/${nft.token_id}`"
 				class="block full-height"
 			>
 				<NFTCard :nft="nft" :collection="collection" />

@@ -83,7 +83,7 @@ const routes: RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/collections",
+		path: "/nfts",
 		name: "CollectionsWrapper",
 		component: () => import("@/components/pages/Wrapper.vue"),
 		meta: {
@@ -116,7 +116,7 @@ const routes: RouteRecordRaw[] = [
 				},
 			},
 			{
-				path: ":address/nft/:tokenId",
+				path: ":address/id/:tokenId",
 				name: "NFTDetails",
 				component: () => import("@/components/pages/collections/NFT.vue"),
 				meta: {
@@ -183,7 +183,7 @@ export const menuItems: MenuItem[] = [
 	{
 		icon: { name: "list", width: 19, height: 13 },
 		label: "Collections",
-		path: "/collections",
+		path: "/nfts",
 		disabled: disabledRoutes,
 	},
 ]
