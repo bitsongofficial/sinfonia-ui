@@ -52,7 +52,8 @@ const collectionWatcher = watch(
 const validationSchema = computed(() =>
 	toFormValidator(
 		z.object({
-			name: z.string().min(1, "Payment address is a required field"),
+			name: z.string().min(1, "Name is a required field"),
+			tokenId: z.string().min(1, "Token ID is a required field"),
 			paymentAddress: z
 				.string()
 				.min(1, "Payment address is a required field")
@@ -91,13 +92,14 @@ const initialValues: CreateNFTRequest = {
 	paymentAddress: "",
 	sellerFee: 0,
 	name: "",
+	tokenId: "",
 	media: null,
 	cover: null,
 	description: "",
 	attributes: [],
 }
 
-const { handleSubmit, values, validate, resetForm, meta } =
+const { values, meta, handleSubmit, validate, resetForm, setFieldValue } =
 	useForm<CreateNFTRequest>({
 		initialValues,
 		validationSchema,
@@ -144,6 +146,11 @@ const mediaTypeWatcher = watch(
 const onSubmit = handleSubmit(() => {
 	NFTStore.mintNFT(address, values)
 })
+
+const generateRandomTokenID = () => {
+	const tokenId = Math.floor(Math.random() * 1_000_000)
+	setFieldValue("tokenId", `${tokenId}`)
+}
 
 onMounted(() => {
 	if (
@@ -197,6 +204,22 @@ onUnmounted(() => {
 
 				<StandardInput
 					class="col-span-12"
+					name="tokenId"
+					placeholder="Token ID"
+					alternative
+				>
+					<template v-slot:append>
+						<SmallButton
+							class="text-white"
+							type="button"
+							label="Generate"
+							@click="generateRandomTokenID"
+						/>
+					</template>
+				</StandardInput>
+
+				<StandardInput
+					class="col-span-12"
 					name="name"
 					placeholder="Name"
 					alternative
@@ -240,14 +263,14 @@ onUnmounted(() => {
 					>
 						<div class="col-span-10 grid grid-cols-12 grid-gap-16">
 							<StandardInput
-								class="col-span-12 col-span-md-6"
+								class="col-span-6"
 								:name="`attributes[${idx}].trait_type`"
 								placeholder="Trait Type"
 								alternative
 							/>
 
 							<StandardInput
-								class="col-span-12 col-span-md-6"
+								class="col-span-6"
 								:name="`attributes[${idx}].value`"
 								placeholder="Value"
 								alternative
@@ -255,7 +278,7 @@ onUnmounted(() => {
 						</div>
 
 						<SmallButton
-							class="col-span-12 col-span-md-2 col-start-md-11"
+							class="col-span-2 col-start-11"
 							type="button"
 							label="Remove"
 							@click="remove(idx)"

@@ -11,6 +11,7 @@ export interface CreateNFTRequest {
 	paymentAddress: string
 	sellerFee: number
 	name: string
+	tokenId: string
 	media?: FilePondFile[] | null
 	cover?: FilePondFile[] | null
 	description: string

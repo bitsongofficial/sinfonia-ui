@@ -79,7 +79,11 @@ const defaultClass = props.alternative
 				:placeholder="placeholder"
 				@update:model-value="updateModelValue($event)"
 				@blur="handleBlur"
-			/>
+			>
+				<template v-for="(_, slot, index) of $slots" v-slot:[slot]="scope">
+					<slot :name="slot" v-bind="scope" :key="index"></slot>
+				</template>
+			</q-input>
 		</div>
 		<p class="fs-12 text-primary text-weight-medium min-h-fit">
 			{{ errorMessage }}

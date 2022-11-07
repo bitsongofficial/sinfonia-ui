@@ -96,14 +96,12 @@ const useNFT = defineStore("nft", {
 
 					const metadataCID = await ipfsClient.upload(metadataFile)
 
-					const tokenId = `${Date.now()}-${metadataCID}`
-
 					transactionManagerStore.executeContract(collectionAddress, {
 						mint: {
 							owner: authStore.bitsongAddress,
 							payment_address: payload.paymentAddress,
 							seller_fee: payload.sellerFee,
-							token_id: tokenId,
+							token_id: payload.tokenId,
 							token_uri: `ipfs://${metadataCID}`,
 						},
 					})
