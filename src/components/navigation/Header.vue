@@ -55,6 +55,17 @@ const fantoken = computed(() => route.name === "Fantoken")
 
 			<div class="settings flex items-center no-wrap">
 				<div>
+					<StandardButton
+						v-if="isProduction === 'testnet'"
+						with-icon
+						:icon="resolveIcon('coin', 24, 24)"
+						class="fs-14 q-mr-32"
+						to="/faucet"
+					>
+						Get BTSG
+					</StandardButton>
+				</div>
+				<div>
 					<IconButton
 						icon="add"
 						width="12"
@@ -152,18 +163,6 @@ const fantoken = computed(() => route.name === "Fantoken")
 							</div>
 						</template>
 					</q-menu>
-				</div>
-				<div>
-					<StandardButton
-						v-if="isProduction === 'testnet' && authStore.session"
-						:disable="bankStore.loadingFaucet"
-						@click="bankStore.getFaucet"
-						with-icon
-						:icon="resolveIcon('coin', 24, 24)"
-						class="bg-gradient-primary-pink fs-14 q-ml-30 q-mr-30"
-					>
-						Get BTSG
-					</StandardButton>
 				</div>
 				<WalletAddress></WalletAddress>
 			</div>

@@ -83,6 +83,14 @@ const routes: RouteRecordRaw[] = [
 		},
 	},
 	{
+		path: "/faucet",
+		name: "Faucet",
+		component: () => import("@/components/pages/Faucet.vue"),
+		meta: {
+			title: "Faucet",
+		},
+	},
+	{
 		path: "/nfts",
 		name: "CollectionsWrapper",
 		component: () => import("@/components/pages/Wrapper.vue"),
