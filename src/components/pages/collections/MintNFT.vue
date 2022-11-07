@@ -33,8 +33,8 @@ const address = route.params.address as string
 
 const tabs = [
 	{ name: "image", label: "Image" },
-	{ name: "video", label: "Video" },
 	{ name: "audio", label: "Audio" },
+	{ name: "video", label: "Video" },
 ]
 
 const collectionWatcher = watch(
