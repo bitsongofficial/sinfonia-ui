@@ -307,15 +307,7 @@ export class TransactionManager extends SignerEventEmitter {
 				? transactionData.fee[0].denom
 				: this.network.symbol
 
-			const stdFee = {
-				amount: coins(
-					Number(transactionData.fee ? transactionData.fee[0].amount : 0),
-					symbol
-				),
-				gas: transactionData.gasEstimate || "350000",
-			}
-
-			const gasPrice = GasPrice.fromString(`0.35${symbol}`)
+			const gasPrice = GasPrice.fromString(`3.75${symbol}`)
 
 			const registry = bitsongRegistry()
 
