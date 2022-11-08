@@ -5,3 +5,15 @@
 		<slot></slot>
 	</q-btn>
 </template>
+
+<style lang="scss" scoped>
+.q-btn {
+	padding: 0;
+	min-height: auto;
+	color: transparent;
+
+	&:deep(.q-focus-helper) {
+		display: none;
+	}
+}
+</style>

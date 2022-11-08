@@ -2,8 +2,10 @@
 import { resolveIcon } from "@/common/resolvers"
 import { TokenBalance } from "@/types"
 import { computed, ref, watch, onUnmounted } from "vue"
-import CoinSelectItem from "./CoinSelectItem.vue"
 import CoinSelectSelected from "./CoinSelectSelected.vue"
+import CoinSelectMenu from "./CoinSelectMenu.vue"
+
+const openMenu = ref(false)
 
 const props = defineProps<{
 	modelValue: TokenBalance | null
@@ -23,19 +25,7 @@ const value = computed<TokenBalance | null>({
 	},
 })
 
-const width = ref(0)
-
 const select = ref<any>(null)
-
-const setWidth = () => {
-	if (select.value) {
-		width.value = select.value.$el.offsetWidth
-	}
-}
-
-const popupStyle = computed(() => {
-	return { width: width.value + "px" }
-})
 
 const optionsWatcher = watch(
 	() => props.options,
@@ -58,29 +48,56 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<q-select
-		v-model="value"
-		:options="options"
-		:dropdown-icon="resolveIcon('dropdown', 11, 7)"
-		borderless
-		class="text-white q-px-select-20 w-full"
-		input-class="q-px-20 q-py-20"
-		popup-content-class="rounded-20 q-px-10 q-py-0"
-		:menu-offset="[0, 30]"
-		ref="select"
-		@popup-show="setWidth"
-		:popup-content-style="popupStyle"
-		behavior="menu"
-	>
-		<template v-slot:option="{ itemProps, opt }">
-			<CoinSelectItem
-				v-bind="itemProps"
-				:coin="opt"
-				class="cursor-pointer"
-			></CoinSelectItem>
-		</template>
-		<template v-slot:selected-item="{ opt }">
-			<CoinSelectSelected :coin="opt"></CoinSelectSelected>
-		</template>
-	</q-select>
+	<div class="position-relative w-full">
+		<div
+			class="w-full cursor-pointer position-relative z-1"
+			@click="openMenu = !openMenu"
+			:class="{
+				'no-pointer-events z-30': openMenu,
+			}"
+		>
+			<q-select
+				v-model="value"
+				:options="options"
+				:dropdown-icon="resolveIcon('dropdown', 11, 7)"
+				borderless
+				class="coin-select text-white w-full bg-primary-dark-500 light:bg-primary-dark-500-5 rounded-30 q-px-20 no-pointer-events"
+				:class="{
+					'light:bg-white': openMenu,
+				}"
+				input-class="q-px-20 q-py-20"
+				ref="select"
+			>
+				<template v-slot:selected-item="{ opt }">
+					<CoinSelectSelected :coin="opt"></CoinSelectSelected>
+				</template>
+			</q-select>
+		</div>
+
+		<CoinSelectMenu
+			v-model="openMenu"
+			v-model:option="value"
+			:options="options"
+		/>
+	</div>
 </template>
+
+<style lang="scss" scoped>
+.coin-select {
+	&:deep(.q-field__marginal) {
+		color: inherit;
+	}
+
+	@media screen and (max-width: $breakpoint-xs) {
+		background: none !important;
+		padding: 0 !important;
+
+		&:deep(.q-field__control),
+		&:deep(.q-field__native) {
+			min-height: 24px;
+			height: 24px;
+			padding: 0;
+		}
+	}
+}
+</style>

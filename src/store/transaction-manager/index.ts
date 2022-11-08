@@ -3,6 +3,7 @@ import usePools from "@/store/pools"
 import useConfig from "@/store/config"
 import useAuth from "@/store/auth"
 import usePrices from "@/store/prices"
+import useMerkledrops from "@/store/merkledrops"
 import { TransactionManager } from "@/signing/transaction-manager"
 import {
 	LockableDurationWithApr,
@@ -10,19 +11,22 @@ import {
 	SwapPool,
 	Token,
 	Transaction,
+	TransactionPayload,
 	TransactionStatus,
 	TransactionType,
 } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { DeliverTxResponse } from "@cosmjs/stargate"
-import { notifyError, notifySuccess, notifyLoading } from "@/common"
+import { notifyError, notifySuccess } from "@/common"
 import ChainClient from "@/services/chain-client"
 
 export interface TransactionManagerState {
 	loadingSign: boolean
 	loadingBroadcasting: boolean
+	loadingBroadcastingFull: boolean
 	transactions: Transaction[]
+	notificationUnread: boolean
 }
 
 const pollingTime = 5000
@@ -32,7 +36,9 @@ const useTransactionManager = defineStore("transactionManager", {
 	state: (): TransactionManagerState => ({
 		loadingSign: false,
 		loadingBroadcasting: false,
+		loadingBroadcastingFull: false,
 		transactions: [],
+		notificationUnread: false,
 	}),
 	actions: {
 		// IBC Transfer from Token to Osmosis or viceversa
@@ -41,7 +47,8 @@ const useTransactionManager = defineStore("transactionManager", {
 			recipientAddress: string,
 			from: Token,
 			to: Token,
-			transferAmount?: Coin
+			transferAmount: Coin,
+			transferToken: Token
 		) {
 			this.loadingSign = true
 
@@ -63,16 +70,13 @@ const useTransactionManager = defineStore("transactionManager", {
 						let txId
 
 						manager.on("ontxsigned", () => {
-							loader = notifyLoading(
-								"Transaction Broadcasting",
-								"Waiting for transaction to be included in the block"
-							)
-
-							txId = this.addBroadcastingTx(
+							txId = this.addBroadcastingTx({
 								from,
-								TransactionType.SEND_IBC_TOKENS,
-								loader
-							)
+								to,
+								type: TransactionType.SEND_IBC_TOKENS,
+								fromAmount: transferAmount.amount,
+								transferToken,
+							})
 
 							this.loadingBroadcasting = true
 						})
@@ -100,7 +104,7 @@ const useTransactionManager = defineStore("transactionManager", {
 							this.loadingSign = false
 						})
 
-						manager.sendIbcTokens(
+						await manager.sendIbcTokens(
 							senderAddress,
 							recipientAddress,
 							transferAmount,
@@ -108,15 +112,6 @@ const useTransactionManager = defineStore("transactionManager", {
 						)
 					}
 				}
-			} catch (error) {
-				console.error(error)
-
-				if (loader) {
-					loader()
-				}
-
-				notifyError("Transaction Failed", (error as Error).message)
-				throw error
 			} finally {
 				this.loadingSign = false
 				this.loadingBroadcasting = false
@@ -141,16 +136,11 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
-							"Transaction Broadcasting",
-							"Waiting for transaction to be included in the block"
-						)
-
-						txId = this.addBroadcastingTx(
-							osmosisToken,
-							TransactionType.LOCK_TOKENS,
-							loader
-						)
+						txId = this.addBroadcastingTx({
+							from: osmosisToken,
+							type: TransactionType.LOCK_TOKENS,
+							gammAmount: coins[0].amount,
+						})
 
 						this.loadingBroadcasting = true
 					})
@@ -178,17 +168,12 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.lockTokens(authStore.osmosisAddress, duration.duration, coins)
+					await manager.lockTokens(
+						authStore.osmosisAddress,
+						duration.duration,
+						coins
+					)
 				}
-			} catch (error) {
-				console.error(error)
-
-				if (loader) {
-					loader()
-				}
-
-				notifyError("Transaction Failed", (error as Error).message)
-				throw error
 			} finally {
 				this.loadingSign = false
 				this.loadingBroadcasting = false
@@ -214,16 +199,11 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
-							"Transaction Broadcasting",
-							"Waiting for transaction to be included in the block"
-						)
-
-						txId = this.addBroadcastingTx(
-							osmosisToken,
-							TransactionType.JOIN_POOL,
-							loader
-						)
+						txId = this.addBroadcastingTx({
+							from: osmosisToken,
+							type: TransactionType.JOIN_POOL,
+							poolId,
+						})
 
 						this.loadingBroadcasting = true
 					})
@@ -251,22 +231,13 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.joinPool(
+					await manager.joinPool(
 						authStore.osmosisAddress,
 						poolId,
 						shareOutAmount,
 						tokenInMaxs
 					)
 				}
-			} catch (error) {
-				console.error(error)
-
-				if (loader) {
-					loader()
-				}
-
-				notifyError("Transaction Failed", (error as Error).message)
-				throw error
 			} finally {
 				this.loadingSign = false
 				this.loadingBroadcasting = false
@@ -296,16 +267,10 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
-							"Transaction Broadcasting",
-							"Waiting for transaction to be included in the block"
-						)
-
-						txId = this.addBroadcastingTx(
-							osmosisToken,
-							TransactionType.JOIN_SWAP_EXTERN_AMOUNT_IN,
-							loader
-						)
+						txId = this.addBroadcastingTx({
+							from: osmosisToken,
+							type: TransactionType.JOIN_SWAP_EXTERN_AMOUNT_IN,
+						})
 
 						this.loadingBroadcasting = true
 					})
@@ -333,22 +298,13 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.joinSwapExternAmountIn(
+					await manager.joinSwapExternAmountIn(
 						authStore.osmosisAddress,
 						poolId,
 						tokenIn,
 						shareOutMinAmount
 					)
 				}
-			} catch (error) {
-				console.error(error)
-
-				if (loader) {
-					loader()
-				}
-
-				notifyError("Transaction Failed", (error as Error).message)
-				throw error
 			} finally {
 				this.loadingSign = false
 				this.loadingBroadcasting = false
@@ -374,16 +330,11 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
-							"Transaction Broadcasting",
-							"Waiting for transaction to be included in the block"
-						)
-
-						txId = this.addBroadcastingTx(
-							osmosisToken,
-							TransactionType.EXIT_POOL,
-							loader
-						)
+						txId = this.addBroadcastingTx({
+							from: osmosisToken,
+							type: TransactionType.EXIT_POOL,
+							poolId,
+						})
 
 						this.loadingBroadcasting = true
 					})
@@ -411,22 +362,13 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.exitPool(
+					await manager.exitPool(
 						authStore.osmosisAddress,
 						poolId,
 						shareInAmount,
 						tokenOutMins
 					)
 				}
-			} catch (error) {
-				console.error(error)
-
-				if (loader) {
-					loader()
-				}
-
-				notifyError("Transaction Failed", (error as Error).message)
-				throw error
 			} finally {
 				this.loadingSign = false
 				this.loadingBroadcasting = false
@@ -465,20 +407,14 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
-							"Transaction Broadcasting",
-							"Waiting for transaction to be included in the block"
-						)
-
-						txId = this.addBroadcastingTx(
-							osmosisToken,
-							TransactionType.SWAP_EXACT_AMOUNT_IN,
-							loader,
-							from,
+						txId = this.addBroadcastingTx({
+							from: osmosisToken,
+							type: TransactionType.SWAP_EXACT_AMOUNT_IN,
+							fromSwap: from,
 							fromAmount,
-							to,
-							toAmount
-						)
+							toSwap: to,
+							toAmount,
+						})
 
 						this.loadingBroadcasting = true
 					})
@@ -506,28 +442,19 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.swapExactAmountIn(
+					await manager.swapExactAmountIn(
 						authStore.osmosisAddress,
 						osmosisRoutes,
 						tokenIn,
 						tokenOutMinAmount
 					)
 				}
-			} catch (error) {
-				console.error(error)
-
-				if (loader) {
-					loader()
-				}
-
-				notifyError("Transaction Failed", (error as Error).message)
-				throw error
 			} finally {
 				this.loadingSign = false
 				this.loadingBroadcasting = false
 			}
 		},
-		async beginUnlocking(id: string) {
+		async beginUnlocking(id: string, poolId: string) {
 			const authStore = useAuth()
 			const configStore = useConfig()
 
@@ -547,16 +474,11 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
-							"Transaction Broadcasting",
-							"Waiting for transaction to be included in the block"
-						)
-
-						txId = this.addBroadcastingTx(
-							osmosisToken,
-							TransactionType.BEGIN_UNLOCKING,
-							loader
-						)
+						txId = this.addBroadcastingTx({
+							from: osmosisToken,
+							type: TransactionType.BEGIN_UNLOCKING,
+							poolId,
+						})
 
 						this.loadingBroadcasting = true
 					})
@@ -584,13 +506,8 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.beginUnlocking(authStore.osmosisAddress, id)
+					await manager.beginUnlocking(authStore.osmosisAddress, id)
 				}
-			} catch (error) {
-				console.error(error)
-				loader()
-				notifyError("Transaction Failed", (error as Error).message)
-				throw error
 			} finally {
 				this.loadingSign = false
 				this.loadingBroadcasting = false
@@ -612,7 +529,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				const bitsongToken = configStore.bitsongToken
 
 				if (window.keplr && bitsongToken && authStore.bitsongAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
 						bitsongToken.chainID
 					)
 
@@ -621,16 +538,11 @@ const useTransactionManager = defineStore("transactionManager", {
 					let txId
 
 					manager.on("ontxsigned", () => {
-						loader = notifyLoading(
-							"Transaction Broadcasting",
-							"Waiting for transaction to be included in the block"
-						)
-
-						txId = this.addBroadcastingTx(
-							bitsongToken,
-							TransactionType.MERKLEDROP_CLAIM,
-							loader
-						)
+						txId = this.addBroadcastingTx({
+							from: bitsongToken,
+							type: TransactionType.MERKLEDROP_CLAIM,
+							merkledropId,
+						})
 
 						this.loadingBroadcasting = true
 					})
@@ -658,7 +570,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						this.loadingSign = false
 					})
 
-					manager.merkledropClaim(
+					await manager.merkledropClaim(
 						authStore.bitsongAddress,
 						merkledropId,
 						index,
@@ -666,31 +578,184 @@ const useTransactionManager = defineStore("transactionManager", {
 						proofs
 					)
 				}
-			} catch (error) {
-				console.error(error)
-				loader()
-				notifyError("Transaction Failed", (error as Error).message)
-				throw error
 			} finally {
 				this.loadingSign = false
 				this.loadingBroadcasting = false
 			}
 		},
-		addBroadcastingTx(
-			from: Token,
-			type: TransactionType,
-			notify: () => void,
-			fromSwap?: Token,
-			fromAmount?: string,
-			toSwap?: Token,
-			toAmount?: string
+		async instantiateContract<T extends object>(
+			codeId: number,
+			label: string,
+			msg: T
 		) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+			let loader
+
+			try {
+				this.loadingSign = true
+				const bitsongToken = configStore.bitsongToken
+
+				if (window.keplr && bitsongToken && authStore.bitsongAddress) {
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
+						bitsongToken.chainID
+					)
+
+					const manager = new TransactionManager(signer, bitsongToken)
+
+					let txId
+
+					manager.on("ontxsigned", () => {
+						txId = this.addBroadcastingTx({
+							from: bitsongToken,
+							type: TransactionType.INSTANTIATE_CONTRACT,
+						})
+
+						this.loadingBroadcasting = true
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+						}
+
+						this.loadingBroadcasting = false
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
+					})
+
+					await manager.instantiateContract(
+						authStore.bitsongAddress,
+						codeId,
+						label,
+						msg
+					)
+				}
+			} finally {
+				this.loadingSign = false
+				this.loadingBroadcasting = false
+			}
+		},
+		async executeContract<T extends object>(
+			contract: string,
+			msg: T,
+			funds: Coin[] = [],
+			fullScreen = false,
+			onComplete?: (tx: DeliverTxResponse) => void
+		) {
+			const authStore = useAuth()
+			const configStore = useConfig()
+
+			let loader
+
+			try {
+				this.loadingSign = true
+				const bitsongToken = configStore.bitsongToken
+
+				if (window.keplr && bitsongToken && authStore.bitsongAddress) {
+					const signer = await window.keplr.getOfflineSignerOnlyAmino(
+						bitsongToken.chainID
+					)
+
+					const manager = new TransactionManager(signer, bitsongToken)
+
+					let txId
+
+					manager.on("ontxsigned", () => {
+						txId = this.addBroadcastingTx({
+							from: bitsongToken,
+							type: TransactionType.EXECUTE_CONTRACT,
+						})
+
+						this.loadingBroadcasting = true
+
+						if (fullScreen) {
+							this.loadingBroadcastingFull = true
+						}
+					})
+
+					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
+						if (txId) {
+							this.updateTx(txId, txs)
+
+							if (onComplete) {
+								onComplete(txs)
+							}
+						}
+
+						this.loadingBroadcasting = false
+
+						if (fullScreen) {
+							this.loadingBroadcastingFull = false
+						}
+					})
+
+					manager.on("onerror", (error: any) => {
+						if (loader) {
+							loader()
+						}
+
+						if (txId) {
+							this.updateTx(txId, undefined, TransactionStatus.FAILED)
+						}
+
+						notifyError("Transaction Failed", (error as Error).message)
+
+						this.loadingBroadcasting = false
+						this.loadingSign = false
+
+						if (fullScreen) {
+							this.loadingBroadcastingFull = false
+						}
+					})
+
+					await manager.executeContract(
+						authStore.bitsongAddress,
+						contract,
+						msg,
+						funds
+					)
+				}
+			} finally {
+				this.loadingSign = false
+				this.loadingBroadcasting = false
+			}
+		},
+		addBroadcastingTx({
+			type,
+			from,
+			to,
+			notify,
+			fromSwap,
+			fromAmount,
+			toSwap,
+			toAmount,
+			poolId,
+			gammAmount,
+			transferToken,
+			merkledropId,
+		}: TransactionPayload) {
 			const id = `tx-${Date.now()}-${Math.random()}`
 			const transactions = [...this.transactions]
 
 			transactions.unshift({
 				id,
 				from,
+				to,
 				status: TransactionStatus.BROADCASTING,
 				type,
 				fromSwap,
@@ -698,10 +763,15 @@ const useTransactionManager = defineStore("transactionManager", {
 				toSwap,
 				toAmount,
 				notify,
+				poolId,
+				gammAmount,
+				transferToken,
+				merkledropId,
 				time: new Date().getTime(),
 			})
 
 			this.transactions = transactions.slice(0, 10)
+			this.notificationUnread = true
 
 			this.clearSubscription()
 
@@ -776,13 +846,19 @@ const useTransactionManager = defineStore("transactionManager", {
 									const poolsStore = usePools()
 									const bankStore = useBank()
 									const pricesStore = usePrices()
+									const merkledropsStore = useMerkledrops()
+									const authStore = useAuth()
 
 									setTimeout(() => {
 										pricesStore.init()
 										poolsStore.init()
 										bankStore.init()
 										bankStore.loadBalances()
-									}, 1000)
+
+										if (merkledropsStore.merkledrops.length > 0) {
+											merkledropsStore.loadAirdrops(authStore.bitsongAddress)
+										}
+									}, 2000)
 								}
 
 								return {
@@ -806,12 +882,31 @@ const useTransactionManager = defineStore("transactionManager", {
 		clearSubscription() {
 			clearInterval(subscription)
 		},
+		reset() {
+			this.clearSubscription()
+			this.transactions = []
+		},
 	},
 	getters: {
 		swapTransactions: ({ transactions }) => {
 			return transactions.filter(
 				(transaction) => transaction.type === TransactionType.SWAP_EXACT_AMOUNT_IN
 			)
+		},
+		pendingTransactions: ({ transactions }) => {
+			return transactions.filter(
+				(transaction) => transaction.status === TransactionStatus.PENDING
+			)
+		},
+		loading({ loadingBroadcasting }) {
+			const pendingTransactions = this.pendingTransactions as Transaction[]
+
+			return pendingTransactions.length > 0 || loadingBroadcasting
+		},
+		loadingAndSign({ loadingSign }) {
+			const loading = this.loading as boolean
+
+			return loading || loadingSign
 		},
 	},
 	persistedState: {

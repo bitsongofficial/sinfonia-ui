@@ -3,8 +3,14 @@ import { sinfoniaClient } from "@/services"
 import { acceptHMRUpdate, defineStore } from "pinia"
 import useAuth from "@/store/auth"
 import useConfig from "@/store/config"
-import { ChainBalance, OsmosisLock, Token, TokenBalance } from "@/types"
-import { reduce, unionBy } from "lodash"
+import {
+	ChainBalance,
+	GammBalance,
+	OsmosisLock,
+	Token,
+	TokenBalance,
+} from "@/types"
+import { compact, reduce, unionBy } from "lodash"
 import { toViewDenom } from "@/common/numbers"
 import { BigNumber } from "bignumber.js"
 import { getFaucet } from "@/services/faucet"
@@ -60,7 +66,9 @@ const useBank = defineStore("bank", {
 				this.loading = true
 
 				if (token) {
-					this.otherBalance = await sinfoniaClient.balance(address, token.apiURL)
+					const otherBalance = await sinfoniaClient.balance(address, token.apiURL)
+
+					this.otherBalance = [...this.otherBalance, ...otherBalance]
 				}
 			} catch (error) {
 				console.error(error)
@@ -72,9 +80,19 @@ const useBank = defineStore("bank", {
 		async loadBalances() {
 			try {
 				const authStore = useAuth()
+				const configStore = useConfig()
 				const bitsongAddress = authStore.bitsongAddress
 				const osmosisAddress = authStore.osmosisAddress
 				this.loading = true
+				this.otherBalance = []
+
+				for (const token of configStore.tokens) {
+					const address = authStore.getAddress(token.addressPrefix)
+
+					if (address) {
+						this.loadBalance(address, token.chainID)
+					}
+				}
 
 				if (bitsongAddress && osmosisAddress) {
 					const data = await sinfoniaClient.balances(bitsongAddress, osmosisAddress)
@@ -170,6 +188,29 @@ const useBank = defineStore("bank", {
 							: coin.denom === coinLookup.chainDenom
 					)
 
+					if (bitsongBalance && configStore.bitsongToken) {
+						const bitsongAvailable = toViewDenom(
+							bitsongBalance.amount,
+							coinLookup.chainToViewConversionFactor
+						)
+						const bitsongTotal = new BigNumber(bitsongAvailable)
+
+						bitsongChain = {
+							name: configStore.bitsongToken.name,
+							symbol: token.symbol,
+							denom: token.ibc.osmosis.sourceDenom,
+							logos: configStore.bitsongToken.logos,
+							total: bitsongTotal.toString(),
+							available: bitsongAvailable.toString(),
+							totalFiat: price.multipliedBy(bitsongTotal.toString()).toString(),
+							availableFiat: price
+								.multipliedBy(bitsongAvailable.toString())
+								.toString(),
+						}
+
+						chains.push(bitsongChain)
+					}
+
 					if (osmosisBalance && configStore.osmosisToken) {
 						const osmosisAvailable = toViewDenom(
 							osmosisBalance.amount,
@@ -193,29 +234,6 @@ const useBank = defineStore("bank", {
 						}
 
 						chains.push(osmosisChain)
-					}
-
-					if (bitsongBalance && configStore.bitsongToken) {
-						const bitsongAvailable = toViewDenom(
-							bitsongBalance.amount,
-							coinLookup.chainToViewConversionFactor
-						)
-						const bitsongTotal = new BigNumber(bitsongAvailable)
-
-						bitsongChain = {
-							name: configStore.bitsongToken.name,
-							symbol: token.symbol,
-							denom: token.ibc.osmosis.sourceDenom,
-							logos: configStore.bitsongToken.logos,
-							total: bitsongTotal.toString(),
-							available: bitsongAvailable.toString(),
-							totalFiat: price.multipliedBy(bitsongTotal.toString()).toString(),
-							availableFiat: price
-								.multipliedBy(bitsongAvailable.toString())
-								.toString(),
-						}
-
-						chains.push(bitsongChain)
 					}
 				}
 
@@ -242,6 +260,7 @@ const useBank = defineStore("bank", {
 		total() {
 			const poolStore = usePools()
 			const balances = this.balances as TokenBalance[]
+			const totalGammPoolBalances = this.totalGammPoolBalances as string
 
 			return reduce<TokenBalance, BigNumber>(
 				balances,
@@ -251,10 +270,12 @@ const useBank = defineStore("bank", {
 				new BigNumber("0")
 			)
 				.plus(poolStore.totalBondedFiat)
+				.plus(totalGammPoolBalances)
 				.toString()
 		},
 		available() {
 			const balances = this.balances as TokenBalance[]
+			const totalGammPoolBalances = this.totalGammPoolBalances as string
 
 			return reduce<TokenBalance, BigNumber>(
 				balances,
@@ -262,7 +283,9 @@ const useBank = defineStore("bank", {
 					return all.plus(balance.availableFiat ?? "0")
 				},
 				new BigNumber("0")
-			).toString()
+			)
+				.plus(totalGammPoolBalances)
+				.toString()
 		},
 		allGamms({ osmosisBalance, lockedCoinsBalance }) {
 			return [...osmosisBalance, ...lockedCoinsBalance]
@@ -360,6 +383,41 @@ const useBank = defineStore("bank", {
 
 					return false
 				})
+		},
+		gammPoolBalances({ osmosisBalance }): GammBalance[] {
+			const poolsStore = usePools()
+
+			return compact(
+				poolsStore.myPools
+					.filter((pool) => {
+						const userLiquidity = new BigNumber(pool.lpLiquidity)
+
+						return userLiquidity.gt(0)
+					})
+					.map((pool) => {
+						const gammBalance = osmosisBalance.find(
+							(balance) => balance.denom === `gamm/pool/${pool.id}`
+						)
+
+						if (gammBalance) {
+							return {
+								pool,
+								coin: gammBalance,
+							}
+						}
+					})
+			)
+		},
+		totalGammPoolBalances() {
+			const balances = this.gammPoolBalances as GammBalance[]
+
+			return reduce<GammBalance, BigNumber>(
+				balances,
+				(all, balance) => {
+					return all.plus(balance.pool.lpLiquidity ?? "0")
+				},
+				new BigNumber("0")
+			).toString()
 		},
 	},
 	persistedState: {

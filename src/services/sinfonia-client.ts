@@ -5,6 +5,8 @@ import {
 	AssetListConfig,
 	BitsongMerkledrop,
 	ChainData,
+	ContractWithDetails,
+	NftTokenInfo,
 	OsmosisPool,
 } from "@/types"
 import { AxiosResponse } from "axios"
@@ -12,6 +14,10 @@ import { Coin } from "@cosmjs/proto-signing"
 import { mapTokensWithDefaults, tokenWithDefaults } from "@/common"
 import ChainClient from "./chain-client"
 import { compact } from "lodash"
+import {
+	TokensResponse,
+	NftInfoResponse,
+} from "@bitsongjs/contracts/dist/codegen/BS721Base.types"
 
 export default class SinfoniaClient {
 	private assetListsConfig?: AssetListConfig
@@ -21,6 +27,142 @@ export default class SinfoniaClient {
 
 	public constructor(configUrl: string) {
 		this.configClient = new ConfigClient(configUrl)
+	}
+
+	public contractInfo = async (address: string) => {
+		try {
+			const bitsongClient = this.bitsongClient
+
+			if (bitsongClient) {
+				const response = await bitsongClient.contractInfo(address)
+
+				return response.data
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public contractHistory = async <T = any>(address: string) => {
+		try {
+			const bitsongClient = this.bitsongClient
+
+			if (bitsongClient) {
+				const response = await bitsongClient.contractHistory<T>(address)
+
+				return {
+					...response.data,
+					address,
+				}
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public contractWithDetails = async <T = any>(address: string) => {
+		try {
+			const bitsongClient = this.bitsongClient
+
+			if (bitsongClient) {
+				const detailsResponse = await this.contractInfo(address)
+				const historyResponse = await this.contractHistory<T>(address)
+
+				if (!detailsResponse) {
+					return undefined
+				}
+
+				return {
+					...detailsResponse.result,
+					history: historyResponse,
+				}
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public contractsWithDetails = async <T = any>(
+		codeId: number
+	): Promise<ContractWithDetails<T>[] | undefined> => {
+		try {
+			const bitsongClient = this.bitsongClient
+
+			if (bitsongClient) {
+				const response = await bitsongClient.contracts(codeId)
+				const contracts = response.data.result ? response.data.result : []
+
+				const responses = compact(
+					await Promise.all(
+						contracts.map((address) => this.contractWithDetails<T>(address))
+					)
+				)
+
+				return responses
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public contracts = async (codeId: number) => {
+		try {
+			if (this.bitsongClient) {
+				const response = await this.bitsongClient.contracts(codeId)
+
+				return response.data
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public nftInfo = async (address: string, tokenId: string) => {
+		try {
+			if (this.bitsongClient) {
+				const response =
+					await this.bitsongClient.contractSmartQuery<NftInfoResponse>(address, {
+						nft_info: {
+							token_id: tokenId,
+						},
+					})
+
+				return {
+					...response.data.data,
+					token_id: tokenId,
+				}
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+	}
+
+	public nfts = async (address: string): Promise<NftTokenInfo[] | undefined> => {
+		try {
+			if (this.bitsongClient) {
+				const allTokensResponse =
+					await this.bitsongClient.contractSmartQuery<TokensResponse>(address, {
+						all_tokens: {},
+					})
+
+				const nftsInfoRequests = allTokensResponse.data.data.tokens.map((tokenId) =>
+					this.nftInfo(address, tokenId)
+				)
+
+				const nftsInfoResponses = compact(await Promise.all(nftsInfoRequests))
+
+				return nftsInfoResponses
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 	}
 
 	public bitsongBlocks = async (block?: string) => {
@@ -34,6 +176,24 @@ export default class SinfoniaClient {
 			console.error(error)
 			throw error
 		}
+	}
+
+	public merkledropClaimed = async (
+		id: number,
+		index: number
+	): Promise<boolean> => {
+		try {
+			if (this.bitsongClient) {
+				const response = await this.bitsongClient.merkledropClaimed(id, index)
+
+				return response.data.is_claimed
+			}
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
+
+		return true
 	}
 
 	public merkledrops = async (ids: number[]): Promise<BitsongMerkledrop[]> => {

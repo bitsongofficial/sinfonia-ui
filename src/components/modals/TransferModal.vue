@@ -46,18 +46,39 @@ const model = computed({
 	},
 })
 
+const fantoken = computed(() => {
+	const token = configStore.findTokenBySymbol(props.coin.symbol)
+
+	if (token) {
+		return token.fantoken
+	}
+
+	return false
+})
+
+const getToken = (coin: Token) => {
+	const token = configStore.allMainTokens.find(
+		(token) => token.chainID === coin.chainID
+	)
+
+	if (token) {
+		return {
+			...token,
+			fantoken: fantoken.value,
+		}
+	}
+
+	return undefined
+}
+
 watch(
 	() => props.coin,
 	(coin) => {
-		fromChain.value = configStore.allMainTokens.find(
-			(token) => token.chainID === coin.chainID
-		)
+		fromChain.value = getToken(coin)
 	}
 )
 
-const fromChain = ref<TokenWithAddress | undefined>(
-	configStore.allMainTokens.find((token) => token.chainID === props.coin.chainID)
-)
+const fromChain = ref<TokenWithAddress | undefined>(getToken(props.coin))
 
 const toChain = ref<TokenWithAddress | undefined>(configStore.osmosisToken)
 
@@ -188,13 +209,16 @@ const onSubmit = handleSubmit(() => {
 			transferAmount = amountIBCFromCoin(values.amount, props.coin)
 		}
 
-		transactionManagerStore.sendIbcTokens(
-			fromAddress.value,
-			toAddress.value,
-			fromChain.value,
-			toChain.value,
-			transferAmount
-		)
+		if (transferAmount) {
+			transactionManagerStore.sendIbcTokens(
+				fromAddress.value,
+				toAddress.value,
+				fromChain.value,
+				toChain.value,
+				transferAmount,
+				props.coin
+			)
+		}
 	}
 })
 
@@ -245,7 +269,7 @@ const availableGtnZero = computed(() => gtnZero(available.value))
 				fit
 				class="q-px-80"
 				:padding-y="14"
-				:disable="!meta.valid"
+				:disable="!meta.valid || transactionManagerStore.loadingAndSign"
 				@click="onSubmit"
 			>
 				<div class="text-uppercase">Transfer</div>

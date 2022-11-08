@@ -7,6 +7,22 @@ body.body--light {
     color: $secondary;
   }
 
+  .filepond--panel-root {
+    background: $white !important;
+  
+    &::after {
+      background-color: transparent !important;
+    }
+  
+    &::before {
+      background-color: transparent !important;
+    }
+  }
+
+  .filepond--drop-label {
+    color: $secondary !important;
+  }
+
   &.main-page-background {
     background: linear-gradient(338.9deg, rgba(17, 8, 44, 0.1) -14.43%, rgba(21, 10, 52, 0) 70.51%), #F0EDF2 !important;
   }
@@ -21,11 +37,20 @@ body.body--light {
     }
   }
 
+  .\!text-white,
   .text-white {
     color: $secondary !important;
   }
 
-  .q-tab.q-tab--active {
+  .hover\:text-white:hover {
+    color: $secondary !important;
+  }
+
+  .\!bg-white-10 {
+    background: $white;
+  }
+
+  .q-tab:not(.border).q-tab--active {
     color: unset !important;
 
     .q-tab__label {
@@ -122,6 +147,18 @@ body.body--light {
     &text-white {
       color: #FFFFFF !important;
     }
+    
+    &border-bottom-secondary-10 {
+        border-bottom: 1px solid transparentize($color: $secondary, $amount: 0.9);
+    }
+
+    &bg-primary-dark-500-5 {
+      background: transparentize($color: $primary-dark-500, $amount: 0.95) !important;
+    }
+
+    &bg-gray-900 {
+      background: $gray-900 !important;
+    }
 
     &text-secondary-320 {
       color: $secondary-320 !important;
@@ -129,6 +166,10 @@ body.body--light {
 
     &border-secondary-350 {
       border-color: $secondary-350 !important;
+    }
+
+    &border-white {
+      border: 2px solid $white;
     }
 
     &bg-secondary-320 {
@@ -359,7 +400,11 @@ body.body--light {
   }
 
   .q-menu {
-    background-color: white;
+    background: white;
+
+    &.alternative {
+      box-shadow: 0px 0px 20px rgb(23 8 33 / 10%);
+    }
 
     .q-item:hover {
       color: $secondary;

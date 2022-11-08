@@ -15,6 +15,8 @@ import {
 	ExitPool,
 	SwapExactAmountIn,
 	MerkledropClaim,
+	InstantiateContract,
+	ExecuteContract,
 } from "./messages"
 import {
 	AminoTypes,
@@ -22,10 +24,18 @@ import {
 	createIbcAminoConverters,
 	SigningStargateClient,
 } from "@cosmjs/stargate"
-import { osmosisRegistry } from "./registry"
-import { createOsmosisAminoConverters } from "./amino-types"
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx"
+import { osmosis } from "osmojs"
+import { createWasmAminoConverters } from "@cosmjs/cosmwasm-stargate"
+import { bitsongRegistry } from "./registry"
+import { createBitsongAminoConverters } from "./amino-types"
+import { contracts } from "@bitsongjs/contracts"
 import SignerEventEmitter from "./events"
+
+const { BS721Base } = contracts
+
+// TODO: Add message composer for NFT operations
+const { BS721BaseMessageComposer } = BS721Base
 
 export class TransactionManager extends SignerEventEmitter {
 	signer: OfflineSigner | OfflineDirectSigner
@@ -107,6 +117,40 @@ export class TransactionManager extends SignerEventEmitter {
 
 		return this.createSignBroadcast(
 			"SendIbcTokens",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public instantiateContract<T extends object>(
+		senderAddress: string,
+		codeId: number,
+		label: string,
+		msg: T,
+		memo?: string
+	) {
+		const message = InstantiateContract(senderAddress, codeId, label, msg)
+
+		return this.createSignBroadcast(
+			"InstantiateContract",
+			[message],
+			senderAddress,
+			memo ?? ""
+		)
+	}
+
+	public executeContract<T extends object>(
+		senderAddress: string,
+		contract: string,
+		msg: T,
+		funds: Coin[] = [],
+		memo?: string
+	) {
+		const message = ExecuteContract(senderAddress, contract, msg, funds)
+
+		return this.createSignBroadcast(
+			"ExecuteContract",
 			[message],
 			senderAddress,
 			memo ?? ""
@@ -265,15 +309,25 @@ export class TransactionManager extends SignerEventEmitter {
 				gas: transactionData.gasEstimate || "350000",
 			}
 
+			const registry = bitsongRegistry()
+
+			osmosis.gamm.v1beta1.load(registry)
+			osmosis.lockup.load(registry)
+
+			const aminoTypes = new AminoTypes({
+				...createIbcAminoConverters(),
+				...osmosis.gamm.v1beta1.AminoConverter,
+				...osmosis.lockup.AminoConverter,
+				...createBitsongAminoConverters(),
+				...createWasmAminoConverters(),
+			})
+
 			const client = await SigningStargateClient.connectWithSigner(
 				this.network.rpcURL,
 				this.signer,
 				{
-					registry: osmosisRegistry(),
-					aminoTypes: new AminoTypes({
-						...createIbcAminoConverters(),
-						...createOsmosisAminoConverters(),
-					}),
+					registry,
+					aminoTypes,
 				}
 			)
 

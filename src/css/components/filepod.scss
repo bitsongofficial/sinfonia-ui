@@ -1,0 +1,26 @@
+.filepond--root {
+  margin-bottom: 0 !important;
+}
+
+.filepond--credits {
+  display: none;
+}
+
+.filepond--panel-root {
+  background: transparentize($color: $white, $amount: 0.95) !important;
+
+  &::after {
+    background-color: transparent !important;
+  }
+
+  &::before {
+    background-color: transparent !important;
+  }
+}
+
+.filepond--drop-label {
+  border: none;
+  background-color: transparent;
+  color: $white !important;
+  opacity: 0.4 !important;
+}

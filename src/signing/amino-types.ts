@@ -1,47 +1,18 @@
 import { AminoConverters } from "@cosmjs/stargate"
-import { Coin } from "@cosmjs/proto-signing"
+import { AminoMsg } from "@cosmjs/amino"
+import { MsgClaim } from "./codec/bitsong/merkledrop/v1beta1/tx"
+import { Coin } from "@cosmjs/launchpad"
 import Long from "long"
-import { OsmosisPool } from "@/types"
 
-export interface AminoMsgMerkleDropClaim {
-	readonly type: "go-bitsong/merkledrop/MsgClaim"
-	readonly value: {
-		sender: string // Owner
-		merkledropId: number
-		index: number
+export interface AminoMsgClaim extends AminoMsg {
+	type: "/bitsong.merkledrop.v1beta1.MsgClaim"
+	value: {
+		sender: string
+		merkledrop_id: string
+		index: string
 		amount: string
 		proofs: string[]
 	}
-}
-
-export interface MsgMerkleDropClaim {
-	sender: string // Owner
-	merkledropId: Long
-	index: Long
-	amount: string
-	proofs: string[]
-}
-
-export interface AminoMsgSwapExactAmountIn {
-	readonly type: "osmosis/gamm/swap-exact-amount-in"
-	readonly value: {
-		sender: string // Owner
-		routes: OsmosisPool[]
-		tokenIn: Coin
-		tokenOutMinAmount: string
-	}
-}
-
-export interface OsmosisMsgPool {
-	poolId: Long
-	tokenOutDenom: string
-}
-
-export interface MsgSwapExactAmountIn {
-	sender: string // Owner
-	routes: OsmosisMsgPool[]
-	tokenIn: Coin
-	tokenOutMinAmount: string
 }
 
 export interface AminoMsgLockTokens {
@@ -62,33 +33,16 @@ export interface MsgLockTokens {
 	coins: Coin[]
 }
 
-export interface AminoMsgJoinPool {
-	readonly type: "osmosis/gamm/join-pool"
-	readonly value: MsgJoinPool
-}
-
-export interface MsgJoinPool {
-	sender: string // Owner
-	poolId: Long
-	shareOutAmount: string
-	tokenInMaxs: Coin[]
-}
-
-export interface AminoMsgJoinSwapExternAmountIn {
-	readonly type: "osmosis/gamm/join-swap-extern-amount-in"
-	readonly value: MsgJoinSwapExternAmountIn
-}
-
-export interface MsgJoinSwapExternAmountIn {
-	sender: string // Owner
-	poolId: Long
-	shareOutMinAmount: string
-	tokenIn: Coin
-}
-
-export interface AminoMsgBeginUnlocking {
-	readonly type: "osmosis/lockup/begin-unlock-period-lock"
-	readonly value: MsgBeginUnlocking
+export interface AminoMsgBeginUnlocking extends AminoMsg {
+	type: "osmosis/lockup/begin-unlock-period-lock"
+	value: {
+		owner: string
+		ID: string
+		coins: {
+			denom: string
+			amount: string
+		}[]
+	}
 }
 
 export interface MsgBeginUnlocking {
@@ -96,24 +50,7 @@ export interface MsgBeginUnlocking {
 	ID: Long
 }
 
-export interface AminoMsgExitPool {
-	readonly type: "osmosis/gamm/exit-pool"
-	readonly value: MsgExitPool
-}
-
-export interface MsgExitPool {
-	sender: string
-	poolId: Long
-	shareInAmount: string
-	tokenOutMins: Coin[]
-}
-
-/* sender: string, // Owner
-		merkledropId: number,
-		index: number,
-		amount: string,
-		proofs: string[] */
-export const createOsmosisAminoConverters = (): AminoConverters => {
+export const createBitsongAminoConverters = (): AminoConverters => {
 	return {
 		"/bitsong.merkledrop.v1beta1.MsgClaim": {
 			aminoType: "go-bitsong/merkledrop/MsgClaim",
@@ -123,10 +60,10 @@ export const createOsmosisAminoConverters = (): AminoConverters => {
 				index,
 				amount,
 				proofs,
-			}: MsgMerkleDropClaim) => {
+			}: MsgClaim): AminoMsgClaim["value"] => {
 				return {
 					sender,
-					merkledropId: merkledropId.toString(),
+					merkledrop_id: merkledropId.toString(),
 					index: index.toString(),
 					amount,
 					proofs,
@@ -134,49 +71,19 @@ export const createOsmosisAminoConverters = (): AminoConverters => {
 			},
 			fromAmino: ({
 				sender,
-				merkledropId,
+				merkledrop_id,
 				index,
 				amount,
 				proofs,
-			}: AminoMsgMerkleDropClaim["value"]) => {
+			}: AminoMsgClaim["value"]): MsgClaim => {
 				return {
 					sender,
-					merkledropId,
-					index,
+					merkledropId: Long.fromString(merkledrop_id),
+					index: Long.fromString(index),
 					amount,
 					proofs,
 				}
 			},
-		},
-		"/osmosis.gamm.v1beta1.MsgSwapExactAmountIn": {
-			aminoType: "osmosis/gamm/swap-exact-amount-in",
-			toAmino: ({
-				sender,
-				routes,
-				tokenIn,
-				tokenOutMinAmount,
-			}: MsgSwapExactAmountIn) => {
-				return {
-					sender,
-					routes: routes.map((el) => ({
-						...el,
-						poolId: el.poolId.toString(),
-					})),
-					tokenIn,
-					tokenOutMinAmount,
-				}
-			},
-			fromAmino: ({
-				sender,
-				routes,
-				tokenIn,
-				tokenOutMinAmount,
-			}: AminoMsgSwapExactAmountIn["value"]) => ({
-				sender,
-				routes,
-				tokenIn,
-				tokenOutMinAmount,
-			}),
 		},
 		"/osmosis.lockup.MsgLockTokens": {
 			aminoType: "osmosis/lockup/lock-tokens",
@@ -200,55 +107,6 @@ export const createOsmosisAminoConverters = (): AminoConverters => {
 				}
 			},
 		},
-		"/osmosis.gamm.v1beta1.MsgJoinPool": {
-			aminoType: "osmosis/gamm/join-pool",
-			toAmino: ({ sender, poolId, shareOutAmount, tokenInMaxs }: MsgJoinPool) => {
-				return {
-					sender,
-					poolId: poolId.toString(),
-					shareOutAmount,
-					tokenInMaxs,
-				}
-			},
-			fromAmino: ({
-				sender,
-				poolId,
-				shareOutAmount,
-				tokenInMaxs,
-			}: AminoMsgJoinPool["value"]) => ({
-				sender,
-				poolId,
-				shareOutAmount,
-				tokenInMaxs,
-			}),
-		},
-		"/osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn": {
-			aminoType: "osmosis/gamm/join-swap-extern-amount-in",
-			toAmino: ({
-				sender,
-				poolId,
-				shareOutMinAmount,
-				tokenIn,
-			}: MsgJoinSwapExternAmountIn) => {
-				return {
-					sender,
-					poolId: poolId.toString(),
-					shareOutMinAmount,
-					tokenIn,
-				}
-			},
-			fromAmino: ({
-				sender,
-				poolId,
-				shareOutMinAmount,
-				tokenIn,
-			}: AminoMsgJoinSwapExternAmountIn["value"]) => ({
-				sender,
-				poolId,
-				shareOutMinAmount,
-				tokenIn,
-			}),
-		},
 		"/osmosis.lockup.MsgBeginUnlocking": {
 			aminoType: "osmosis/lockup/begin-unlock-period-lock",
 			toAmino: ({ owner, ID }: MsgBeginUnlocking) => {
@@ -262,28 +120,6 @@ export const createOsmosisAminoConverters = (): AminoConverters => {
 				owner,
 				ID,
 				coins: [],
-			}),
-		},
-		"/osmosis.gamm.v1beta1.MsgExitPool": {
-			aminoType: "osmosis/gamm/exit-pool",
-			toAmino: ({ sender, poolId, shareInAmount, tokenOutMins }: MsgExitPool) => {
-				return {
-					sender,
-					poolId: poolId.toString(),
-					shareInAmount,
-					tokenOutMins,
-				}
-			},
-			fromAmino: ({
-				sender,
-				poolId,
-				shareInAmount,
-				tokenOutMins,
-			}: AminoMsgExitPool["value"]) => ({
-				sender,
-				poolId,
-				shareInAmount,
-				tokenOutMins,
 			}),
 		},
 	}

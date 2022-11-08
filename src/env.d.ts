@@ -24,6 +24,8 @@ interface ImportMetaEnv {
 	readonly VITE_TRANSACTIONS_DISABLE: string
 	readonly VITE_AIRDROPS_DISABLE: string
 	readonly VITE_ESTIMATED_BLOCK_TIME: string // In ms
+	readonly VITE_BS721_CODE_ID: string
+	readonly VITE_IPFS_SERVER_URL: string
 	readonly VITE_MODE: string
 }
 

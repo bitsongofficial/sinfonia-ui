@@ -68,3 +68,7 @@ export interface FantokenTab {
 	name?: string
 	url?: string
 }
+
+export interface FantokenMetadata {
+	tags?: string[]
+}

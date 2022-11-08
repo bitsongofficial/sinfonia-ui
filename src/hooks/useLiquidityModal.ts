@@ -45,6 +45,8 @@ const useLiquidityModal = (
 		pool.value.coins.map((el) => el.token.denom)
 	)
 
+	const loading = computed(() => transactionManagerStore.loadingAndSign)
+
 	const balances = computed(() => {
 		const balancesMap = {}
 
@@ -172,10 +174,10 @@ const useLiquidityModal = (
 					const shareOutAmount = calcPoolOutGivenSingleIn(
 						singlePoolAsset.value.token.amount,
 						singlePoolAsset.value.weight,
-						pool.value.totalShares.amount,
-						pool.value.totalWeight,
+						pool.value.total_shares.amount,
+						pool.value.total_weight,
 						singleAssetAmount.value,
-						pool.value.poolParams.swapFee
+						pool.value.pool_params.swap_fee
 					)
 
 					const outRatio = new BigNumber(1).minus(
@@ -217,10 +219,22 @@ const useLiquidityModal = (
 			}
 		}
 
+		const tokenInMaxsSort: Coin[] = []
+
+		for (const assetPool of pool.value.pool_assets) {
+			const tokenInMax = tokenInMaxs.find(
+				(token) => token.denom === assetPool.token.denom
+			)
+
+			if (tokenInMax) {
+				tokenInMaxsSort.push(tokenInMax)
+			}
+		}
+
 		transactionManagerStore.joinPool(
 			pool.value.id,
 			new BigNumber(shareOutAmount.value).toFixed(0),
-			tokenInMaxs
+			tokenInMaxsSort
 		)
 	}
 
@@ -239,7 +253,7 @@ const useLiquidityModal = (
 
 		const shareInAmount = poolShareWithPercentage.toFixed(0)
 		const shareRatio = new BigNumber(poolShareWithPercentage).div(
-			new BigNumber(pool.value.totalShares.amount)
+			new BigNumber(pool.value.total_shares.amount)
 		)
 
 		const tokenOutMins = pool.value.coins.map((coin) => {
@@ -260,10 +274,22 @@ const useLiquidityModal = (
 			}
 		})
 
+		const tokenOutMinsSort: Coin[] = []
+
+		for (const assetPool of pool.value.pool_assets) {
+			const tokenOut = compact(tokenOutMins).find(
+				(token) => token.denom === assetPool.token.denom
+			)
+
+			if (tokenOut) {
+				tokenOutMinsSort.push(tokenOut)
+			}
+		}
+
 		transactionManagerStore.exitPool(
 			pool.value.id,
 			shareInAmount,
-			compact(tokenOutMins).slice(0, 1)
+			tokenOutMinsSort
 		)
 	}
 
@@ -327,6 +353,7 @@ const useLiquidityModal = (
 		removePercent,
 		priceImpact,
 		meta,
+		loading,
 		onSubmit,
 		onExitPool,
 		changeToken,

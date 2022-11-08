@@ -3,15 +3,33 @@
 
     .q-tab__label {
         font-size: inherit;
+        color: inherit;
     }
 
-    .q-tab__indicator {
+    &:not(.border) .q-tab__indicator {
         display: none;
+    }
+
+    &.border {
+        .q-tab__indicator {
+            background: linear-gradient(90deg, $primary-complementary 0%, $primary 100%);
+            height: 6px;
+            border-radius: 40px;
+        }
+
+        .q-tab__label {
+            line-height: 24px;
+        }
+
+        .q-tab__content {
+            justify-content: flex-start;
+        }
+
+        min-height: 40px;
     }
 
     &.q-tab--active {
         opacity: 1 !important;
-        color: var(--text-color) !important;
     }
 
     .q-ripple {

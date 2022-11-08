@@ -79,7 +79,7 @@ const address = computed(() => {
 					{{ opt.name }}
 				</p>
 				<p class="fs-12 text-weight-medium opacity-40">
-					{{ shortenMiddle(address, 20) }}
+					{{ address ? shortenMiddle(address, 20) : "uknown" }}
 				</p>
 			</div>
 			<DangerTooltip

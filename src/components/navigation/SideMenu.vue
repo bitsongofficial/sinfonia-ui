@@ -2,10 +2,20 @@
 import { resolveIcon } from "@/common/resolvers"
 import MenuItem from "@/components/navigation/MenuItem.vue"
 import { menuItems } from "@/configs/routes"
+import { computed } from "vue"
+import { useRoute } from "vue-router"
+
+const route = useRoute()
+
+const fantoken = computed(() => route.name === "Fantoken")
 </script>
+
 <template>
 	<div
 		class="column min-width justify-around items-center bg-rounded-translucent q-px-20 q-py-28"
+		:class="{
+			'!shadow-10': fantoken,
+		}"
 	>
 		<MenuItem
 			v-for="(menuItem, i) in menuItems"

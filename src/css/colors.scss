@@ -56,6 +56,14 @@
     border: 1px solid $dark;
 }
 
+.border-dark-2 {
+    border: 2px solid $dark;
+}
+
+.border-white-2 {
+    border: 2px solid $white;
+}
+
 .text-primary-dark-700 {
     color: $primary-dark-700 !important;
 }
@@ -76,12 +84,36 @@
     border: 2px solid rgba(122, 110, 124, 0.15);
 }
 
+.border-white-8 {
+    border: 2px solid transparentize($color: $white, $amount: 0.92);
+}
+
+.text-dark {
+    color: $dark !important;
+}
+
+.bg-primary-dark-500 {
+    background: $primary-dark-500 !important;
+}
+
+.bg-primary-dark-500-5 {
+    background: transparentize($color: $primary-dark-500, $amount: 0.95) !important;
+}
+
 .text-dark-light {
     color: $dark-light !important;
 }
 
 .bg-dark-light {
     background: $dark-light !important;
+}
+
+.bg-dark-30 {
+    background: transparentize($color: $dark, $amount: 0.7);
+}
+
+.bg-secondary-80 {
+    background: transparentize($color: $secondary, $amount: 0.2);
 }
 
 .text-dark-lighter {
@@ -124,6 +156,11 @@
     border-radius: 30px;
 }
 
+.bg-blur-white-700 {
+    background-color: $white-700;
+    filter: blur(300px);
+}
+
 .text-gradient {
     @include text-gradient();
 }
@@ -134,6 +171,10 @@
 
 .shadow-10 {
     box-shadow: 0px 0px 20px transparentize($color: $alternative, $amount: 0.9);
+}
+
+.\!shadow-10 {
+    box-shadow: 0px 0px 20px transparentize($color: $alternative, $amount: 0.9) !important;
 }
 
 .shadow-20-alt {
@@ -184,6 +225,14 @@
     border: 2px solid $white;
 }
 
+.border-bottom-white {
+    border-bottom: 1px solid $white;
+}
+
+.border-bottom-white-10 {
+    border-bottom: 1px solid transparentize($color: $white, $amount: 0.9);
+}
+
 .text-overlay-gradient {
     background: linear-gradient(180deg, rgba(72, 60, 88, 0) 0%, #483B58 100%);
 }
@@ -194,8 +243,7 @@
 }
 
 .main-page-background-helper {
-    background: $secondary;
-    filter: blur(200px);
+    background: $accent;
     backdrop-filter: blur(100px);
 }
 
@@ -207,6 +255,10 @@
     background: linear-gradient(0deg, rgba(0, 224, 255, 0.4), rgba(0, 224, 255, 0.4)), $primary;
 }
 
+.\!text-white {
+    color: $white;
+}
+
 @for $i from 1 through 8 {
     $name: $i*5;
     $val: -(1 - $i/20);
@@ -215,13 +267,25 @@
         background-color: color.adjust(#FFFFFF, $alpha: $val);
     }
 
+    .\!bg-white-#{$name} {
+        background-color: color.adjust(#FFFFFF, $alpha: $val) !important;
+    }
+
     .hover\:bg-white-#{$name}:hover {
         background-color: color.adjust(#FFFFFF, $alpha: $val);
+    }
+
+    .hover\:text-white:hover {
+        color: $white !important;
     }
 }
 
 @for $i from 1 through 20 {
     .opacity-#{$i*5} {
+        opacity: #{$i/20};
+    }
+
+    .\!opacity-#{$i*5} {
         opacity: #{$i/20};
     }
 

@@ -51,9 +51,23 @@ const useMerkledrops = defineStore("merkledrops", {
 				)
 
 				this.bitsongBlock = await sinfoniaClient.bitsongBlocks()
-				this.merkledropsDetails = await sinfoniaClient.merkledrops(merkledropIds)
+				const merkledropsDetails = await sinfoniaClient.merkledrops(merkledropIds)
+				const proofs: MerkledropProof[] = []
 
-				this.merkledropProofs = merkledropProofs ?? []
+				for (const proof of merkledropProofs ?? []) {
+					const isClaimed = await sinfoniaClient.merkledropClaimed(
+						proof.merkledrop_id,
+						proof.index
+					)
+
+					proofs.push({
+						...proof,
+						claimed: isClaimed,
+					})
+				}
+
+				this.merkledropsDetails = merkledropsDetails
+				this.merkledropProofs = proofs
 				this.merkledrops = merkledrops
 			} catch (error) {
 				console.error(error)
@@ -136,7 +150,7 @@ const useMerkledrops = defineStore("merkledrops", {
 					symbol,
 					proof,
 					owner,
-					amount: total.mul(10e-6).toNumber(),
+					amount: total.mul(1e-6).toNumber(),
 					claimed: claimed.toString(),
 					claimedPercentage: claimed.div(total).toString(),
 				}

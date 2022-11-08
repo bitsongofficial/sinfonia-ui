@@ -28,18 +28,31 @@ const available = computed(() => {
 </script>
 
 <template>
-	<q-item class="full-width q-pa-0">
-		<div class="flex-1 flex justify-between items-center q-py-0 no-wrap">
-			<div class="order-xs-3 q-mr-xs-0 q-mr-20">
-				<p class="fs-15 q-mb-4 text-white gt-xs">{{ coin.name }}</p>
-				<p class="fs-12 text-dark">{{ available }} {{ coin.symbol }}</p>
-			</div>
-			<div class="order-xs-1 flex items-center no-wrap">
-				<q-avatar size="40px" class="q-mr-8 q-mr-xs-20 !fs-xs-24 no-margin-select">
-					<img :src="coin.logos.default" alt="" />
+	<q-item class="full-width q-pa-0 coin-selected">
+		<div class="flex-1 flex items-center q-py-0 no-wrap">
+			<div class="flex items-center no-wrap">
+				<q-avatar size="24px" class="q-mr-20 no-margin-select">
+					<img :src="coin.logos.default" :alt="coin.name" />
 				</q-avatar>
-				<p class="fs-14 text-white lt-sm">{{ coin.name }}</p>
+			</div>
+			<div
+				class="q-mr-xs-0 q-mr-20 column row-xs items-center-xs justify-between-xs flex-1"
+			>
+				<p class="fs-16 text-weight-medium fs-xs-14 !leading-20 text-white">
+					{{ coin.symbol }}
+				</p>
+				<p class="fs-12 text-weight-medium !leading-15 text-dark q-mt-2">
+					{{ available }}
+				</p>
 			</div>
 		</div>
 	</q-item>
 </template>
+
+<style lang="scss" scoped>
+.coin-selected {
+	@media screen and (max-width: $breakpoint-xs) {
+		min-height: auto;
+	}
+}
+</style>
