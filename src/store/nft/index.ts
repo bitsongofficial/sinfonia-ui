@@ -28,6 +28,7 @@ import { getIPFSFile } from "@/services/ipfs"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 import { router } from "@/configs/routes"
+import { DeliverTxResponse, logs } from "@cosmjs/stargate"
 
 export interface NFTState {
 	loading: boolean
@@ -165,6 +166,17 @@ const useNFT = defineStore("nft", {
 
 					const metadataCID = await ipfsClient.upload(metadataFile)
 
+					const onComplete = (tx: DeliverTxResponse) => {
+						const parsedLogs = logs.parseRawLog(tx.rawLog)
+						const contractAddressAttr = logs.findAttribute(
+							parsedLogs,
+							"instantiate",
+							"_contract_address"
+						)
+
+						router.replace(`/nfts/${contractAddressAttr.value}/details`)
+					}
+
 					transactionManagerStore.instantiateContract<BS721InitMsg>(
 						codeId,
 						payload.name,
@@ -173,7 +185,9 @@ const useNFT = defineStore("nft", {
 							name: payload.name,
 							symbol: payload.symbol,
 							uri: `ipfs://${metadataCID}`,
-						}
+						},
+						true,
+						onComplete
 					)
 				}
 			} catch (error) {
@@ -339,33 +353,35 @@ const useNFT = defineStore("nft", {
 			collections,
 			collectionsMetadata,
 		}): BitsongCollection[] => {
-			return collections.map((collection) => {
-				const initEntry = collection.history?.result.find(
-					(el) =>
-						el.operation ===
-						ContractCodeHistoryOperationType.CONTRACT_CODE_HISTORY_OPERATION_TYPE_INIT
-				)
+			return collections
+				.map((collection) => {
+					const initEntry = collection.history?.result.find(
+						(el) =>
+							el.operation ===
+							ContractCodeHistoryOperationType.CONTRACT_CODE_HISTORY_OPERATION_TYPE_INIT
+					)
 
-				let metadata: CollectionMetadata | undefined = undefined
+					let metadata: CollectionMetadata | undefined = undefined
 
-				if (initEntry) {
-					const uri = validateIPFSURI(initEntry.msg.uri)
+					if (initEntry) {
+						const uri = validateIPFSURI(initEntry.msg.uri)
 
-					if (uri) {
-						metadata = collectionsMetadata[uri]
+						if (uri) {
+							metadata = collectionsMetadata[uri]
+						}
 					}
-				}
 
-				return {
-					address: collection.address,
-					code_id: collection.code_id,
-					creator: collection.creator,
-					admin: collection.admin,
-					label: collection.label,
-					init: initEntry?.msg,
-					metadata,
-				}
-			})
+					return {
+						address: collection.address,
+						code_id: collection.code_id,
+						creator: collection.creator,
+						admin: collection.admin,
+						label: collection.label,
+						init: initEntry?.msg,
+						metadata,
+					}
+				})
+				.reverse()
 		},
 		myCollections(): BitsongCollection[] {
 			const authStore = useAuth()

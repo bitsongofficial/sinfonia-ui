@@ -95,7 +95,7 @@ const routes: RouteRecordRaw[] = [
 		name: "CollectionsWrapper",
 		component: () => import("@/components/pages/Wrapper.vue"),
 		meta: {
-			title: "Collections",
+			title: "NFTs",
 		},
 		children: [
 			{

@@ -586,7 +586,9 @@ const useTransactionManager = defineStore("transactionManager", {
 		async instantiateContract<T extends object>(
 			codeId: number,
 			label: string,
-			msg: T
+			msg: T,
+			fullScreen = false,
+			onComplete?: (tx: DeliverTxResponse) => void
 		) {
 			const authStore = useAuth()
 			const configStore = useConfig()
@@ -613,14 +615,23 @@ const useTransactionManager = defineStore("transactionManager", {
 						})
 
 						this.loadingBroadcasting = true
+
+						if (fullScreen) {
+							this.loadingBroadcastingFull = true
+						}
 					})
 
 					manager.on("ontxbroadcasted", (txs: DeliverTxResponse) => {
 						if (txId) {
 							this.updateTx(txId, txs)
+
+							if (onComplete) {
+								onComplete(txs)
+							}
 						}
 
 						this.loadingBroadcasting = false
+						this.loadingBroadcastingFull = false
 					})
 
 					manager.on("onerror", (error: any) => {
@@ -635,6 +646,7 @@ const useTransactionManager = defineStore("transactionManager", {
 						notifyError("Transaction Failed", (error as Error).message)
 
 						this.loadingBroadcasting = false
+						this.loadingBroadcastingFull = false
 						this.loadingSign = false
 					})
 
@@ -648,6 +660,7 @@ const useTransactionManager = defineStore("transactionManager", {
 			} finally {
 				this.loadingSign = false
 				this.loadingBroadcasting = false
+				this.loadingBroadcastingFull = false
 			}
 		},
 		async executeContract<T extends object>(

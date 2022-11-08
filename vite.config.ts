@@ -71,7 +71,7 @@ export default defineConfig({
 		"process.env": {},
 		"process.platform": {},
 	},
-	optimizeDeps: {
+	/* optimizeDeps: {
 		esbuildOptions: {
 			plugins: [
 				NodeGlobalsPolyfillPlugin({
@@ -81,5 +81,5 @@ export default defineConfig({
 				NodeModulesPolyfillPlugin(),
 			],
 		},
-	},
+	}, */
 })
