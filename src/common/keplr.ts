@@ -40,9 +40,9 @@ export const tokenToExperimentalSuggestChain = (
 			feeCurrencies,
 			coinType: token.coinType,
 			gasPriceStep: {
-				low: 0.01,
-				average: 0.025,
-				high: 0.04,
+				low: 1.25,
+				average: 3.75,
+				high: 7.5,
 			},
 			features: ["ibc-transfer", "ibc-go"],
 		}
