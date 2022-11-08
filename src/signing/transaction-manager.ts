@@ -21,7 +21,9 @@ import {
 import {
 	AminoTypes,
 	assertIsDeliverTxSuccess,
+	calculateFee,
 	createIbcAminoConverters,
+	GasPrice,
 	SigningStargateClient,
 } from "@cosmjs/stargate"
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx"
@@ -301,13 +303,19 @@ export class TransactionManager extends SignerEventEmitter {
 				chainId: this.network.chainID,
 			}
 
+			const symbol = transactionData.fee
+				? transactionData.fee[0].denom
+				: this.network.symbol
+
 			const stdFee = {
 				amount: coins(
 					Number(transactionData.fee ? transactionData.fee[0].amount : 0),
-					transactionData.fee ? transactionData.fee[0].denom : this.network.symbol
+					symbol
 				),
 				gas: transactionData.gasEstimate || "350000",
 			}
+
+			const gasPrice = GasPrice.fromString(`0.35${symbol}`)
 
 			const registry = bitsongRegistry()
 
@@ -333,7 +341,17 @@ export class TransactionManager extends SignerEventEmitter {
 
 			this.emit("onsignerconnected", client)
 
-			const raw = await client.sign(senderAddress, messages, stdFee, memo || "")
+			const gasEstimation = await client.simulate(senderAddress, messages, memo)
+
+			// https://github.com/cosmos/cosmjs/blob/main/packages/stargate/src/signingstargateclient.ts#L290
+			const multiplier = 1.3
+
+			const usedFee = calculateFee(
+				Math.round(gasEstimation * multiplier),
+				gasPrice
+			)
+
+			const raw = await client.sign(senderAddress, messages, usedFee, memo || "")
 
 			this.emit("ontxsigned", raw)
 

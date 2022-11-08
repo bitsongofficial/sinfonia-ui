@@ -328,22 +328,24 @@ const useNFT = defineStore("nft", {
 	},
 	getters: {
 		bitsongNFTs: ({ nfts, nftsMetadata }): BitsongNFT[] => {
-			return nfts.map((nft) => {
-				let metadata: NFTMetadata | undefined = undefined
+			return nfts
+				.map((nft) => {
+					let metadata: NFTMetadata | undefined = undefined
 
-				if (nft.token_uri) {
-					const uri = validateIPFSURI(nft.token_uri)
+					if (nft.token_uri) {
+						const uri = validateIPFSURI(nft.token_uri)
 
-					if (uri) {
-						metadata = nftsMetadata[uri]
+						if (uri) {
+							metadata = nftsMetadata[uri]
+						}
 					}
-				}
 
-				return {
-					...nft,
-					metadata,
-				}
-			})
+					return {
+						...nft,
+						metadata,
+					}
+				})
+				.reverse()
 		},
 		nft(): (tokenId: string) => BitsongNFT | undefined {
 			return (tokenId: string) =>

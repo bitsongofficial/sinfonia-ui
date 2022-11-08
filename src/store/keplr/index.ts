@@ -24,11 +24,11 @@ const useKeplr = defineStore("keplr", {
 				const configStore = useConfig()
 
 				if (window.keplr) {
-					window.keplr.defaultOptions = {
+					/* window.keplr.defaultOptions = {
 						sign: {
 							preferNoSetFee: true,
 						},
-					}
+					} */
 
 					const chainIds = configStore.allMainTokens.map((token) => token.chainID)
 
