@@ -45,7 +45,7 @@ const nftWatcher = watch(
 	() => nft.value,
 	(currentNFT) => {
 		if (currentNFT && currentNFT.metadata) {
-			document.title = `${currentNFT.metadata.name} NFT`
+			document.title = `${currentNFT.metadata.name} | ${collection.value?.init?.name} | NFT`
 
 			settingsStore.breadcrumbPageTitle = currentNFT.metadata.name
 			settingsStore.breadcrumbPrepend = [

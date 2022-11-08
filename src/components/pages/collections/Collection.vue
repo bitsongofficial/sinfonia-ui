@@ -27,7 +27,7 @@ const collectionWatcher = watch(
 	() => NFTStore.collection(address),
 	(collection) => {
 		if (collection && collection.init) {
-			document.title = `${collection.init.name} Collection`
+			document.title = `${collection.init.name} | NFT`
 
 			settingsStore.breadcrumbPageTitle = collection.init.name
 		}
