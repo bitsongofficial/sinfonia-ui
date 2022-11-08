@@ -143,7 +143,7 @@ const onSubmit = handleSubmit(() => {
 						:key="link.key"
 						class="col-span-12 grid grid-cols-12 grid-gap-16 items-center"
 					>
-						<div class="col-span-11 grid grid-cols-12 grid-gap-16">
+						<div class="col-span-10 grid grid-cols-12 grid-gap-16">
 							<StandardInput
 								class="col-span-12 col-span-md-6"
 								:name="`links[${idx}].key`"
@@ -160,7 +160,7 @@ const onSubmit = handleSubmit(() => {
 						</div>
 
 						<SmallButton
-							class="col-span-12 col-span-md-1 col-start-md-12"
+							class="col-span-2 col-start-11"
 							type="button"
 							label="Remove"
 							@click="remove(idx)"
