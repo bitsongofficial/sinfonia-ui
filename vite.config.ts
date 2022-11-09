@@ -4,8 +4,6 @@ import { quasar, transformAssetUrls } from "@quasar/vite-plugin"
 import checker from "vite-plugin-checker"
 import VitePluginHtmlEnv from "vite-plugin-html-env"
 import path from "path"
-import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill"
-import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill"
 import rollupNodePolyFill from "rollup-plugin-node-polyfills"
 
 // https://vitejs.dev/config/
@@ -71,15 +69,4 @@ export default defineConfig({
 		"process.env": {},
 		"process.platform": {},
 	},
-	/* optimizeDeps: {
-		esbuildOptions: {
-			plugins: [
-				NodeGlobalsPolyfillPlugin({
-					process: true,
-					buffer: true,
-				}),
-				NodeModulesPolyfillPlugin(),
-			],
-		},
-	}, */
 })

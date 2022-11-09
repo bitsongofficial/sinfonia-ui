@@ -11,6 +11,7 @@ import useSettings from "@/store/settings"
 import LightModeSwitch from "@/components/inputs/LightModeSwitch.vue"
 import DisclaimerModal from "@/components/modals/DisclaimerModal.vue"
 import useTransactionManager from "@/store/transaction-manager"
+import { useMeta } from "vue-meta"
 
 const settingsStore = useSettings()
 const transactionManagerStore = useTransactionManager()
@@ -36,12 +37,35 @@ const disclaimerUpdate = (value: boolean) => {
 		showDisclaimer.value = false
 	}
 }
+
+useMeta({
+	title: "Sinfonia",
+	description: "Your Music FanToken Marketplace powered by BitSong on Osmosis",
+	og: {
+		type: "website",
+		url: import.meta.env.VITE_BASE_URL,
+		title: "Sinfonia",
+		description: "Your Music FanToken Marketplace powered by BitSong on Osmosis",
+		image: `${import.meta.env.VITE_BASE_URL}cover.jpeg`,
+	},
+	twitter: {
+		card: "summary_large_image",
+		url: import.meta.env.VITE_BASE_URL,
+		title: "Sinfonia",
+		description: "Your Music FanToken Marketplace powered by BitSong on Osmosis",
+		image: `${import.meta.env.VITE_BASE_URL}cover.jpeg`,
+	},
+})
 </script>
 
 <template>
 	<div
 		class="min-h-window-height q-pt-28 q-pb-60 q-pt-md-64 q-mt-xs-10 q-pt-xs-40 q-pb-xs-150 column"
 	>
+		<metainfo>
+			<template v-slot:title="{ content }">{{ content }}</template>
+			<template v-slot:description="{ content }">{{ content }}</template>
+		</metainfo>
 		<PageLoader v-if="transactionManagerStore.loadingBroadcastingFull" />
 		<div class="spot bg-blur-white-700 absolute"></div>
 		<div class="container q-px-xs-0 q-px-md-0">

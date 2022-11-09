@@ -13,8 +13,6 @@ specifiers:
   '@cosmjs/math': ^0.29.3
   '@cosmjs/proto-signing': 0.29.2
   '@cosmjs/stargate': 0.29.2
-  '@esbuild-plugins/node-globals-polyfill': ^0.1.1
-  '@esbuild-plugins/node-modules-polyfill': ^0.1.4
   '@kelchy/pre-commit': ^1.2.4
   '@keplr-wallet/types': ^0.9.12
   '@osmonauts/helpers': ^0.6.0
@@ -66,6 +64,7 @@ specifiers:
   vue-filepond: ^7.0.3
   vue-fuse: ^4.1.1
   vue-gtag: ^2.0.1
+  vue-meta: 3.0.0-alpha.7
   vue-router: '4'
   vue-tsc: ^0.29.8
   zod: ^3.19.1
@@ -117,12 +116,11 @@ dependencies:
   vue-filepond: 7.0.3_filepond@4.30.4+vue@3.2.31
   vue-fuse: 4.1.1_fuse.js@6.6.2+vue@3.2.31
   vue-gtag: 2.0.1_vue@3.2.31
+  vue-meta: 3.0.0-alpha.7_vue@3.2.31
   vue-router: 4.0.13_vue@3.2.31
   zod: 3.19.1
 
 devDependencies:
-  '@esbuild-plugins/node-globals-polyfill': 0.1.1
-  '@esbuild-plugins/node-modules-polyfill': 0.1.4
   '@kelchy/pre-commit': 1.2.4
   '@keplr-wallet/types': 0.9.12
   '@quasar/vite-plugin': 1.0.5_vz2kgjuq7eylzhnfwiiqbx4uti
@@ -2032,21 +2030,6 @@ packages:
 
   /@emmetio/scanner/1.0.0:
     resolution: {integrity: sha512-8HqW8EVqjnCmWXVpqAOZf+EGESdkR27odcMMMGefgKXtar00SoYNSryGv//TELI4T3QFsECo78p+0lmalk/CFA==}
-    dev: true
-
-  /@esbuild-plugins/node-globals-polyfill/0.1.1:
-    resolution: {integrity: sha512-MR0oAA+mlnJWrt1RQVQ+4VYuRJW/P2YmRTv1AsplObyvuBMnPHiizUF95HHYiSsMGLhyGtWufaq2XQg6+iurBg==}
-    peerDependencies:
-      esbuild: '*'
-    dev: true
-
-  /@esbuild-plugins/node-modules-polyfill/0.1.4:
-    resolution: {integrity: sha512-uZbcXi0zbmKC/050p3gJnne5Qdzw8vkXIv+c2BW0Lsc1ji1SkrxbKPUy5Efr0blbTu1SL8w4eyfpnSdPg3G0Qg==}
-    peerDependencies:
-      esbuild: '*'
-    dependencies:
-      escape-string-regexp: 4.0.0
-      rollup-plugin-node-polyfills: 0.2.1
     dev: true
 
   /@eslint/eslintrc/1.2.1:
@@ -7763,6 +7746,14 @@ packages:
 
   /vue-gtag/2.0.1_vue@3.2.31:
     resolution: {integrity: sha512-aM4A58FVL0wV2ptYi+xzAjeg+pQVRyUcfBc5UkXAwQrR4t3WBhor50Izp2I+3Oo7+l+vWJ7u78DGcNzReb8S/A==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.2.31
+    dev: false
+
+  /vue-meta/3.0.0-alpha.7_vue@3.2.31:
+    resolution: {integrity: sha512-C5JgqeVvqjPvWzJ1+Wpffk5GWxdlskuxP3q7iOQrI7TZ+ofVMDA5RDd1iAvAcPwfbaSrhGd8zda0zu+IfBvSLg==}
     peerDependencies:
       vue: ^3.0.0
     dependencies:

@@ -11,6 +11,7 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 import { formatShortAddress, isValidContractAddress } from "@/common"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
+import { useMeta } from "vue-meta"
 import useClipboard from "@/hooks/useClipboard"
 
 const route = useRoute()
@@ -27,8 +28,6 @@ const collectionWatcher = watch(
 	() => NFTStore.collection(address),
 	(collection) => {
 		if (collection && collection.init) {
-			document.title = `${collection.init.name} | NFT`
-
 			settingsStore.breadcrumbPageTitle = collection.init.name
 		}
 	},
@@ -53,6 +52,27 @@ onUnmounted(() => {
 })
 
 const { onCopy } = useClipboard()
+
+const metadata = computed(() => ({
+	title: `${collection.value?.init?.name} | NFT`,
+	description: collection.value?.metadata?.description,
+	og: {
+		type: "website",
+		url: import.meta.env.VITE_BASE_URL,
+		title: `${collection.value?.init?.name} | NFT`,
+		description: collection.value?.metadata?.description,
+		image: collection.value?.metadata?.cover,
+	},
+	twitter: {
+		card: "summary_large_image",
+		url: import.meta.env.VITE_BASE_URL,
+		title: `${collection.value?.init?.name} | NFT`,
+		description: collection.value?.metadata?.description,
+		image: collection.value?.metadata?.cover,
+	},
+}))
+
+useMeta(metadata)
 </script>
 
 <template>
