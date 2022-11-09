@@ -9,6 +9,7 @@ import useNFT from "@/store/nft"
 import useSettings from "@/store/settings"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useRoute, useRouter, RouterLink } from "vue-router"
+import { useMeta } from "vue-meta"
 import useClipboard from "@/hooks/useClipboard"
 
 const route = useRoute()
@@ -45,8 +46,6 @@ const nftWatcher = watch(
 	() => nft.value,
 	(currentNFT) => {
 		if (currentNFT && currentNFT.metadata) {
-			document.title = `${currentNFT.metadata.name} | ${collection.value?.init?.name} | NFT`
-
 			settingsStore.breadcrumbPageTitle = currentNFT.metadata.name
 			settingsStore.breadcrumbPrepend = [
 				{
@@ -65,6 +64,27 @@ onUnmounted(() => {
 })
 
 const { onCopy } = useClipboard()
+
+const metadata = computed(() => ({
+	title: `${nft.value?.metadata?.name} | ${collection.value?.init?.name} | NFT`,
+	description: nft.value?.metadata?.description,
+	og: {
+		type: "website",
+		url: import.meta.env.VITE_BASE_URL,
+		title: `${nft.value?.metadata?.name} | ${collection.value?.init?.name} | NFT`,
+		description: nft.value?.metadata?.description,
+		image: nft.value?.metadata?.image,
+	},
+	twitter: {
+		card: "summary_large_image",
+		url: import.meta.env.VITE_BASE_URL,
+		title: `${nft.value?.metadata?.name} | ${collection.value?.init?.name} | NFT`,
+		description: nft.value?.metadata?.description,
+		image: nft.value?.metadata?.image,
+	},
+}))
+
+useMeta(metadata)
 </script>
 
 <template>
@@ -139,7 +159,7 @@ const { onCopy } = useClipboard()
 					<div class="q-mb-64" v-if="nft.metadata.description">
 						<Title :font-size="24" class="q-mb-16">Description</Title>
 
-						<p class="opacity-50">{{ nft.metadata.description }}</p>
+						<p class="opacity-50 white-space-pre">{{ nft.metadata.description }}</p>
 					</div>
 				</div>
 			</div>

@@ -105,9 +105,10 @@ useMeta(metadata)
 				<Title
 					v-if="collection.metadata && collection.metadata.description"
 					:font-size="18"
-					class="q-mb-32"
-					>{{ collection.metadata.description }}</Title
+					class="q-mb-32 white-space-pre"
 				>
+					{{ collection.metadata.description }}
+				</Title>
 
 				<LargeButton
 					:padding-x="30"
