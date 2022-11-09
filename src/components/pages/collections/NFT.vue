@@ -31,15 +31,10 @@ onMounted(() => {
 			!isValidContractAddress(address, configStore.bitsongToken.addressPrefix))
 	) {
 		router.replace({ name: "NotFound" })
-	} else {
-		if (!collection.value) {
-			NFTStore.loadCollection(address)
-		}
-
-		if (!nft.value) {
-			NFTStore.loadNFTs(address)
-		}
 	}
+
+	NFTStore.loadCollection(address)
+	NFTStore.loadNFTs(address)
 })
 
 const nftWatcher = watch(
