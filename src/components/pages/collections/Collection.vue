@@ -41,10 +41,10 @@ onMounted(() => {
 			!isValidContractAddress(address, configStore.bitsongToken.addressPrefix))
 	) {
 		router.replace({ name: "NotFound" })
-	} else {
-		NFTStore.loadCollection(address)
-		NFTStore.loadNFTs(address)
 	}
+
+	NFTStore.loadCollection(address)
+	NFTStore.loadNFTs(address)
 })
 
 onUnmounted(() => {
