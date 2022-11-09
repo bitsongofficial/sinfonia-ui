@@ -65,13 +65,12 @@
 		"vue": "^3.2.25",
 		"vue-filepond": "^7.0.3",
 		"vue-fuse": "^4.1.1",
+		"vue-meta": "3.0.0-alpha.7",
 		"vue-gtag": "^2.0.1",
 		"vue-router": "4",
 		"zod": "^3.19.1"
 	},
 	"devDependencies": {
-		"@esbuild-plugins/node-globals-polyfill": "^0.1.1",
-		"@esbuild-plugins/node-modules-polyfill": "^0.1.4",
 		"@kelchy/pre-commit": "^1.2.4",
 		"@keplr-wallet/types": "^0.9.12",
 		"@quasar/vite-plugin": "^1.0.5",
