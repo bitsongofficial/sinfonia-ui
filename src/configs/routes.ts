@@ -141,6 +141,32 @@ const routes: RouteRecordRaw[] = [
 			},
 		],
 	},
+	{
+		path: "/podcasts",
+		name: "PodcastsWrapper",
+		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Podcasts",
+		},
+		children: [
+			{
+				path: ":codeId?",
+				name: "Podcasts",
+				component: () => import("@/components/pages/podcasts/Podcasts.vue"),
+				meta: {
+					breadcrumbHide: true,
+				},
+			},
+			{
+				path: ":codeId/create",
+				name: "CreatePodcast",
+				component: () => import("@/components/pages/podcasts/CreatePodcast.vue"),
+				meta: {
+					title: "Create Podcast",
+				},
+			},
+		],
+	},
 	/* {
 		path: "/airdrops",
 		name: "Airdrops",
@@ -192,6 +218,12 @@ export const menuItems: MenuItem[] = [
 		icon: { name: "list", width: 19, height: 13 },
 		label: "Collections",
 		path: "/nfts",
+		disabled: disabledRoutes,
+	},
+	{
+		icon: { name: "trophy", width: 22, height: 18 },
+		label: "Podcasts",
+		path: "/podcasts",
 		disabled: disabledRoutes,
 	},
 ]

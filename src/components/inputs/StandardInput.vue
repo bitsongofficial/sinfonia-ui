@@ -8,6 +8,8 @@ const props = withDefaults(
 		placeholder?: string
 		value?: string
 		alternative?: boolean
+		counter?: boolean
+		maxlength?: string | number
 		type?:
 			| "number"
 			| "search"
@@ -24,6 +26,7 @@ const props = withDefaults(
 	}>(),
 	{
 		value: "",
+		counter: false,
 		alternative: false,
 		placeholder: "0",
 		type: "text",
@@ -74,8 +77,11 @@ const defaultClass = props.alternative
 				:type="type"
 				class="fs-16 q-mb-0 text-white full-width"
 				no-error-icon
-				hide-bottom-space
-				:error="!meta.valid"
+				:hide-bottom-space="!counter"
+				:bottom-slots="counter"
+				:counter="counter"
+				:maxlength="maxlength"
+				:error="!meta.valid && errorMessage !== undefined"
 				:placeholder="placeholder"
 				@update:model-value="updateModelValue($event)"
 				@blur="handleBlur"

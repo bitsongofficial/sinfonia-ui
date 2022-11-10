@@ -154,7 +154,9 @@ useMeta(metadata)
 					<div class="q-mb-64" v-if="nft.metadata.description">
 						<Title :font-size="24" class="q-mb-16">Description</Title>
 
-						<p class="opacity-50 white-space-pre">{{ nft.metadata.description }}</p>
+						<p class="opacity-50 white-space-pre-line">
+							{{ nft.metadata.description }}
+						</p>
 					</div>
 				</div>
 			</div>
