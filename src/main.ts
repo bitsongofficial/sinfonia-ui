@@ -2,7 +2,6 @@ import { createApp } from "vue"
 import { createPinia } from "pinia"
 import { Quasar, Notify, Dialog } from "quasar"
 import { createPersistedStatePlugin } from "pinia-plugin-persistedstate-2"
-import { createMetaManager } from "vue-meta"
 import "@/common/validation"
 import VueGtag from "vue-gtag"
 import VueCountdown from "@chenfengyuan/vue-countdown"
@@ -49,8 +48,6 @@ const pinia = createPinia()
 pinia.use(createPersistedStatePlugin())
 
 app.use(pinia)
-
-app.use(createMetaManager())
 
 app.use(router)
 
