@@ -21,9 +21,15 @@ export const defaultMetadata: WebMetadata = {
 }
 
 export const queryAndSetMetadata = (metadata: WebMetadata) => {
-	document.title = metadata.title
+	const titleMetadata = window.document.querySelector("title")
 
-	const descriptionMetadata = document.querySelector('meta[name="description"]')
+	if (titleMetadata && metadata.title) {
+		titleMetadata.text = metadata.title
+	}
+
+	const descriptionMetadata = window.document.querySelector(
+		'meta[name="description"]'
+	)
 
 	if (descriptionMetadata && metadata.description) {
 		descriptionMetadata.setAttribute("content", metadata.description)
@@ -31,7 +37,9 @@ export const queryAndSetMetadata = (metadata: WebMetadata) => {
 
 	if (metadata.og) {
 		for (const meta in metadata.og) {
-			const ogMetadata = document.querySelector(`meta[property="og:${meta}"]`)
+			const ogMetadata = window.document.querySelector(
+				`meta[property="og:${meta}"]`
+			)
 
 			if (ogMetadata) {
 				ogMetadata.setAttribute("content", metadata.og[meta])
@@ -41,7 +49,9 @@ export const queryAndSetMetadata = (metadata: WebMetadata) => {
 
 	if (metadata.twitter) {
 		for (const meta in metadata.twitter) {
-			const ogMetadata = document.querySelector(`meta[name="twitter:${meta}"]`)
+			const ogMetadata = window.document.querySelector(
+				`meta[name="twitter:${meta}"]`
+			)
 
 			if (ogMetadata) {
 				ogMetadata.setAttribute("content", metadata.twitter[meta])
@@ -51,7 +61,7 @@ export const queryAndSetMetadata = (metadata: WebMetadata) => {
 }
 
 export const useMetadata = (metadata: ComputedRef<WebMetadata>) => {
-	/* const watchMetadata = watch(
+	const watchMetadata = watch(
 		() => metadata.value,
 		(currentmeta) => {
 			queryAndSetMetadata(currentmeta)
@@ -64,5 +74,5 @@ export const useMetadata = (metadata: ComputedRef<WebMetadata>) => {
 	onUnmounted(() => {
 		watchMetadata()
 		queryAndSetMetadata(defaultMetadata)
-	}) */
+	})
 }
