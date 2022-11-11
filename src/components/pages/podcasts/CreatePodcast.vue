@@ -86,88 +86,101 @@ const onSubmit = handleSubmit(() => {
 <template>
 	<div>
 		<div class="column row-md align-items-end-md q-mb-42">
-			<Title class="q-mr-32"> Set up your podcast </Title>
+			<Title class="q-mb-16"> Set up your podcast </Title>
+			<p class="opacity-50">
+				Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+				ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis
+				parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,
+				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec
+				pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo,
+				rhoncus ut,
+			</p>
 		</div>
 
 		<div class="grid grid-cols-12">
 			<div
-				class="col-span-12 col-span-md-6 col-start-md-4 grid grid-cols-12 grid-gap-24 q-mb-74"
+				class="col-span-12 col-span-md-6 col-start-md-4 grid grid-cols-12 grid-gap-32 q-mb-74"
 			>
-				<p class="text-weight-medium text-uppercase col-span-12">Image</p>
+				<div class="col-span-12">
+					<p class="text-weight-medium text-uppercase q-mb-8">Artwork</p>
 
-				<StandardFilePicker
-					class="col-span-12"
-					name="image"
-					placeholder="Drop image file here (3000x3000)"
-					alternative
-					:allow-image-validate-size="true"
-					:image-validate-size-min-width="3000"
-					:image-validate-size-max-width="3000"
-					:image-validate-size-min-height="3000"
-					:image-validate-size-max-height="3000"
-				/>
+					<p class="opacity-50 q-mb-12">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+						ligula eget.
+					</p>
 
-				<p class="text-weight-medium text-uppercase col-span-12">Podcast name</p>
+					<StandardFilePicker
+						name="image"
+						placeholder="Drop image file here (3000x3000)"
+						alternative
+						:allow-image-validate-size="true"
+						:image-validate-size-min-width="3000"
+						:image-validate-size-max-width="3000"
+						:image-validate-size-min-height="3000"
+						:image-validate-size-max-height="3000"
+					/>
+				</div>
 
-				<StandardInput
-					class="col-span-12"
-					name="name"
-					alternative
-					counter
-					maxlength="100"
-				/>
+				<div class="col-span-12">
+					<p class="text-weight-medium text-uppercase q-mb-8">Podcast name</p>
 
-				<p class="text-weight-medium text-uppercase col-span-12">Podcast symbol</p>
+					<p class="opacity-50 q-mb-12">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+						ligula eget.
+					</p>
 
-				<StandardInput class="col-span-12" name="symbol" alternative />
+					<StandardInput name="name" alternative counter maxlength="100" />
+				</div>
 
-				<p class="text-weight-medium text-uppercase col-span-12">
-					Podcast description
-				</p>
+				<div class="col-span-12">
+					<p class="text-weight-medium text-uppercase q-mb-8">Podcast symbol</p>
 
-				<StandardInput
-					class="col-span-12"
-					name="description"
-					alternative
-					type="textarea"
-					counter
-					maxlength="600"
-				/>
+					<p class="opacity-50 q-mb-12">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+						ligula eget.
+					</p>
 
-				<p class="text-weight-medium text-uppercase col-span-12">
-					Podcast description
-				</p>
+					<StandardInput name="symbol" alternative />
+				</div>
 
-				<StandardInput
-					class="col-span-12"
-					name="description"
-					alternative
-					type="textarea"
-					counter
-					maxlength="600"
-				/>
+				<div class="col-span-12">
+					<p class="text-weight-medium text-uppercase q-mb-8">Podcast description</p>
 
-				<p class="text-weight-medium text-uppercase col-span-12">
-					Podcast category
-				</p>
+					<p class="opacity-50 q-mb-12">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+						ligula eget.
+					</p>
 
-				<FillSelect
-					v-model="category"
-					:options="podcastCategories"
-					class="col-span-12"
-					light
-				/>
+					<StandardInput
+						name="description"
+						alternative
+						type="textarea"
+						counter
+						maxlength="600"
+					/>
+				</div>
 
-				<p class="text-weight-medium text-uppercase col-span-12">
-					Podcast language
-				</p>
+				<div class="col-span-12">
+					<p class="text-weight-medium text-uppercase q-mb-8">Podcast category</p>
 
-				<FillSelect
-					v-model="language"
-					:options="podcastLanguages"
-					class="col-span-12"
-					light
-				/>
+					<p class="opacity-50 q-mb-12">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+						ligula eget.
+					</p>
+
+					<FillSelect v-model="category" :options="podcastCategories" light />
+				</div>
+
+				<div class="col-span-12">
+					<p class="text-weight-medium text-uppercase q-mb-8">Podcast language</p>
+
+					<p class="opacity-50 q-mb-12">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+						ligula eget.
+					</p>
+
+					<FillSelect v-model="language" :options="podcastLanguages" light />
+				</div>
 
 				<div class="col-span-12 col-start-md-9 col-span-md-4 row-start-span-md-5">
 					<LargeButton
