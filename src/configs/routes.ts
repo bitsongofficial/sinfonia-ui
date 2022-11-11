@@ -173,6 +173,14 @@ const routes: RouteRecordRaw[] = [
 					title: "Podcast",
 				},
 			},
+			{
+				path: ":address/id/:tokenId",
+				name: "PodcastEpisode",
+				component: () => import("@/components/pages/podcasts/Episode.vue"),
+				meta: {
+					title: "Episode",
+				},
+			},
 		],
 	},
 	/* {
