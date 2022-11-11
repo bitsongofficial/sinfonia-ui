@@ -124,7 +124,7 @@ const usePodcasts = defineStore("podcasts", {
 				loadingNotification()
 			}
 		},
-		/* async loadNFTsMetadata() {
+		async loadEpisodesMetadata() {
 			try {
 				this.loadingEpisodesMetadata = true
 
@@ -164,20 +164,20 @@ const usePodcasts = defineStore("podcasts", {
 				this.loadingEpisodesMetadata = false
 			}
 		},
-		async loadNFTs(address: string) {
+		async loadEpisodes(address: string) {
 			try {
 				this.loadingEpisodes = true
 
-				this.episodes = compact(await sinfoniaClient.episodes(address))
+				this.episodes = compact(await sinfoniaClient.nfts(address))
 
-				await this.loadNFTsMetadata()
+				await this.loadEpisodesMetadata()
 			} catch (error) {
 				console.error(error)
 				throw error
 			} finally {
 				this.loadingEpisodes = false
 			}
-		}, */
+		},
 		async loadPodcastsMetadata() {
 			try {
 				this.loading = true
