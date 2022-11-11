@@ -5,8 +5,8 @@ import {
 	CreatePodcastRequest,
 	BitsongCollection,
 	NftTokenInfo,
-	CreateNFTRequest,
 	BitsongNFT,
+	CreateEpisodeRequest,
 } from "@/types"
 import { compact } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
@@ -55,6 +55,84 @@ const usePodcasts = defineStore("podcasts", {
 		episodesMetdata: {},
 	}),
 	actions: {
+		async createEpisode(
+			collectionAddress: string,
+			payload: CreateEpisodeRequest
+		) {
+			const transactionManagerStore = useTransactionManager()
+			const authStore = useAuth()
+
+			const loadingNotification = notifyLoading(
+				"Uploading",
+				"Uploading data to IPFS"
+			)
+
+			try {
+				this.creatingEpisode = true
+
+				if (payload.media && authStore.bitsongAddress) {
+					const [media] = payload.media
+					const mediaCID = await ipfsClient.upload(media.file as File)
+
+					let coverCID: string | undefined = undefined
+
+					if (payload.cover && payload.cover.length > 0) {
+						const [cover] = payload.cover
+						coverCID = await ipfsClient.upload(cover.file as File)
+					}
+
+					const metadata = {
+						image: `ipfs://${coverCID ? coverCID : mediaCID}`,
+						name: payload.name,
+						description: payload.description,
+						animation_url: coverCID ? `ipfs://${mediaCID}` : undefined,
+					}
+
+					// Check if metadata schema is valid
+					// NOTO: Add podcast episode schema types and validation inside bitsongjs
+					/* NFTMetadataSchema.parse(metadata) */
+
+					const metadataFile = new File(
+						[JSON.stringify(metadata)],
+						`${payload.name}_metadata`,
+						{
+							type: "application/json",
+						}
+					)
+
+					const metadataCID = await ipfsClient.upload(metadataFile)
+
+					const onComplete = () => {
+						router.replace(
+							`/podcasts/${collectionAddress}/episode/${payload.tokenId}`
+						)
+					}
+
+					transactionManagerStore.executeContract(
+						collectionAddress,
+						{
+							mint: {
+								owner: authStore.bitsongAddress,
+								payment_address: payload.paymentAddress,
+								seller_fee: payload.sellerFee,
+								token_id: payload.tokenId,
+								token_uri: `ipfs://${metadataCID}`,
+							},
+						},
+						[],
+						true,
+						onComplete
+					)
+				}
+			} catch (error) {
+				console.error(error)
+				notifyError("Upload failed", (error as Error).message)
+				throw error
+			} finally {
+				this.creatingEpisode = false
+				loadingNotification()
+			}
+		},
 		async createPodcast(codeId: number, payload: CreatePodcastRequest) {
 			const transactionManagerStore = useTransactionManager()
 			const authStore = useAuth()

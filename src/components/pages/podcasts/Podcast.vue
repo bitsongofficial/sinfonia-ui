@@ -2,8 +2,7 @@
 import useConfig from "@/store/config"
 import useSettings from "@/store/settings"
 import Spinner from "@/components/Spinner"
-import Card from "@/components/cards/Card.vue"
-import IconButton from "@/components/buttons/IconButton.vue"
+import EpisodeItem from "@/components/cards/EpisodeItem.vue"
 import Title from "@/components/typography/Title.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import { formatShortAddress, isValidContractAddress } from "@/common"
@@ -111,10 +110,10 @@ useMeta(metadata)
 							:padding-x="30"
 							:padding-y="14"
 							fit
-							:to="`/podcasts/${address}/mint`"
+							:to="`/podcasts/${address}/create-episode`"
 							v-if="authStore.bitsongAddress === podcast.creator"
 						>
-							New Episode
+							Create Episode
 						</StandardButton>
 					</div>
 
@@ -127,96 +126,13 @@ useMeta(metadata)
 						</p>
 						<template v-else>
 							<RouterLink
-								v-for="episode in podcastsStore.episodes"
+								v-for="episode in podcastsStore.sinfoniaEpisodes"
 								class="col-span-12"
-								to="/podcasts/test/id/1"
+								:to="`/podcasts/${address}/episode/${episode.token_id}`"
 							>
-								<Card
-									class="!grid grid-cols-12 grid-gap-24 hover:bg-white-10 cursor-pointer transition-all"
-									:transparency="5"
-								>
-									<q-img
-										class="col-span-2 rounded-10 shadow-20"
-										src="https://via.placeholder.com/3000"
-										height="100px"
-										width="100px"
-									/>
-
-									<div class="col-span-10">
-										<Title class="text-weight-bold q-mb-16" :font-size="16">
-											Mele Marce - Trailer
-										</Title>
-
-										<p class="fs-14 !leading-22 opacity-50 text-container q-mb-16">
-											La storia di WeWork, una società che affitta spazi di coworking
-											arrivata, seppur per poco, a valere 47 miliardi di dollari. Non una
-											semplice società “immobiliare” di affitto di spazi-ufficio condivisi
-											ma molto di più: è tech, è software è “space as a service”. E in
-											quelle quattro parole c’è la sintesi di tutta un’epoca. Quelle
-											quattro parole riassumono il personaggio e il nuovo volto del
-											capitalismo digitale: Adam Neumann e la Silicon Valley ideology Learn
-											more about your ad choices. Visit podcastchoices.com/adchoices
-										</p>
-
-										<div class="row items-center">
-											<IconButton
-												icon="pause"
-												width="24"
-												height="24"
-												class="text-white light:text-white fs-14 q-mr-16 w-36"
-												icon-class="rotate-90 !fs-20"
-												color="none"
-												:solid="true"
-											/>
-
-											<p class="opacity-50">Nov 8 · 2 min 9 sec</p>
-										</div>
-									</div>
-								</Card>
+								<EpisodeItem :episode="episode" />
 							</RouterLink>
 						</template>
-						<!-- <Card
-							class="!grid grid-cols-12 grid-gap-24 col-span-12 hover:bg-white-10 cursor-pointer transition-all"
-							:transparency="5"
-						>
-							<q-img
-								class="col-span-2 rounded-10 shadow-20"
-								src="https://via.placeholder.com/3000"
-								height="100px"
-								width="100px"
-							/>
-
-							<div class="col-span-10">
-								<Title class="text-weight-bold q-mb-16" :font-size="16">
-									Mele Marce - Trailer
-								</Title>
-
-								<p class="fs-14 !leading-22 opacity-50 text-container q-mb-16">
-									La storia di WeWork, una società che affitta spazi di coworking
-									arrivata, seppur per poco, a valere 47 miliardi di dollari. Non una
-									semplice società “immobiliare” di affitto di spazi-ufficio condivisi ma
-									molto di più: è tech, è software è “space as a service”. E in quelle
-									quattro parole c’è la sintesi di tutta un’epoca. Quelle quattro parole
-									riassumono il personaggio e il nuovo volto del capitalismo digitale:
-									Adam Neumann e la Silicon Valley ideology Learn more about your ad
-									choices. Visit podcastchoices.com/adchoices
-								</p>
-
-								<div class="row items-center">
-									<IconButton
-										icon="triangle"
-										width="22"
-										height="17"
-										class="text-white light:text-white fs-14 q-mr-16 w-36"
-										icon-class="rotate-90"
-										color="none"
-										:solid="true"
-									/>
-
-									<p class="opacity-50">Nov 8 · 2 min 9 sec</p>
-								</div>
-							</div>
-						</Card> -->
 					</div>
 				</div>
 			</div>

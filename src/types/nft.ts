@@ -58,3 +58,13 @@ export interface CreatePodcastRequest {
 	category: string
 	language: string
 }
+
+export interface CreateEpisodeRequest {
+	paymentAddress: string
+	sellerFee: number
+	name: string
+	tokenId: string
+	media?: FilePondFile[] | null
+	cover?: FilePondFile[] | null
+	description: string
+}

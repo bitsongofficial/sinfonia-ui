@@ -174,7 +174,15 @@ const routes: RouteRecordRaw[] = [
 				},
 			},
 			{
-				path: ":address/id/:tokenId",
+				path: ":address/create-episode",
+				name: "CreatePodcastEpisode",
+				component: () => import("@/components/pages/podcasts/CreateEpisode.vue"),
+				meta: {
+					title: "Create Episode",
+				},
+			},
+			{
+				path: ":address/episode/:tokenId",
 				name: "PodcastEpisode",
 				component: () => import("@/components/pages/podcasts/Episode.vue"),
 				meta: {
