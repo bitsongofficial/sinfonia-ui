@@ -33,11 +33,16 @@ const tabs = [
 			<Title class="q-mr-32">Collections</Title>
 		</div>
 		<div class="row items-center justify-between q-mb-42">
-			<div class="q-mt-8">
+			<div class="q-mb-xs-20">
 				<Tabs v-model="collectionsType" :options="tabs" border />
 			</div>
 
-			<LargeButton label="Create Collection" :to="`/nfts/${code}/create`" fit />
+			<LargeButton
+				class="q-ml-auto"
+				label="Create Collection"
+				:to="`/nfts/${code}/create`"
+				fit
+			/>
 		</div>
 
 		<Spinner v-if="NFTStore.loading" class="!w-50 !h-50 q-mx-auto" />

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Title from "@/components/typography/Title.vue"
-import CollectionCard from "@/components/cards/CollectionCard.vue"
+import PodcastCard from "@/components/cards/PodcastCard.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import useNFT from "@/store/nft"
 import Spinner from "@/components/Spinner"
@@ -33,44 +33,54 @@ const tabs = [
 			<Title class="q-mr-32">Podcasts</Title>
 		</div>
 		<div class="row items-center justify-between q-mb-42">
-			<div class="q-mt-8">
+			<div class="q-mb-xs-20">
 				<Tabs v-model="collectionsType" :options="tabs" border />
 			</div>
 
-			<LargeButton label="Create Podcast" :to="`/podcasts/${code}/create`" fit />
+			<LargeButton
+				class="q-ml-auto"
+				label="Create Podcast"
+				:to="`/podcasts/${code}/create`"
+				fit
+			/>
 		</div>
 
 		<Spinner v-if="NFTStore.loading" class="!w-50 !h-50 q-mx-auto" />
 
-		<!-- <template v-if="collectionsType === 'mycollections'">
-			<template v-if="NFTStore.myCollections.length > 0">
-				<div
-					v-if="!NFTStore.loading"
-					class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-42"
-				>
-					<RouterLink
-						v-for="(collection, index) in NFTStore.myCollections"
-						:key="index"
-						:to="`/nfts/${collection.address}/details`"
-						class="block full-height"
-					>
-						<CollectionCard :collection="collection" />
-					</RouterLink>
-				</div>
-			</template>
-		</template>
 		<div
 			v-else
-			class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
+			class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24 q-mb-42"
 		>
-			<RouterLink
-				v-for="(collection, index) in NFTStore.bitsongCollections"
-				:key="index"
-				:to="`/nfts/${collection.address}/details`"
-				class="block full-height"
-			>
-				<CollectionCard :collection="collection" />
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
 			</RouterLink>
-		</div> -->
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
+			</RouterLink>
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
+			</RouterLink>
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
+			</RouterLink>
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
+			</RouterLink>
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
+			</RouterLink>
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
+			</RouterLink>
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
+			</RouterLink>
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
+			</RouterLink>
+			<RouterLink to="/podcasts/test/details" class="block full-height">
+				<PodcastCard :podcast="1" />
+			</RouterLink>
+		</div>
 	</div>
 </template>
