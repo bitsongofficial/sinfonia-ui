@@ -64,7 +64,6 @@ specifiers:
   vue-filepond: ^7.0.3
   vue-fuse: ^4.1.1
   vue-gtag: ^2.0.1
-  vue-meta: 3.0.0-alpha.7
   vue-router: '4'
   vue-tsc: ^0.29.8
   zod: ^3.19.1
@@ -116,7 +115,6 @@ dependencies:
   vue-filepond: 7.0.3_filepond@4.30.4+vue@3.2.31
   vue-fuse: 4.1.1_fuse.js@6.6.2+vue@3.2.31
   vue-gtag: 2.0.1_vue@3.2.31
-  vue-meta: 3.0.0-alpha.7_vue@3.2.31
   vue-router: 4.0.13_vue@3.2.31
   zod: 3.19.1
 
@@ -7746,14 +7744,6 @@ packages:
 
   /vue-gtag/2.0.1_vue@3.2.31:
     resolution: {integrity: sha512-aM4A58FVL0wV2ptYi+xzAjeg+pQVRyUcfBc5UkXAwQrR4t3WBhor50Izp2I+3Oo7+l+vWJ7u78DGcNzReb8S/A==}
-    peerDependencies:
-      vue: ^3.0.0
-    dependencies:
-      vue: 3.2.31
-    dev: false
-
-  /vue-meta/3.0.0-alpha.7_vue@3.2.31:
-    resolution: {integrity: sha512-C5JgqeVvqjPvWzJ1+Wpffk5GWxdlskuxP3q7iOQrI7TZ+ofVMDA5RDd1iAvAcPwfbaSrhGd8zda0zu+IfBvSLg==}
     peerDependencies:
       vue: ^3.0.0
     dependencies:
