@@ -250,6 +250,10 @@
     max-width: 316px;
 }
 
+.max-h-120 {
+    max-height: 120px;
+}
+
 .max-h-360 {
     max-height: 360px;
 }
@@ -401,6 +405,10 @@
 
 .grid {
     display: grid;
+}
+
+.\!grid {
+    display: grid !important;
 }
 
 .\!q-pr-32 {

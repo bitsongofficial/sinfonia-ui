@@ -165,6 +165,14 @@ const routes: RouteRecordRaw[] = [
 					title: "Create Podcast",
 				},
 			},
+			{
+				path: ":address/details",
+				name: "PodcastDetails",
+				component: () => import("@/components/pages/podcasts/Podcast.vue"),
+				meta: {
+					title: "Podcast",
+				},
+			},
 		],
 	},
 	/* {
@@ -215,7 +223,7 @@ export const menuItems: MenuItem[] = [
 		disabled: disabledRoutes,
 	},
 	{
-		icon: { name: "list", width: 19, height: 13 },
+		icon: { name: "3d-cube", width: 19, height: 19 },
 		label: "Collections",
 		path: "/nfts",
 		disabled: disabledRoutes,
