@@ -3,10 +3,16 @@ import { resolveIcon } from "@/common/resolvers"
 import { Option } from "@/types"
 import { computed } from "vue"
 
-const props = defineProps<{
-	modelValue?: any
-	options?: string[] | Option[]
-}>()
+const props = withDefaults(
+	defineProps<{
+		modelValue?: any
+		options?: string[] | Option[]
+		light?: boolean
+	}>(),
+	{
+		light: false,
+	}
+)
 
 const emit = defineEmits<{
 	(e: "update:modelValue", value: any): void
@@ -27,6 +33,9 @@ const model = computed({
 		v-model="model"
 		:options="options"
 		class="fill-select text-white text-capitalize fs-14 text-weight-medium"
+		:class="{
+			'fill-select-light': light,
+		}"
 		popup-content-class="text-white alternative"
 		rounded
 		map-options
@@ -83,6 +92,10 @@ const model = computed({
 	padding-right: 14px;
 	box-shadow: none;
 	background: transparentize($color: $white, $amount: 0.9);
+}
+
+.fill-select.fill-select-light:deep(.q-field__control) {
+	background: transparentize($color: $white, $amount: 0.95);
 }
 
 .fill-select:deep(.q-field__control):before {

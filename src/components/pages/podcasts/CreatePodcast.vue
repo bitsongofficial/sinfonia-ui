@@ -100,6 +100,11 @@ const onSubmit = handleSubmit(() => {
 					name="image"
 					placeholder="Drop image file here (3000x3000)"
 					alternative
+					:allow-image-validate-size="true"
+					:image-validate-size-min-width="3000"
+					:image-validate-size-max-width="3000"
+					:image-validate-size-min-height="3000"
+					:image-validate-size-max-height="3000"
 				/>
 
 				<p class="text-weight-medium text-uppercase col-span-12">Podcast name</p>
@@ -107,7 +112,6 @@ const onSubmit = handleSubmit(() => {
 				<StandardInput
 					class="col-span-12"
 					name="name"
-					placeholder="Name"
 					alternative
 					counter
 					maxlength="100"
@@ -115,12 +119,7 @@ const onSubmit = handleSubmit(() => {
 
 				<p class="text-weight-medium text-uppercase col-span-12">Podcast symbol</p>
 
-				<StandardInput
-					class="col-span-12"
-					name="symbol"
-					placeholder="Symbol"
-					alternative
-				/>
+				<StandardInput class="col-span-12" name="symbol" alternative />
 
 				<p class="text-weight-medium text-uppercase col-span-12">
 					Podcast description
@@ -129,7 +128,6 @@ const onSubmit = handleSubmit(() => {
 				<StandardInput
 					class="col-span-12"
 					name="description"
-					placeholder="Description"
 					alternative
 					type="textarea"
 					counter
@@ -143,7 +141,6 @@ const onSubmit = handleSubmit(() => {
 				<StandardInput
 					class="col-span-12"
 					name="description"
-					placeholder="Description"
 					alternative
 					type="textarea"
 					counter
@@ -158,6 +155,7 @@ const onSubmit = handleSubmit(() => {
 					v-model="category"
 					:options="podcastCategories"
 					class="col-span-12"
+					light
 				/>
 
 				<p class="text-weight-medium text-uppercase col-span-12">
@@ -168,6 +166,7 @@ const onSubmit = handleSubmit(() => {
 					v-model="language"
 					:options="podcastLanguages"
 					class="col-span-12"
+					light
 				/>
 
 				<div class="col-span-12 col-start-md-9 col-span-md-4 row-start-span-md-5">

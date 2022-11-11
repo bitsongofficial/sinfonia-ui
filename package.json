@@ -51,6 +51,7 @@
 		"filepond": "^4.30.4",
 		"filepond-plugin-file-validate-type": "^1.2.8",
 		"filepond-plugin-image-preview": "^4.6.11",
+		"filepond-plugin-image-validate-size": "^1.2.7",
 		"fuse.js": "^6.6.2",
 		"graphql": "^16.5.0",
 		"graphql-tag": "^2.12.6",
@@ -65,8 +66,8 @@
 		"vue": "^3.2.25",
 		"vue-filepond": "^7.0.3",
 		"vue-fuse": "^4.1.1",
-		"vue-meta": "3.0.0-alpha.7",
 		"vue-gtag": "^2.0.1",
+		"vue-meta": "3.0.0-alpha.7",
 		"vue-router": "4",
 		"zod": "^3.19.1"
 	},

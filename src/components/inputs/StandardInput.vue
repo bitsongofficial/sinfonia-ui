@@ -28,7 +28,7 @@ const props = withDefaults(
 		value: "",
 		counter: false,
 		alternative: false,
-		placeholder: "0",
+		placeholder: "",
 		type: "text",
 	}
 )

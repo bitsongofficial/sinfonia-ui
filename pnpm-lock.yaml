@@ -41,6 +41,7 @@ specifiers:
   filepond: ^4.30.4
   filepond-plugin-file-validate-type: ^1.2.8
   filepond-plugin-image-preview: ^4.6.11
+  filepond-plugin-image-validate-size: ^1.2.7
   fuse.js: ^6.6.2
   graphql: ^16.5.0
   graphql-tag: ^2.12.6
@@ -101,6 +102,7 @@ dependencies:
   filepond: 4.30.4
   filepond-plugin-file-validate-type: 1.2.8_filepond@4.30.4
   filepond-plugin-image-preview: 4.6.11_filepond@4.30.4
+  filepond-plugin-image-validate-size: 1.2.7_filepond@4.30.4
   fuse.js: 6.6.2
   graphql: 16.5.0
   graphql-tag: 2.12.6_graphql@16.5.0
@@ -4442,6 +4444,14 @@ packages:
     resolution: {integrity: sha512-0EmQ9HnOb/X0xc5rLcNRhhmdUbp7oiicRwQrcr90ZfVmPJOOZoX3ZGUEsEPj7luMI55huguhcVozdESxtqnuRw==}
     peerDependencies:
       filepond: '>=4.x <5.x'
+    dependencies:
+      filepond: 4.30.4
+    dev: false
+
+  /filepond-plugin-image-validate-size/1.2.7_filepond@4.30.4:
+    resolution: {integrity: sha512-Sxu2XTbQHf9HRWu+AQg6zJkww0O6hTXq9IX5/SAJLuvohpF23XTzCNg+29KXr4Wulm70/jSSpMcJURn9AU72rA==}
+    peerDependencies:
+      filepond: '>=1.8.x <5.x'
     dependencies:
       filepond: 4.30.4
     dev: false
