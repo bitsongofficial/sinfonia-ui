@@ -2,7 +2,7 @@ import { ipfsClient, sinfoniaClient } from "@/services"
 import {
 	ContractWithDetails,
 	BS721InitMsg,
-	CreateCollectionRequest,
+	CreatePodcastRequest,
 	BitsongCollection,
 	NftTokenInfo,
 	CreateNFTRequest,
@@ -55,7 +55,7 @@ const usePodcasts = defineStore("podcasts", {
 		episodesMetdata: {},
 	}),
 	actions: {
-		async createCollection(codeId: number, payload: CreateCollectionRequest) {
+		async createPodcast(codeId: number, payload: CreatePodcastRequest) {
 			const transactionManagerStore = useTransactionManager()
 			const authStore = useAuth()
 			const loadingNotification = notifyLoading(
@@ -66,22 +66,20 @@ const usePodcasts = defineStore("podcasts", {
 			try {
 				this.creatingPodcast = true
 
-				if (payload.cover && payload.image && authStore.bitsongAddress) {
+				if (payload.image && authStore.bitsongAddress) {
 					const [image] = payload.image
 					const imageCID = await ipfsClient.upload(image.file as File)
 
-					const [cover] = payload.cover
-					const coverCID = await ipfsClient.upload(cover.file as File)
-
-					const metadata: CollectionMetadata = {
+					const metadata = {
 						image: `ipfs://${imageCID}`,
-						cover: `ipfs://${coverCID}`,
 						description: payload.description,
-						external_urls: convertListToMap(payload.links, "key", "value"),
+						type: "podcast",
+						category: payload.category,
+						language: payload.language,
 					}
 
-					// Check if metadata schema is valid
-					CollectionMetadataSchema.parse(metadata)
+					// NOTO: Add podcast schema types and validation inside bitsongjs
+					/* CollectionMetadataSchema.parse(metadata) */
 
 					const metadataFile = new File(
 						[JSON.stringify(metadata)],
@@ -101,7 +99,7 @@ const usePodcasts = defineStore("podcasts", {
 							"_contract_address"
 						)
 
-						router.replace(`/episodes/${contractAddressAttr.value}/details`)
+						router.replace(`/podcasts/${contractAddressAttr.value}/details`)
 					}
 
 					transactionManagerStore.instantiateContract<BS721InitMsg>(
@@ -180,12 +178,12 @@ const usePodcasts = defineStore("podcasts", {
 				this.loadingEpisodes = false
 			}
 		}, */
-		async loadCollectionsMetadata() {
+		async loadPodcastsMetadata() {
 			try {
 				this.loading = true
 
 				const requests = compact(
-					this.bitsongCollections.map((collection) => {
+					this.sinfoniaPodcasts.map((collection) => {
 						if (collection.init) {
 							const uri = validateIPFSURI(collection.init.uri)
 
@@ -218,7 +216,7 @@ const usePodcasts = defineStore("podcasts", {
 				this.loading = false
 			}
 		},
-		async loadCollection(address: string) {
+		async loadPodcast(address: string) {
 			try {
 				this.loading = true
 
@@ -228,7 +226,7 @@ const usePodcasts = defineStore("podcasts", {
 
 				this.podcasts = compact(results)
 
-				await this.loadCollectionsMetadata()
+				await this.loadPodcastsMetadata()
 			} catch (error) {
 				console.error(error)
 				throw error
@@ -236,7 +234,7 @@ const usePodcasts = defineStore("podcasts", {
 				this.loading = false
 			}
 		},
-		async loadCollections(codeId: number) {
+		async loadPodcasts(codeId: number) {
 			try {
 				this.loading = true
 
@@ -244,7 +242,7 @@ const usePodcasts = defineStore("podcasts", {
 					await sinfoniaClient.contractsWithDetails<BS721InitMsg>(codeId)
 				)
 
-				await this.loadCollectionsMetadata()
+				await this.loadPodcastsMetadata()
 			} catch (error) {
 				console.error(error)
 				throw error
@@ -254,7 +252,7 @@ const usePodcasts = defineStore("podcasts", {
 		},
 	},
 	getters: {
-		bitsongNFTs: ({ episodes, episodesMetdata }): BitsongNFT[] => {
+		sinfoniaEpisodes: ({ episodes, episodesMetdata }): BitsongNFT[] => {
 			return episodes
 				.map((nft) => {
 					let metadata: NFTMetadata | undefined = undefined
@@ -274,14 +272,14 @@ const usePodcasts = defineStore("podcasts", {
 				})
 				.reverse()
 		},
-		nft(): (tokenId: string) => BitsongNFT | undefined {
+		episode(): (tokenId: string) => BitsongNFT | undefined {
 			return (tokenId: string) =>
-				this.bitsongNFTs.find((nft) => nft.token_id === tokenId)
+				this.sinfoniaEpisodes.find((episode) => episode.token_id === tokenId)
 		},
-		bitsongCollections: ({ podcasts, podcastsMetadata }): BitsongCollection[] => {
+		sinfoniaPodcasts: ({ podcasts, podcastsMetadata }): BitsongCollection[] => {
 			return podcasts
-				.map((collection) => {
-					const initEntry = collection.history?.result.find(
+				.map((podcast) => {
+					const initEntry = podcast.history?.result.find(
 						(el) =>
 							el.operation ===
 							ContractCodeHistoryOperationType.CONTRACT_CODE_HISTORY_OPERATION_TYPE_INIT
@@ -298,31 +296,31 @@ const usePodcasts = defineStore("podcasts", {
 					}
 
 					return {
-						address: collection.address,
-						code_id: collection.code_id,
-						creator: collection.creator,
-						admin: collection.admin,
-						label: collection.label,
+						address: podcast.address,
+						code_id: podcast.code_id,
+						creator: podcast.creator,
+						admin: podcast.admin,
+						label: podcast.label,
 						init: initEntry?.msg,
 						metadata,
 					}
 				})
 				.reverse()
 		},
-		myCollections(): BitsongCollection[] {
+		myPodcasts(): BitsongCollection[] {
 			const authStore = useAuth()
 
 			if (authStore.bitsongAddress) {
-				return this.bitsongCollections.filter(
-					(collection) => collection.creator === authStore.bitsongAddress
+				return this.sinfoniaPodcasts.filter(
+					(podcast) => podcast.creator === authStore.bitsongAddress
 				)
 			}
 
 			return []
 		},
-		collection(): (address: string) => BitsongCollection | undefined {
+		podcast(): (address: string) => BitsongCollection | undefined {
 			return (address: string) =>
-				this.bitsongCollections.find((collection) => collection.address === address)
+				this.sinfoniaPodcasts.find((podcast) => podcast.address === address)
 		},
 	},
 	persistedState: {

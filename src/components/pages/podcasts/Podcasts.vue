@@ -5,19 +5,28 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 import useNFT from "@/store/nft"
 import Spinner from "@/components/Spinner"
 import Tabs from "@/components/Tabs.vue"
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { useRoute, RouterLink } from "vue-router"
+import usePodcasts from "@/store/podcasts"
 
 const route = useRoute()
-const NFTStore = useNFT()
+const podcastsStore = usePodcasts()
 const collectionsType = ref("all")
 
 const code = route.params.codeId
 	? parseInt(route.params.codeId as string, 10)
 	: parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
 
+const podcasts = computed(() =>
+	podcastsStore.sinfoniaPodcasts.filter((podcast) => {
+		// TODO: replace with correct type from bitsongjs
+		// @ts-ignore
+		return podcast.metadata.type === "podcast"
+	})
+)
+
 onMounted(() => {
-	/* NFTStore.loadCollections(code) */
+	podcastsStore.loadPodcasts(code)
 })
 
 const tabs = [
@@ -45,41 +54,18 @@ const tabs = [
 			/>
 		</div>
 
-		<Spinner v-if="NFTStore.loading" class="!w-50 !h-50 q-mx-auto" />
+		<Spinner v-if="podcastsStore.loading" class="!w-50 !h-50 q-mx-auto" />
 
 		<div
 			v-else
 			class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24 q-mb-42"
 		>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
-			</RouterLink>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
-			</RouterLink>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
-			</RouterLink>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
-			</RouterLink>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
-			</RouterLink>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
-			</RouterLink>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
-			</RouterLink>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
-			</RouterLink>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
-			</RouterLink>
-			<RouterLink to="/podcasts/test/details" class="block full-height">
-				<PodcastCard :podcast="1" />
+			<RouterLink
+				v-for="podcast of podcasts"
+				:to="`/podcasts/${podcast.address}/details`"
+				class="block full-height"
+			>
+				<PodcastCard :podcast="podcast" />
 			</RouterLink>
 		</div>
 	</div>
