@@ -51,7 +51,7 @@ export const queryAndSetMetadata = (metadata: WebMetadata) => {
 }
 
 export const useMetadata = (metadata: ComputedRef<WebMetadata>) => {
-	const watchMetadata = watch(
+	/* const watchMetadata = watch(
 		() => metadata.value,
 		(currentmeta) => {
 			queryAndSetMetadata(currentmeta)
@@ -64,5 +64,5 @@ export const useMetadata = (metadata: ComputedRef<WebMetadata>) => {
 	onUnmounted(() => {
 		watchMetadata()
 		queryAndSetMetadata(defaultMetadata)
-	})
+	}) */
 }
