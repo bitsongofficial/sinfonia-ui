@@ -3,11 +3,47 @@ import Title from "@/components/typography/Title.vue"
 import Card from "@/components/cards/Card.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
 import { BitsongNFT, BitsongCollection } from "@/types"
+import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
+import { onUnmounted, toRef, watch } from "vue"
 
-defineProps<{
+const props = defineProps<{
 	episode: BitsongNFT
 	collection?: BitsongCollection
 }>()
+
+const episodeRef = toRef(props, "episode")
+
+const {
+	addTrack,
+	play,
+	stop,
+	isPlaying,
+	audioFullDuration,
+	sinfoniaCurrentTokenID,
+} = useSinfoniaMediaPlayer()
+
+const episodeWatcher = watch(
+	() => episodeRef.value,
+	(value) => {
+		if (value && value.metadata?.animation_url) {
+			addTrack(value.metadata.animation_url)
+		}
+	},
+	{
+		immediate: true,
+	}
+)
+
+onUnmounted(() => {
+	episodeWatcher()
+	stop()
+})
+
+const playTrack = () => {
+	if (episodeRef.value && episodeRef.value.metadata?.animation_url) {
+		play(episodeRef.value.metadata.animation_url, episodeRef.value.token_id)
+	}
+}
 </script>
 
 <template>
@@ -33,6 +69,18 @@ defineProps<{
 
 			<div class="row items-center">
 				<IconButton
+					v-if="isPlaying && sinfoniaCurrentTokenID === episode.token_id"
+					icon="pause"
+					width="24"
+					height="24"
+					class="text-white light:text-white fs-14 q-mr-16 w-36"
+					icon-class="rotate-90 !fs-20"
+					color="none"
+					:solid="true"
+					@click.prevent.stop="stop"
+				/>
+				<IconButton
+					v-else
 					icon="triangle"
 					width="22"
 					height="17"
@@ -40,19 +88,10 @@ defineProps<{
 					icon-class="rotate-90"
 					color="none"
 					:solid="true"
+					@click.prevent.stop="playTrack"
 				/>
 
-				<!--  <IconButton
-												icon="pause"
-												width="24"
-												height="24"
-												class="text-white light:text-white fs-14 q-mr-16 w-36"
-												icon-class="rotate-90 !fs-20"
-												color="none"
-												:solid="true"
-											/> -->
-
-				<p class="opacity-50">Nov 8 · 2 min 9 sec</p>
+				<p class="opacity-50">{{ audioFullDuration }}</p>
 			</div>
 		</div>
 	</Card>

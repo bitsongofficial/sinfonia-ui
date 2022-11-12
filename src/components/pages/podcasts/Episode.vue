@@ -10,6 +10,7 @@ import { isValidContractAddress } from "@/common"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useRoute, useRouter, RouterLink } from "vue-router"
 import { useMeta } from "vue-meta"
+import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import useClipboard from "@/hooks/useClipboard"
 
 const route = useRoute()
@@ -23,6 +24,21 @@ const tokenId = route.params.tokenId as string
 
 const podcast = computed(() => podcastsStore.podcast(address))
 const episode = computed(() => podcastsStore.episode(tokenId))
+
+const {
+	addTrack,
+	play,
+	stop,
+	isPlaying,
+	audioFullDuration,
+	sinfoniaCurrentTokenID,
+} = useSinfoniaMediaPlayer()
+
+const playTrack = () => {
+	if (episode.value && episode.value.metadata?.animation_url) {
+		play(episode.value.metadata.animation_url, episode.value.token_id)
+	}
+}
 
 onMounted(() => {
 	if (
@@ -48,6 +64,10 @@ const episodeWatcher = watch(
 					to: `/podcasts/${podcast.value?.address}/details`,
 				},
 			]
+
+			if (currentEpisode.metadata.animation_url) {
+				addTrack(currentEpisode.metadata.animation_url)
+			}
 		}
 	},
 	{ immediate: true }
@@ -105,18 +125,31 @@ useMeta(metadata)
 
 			<div class="grid grid-cols-12 grid-gap-32">
 				<div class="col-span-12 col-span-md-8">
-					<div class="column q-mb-32">
-						<p class="fs-18 opacity-50 q-mb-12">Nov 8 · 2 min 9 sec</p>
-
+					<div class="row q-mb-32 items-center">
 						<IconButton
+							v-if="isPlaying && sinfoniaCurrentTokenID === episode.token_id"
+							icon="pause"
+							width="24"
+							height="24"
+							class="text-white light:text-white fs-14 q-mr-20 w-48 h-48"
+							icon-class="rotate-90 !fs-22"
+							color="none"
+							:solid="true"
+							@click.prevent.stop="stop"
+						/>
+						<IconButton
+							v-else
 							icon="triangle"
 							width="22"
 							height="17"
-							class="text-white light:text-white fs-14 q-mr-20 w-48 h-48"
+							class="text-white light:text-white fs-16 q-mr-20 w-48 h-48"
 							icon-class="rotate-90"
 							color="none"
 							:solid="true"
+							@click.prevent.stop="playTrack"
 						/>
+
+						<p class="fs-18 opacity-50">{{ audioFullDuration }}</p>
 					</div>
 
 					<Title class="text-weight-bold q-mb-16">Description</Title>
