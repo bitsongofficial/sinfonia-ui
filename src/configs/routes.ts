@@ -12,6 +12,7 @@ export const disabledPlayground =
 	import.meta.env.VITE_PLAYGROUND_DISABLE === "true"
 
 export const disabledAirdrops = import.meta.env.VITE_AIRDROPS_DISABLE === "true"
+export const disabledPodcasts = import.meta.env.VITE_PODCASTS_DISABLE === "true"
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -244,13 +245,16 @@ export const menuItems: MenuItem[] = [
 		path: "/nfts",
 		disabled: disabledRoutes,
 	},
-	{
+]
+
+if (!disabledPodcasts) {
+	menuItems.push({
 		icon: { name: "trophy", width: 22, height: 18 },
 		label: "Podcasts",
 		path: "/podcasts",
 		disabled: disabledRoutes,
-	},
-]
+	})
+}
 
 /* if (!disabledAirdrops) {
 	menuItems.push({
