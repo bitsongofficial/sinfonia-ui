@@ -48,7 +48,7 @@ $scrollbarSize: $padding * 2+$thumbSize;
 
 $custom-sizes: ();
 
-@for $i from 0 through 50 {
+@for $i from 0 through 80 {
     $s: $i;
     $custom-sizes: map.set($custom-sizes, $s, $s * 1px);
     $s: $i*2;

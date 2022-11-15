@@ -28,7 +28,7 @@ const episode = computed(() => podcastsStore.episode(tokenId))
 const {
 	addTrack,
 	play,
-	stop,
+	pause,
 	isPlaying,
 	audioFullDuration,
 	sinfoniaCurrentTokenID,
@@ -36,7 +36,7 @@ const {
 
 const playTrack = () => {
 	if (episode.value && episode.value.metadata?.animation_url) {
-		play(episode.value.metadata.animation_url, episode.value.token_id)
+		play(episode.value, episode.value.token_id)
 	}
 }
 
@@ -135,7 +135,7 @@ useMeta(metadata)
 							icon-class="rotate-90 !fs-22"
 							color="none"
 							:solid="true"
-							@click.prevent.stop="stop"
+							@click.prevent.stop="pause"
 						/>
 						<IconButton
 							v-else

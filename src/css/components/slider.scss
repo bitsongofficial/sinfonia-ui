@@ -1,0 +1,20 @@
+.gradient-slider.q-slider {
+  .q-linear-progress__track {
+    background-color: $dark-background;
+    color: transparent;
+  }
+
+  .q-slider__selection {
+    background: linear-gradient(to right, $primary-complementary, $primary);
+    color: transparent;
+  }
+
+  .q-slider__track-container:hover .q-slider__focus-ring {
+    background: linear-gradient(to right, $primary-complementary, $primary) !important;
+    transform: scale3d(1.2, 1.2, 1) !important;
+  }
+
+  &.q-slider--active .q-slider__thumb-shape {
+    transform: scale(1.2) !important;
+  }
+}

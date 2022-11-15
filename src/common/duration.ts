@@ -2,6 +2,7 @@ import { LockableDuration } from "@/types"
 import { intervalToDuration, formatDuration } from "date-fns"
 import { parse, toMilliseconds, Duration } from "duration-fns"
 import locale from "date-fns/locale/en-US"
+import { compact } from "lodash"
 
 export const mapLockableDuration = (durationStr: string): LockableDuration => {
 	const duration = parseInt(durationStr.replace("s", "")) // Seconds
@@ -74,4 +75,16 @@ export const formatDurationLocale = (secs: number) => {
 			formatDistance,
 		},
 	})
+}
+
+export const formatDurationWithSeparator = (secs: number, separator = ":") => {
+	const duration = intervalToDuration({ start: 0, end: secs * 1000 })
+
+	const elements = [duration.minutes, duration.seconds]
+
+	if (duration.hours && duration.hours > 0) {
+		elements.unshift(duration.hours)
+	}
+
+	return elements.map((value) => `${value}`.padStart(2, "0")).join(separator)
 }

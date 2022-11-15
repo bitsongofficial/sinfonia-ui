@@ -3,6 +3,7 @@ import { RouterView } from "vue-router"
 import { externalWebsites } from "./configs/config"
 import { useQuasar } from "quasar"
 import { onBeforeMount, ref } from "vue"
+import MediaPlayer from "@/components/player/MediaPlayer.vue"
 import Header from "@/components/navigation/Header.vue"
 import SideMenu from "@/components/navigation/SideMenu.vue"
 import PageLoader from "@/components/PageLoader.vue"
@@ -99,7 +100,7 @@ useMeta({
 						</div>
 					</div>
 					<div
-						class="full-width q-ml-auto !w-xs-2/3 !w-sm-3/4 !w-md-5/6 q-pt-30 all-pointer-events"
+						class="full-width q-ml-auto !w-xs-2/3 !w-sm-3/4 !w-md-5/6 q-pt-30 q-pb-80 all-pointer-events"
 					>
 						<router-view v-slot="{ Component }">
 							<Transition name="fade" mode="out-in">
@@ -112,6 +113,7 @@ useMeta({
 		</div>
 
 		<DisclaimerModal v-model="showDisclaimer" @submit="disclaimerUpdate" />
+		<MediaPlayer />
 	</div>
 </template>
 

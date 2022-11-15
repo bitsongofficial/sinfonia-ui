@@ -16,7 +16,7 @@ const episodeRef = toRef(props, "episode")
 const {
 	addTrack,
 	play,
-	stop,
+	pause,
 	isPlaying,
 	audioFullDuration,
 	sinfoniaCurrentTokenID,
@@ -36,12 +36,11 @@ const episodeWatcher = watch(
 
 onUnmounted(() => {
 	episodeWatcher()
-	stop()
 })
 
 const playTrack = () => {
 	if (episodeRef.value && episodeRef.value.metadata?.animation_url) {
-		play(episodeRef.value.metadata.animation_url, episodeRef.value.token_id)
+		play(episodeRef.value, episodeRef.value.token_id)
 	}
 }
 </script>
@@ -77,7 +76,7 @@ const playTrack = () => {
 					icon-class="rotate-90 !fs-20"
 					color="none"
 					:solid="true"
-					@click.prevent.stop="stop"
+					@click.prevent.stop="pause"
 				/>
 				<IconButton
 					v-else
