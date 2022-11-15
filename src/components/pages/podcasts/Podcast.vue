@@ -8,7 +8,7 @@ import StandardButton from "@/components/buttons/StandardButton.vue"
 import { formatShortAddress, isValidContractAddress } from "@/common"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useRoute, useRouter, RouterLink } from "vue-router"
-import { useMeta } from "vue-meta"
+import { useMetadata } from "@/hooks/useMetadata"
 import useClipboard from "@/hooks/useClipboard"
 import usePodcasts from "@/store/podcasts"
 import useAuth from "@/store/auth"
@@ -72,7 +72,7 @@ const metadata = computed(() => ({
 	},
 }))
 
-useMeta(metadata)
+useMetadata(metadata)
 </script>
 
 <template>

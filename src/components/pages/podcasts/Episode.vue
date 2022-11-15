@@ -9,7 +9,7 @@ import Title from "@/components/typography/Title.vue"
 import { isValidContractAddress } from "@/common"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useRoute, useRouter, RouterLink } from "vue-router"
-import { useMeta } from "vue-meta"
+import { useMetadata } from "@/hooks/useMetadata"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import useClipboard from "@/hooks/useClipboard"
 
@@ -99,7 +99,7 @@ const metadata = computed(() => ({
 	},
 }))
 
-useMeta(metadata)
+useMetadata(metadata)
 </script>
 
 <template>
