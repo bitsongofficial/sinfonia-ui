@@ -372,6 +372,14 @@
     transform: translateY(-50%);
 }
 
+.left-50 {
+    left: 50%;
+}
+
+.\-translate-x-50 {
+    transform: translateX(-50%);
+}
+
 .q-px-select-20 {
     margin-left: -20px;
     width: calc(100% + 40px);

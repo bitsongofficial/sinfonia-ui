@@ -22,7 +22,7 @@ const {
 <template>
 	<Transition name="fade" mode="out-in">
 		<div
-			class="fixed bottom-20 left-0 w-full container"
+			class="fixed bottom-20 left-50 -translate-x-50 w-full container"
 			v-if="sinfoniaCurrentTrackNFT"
 		>
 			<div class="w-full q-ml-auto !w-xs-full !w-md-5/6">
