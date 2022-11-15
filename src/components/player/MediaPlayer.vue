@@ -27,11 +27,14 @@ const {
 		>
 			<div class="w-full q-ml-auto !w-xs-full !w-md-5/6">
 				<div
-					class="bg-secondary-80 light:bg-white blur-20 shadow-10 row items-center rounded-20 h-80 q-pa-10"
+					class="bg-secondary-80 light:bg-white blur-20 shadow-10 row no-wrap items-center rounded-20 h-80 q-pa-10"
 				>
-					<Track :track="sinfoniaCurrentTrackNFT" class="w-3/10 min-w-180" />
+					<Track
+						:track="sinfoniaCurrentTrackNFT"
+						class="w-4/5 w-xs-3/10 min-w-xs-180"
+					/>
 
-					<div class="w-2/5">
+					<div class="w-1/5 w-xs-2/5">
 						<div class="w-full row items-center">
 							<div class="flex-1"></div>
 							<IconButton
@@ -63,18 +66,18 @@ const {
 							v-model="durationProgress"
 							:min="0"
 							:max="sinfoniaAudioDuration"
-							class="w-full"
+							class="w-full hidden flex-min-xs"
 							@update:model-value="seek"
 						/>
 					</div>
 
-					<div class="w-3/10 min-w-180 q-pr-8">
+					<div class="w-3/10 min-w-180 q-pr-8 hidden block-min-xs">
 						<div class="row items-center no-wrap q-ml-auto max-w-160">
 							<IconButton
 								icon="volume"
 								width="24"
 								height="24"
-								class="text-white light:text-white fs-20 w-32 h-32"
+								class="text-white light:text-secondary fs-20 w-32 h-32 q-mr-12"
 								color="none"
 								@click.prevent.stop="toggleVolume"
 							/>
@@ -88,6 +91,16 @@ const {
 							/>
 						</div>
 					</div>
+				</div>
+
+				<div class="w-full hidden-min-xs">
+					<TrackBar
+						v-model="durationProgress"
+						:min="0"
+						:max="sinfoniaAudioDuration"
+						class="w-full"
+						@update:model-value="seek"
+					/>
 				</div>
 			</div>
 		</div>

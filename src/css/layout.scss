@@ -172,6 +172,10 @@
     width: 5%;
 }
 
+.w-1\/5 {
+    width: 20%;
+}
+
 .w-1\/4 {
     width: 25%;
 }
@@ -190,6 +194,10 @@
 
 .w-3\/4 {
     width: 75%;
+}
+
+.w-4\/5 {
+    width: 80%;
 }
 
 .w-4\/4,
@@ -860,6 +868,34 @@ $s in $custom-sizes {
 }
 
 @media screen and (min-width: $breakpoint-xs) {
+    .w-xs-2\/5 {
+        width: 40%;
+    }
+
+    .w-xs-3\/10 {
+        width: 30%;
+    }
+
+    .w-xs-4\/5 {
+        width: 80%;
+    }
+
+    .min-w-xs-180 {
+        min-width: 180px;
+    }
+
+    .block-min-xs {
+        display: block !important;
+    }
+
+    .flex-min-xs {
+        display: flex !important;
+    }
+
+    .hidden-min-xs {
+        display: none !important;
+    }
+
     .w-xs-1\/3 {
         width: 1/3 * 100%;
     }
@@ -982,6 +1018,30 @@ $s in $custom-sizes {
 
     .row-md {
         flex-direction: row !important;
+    }
+
+    .w-md-2\/5 {
+        width: 40%;
+    }
+
+    .w-md-3\/10 {
+        width: 30%;
+    }
+
+    .w-md-4\/5 {
+        width: 80%;
+    }
+
+    .min-w-md-180 {
+        min-width: 180px;
+    }
+
+    .block-md {
+        display: block !important;
+    }
+
+    .flex-md {
+        display: flex !important;
     }
 
     @each $k,

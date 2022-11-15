@@ -47,7 +47,7 @@ const pan = (value: "start" | "end") => {
 
 <template>
 	<div class="row items-center grid-gap-8 no-wrap">
-		<span class="text-white fs-11 text-right min-w-40 q-mr-4">{{
+		<span class="text-white fs-12 text-right min-w-40 q-mr-4">{{
 			startTimeStr
 		}}</span>
 		<q-slider
@@ -58,7 +58,7 @@ const pan = (value: "start" | "end") => {
 			:min="min"
 			:max="max"
 		/>
-		<span class="text-white fs-11 text-left min-w-40 q-ml-4">{{
+		<span class="text-white fs-12 text-left min-w-40 q-ml-4">{{
 			endTimeStr
 		}}</span>
 	</div>

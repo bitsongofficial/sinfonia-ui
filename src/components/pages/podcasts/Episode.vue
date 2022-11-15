@@ -105,13 +105,13 @@ useMeta(metadata)
 <template>
 	<div class="text-white">
 		<div v-if="!podcastsStore.loadingEpisodes && episode">
-			<div class="grid grid-cols-12 grid-gap-32 q-mb-42">
+			<div class="grid grid-cols-12 grid-row-gap-32 grid-gap-md-32 q-mb-42">
 				<div class="col-span-12 col-span-md-3">
 					<q-img class="rounded-10 shadow-20" :src="episode.metadata?.image" />
 				</div>
 				<div class="col-span-12 col-span-md-9 flex column justify-end">
 					<p class="fs-16 opacity-50 q-mb-16">Podcast Episode</p>
-					<Title class="text-weight-bold q-mb-24" :font-size="32">
+					<Title class="text-weight-bold q-mb-24 !fs-28 !fs-md-32">
 						{{ episode.metadata?.name }}
 					</Title>
 
@@ -123,7 +123,7 @@ useMeta(metadata)
 				</div>
 			</div>
 
-			<div class="grid grid-cols-12 grid-gap-32">
+			<div class="grid grid-cols-12 grid-row-gap-32 grid-gap-md-32">
 				<div class="col-span-12 col-span-md-8">
 					<div class="row q-mb-32 items-center">
 						<IconButton
