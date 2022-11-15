@@ -301,6 +301,10 @@
     min-width: 60px;
 }
 
+.min-w-100 {
+    min-width: 100px;
+}
+
 .min-w-180 {
     min-width: 180px;
 }
@@ -446,6 +450,10 @@
     display: grid !important;
 }
 
+.\!flex {
+    display: flex !important;
+}
+
 .\!q-pr-32 {
     padding-right: 32px !important;
 }
@@ -472,6 +480,10 @@
     .rounded-top-right-#{$val} {
         border-top-right-radius: #{$val}px;
     }
+}
+
+.col-span-full {
+    grid-column: 1 / -1;
 }
 
 @each $k,
@@ -513,6 +525,11 @@ $s in $custom-sizes {
     .grid-gap-#{$k} {
         --grid-gap-offset: #{$s};
         gap: $s;
+    }
+
+    .grid-row-gap-#{$k} {
+        --grid-gap-offset: #{$s};
+        row-gap: $s;
     }
 
     .grid-cols-#{$k} {
@@ -854,6 +871,10 @@ $s in $custom-sizes {
     .\!w-xs-2\/3 {
         width: 2/3 * 100% !important;
     }
+
+    .\!w-xs-full {
+        width: 100% !important;
+    }
 }
 
 @media screen and (min-width: $breakpoint-sm) {
@@ -875,6 +896,10 @@ $s in $custom-sizes {
 
     .\!w-sm-3\/4 {
         width: 3/4 * 100% !important;
+    }
+
+    .\!w-sm-full {
+        width: 100% !important;
     }
 
     .q-pa-sm-20 {

@@ -47,17 +47,17 @@ const playTrack = () => {
 
 <template>
 	<Card
-		class="!grid grid-cols-12 grid-gap-24 col-span-12 hover:bg-white-10 cursor-pointer transition-all"
+		class="!flex row no-wrap grid-gap-24 hover:bg-white-10 cursor-pointer transition-all"
 		:transparency="5"
 	>
 		<q-img
-			class="col-span-2 rounded-10 shadow-20"
+			class="rounded-10 shadow-20 min-w-100"
 			:src="episode.metadata?.image"
 			height="100px"
 			width="100px"
 		/>
 
-		<div class="col-span-10">
+		<div>
 			<Title class="text-weight-bold q-mb-16" :font-size="16">
 				{{ episode.metadata?.name }}
 			</Title>

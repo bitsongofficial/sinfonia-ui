@@ -78,7 +78,7 @@ useMeta(metadata)
 <template>
 	<div class="text-white">
 		<div v-if="!podcastsStore.loading && podcast">
-			<div class="grid grid-cols-12 grid-gap-32 q-mb-42">
+			<div class="grid grid-cols-12 grid-row-gap-32 grid-gap-md-32 q-mb-42">
 				<div class="col-span-12 col-span-md-3">
 					<q-img class="rounded-10 shadow-20" :src="podcast?.metadata?.image" />
 				</div>
