@@ -12,7 +12,6 @@ import useSettings from "@/store/settings"
 import LightModeSwitch from "@/components/inputs/LightModeSwitch.vue"
 import DisclaimerModal from "@/components/modals/DisclaimerModal.vue"
 import useTransactionManager from "@/store/transaction-manager"
-import { useMeta } from "vue-meta"
 
 const settingsStore = useSettings()
 const transactionManagerStore = useTransactionManager()
@@ -38,25 +37,6 @@ const disclaimerUpdate = (value: boolean) => {
 		showDisclaimer.value = false
 	}
 }
-
-useMeta({
-	title: "Sinfonia",
-	description: "Your Music FanToken Marketplace powered by BitSong on Osmosis",
-	og: {
-		type: "website",
-		url: import.meta.env.VITE_BASE_URL,
-		title: "Sinfonia",
-		description: "Your Music FanToken Marketplace powered by BitSong on Osmosis",
-		image: `${import.meta.env.VITE_BASE_URL}cover.jpeg`,
-	},
-	twitter: {
-		card: "summary_large_image",
-		url: import.meta.env.VITE_BASE_URL,
-		title: "Sinfonia",
-		description: "Your Music FanToken Marketplace powered by BitSong on Osmosis",
-		image: `${import.meta.env.VITE_BASE_URL}cover.jpeg`,
-	},
-})
 </script>
 
 <template>

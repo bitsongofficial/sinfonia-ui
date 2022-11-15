@@ -9,7 +9,7 @@ import useNFT from "@/store/nft"
 import useSettings from "@/store/settings"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useRoute, useRouter, RouterLink } from "vue-router"
-import { useMeta } from "vue-meta"
+import { useMetadata } from "@/hooks/useMetadata"
 import useClipboard from "@/hooks/useClipboard"
 
 const route = useRoute()
@@ -79,7 +79,7 @@ const metadata = computed(() => ({
 	},
 }))
 
-useMeta(metadata)
+useMetadata(metadata)
 </script>
 
 <template>

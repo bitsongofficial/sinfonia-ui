@@ -11,7 +11,7 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 import { formatShortAddress, isValidContractAddress } from "@/common"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { useMeta } from "vue-meta"
+import { useMetadata } from "@/hooks/useMetadata"
 import useClipboard from "@/hooks/useClipboard"
 
 const route = useRoute()
@@ -72,7 +72,7 @@ const metadata = computed(() => ({
 	},
 }))
 
-useMeta(metadata)
+useMetadata(metadata)
 </script>
 
 <template>
