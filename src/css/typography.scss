@@ -23,7 +23,7 @@
 
 $font-sizes: ('13': 13, '15': 15);
 
-@for $i from 0 through 22 {
+@for $i from 0 through 90 {
     $s: $i * 2;
     $font-sizes: map.set($font-sizes, $s, $s);
     $s: $i * 3;
@@ -84,4 +84,14 @@ a {
     -webkit-box-orient: vertical;
     white-space: normal;
     margin: 0;
+}
+
+.text-container {
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 0;
+    word-break: break-word;
 }

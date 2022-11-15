@@ -12,6 +12,7 @@ export const disabledPlayground =
 	import.meta.env.VITE_PLAYGROUND_DISABLE === "true"
 
 export const disabledAirdrops = import.meta.env.VITE_AIRDROPS_DISABLE === "true"
+export const disabledPodcasts = import.meta.env.VITE_PODCASTS_DISABLE === "true"
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -141,6 +142,56 @@ const routes: RouteRecordRaw[] = [
 			},
 		],
 	},
+	{
+		path: "/podcasts",
+		name: "PodcastsWrapper",
+		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Podcasts",
+		},
+		children: [
+			{
+				path: ":codeId?",
+				name: "Podcasts",
+				component: () => import("@/components/pages/podcasts/Podcasts.vue"),
+				meta: {
+					breadcrumbHide: true,
+				},
+			},
+			{
+				path: ":codeId/create",
+				name: "CreatePodcast",
+				component: () => import("@/components/pages/podcasts/CreatePodcast.vue"),
+				meta: {
+					title: "Create Podcast",
+				},
+			},
+			{
+				path: ":address/details",
+				name: "PodcastDetails",
+				component: () => import("@/components/pages/podcasts/Podcast.vue"),
+				meta: {
+					title: "Podcast",
+				},
+			},
+			{
+				path: ":address/create-episode",
+				name: "CreatePodcastEpisode",
+				component: () => import("@/components/pages/podcasts/CreateEpisode.vue"),
+				meta: {
+					title: "Create Episode",
+				},
+			},
+			{
+				path: ":address/episode/:tokenId",
+				name: "PodcastEpisode",
+				component: () => import("@/components/pages/podcasts/Episode.vue"),
+				meta: {
+					title: "Episode",
+				},
+			},
+		],
+	},
 	/* {
 		path: "/airdrops",
 		name: "Airdrops",
@@ -189,12 +240,21 @@ export const menuItems: MenuItem[] = [
 		disabled: disabledRoutes,
 	},
 	{
-		icon: { name: "list", width: 19, height: 13 },
+		icon: { name: "3d-cube", width: 19, height: 19 },
 		label: "Collections",
 		path: "/nfts",
 		disabled: disabledRoutes,
 	},
 ]
+
+if (!disabledPodcasts) {
+	menuItems.push({
+		icon: { name: "trophy", width: 22, height: 18 },
+		label: "Podcasts",
+		path: "/podcasts",
+		disabled: disabledRoutes,
+	})
+}
 
 /* if (!disabledAirdrops) {
 	menuItems.push({

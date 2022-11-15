@@ -19,6 +19,7 @@ specifiers:
   '@quasar/extras': ^1.12.5
   '@quasar/vite-plugin': ^1.0.5
   '@storipress/apollo-vue-devtool': ^0.0.4
+  '@types/howler': ^2.2.7
   '@types/lodash': ^4.14.180
   '@typescript-eslint/eslint-plugin': ^5.16.0
   '@typescript-eslint/parser': ^5.16.0
@@ -41,9 +42,11 @@ specifiers:
   filepond: ^4.30.4
   filepond-plugin-file-validate-type: ^1.2.8
   filepond-plugin-image-preview: ^4.6.11
+  filepond-plugin-image-validate-size: ^1.2.7
   fuse.js: ^6.6.2
   graphql: ^16.5.0
   graphql-tag: ^2.12.6
+  howler: ^2.2.3
   lodash: ^4.17.21
   long: ^5.2.0
   osmojs: ^0.35.0
@@ -100,9 +103,11 @@ dependencies:
   filepond: 4.30.4
   filepond-plugin-file-validate-type: 1.2.8_filepond@4.30.4
   filepond-plugin-image-preview: 4.6.11_filepond@4.30.4
+  filepond-plugin-image-validate-size: 1.2.7_filepond@4.30.4
   fuse.js: 6.6.2
   graphql: 16.5.0
   graphql-tag: 2.12.6_graphql@16.5.0
+  howler: 2.2.3
   lodash: 4.17.21
   long: 5.2.0
   osmojs: 0.35.0
@@ -122,6 +127,7 @@ devDependencies:
   '@kelchy/pre-commit': 1.2.4
   '@keplr-wallet/types': 0.9.12
   '@quasar/vite-plugin': 1.0.5_vz2kgjuq7eylzhnfwiiqbx4uti
+  '@types/howler': 2.2.7
   '@types/lodash': 4.14.180
   '@typescript-eslint/eslint-plugin': 5.16.0_dt6uqzldi2k7eqpzz2fabqktva
   '@typescript-eslint/parser': 5.16.0_qfndwjbknwkswbha2khu23tpva
@@ -2466,6 +2472,10 @@ packages:
       '@types/node': 17.0.22
     dev: false
 
+  /@types/howler/2.2.7:
+    resolution: {integrity: sha512-PEZldwZqJJw1PWRTpupyC7ajVTZA8aHd8nB/Y0n6zRZi5u8ktYDntsHj13ltEiBRqWwF06pASxBEvCTxniG8eA==}
+    dev: true
+
   /@types/istanbul-lib-coverage/2.0.4:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}
     dev: false
@@ -4444,6 +4454,14 @@ packages:
       filepond: 4.30.4
     dev: false
 
+  /filepond-plugin-image-validate-size/1.2.7_filepond@4.30.4:
+    resolution: {integrity: sha512-Sxu2XTbQHf9HRWu+AQg6zJkww0O6hTXq9IX5/SAJLuvohpF23XTzCNg+29KXr4Wulm70/jSSpMcJURn9AU72rA==}
+    peerDependencies:
+      filepond: '>=1.8.x <5.x'
+    dependencies:
+      filepond: 4.30.4
+    dev: false
+
   /filepond/4.30.4:
     resolution: {integrity: sha512-FCwsMvG9iiEs6uobdDrTaKsCgsqys0NuLgPPD8n37AYVYBiiDkrPkk9MSIU5rT2FahYcL1bScYI9huIPtlzqyA==}
     dev: false
@@ -4791,6 +4809,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       lru-cache: 6.0.0
+    dev: false
+
+  /howler/2.2.3:
+    resolution: {integrity: sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==}
     dev: false
 
   /htmlparser2/7.2.0:

@@ -5,6 +5,7 @@ import "filepond/dist/filepond.min.css"
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css"
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginImagePreview from "filepond-plugin-image-preview"
+import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size"
 import { toRef, ref, watch, onUnmounted } from "vue"
 import { useField } from "vee-validate"
 
@@ -15,6 +16,11 @@ const props = withDefaults(
 		placeholder?: string
 		value?: FilePondFile[] | undefined
 		alternative?: boolean
+		allowImageValidateSize?: boolean
+		imageValidateSizeMinWidth?: number
+		imageValidateSizeMaxWidth?: number
+		imageValidateSizeMinHeight?: number
+		imageValidateSizeMaxHeight?: number
 		type?:
 			| "number"
 			| "search"
@@ -32,9 +38,14 @@ const props = withDefaults(
 	{
 		value: undefined,
 		alternative: false,
+		allowImageValidateSize: false,
 		placeholder: "0",
 		fileTypes: "image/jpeg, image/png, image/webp",
 		type: "text",
+		imageValidateSizeMinWidth: 1,
+		imageValidateSizeMaxWidth: 65535,
+		imageValidateSizeMinHeight: 1,
+		imageValidateSizeMaxHeight: 65535,
 	}
 )
 
@@ -73,7 +84,8 @@ const updateModelValue = (e: FilePondFile[] | undefined) => {
 
 const FilePond = vueFilePond(
 	FilePondPluginFileValidateType,
-	FilePondPluginImagePreview
+	FilePondPluginImagePreview,
+	FilePondPluginImageValidateSize
 )
 
 onUnmounted(() => {
@@ -87,6 +99,11 @@ onUnmounted(() => {
 			ref="uploader"
 			:label-idle="placeholder"
 			:accepted-file-types="fileTypes"
+			:allow-image-validate-size="allowImageValidateSize"
+			:image-validate-size-min-width="imageValidateSizeMinWidth"
+			:image-validate-size-max-width="imageValidateSizeMaxWidth"
+			:image-validate-size-min-height="imageValidateSizeMinHeight"
+			:image-validate-size-max-height="imageValidateSizeMaxHeight"
 			v-model="value"
 			@input="updateModelValue($event)"
 			class="shadow-md light:shadow-10"

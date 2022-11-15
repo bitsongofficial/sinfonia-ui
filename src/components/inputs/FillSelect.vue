@@ -1,60 +1,64 @@
 <script setup lang="ts">
 import { resolveIcon } from "@/common/resolvers"
 import { Option } from "@/types"
-import { computed } from "vue"
+import { computed, toRef } from "vue"
+import { useField } from "vee-validate"
 
-const props = defineProps<{
-	modelValue?: any
-	options?: string[] | Option[]
-}>()
+const props = withDefaults(
+	defineProps<{
+		name: string
+		value?: unknown
+		options?: string[] | Option[]
+		light?: boolean
+	}>(),
+	{
+		light: false,
+	}
+)
+
+const name = toRef(props, "name")
 
 const emit = defineEmits<{
 	(e: "update:modelValue", value: any): void
 }>()
 
-const model = computed({
-	get(): any {
-		return props.modelValue
-	},
-	set(value: any) {
-		emit("update:modelValue", value)
-	},
-})
+const { value, errorMessage, handleBlur, handleChange, meta } = useField(
+	name,
+	undefined,
+	{
+		initialValue: props.value,
+	}
+)
+
+const updateModelValue = (e: unknown) => {
+	handleChange(e)
+	emit("update:modelValue", value.value)
+}
 </script>
 
 <template>
-	<q-select
-		v-model="model"
-		:options="options"
-		class="fill-select text-white text-capitalize fs-14 text-weight-medium"
-		popup-content-class="text-white alternative"
-		rounded
-		map-options
-		emit-value
-		standout="!bg-white-10 !text-white"
-		:dark="false"
-		:dropdown-icon="resolveIcon('dropdown', 11, 7)"
-		behavior="menu"
-	>
-		<template v-slot:selected-item="scope">
-			<div class="flex row items-center">
-				<q-icon
-					v-if="scope.opt.icon"
-					class="fs-24 q-mr-8"
-					:name="
-						resolveIcon(
-							scope.opt.icon.name,
-							scope.opt.icon.width ?? 24,
-							scope.opt.icon.height ?? 24
-						)
-					"
-				/>
-
-				<q-item-label class="fs-14">{{ scope.opt.label }}</q-item-label>
-			</div>
-		</template>
-		<template v-slot:option="scope">
-			<q-item v-bind="scope.itemProps">
+	<div>
+		<q-select
+			v-model="value"
+			:options="options"
+			class="fill-select text-white text-capitalize fs-14 text-weight-medium"
+			:class="{
+				'fill-select-light': light,
+			}"
+			popup-content-class="text-white alternative"
+			rounded
+			map-options
+			emit-value
+			no-error-icon
+			standout="!bg-white-10 !text-white"
+			:dark="false"
+			:dropdown-icon="resolveIcon('dropdown', 11, 7)"
+			:error="!meta.valid && errorMessage !== undefined"
+			behavior="menu"
+			@update:model-value="updateModelValue($event)"
+			@blur="handleBlur"
+		>
+			<template v-slot:selected-item="scope">
 				<div class="flex row items-center">
 					<q-icon
 						v-if="scope.opt.icon"
@@ -70,9 +74,31 @@ const model = computed({
 
 					<q-item-label class="fs-14">{{ scope.opt.label }}</q-item-label>
 				</div>
-			</q-item>
-		</template>
-	</q-select>
+			</template>
+			<template v-slot:option="scope">
+				<q-item v-bind="scope.itemProps">
+					<div class="flex row items-center">
+						<q-icon
+							v-if="scope.opt.icon"
+							class="fs-24 q-mr-8"
+							:name="
+								resolveIcon(
+									scope.opt.icon.name,
+									scope.opt.icon.width ?? 24,
+									scope.opt.icon.height ?? 24
+								)
+							"
+						/>
+
+						<q-item-label class="fs-14">{{ scope.opt.label }}</q-item-label>
+					</div>
+				</q-item>
+			</template>
+		</q-select>
+		<p class="fs-12 text-primary text-weight-medium min-h-fit">
+			{{ errorMessage }}
+		</p>
+	</div>
 </template>
 
 <style lang="scss" scoped>
@@ -83,6 +109,10 @@ const model = computed({
 	padding-right: 14px;
 	box-shadow: none;
 	background: transparentize($color: $white, $amount: 0.9);
+}
+
+.fill-select.fill-select-light:deep(.q-field__control) {
+	background: transparentize($color: $white, $amount: 0.95);
 }
 
 .fill-select:deep(.q-field__control):before {
