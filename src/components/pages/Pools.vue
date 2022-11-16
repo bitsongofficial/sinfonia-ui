@@ -122,6 +122,7 @@ const totalLiquidity = computed(() => {
 				</div>
 
 				<FillSelect
+					name="myPools"
 					class="col-start-span-md-1 col-span-8 col-span-md-1 col-start-md-8"
 					v-model="myPoolsViewType"
 					:options="poolsViewTypes"
@@ -203,6 +204,7 @@ const totalLiquidity = computed(() => {
 			</p>
 
 			<FillSelect
+				name="poolsType"
 				class="col-start-span-md-1 col-span-8 col-span-md-1 col-end-md-9"
 				v-model="poolsViewType"
 				:options="poolsViewTypes"
