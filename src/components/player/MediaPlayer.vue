@@ -17,6 +17,12 @@ const {
 	seek,
 	toggleVolume,
 } = useSinfoniaMediaPlayer()
+
+const durationUpdate = (seekValue: number | null) => {
+	if (seekValue !== null) {
+		seek(seekValue)
+	}
+}
 </script>
 
 <template>
@@ -67,7 +73,7 @@ const {
 							:min="0"
 							:max="sinfoniaAudioDuration"
 							class="w-full hidden flex-min-xs"
-							@update:model-value="seek"
+							@update:model-value="durationUpdate"
 						/>
 					</div>
 
@@ -99,7 +105,7 @@ const {
 						:min="0"
 						:max="sinfoniaAudioDuration"
 						class="w-full"
-						@update:model-value="seek"
+						@update:model-value="durationUpdate"
 					/>
 				</div>
 			</div>

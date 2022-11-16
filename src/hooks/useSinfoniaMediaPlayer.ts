@@ -81,8 +81,8 @@ const clearAnimations = () => {
 	requestIDs = []
 }
 
-const volume = (newValue: number) => {
-	if (sinfoniaPlayer.value) {
+const volume = (newValue: number | null) => {
+	if (sinfoniaPlayer.value && newValue !== null) {
 		sinfoniaPlayer.value.volume(newValue)
 		currentVolume.value = newValue
 	}
