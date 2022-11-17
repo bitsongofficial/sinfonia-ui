@@ -61,8 +61,8 @@ const playTrack = () => {
 		/>
 
 		<div>
-			<div class="row justify-between">
-				<Title class="text-weight-bold q-mb-16" :font-size="16">
+			<div class="row justify-between items-center q-mb-16">
+				<Title class="text-weight-bold" :font-size="16">
 					{{ episode.metadata?.name }}
 				</Title>
 				<IconButton
