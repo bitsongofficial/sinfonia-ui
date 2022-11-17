@@ -1,21 +1,20 @@
 import { acceptHMRUpdate, defineStore } from "pinia"
-import apolloClient, {
-	merkledropsWithProofsByAddress,
-	merkledropsList,
-} from "@/services/sinfonia-gql"
 import {
 	Merkledrop,
 	MerkledropProof,
 	MerkledropWithProof,
-	MerkledropsWithProofsByAddress,
 	BitsongMerkledrop,
+	MerkledropResponse,
+	MerkledropWithDetails,
 } from "@/types"
 import { sinfoniaClient } from "@/services"
 import Decimal from "decimal.js"
 import { BlockResponse } from "@cosmjs/launchpad"
 import { add, sub } from "date-fns"
-import { formatTimeLocate } from "@/common"
+import { formatTimeLocate, validateIPFSURI } from "@/common"
 import useConfig from "@/store/config"
+import { getIPFSFile } from "@/services/ipfs"
+import { compact } from "lodash"
 
 export interface MerkleDropsState {
 	loading: boolean
@@ -33,18 +32,42 @@ const useMerkledrops = defineStore("merkledrops", {
 		merkledropProofs: [],
 	}),
 	actions: {
+		async loadProof(address: string, merkledrop: Merkledrop): Promise<MerkledropProof | undefined> {
+			try {
+				const CID = validateIPFSURI(merkledrop.uri)
+
+				if (CID) {
+					const response = await getIPFSFile<MerkledropProof>(`${CID}/${address}.json`)
+
+					return ({
+						...response.result,
+						merkledrop_id: merkledrop.merkledrop_id
+					})
+				}
+			} catch (error) {
+				console.error(error)
+				return undefined
+			}
+		},
 		async loadAirdrops(address?: string) {
 			try {
 				this.loading = true
 
-				const {
-					data: { merkledrops, merkledropProofs },
-				} = await apolloClient.query<MerkledropsWithProofsByAddress>({
-					query: address ? merkledropsWithProofsByAddress : merkledropsList,
-					variables: {
-						address: address,
-					},
-				})
+				let merkledrops: MerkledropWithDetails[] = []
+				let merkledropProofs: MerkledropProof[] = []
+
+				const response = await getIPFSFile<MerkledropResponse>(import.meta.env.VITE_AIRDROPS_CID)
+
+				merkledrops = response.result.merkledrops
+
+				if (address) {
+					const requests = response.result.merkledrops.map(merkledrop => this.loadProof(address, merkledrop))
+					const responses = (await Promise.allSettled(requests)).filter(result => result.status === "fulfilled")
+
+					// @ts-ignore
+					merkledropProofs = responses.map((result) => result.value)
+					merkledropProofs = compact(merkledropProofs)
+				}
 
 				const merkledropIds = merkledrops.map(
 					(merkledrop) => merkledrop.merkledrop_id
@@ -54,16 +77,19 @@ const useMerkledrops = defineStore("merkledrops", {
 				const merkledropsDetails = await sinfoniaClient.merkledrops(merkledropIds)
 				const proofs: MerkledropProof[] = []
 
-				for (const proof of merkledropProofs ?? []) {
-					const isClaimed = await sinfoniaClient.merkledropClaimed(
-						proof.merkledrop_id,
-						proof.index
-					)
-
-					proofs.push({
-						...proof,
-						claimed: isClaimed,
-					})
+				for (const proof of merkledropProofs) {
+					if (proof) {
+						const isClaimed = await sinfoniaClient.merkledropClaimed(
+							proof.merkledrop_id,
+							proof.index
+						)
+	
+						proofs.push({
+							...proof,
+							merkledrop_id: proof.merkledrop_id,
+							claimed: isClaimed,
+						})
+					}
 				}
 
 				this.merkledropsDetails = merkledropsDetails

@@ -1,3 +1,7 @@
+export interface MerkledropResponse {
+	merkledrops: Merkledrop[]
+}
+
 export interface Merkledrop {
 	merkledrop_id: number
 	denom: string
@@ -6,14 +10,20 @@ export interface Merkledrop {
 	end_height: number
 	name: string
 	image: string
+	uri: string
 }
 
 export interface MerkledropProof {
 	merkledrop_id: number
+	address: string
 	index: number
 	proofs: string[]
 	amount: number // User amount claim
-	claimed: boolean
+	claimed?: boolean
+}
+
+export interface MerkledropWithDetails extends Merkledrop{
+	details?: MerkledropProof
 }
 
 export interface MerkledropWithProof extends Merkledrop {
