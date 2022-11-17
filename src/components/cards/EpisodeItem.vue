@@ -4,7 +4,8 @@ import Card from "@/components/cards/Card.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
 import { BitsongNFT, BitsongCollection } from "@/types"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
-import { onUnmounted, toRef, watch } from "vue"
+import { onUnmounted, toRef, watch, ref } from "vue"
+import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
 
 const props = defineProps<{
 	episode: BitsongNFT
@@ -12,11 +13,13 @@ const props = defineProps<{
 }>()
 
 const episodeRef = toRef(props, "episode")
+const show = ref(false)
 
 const {
 	addTrack,
 	play,
 	pause,
+	addTrackToPlaylist,
 	isPlaying,
 	audioFullDuration,
 	sinfoniaCurrentTokenID,
@@ -40,7 +43,7 @@ onUnmounted(() => {
 
 const playTrack = () => {
 	if (episodeRef.value && episodeRef.value.metadata?.animation_url) {
-		play(episodeRef.value, episodeRef.value.token_id)
+		play(episodeRef.value)
 	}
 }
 </script>
@@ -58,9 +61,23 @@ const playTrack = () => {
 		/>
 
 		<div>
-			<Title class="text-weight-bold q-mb-16" :font-size="16">
-				{{ episode.metadata?.name }}
-			</Title>
+			<div class="row justify-between">
+				<Title class="text-weight-bold q-mb-16" :font-size="16">
+					{{ episode.metadata?.name }}
+				</Title>
+				<IconButton
+					icon="vertical-dots"
+					width="4"
+					height="16"
+					class="fs-16 s-28 q-mr--4 opacity-30 hover:opacity-100"
+					@click.native.prevent="show = true"
+				>
+					<EpisodeContextMenu
+						v-model="show"
+						@addtoplaylist="addTrackToPlaylist(episode)"
+					></EpisodeContextMenu>
+				</IconButton>
+			</div>
 
 			<p class="fs-14 !leading-22 opacity-50 text-container q-mb-16">
 				{{ episode.metadata?.description }}

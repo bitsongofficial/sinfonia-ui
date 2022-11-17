@@ -8,7 +8,10 @@ const format = ["mp3", "wav", "mp4", "webm", "mpeg"]
 const sinfoniaPlayer = ref<Howl>()
 const sinfoniaCurrentTrack = ref("")
 const sinfoniaCurrentTokenID = ref("")
-const sinfoniaCurrentTrackNFT = ref<BitsongNFT>()
+
+const sinfoniaPlaylist = ref<BitsongNFT[]>([])
+const currentTrackIndex = ref(0)
+
 const isPlaying = ref(false)
 const progress = ref(0) // Percentage
 const durationProgress = ref(0) // seconds
@@ -17,18 +20,36 @@ const sinfoniaLabelAudioDuration = ref("")
 const sinfoniaAudioDuration = ref(0)
 const currentVolume = ref(1)
 
-const setupAudioPlayer = (nft: BitsongNFT, tokenId: string) => {
-	sinfoniaCurrentTrackNFT.value = nft
+const sinfoniaCurrentTrackNFT = computed<BitsongNFT>(
+	() => sinfoniaPlaylist.value[currentTrackIndex.value]
+)
+
+const canGoNext = computed(
+	() => currentTrackIndex.value < sinfoniaPlaylist.value.length - 1
+)
+
+const canGoPrev = computed(() => currentTrackIndex.value > 0)
+
+const addTrackToPlaylist = (track: BitsongNFT) => {
+	sinfoniaPlaylist.value.push(track)
+}
+
+const setupAudioPlayer = () => {
+	const nft = sinfoniaPlaylist.value[currentTrackIndex.value]
 
 	if (nft.metadata?.animation_url) {
+		clearAnimations()
 		const src = nft.metadata.animation_url
 		sinfoniaCurrentTrack.value = src
-		sinfoniaCurrentTokenID.value = tokenId
+		sinfoniaCurrentTokenID.value = nft.token_id
+		progress.value = 0
+		durationProgress.value = 0
 
 		sinfoniaPlayer.value = new Howl({
 			src,
 			html5: true,
 			preload: "metadata",
+			autoplay: true,
 			format,
 			volume: currentVolume.value,
 			onplay: () => {
@@ -70,6 +91,61 @@ const setupAudioPlayer = (nft: BitsongNFT, tokenId: string) => {
 				}
 			},
 		})
+	}
+}
+
+const play = (src: BitsongNFT) => {
+	Howler.stop()
+	currentTrackIndex.value = 0
+	addTrackToPlaylist(src)
+	setupAudioPlayer()
+
+	if (sinfoniaPlayer.value) {
+		sinfoniaPlayer.value.play()
+	}
+}
+
+const resume = () => {
+	if (sinfoniaPlayer.value) {
+		sinfoniaPlayer.value.play()
+	} else if (sinfoniaCurrentTrackNFT.value) {
+		setupAudioPlayer()
+	}
+}
+
+const next = () => {
+	if (canGoNext.value) {
+		currentTrackIndex.value++
+
+		Howler.stop()
+		setupAudioPlayer()
+	}
+}
+
+const prev = () => {
+	if (canGoPrev.value) {
+		currentTrackIndex.value--
+
+		Howler.stop()
+		setupAudioPlayer()
+	}
+}
+
+const stop = () => {
+	if (sinfoniaPlayer.value) {
+		Howler.stop()
+		sinfoniaPlayer.value.stop()
+		currentTrackIndex.value = -1
+		sinfoniaCurrentTrack.value = ""
+		sinfoniaCurrentTokenID.value = ""
+		isPlaying.value = false
+	}
+}
+
+const pause = () => {
+	if (sinfoniaPlayer.value) {
+		sinfoniaPlayer.value.pause()
+		isPlaying.value = false
 	}
 }
 
@@ -146,39 +222,6 @@ export const useSinfoniaMediaPlayer = () => {
 		setupInfoPlayer(src)
 	}
 
-	const play = (src: BitsongNFT, tokenId: string) => {
-		Howler.stop()
-		setupAudioPlayer(src, tokenId)
-
-		if (sinfoniaPlayer.value) {
-			sinfoniaPlayer.value.play()
-		}
-	}
-
-	const resume = () => {
-		if (sinfoniaPlayer.value) {
-			sinfoniaPlayer.value.play()
-		}
-	}
-
-	const stop = () => {
-		if (sinfoniaPlayer.value) {
-			Howler.stop()
-			sinfoniaPlayer.value.stop()
-			sinfoniaCurrentTrackNFT.value = undefined
-			sinfoniaCurrentTrack.value = ""
-			sinfoniaCurrentTokenID.value = ""
-			isPlaying.value = false
-		}
-	}
-
-	const pause = () => {
-		if (sinfoniaPlayer.value) {
-			sinfoniaPlayer.value.pause()
-			isPlaying.value = false
-		}
-	}
-
 	return {
 		sinfoniaPlayer,
 		isPlaying,
@@ -187,11 +230,14 @@ export const useSinfoniaMediaPlayer = () => {
 		sinfoniaLabelAudioDuration,
 		sinfoniaAudioDuration,
 		sinfoniaCurrentTrack,
+		sinfoniaPlaylist,
 		sinfoniaCurrentTrackNFT,
 		audioFullDuration,
 		sinfoniaCurrentTokenID,
 		durationProgress,
 		currentVolume,
+		canGoNext,
+		canGoPrev,
 		addTrack,
 		play,
 		stop,
@@ -200,5 +246,8 @@ export const useSinfoniaMediaPlayer = () => {
 		seek,
 		volume,
 		toggleVolume,
+		next,
+		prev,
+		addTrackToPlaylist,
 	}
 }
