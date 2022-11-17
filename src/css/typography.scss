@@ -47,6 +47,25 @@ $v in $font-sizes {
     }
 }
 
+@media screen and (min-width: $breakpoint-md) {
+    @each $k,
+    $v in $font-sizes {
+        .fs-md-#{$k} {
+            font-size: $v * 1px;
+            line-height: $v * 1px;
+        }
+
+        .\!leading-md-#{$k} {
+            line-height: $v * 1px !important;
+        }
+
+        .\!fs-md-#{$k} {
+            font-size: $v * 1px !important;
+            line-height: $v * 1px !important;
+        }
+    }
+}
+
 * {
     font-family: "Circular Std", sans-serif;
 }

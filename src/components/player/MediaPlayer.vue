@@ -3,7 +3,6 @@ import Track from "@/components/player/Track.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
 import TrackBar from "@/components/player/TrackBar.vue"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
-import { resolveIcon } from "@/common"
 
 const {
 	sinfoniaCurrentTrackNFT,
@@ -11,11 +10,15 @@ const {
 	durationProgress,
 	sinfoniaAudioDuration,
 	currentVolume,
+	canGoNext,
+	canGoPrev,
 	volume,
 	pause,
 	resume,
 	seek,
 	toggleVolume,
+	next,
+	prev,
 } = useSinfoniaMediaPlayer()
 
 const durationUpdate = (seekValue: number | null) => {
@@ -42,7 +45,17 @@ const durationUpdate = (seekValue: number | null) => {
 
 					<div class="w-1/5 w-xs-2/5">
 						<div class="w-full row items-center">
-							<div class="flex-1"></div>
+							<div class="row justify-end flex-1">
+								<IconButton
+									icon="skip"
+									width="24"
+									height="24"
+									class="text-white light:text-secondary fs-20 w-32 h-32 q-mr-12"
+									color="none"
+									@click.prevent.stop="prev"
+									:disabled="!canGoPrev"
+								/>
+							</div>
 							<IconButton
 								v-if="isPlaying"
 								icon="pause"
@@ -65,7 +78,17 @@ const durationUpdate = (seekValue: number | null) => {
 								:solid="true"
 								@click.prevent.stop="resume"
 							/>
-							<div class="flex-1"></div>
+							<div class="row justify-start flex-1">
+								<IconButton
+									icon="forward"
+									width="24"
+									height="24"
+									class="text-white light:text-secondary fs-20 w-32 h-32 q-ml-12"
+									color="none"
+									@click.prevent.stop="next"
+									:disabled="!canGoNext"
+								/>
+							</div>
 						</div>
 
 						<TrackBar

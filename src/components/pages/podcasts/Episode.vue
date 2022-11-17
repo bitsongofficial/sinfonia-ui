@@ -6,12 +6,12 @@ import Spinner from "@/components/Spinner"
 import IconButton from "@/components/buttons/IconButton.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import Title from "@/components/typography/Title.vue"
+import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
 import { isValidContractAddress } from "@/common"
-import { computed, onMounted, onUnmounted, watch } from "vue"
+import { computed, onMounted, onUnmounted, watch, ref } from "vue"
 import { useRoute, useRouter, RouterLink } from "vue-router"
 import { useMetadata } from "@/hooks/useMetadata"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
-import useClipboard from "@/hooks/useClipboard"
 
 const route = useRoute()
 const router = useRouter()
@@ -22,6 +22,8 @@ const podcastsStore = usePodcasts()
 const address = route.params.address as string
 const tokenId = route.params.tokenId as string
 
+const show = ref(false)
+
 const podcast = computed(() => podcastsStore.podcast(address))
 const episode = computed(() => podcastsStore.episode(tokenId))
 
@@ -29,6 +31,7 @@ const {
 	addTrack,
 	play,
 	pause,
+	addTrackToPlaylist,
 	isPlaying,
 	audioFullDuration,
 	sinfoniaCurrentTokenID,
@@ -36,7 +39,13 @@ const {
 
 const playTrack = () => {
 	if (episode.value && episode.value.metadata?.animation_url) {
-		play(episode.value, episode.value.token_id)
+		play(episode.value)
+	}
+}
+
+const addToPlaylist = () => {
+	if (episode.value) {
+		addTrackToPlaylist(episode.value)
 	}
 }
 
@@ -77,8 +86,6 @@ onUnmounted(() => {
 	episodeWatcher()
 	settingsStore.breadcrumbPrepend = []
 })
-
-const { onCopy } = useClipboard()
 
 const metadata = computed(() => ({
 	title: `${episode.value?.metadata?.name} | ${podcast.value?.init?.name}`,
@@ -150,6 +157,17 @@ useMetadata(metadata)
 						/>
 
 						<p class="fs-18 opacity-50">{{ audioFullDuration }}</p>
+
+						<IconButton
+							icon="vertical-dots"
+							width="4"
+							height="16"
+							class="fs-20 s-28 q-ml-auto opacity-50 hover:opacity-100"
+							@click.native.prevent="show = true"
+							v-if="episode"
+						>
+							<EpisodeContextMenu v-model="show" @addtoplaylist="addToPlaylist" />
+						</IconButton>
 					</div>
 
 					<Title class="text-weight-bold q-mb-16">Description</Title>
