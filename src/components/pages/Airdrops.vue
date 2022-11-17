@@ -204,7 +204,7 @@ onUnmounted(() => {
 		<LightTable
 			:columns="airdropColumns"
 			:rows="merkledrops.merkledropsWithProofs"
-			:loading="merkledrops.loading || authStore.loading"
+			:loading="merkledrops.loading"
 			alternative
 			row-key="drop"
 			v-if="$q.screen.gt.md"
