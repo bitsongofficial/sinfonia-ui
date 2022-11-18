@@ -92,12 +92,6 @@ const addressWatcher = watch(
 )
 
 const onClaim = (merkledrop: MerkledropWithProof) => {
-	transactionManagerStore.merkledropClaim(
-		merkledrop.merkledrop_id,
-		0,
-		"1000000000",
-		[]
-	)
 	if (merkledrop.proof) {
 		transactionManagerStore.merkledropClaim(
 			merkledrop.merkledrop_id,
@@ -295,7 +289,7 @@ onUnmounted(() => {
 						disable
 						class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
 					/>
-					<StandardButton
+					<!-- <StandardButton
 						label="Claim"
 						no-padding
 						@click="onClaim(slotProps.row)"
@@ -303,7 +297,7 @@ onUnmounted(() => {
 							transactionManagerStore.loadingBroadcasting ||
 							transactionManagerStore.loadingSign
 						"
-					/>
+					/> -->
 				</q-td>
 			</template>
 		</LightTable>
