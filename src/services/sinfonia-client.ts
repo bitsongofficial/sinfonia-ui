@@ -58,14 +58,14 @@ export default class SinfoniaClient {
 		try {
 			if (this.bitsongClient) {
 				const requests: Promise<
-					AxiosResponse<ChainData<"merkledrop", BitsongMerkledrop>>
+					AxiosResponse<ChainData<"merkledrop", BitsongMerkledrop>> | undefined
 				>[] = []
 
 				for (const id of ids) {
 					requests.push(this.bitsongClient.merkledrop(id))
 				}
 
-				const merkledropsResponse = await Promise.all(requests)
+				const merkledropsResponse = compact(await Promise.all(requests))
 
 				return merkledropsResponse.map((el) => el.data.merkledrop)
 			}

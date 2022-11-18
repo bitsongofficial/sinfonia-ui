@@ -18,10 +18,17 @@ export default class BitsongClient extends ChainClient {
 			{ params }
 		)
 
-	public merkledrop = (id: number) =>
-		this.instance.get<ChainData<"merkledrop", BitsongMerkledrop>>(
-			`bitsong/merkledrop/v1beta1/markledrops/${id}`
-		)
+	public merkledrop = async (id: number) => {
+		try {
+			const response = await this.instance.get<ChainData<"merkledrop", BitsongMerkledrop>>(
+				`bitsong/merkledrop/v1beta1/markledrops/${id}`
+			)
+
+			return response
+		} catch (error) {
+			return undefined
+		}
+	}
 
 	public merkledropClaimed = (id: number, index: number) =>
 		this.instance.get<ChainData<"is_claimed", boolean>>(
