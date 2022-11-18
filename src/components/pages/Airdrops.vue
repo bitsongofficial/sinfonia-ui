@@ -233,7 +233,10 @@ onUnmounted(() => {
 			</template>
 			<template v-slot:body-cell-claimed="slotProps">
 				<q-td :props="slotProps">
-					<p class="fs-14">{{ percentage(slotProps.row.claimedPercentage) }} %</p>
+					<p class="fs-14" v-if="slotProps.row.owner">
+						{{ percentage(slotProps.row.claimedPercentage) }} %
+					</p>
+					<p class="fs-14" v-else>100 %</p>
 				</q-td>
 			</template>
 			<template v-slot:body-cell-owner="slotProps">
@@ -253,7 +256,16 @@ onUnmounted(() => {
 			<template v-slot:body-cell-actions="slotProps">
 				<q-td :props="slotProps">
 					<q-btn
-						v-if="!slotProps.row.active"
+						v-if="!slotProps.row.owner"
+						outline
+						rounded
+						color="white"
+						label="Completed"
+						disable
+						class="q-px-22 text-secondry-390 btn-outline-minimal light:before:border-2 light:hover:helper-white text-capitalize"
+					/>
+					<q-btn
+						v-else-if="!slotProps.row.active"
 						outline
 						rounded
 						color="white"
