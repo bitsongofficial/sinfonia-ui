@@ -17,7 +17,7 @@ export interface MerkledropProof {
 	merkledrop_id: number
 	address: string
 	index: number
-	proofs: string[]
+	proof: string[]
 	amount: number // User amount claim
 	claimed?: boolean
 }
