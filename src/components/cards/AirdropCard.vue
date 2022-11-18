@@ -37,7 +37,7 @@ const onClaim = (merkledrop: MerkledropWithProof) => {
 			merkledrop.merkledrop_id,
 			merkledrop.proof?.index,
 			merkledrop.proof.amount.toString(),
-			merkledrop.proof?.proofs
+			merkledrop.proof?.proof
 		)
 	}
 }
