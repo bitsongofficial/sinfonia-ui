@@ -9,8 +9,8 @@ export interface AminoMsgClaim extends AminoMsg {
 	type: "/bitsong.merkledrop.v1beta1.MsgClaim"
 	value: {
 		sender: string
-		merkledropId: number
-		index: number
+		merkledrop_id: string
+		index: string
 		amount: string
 		proofs: string[]
 	}
@@ -64,23 +64,23 @@ export const createBitsongAminoConverters = (): AminoConverters => {
 			}: MsgClaim): AminoMsgClaim["value"] => {
 				return {
 					sender,
-					merkledropId: merkledropId.toNumber(),
-					index: index.toNumber(),
+					merkledrop_id: merkledropId.toString(),
+					index: index.toString(),
 					amount,
 					proofs,
 				}
 			},
 			fromAmino: ({
 				sender,
-				merkledropId,
+				merkledrop_id,
 				index,
 				amount,
 				proofs,
-			}: AminoMsgClaim["value"]): any => {
+			}: AminoMsgClaim["value"]): MsgClaim => {
 				return {
 					sender,
-					merkledropId: Long.fromNumber(merkledropId),
-					index: Long.fromNumber(index),
+					merkledropId: Long.fromString(merkledrop_id),
+					index: Long.fromString(index),
 					amount,
 					proofs,
 				}
