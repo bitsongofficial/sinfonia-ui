@@ -2,12 +2,15 @@ import { FilePondFile } from "filepond"
 import { CosmWasmContractInfo, BS721InitMsg } from "./cosmwasm"
 import { NftTokenInfo } from "./nft"
 
-export interface PodcastITunes {
-	author: string
-	channel_type: string
+export interface BaseITunes {
 	explicit: boolean
-	category: string[]
 	image: string
+}
+
+export interface PodcastITunes extends BaseITunes {
+	author: string
+	channel_type: String
+	category: string[]
 }
 
 export interface PodcastInitMsg extends Omit<BS721InitMsg, "uri" | "name"> {
@@ -60,11 +63,22 @@ export interface PodcastEpisodeExtension {
 	guid: string
 	title: string
 	description: string
-	itunes: PodcastITunes
+	itunes: BaseITunes
 	enclosure: PodcastEpisodeEnclosure
-	pub_date: string
+	pub_date: number
 }
 
 export interface PodcastEpisode extends Omit<NftTokenInfo, "extension"> {
 	extension: PodcastEpisodeExtension
+}
+
+export interface CreateEpisodeRequest {
+	paymentAddress: string
+	sellerFee: number
+	title: string
+	tokenId: string
+	media?: FilePondFile[] | null
+	cover?: FilePondFile[] | null
+	description: string
+	explicit: boolean
 }

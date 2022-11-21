@@ -33,14 +33,14 @@ const code = route.params.codeId
 const validationSchema = toFormValidator(
 	z.object({
 		image: z.array(z.any()).length(1),
-		title: z.string().min(1, "Name is a required field"),
+		title: z.string().min(1, "Title is a required field"),
 		description: z.string().min(1, "Description is a required field"),
 		link: z.string().min(1, "Link is a required field"),
-		language: z.string().min(1, "Description is a required field"),
+		language: z.string().min(1, "Language is a required field"),
 		symbol: z.string().min(1, "Symbol is a required field"),
 		itunesCategory: z.string().min(1, "Category is a required field"),
-		itunesAuthor: z.string().min(1, "Category is a required field"),
-		itunesChannelType: z.string().min(1, "Category is a required field"),
+		itunesAuthor: z.string().min(1, "Author is a required field"),
+		itunesChannelType: z.string().min(1, "Type is a required field"),
 		itunesExplicit: z.boolean(),
 	})
 )
@@ -111,7 +111,7 @@ const onSubmit = handleSubmit(() => {
 				</div>
 
 				<div class="col-span-12">
-					<p class="text-weight-medium text-uppercase q-mb-8">Podcast name</p>
+					<p class="text-weight-medium text-uppercase q-mb-8">Podcast title</p>
 
 					<p class="opacity-50 q-mb-12">
 						Choose the titles for your podcasts.<br />

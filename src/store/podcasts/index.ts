@@ -54,6 +54,7 @@ const usePodcasts = defineStore("podcasts", {
 
 				if (payload.media && authStore.bitsongAddress) {
 					const [media] = payload.media
+					console.log(media)
 					const mediaCID = await ipfsClient.upload(media.file as File)
 
 					let coverCID: string | undefined = undefined
@@ -63,42 +64,48 @@ const usePodcasts = defineStore("podcasts", {
 						coverCID = await ipfsClient.upload(cover.file as File)
 					}
 
-					const metadata = {
-						image: `ipfs://${coverCID ? coverCID : mediaCID}`,
-						name: payload.name,
-						description: payload.description,
-						animation_url: coverCID ? `ipfs://${mediaCID}` : undefined,
-					}
-
-					// Check if metadata schema is valid
-					// NOTO: Add podcast episode schema types and validation inside bitsongjs
-					/* NFTMetadataSchema.parse(metadata) */
-
-					const metadataFile = new File(
-						[JSON.stringify(metadata)],
-						`${payload.name}_metadata`,
-						{
-							type: "application/json",
-						}
-					)
-
-					const metadataCID = await ipfsClient.upload(metadataFile)
-
 					const onComplete = () => {
 						router.replace(
 							`/podcasts/${collectionAddress}/episode/${payload.tokenId}`
 						)
 					}
 
+					const extension: PodcastEpisodeExtension = {
+						guid: payload.tokenId,
+						title: payload.title,
+						description: payload.description,
+						itunes: {
+							image: `ipfs://${coverCID}`,
+							explicit: payload.explicit,
+						},
+						enclosure: {
+							url: `ipfs://${mediaCID}`,
+							media_type: media.fileType,
+							length: media.fileSize,
+						},
+						pub_date: Date.now(),
+					}
+
+					console.log(
+						JSON.stringify({
+							owner: authStore.bitsongAddress,
+							token_id: payload.tokenId,
+							/* payment_address: payload.paymentAddress, */
+							token_uri: "",
+							extension,
+						})
+					)
+
 					transactionManagerStore.executeContract(
 						collectionAddress,
 						{
 							mint: {
 								owner: authStore.bitsongAddress,
-								payment_address: payload.paymentAddress,
-								seller_fee: payload.sellerFee,
 								token_id: payload.tokenId,
-								token_uri: `ipfs://${metadataCID}`,
+								/* payment_address: payload.paymentAddress, */
+								/* seller_fee: payload.sellerFee, */
+								token_uri: "",
+								extension,
 							},
 						},
 						[],

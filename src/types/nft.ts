@@ -46,16 +46,3 @@ export interface NftTokenInfo extends NftInfoResponse {
 }
 
 export type NFTMediaType = "audio" | "video" | "image"
-
-/*
- * Podcasts
- */
-export interface CreateEpisodeRequest {
-	paymentAddress: string
-	sellerFee: number
-	name: string
-	tokenId: string
-	media?: FilePondFile[] | null
-	cover?: FilePondFile[] | null
-	description: string
-}
