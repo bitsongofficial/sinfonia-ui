@@ -240,7 +240,7 @@ export const menuItems: MenuItem[] = [
 		disabled: disabledRoutes,
 	},
 	{
-		icon: { name: "3d-cube", width: 19, height: 19 },
+		icon: { name: "box", width: 24, height: 24 },
 		label: "Collections",
 		path: "/nfts",
 		disabled: disabledRoutes,
@@ -249,7 +249,7 @@ export const menuItems: MenuItem[] = [
 
 if (!disabledPodcasts) {
 	menuItems.push({
-		icon: { name: "trophy", width: 22, height: 18 },
+		icon: { name: "headphones", width: 24, height: 24 },
 		label: "Podcasts",
 		path: "/podcasts",
 		disabled: disabledRoutes,

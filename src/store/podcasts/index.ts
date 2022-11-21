@@ -1,9 +1,9 @@
 import { ipfsClient, sinfoniaClient } from "@/services"
 import {
 	ContractWithDetails,
-	BS721InitMsg,
 	CreatePodcastRequest,
-	BitsongCollection,
+	Podcast,
+	PodcastInitMsg,
 	NftTokenInfo,
 	BitsongNFT,
 	CreateEpisodeRequest,
@@ -17,12 +17,7 @@ import {
 	notifyLoading,
 	validateIPFSURI,
 } from "@/common"
-import {
-	CollectionMetadata,
-	CollectionMetadataSchema,
-	NFTMetadata,
-	NFTMetadataSchema,
-} from "@bitsongjs/nft"
+import { NFTMetadata, NFTMetadataSchema } from "@bitsongjs/nft"
 import { ContractCodeHistoryOperationType } from "cosmjs-types/cosmwasm/wasm/v1/types"
 import { getIPFSFile } from "@/services/ipfs"
 import useTransactionManager from "@/store/transaction-manager"
@@ -36,8 +31,7 @@ export interface PodcastsState {
 	loadingEpisodesMetadata: boolean
 	creatingPodcast: boolean
 	creatingEpisode: boolean
-	podcasts: ContractWithDetails<BS721InitMsg>[]
-	podcastsMetadata: Record<string, CollectionMetadata>
+	podcasts: ContractWithDetails<PodcastInitMsg>[]
 	episodes: NftTokenInfo[]
 	episodesMetdata: Record<string, NFTMetadata>
 }
@@ -50,7 +44,6 @@ const usePodcasts = defineStore("podcasts", {
 		creatingPodcast: false,
 		creatingEpisode: false,
 		podcasts: [],
-		podcastsMetadata: {},
 		episodes: [],
 		episodesMetdata: {},
 	}),
@@ -148,27 +141,6 @@ const usePodcasts = defineStore("podcasts", {
 					const [image] = payload.image
 					const imageCID = await ipfsClient.upload(image.file as File)
 
-					const metadata = {
-						image: `ipfs://${imageCID}`,
-						description: payload.description,
-						type: "podcast",
-						category: payload.category,
-						language: payload.language,
-					}
-
-					// NOTO: Add podcast schema types and validation inside bitsongjs
-					/* CollectionMetadataSchema.parse(metadata) */
-
-					const metadataFile = new File(
-						[JSON.stringify(metadata)],
-						`${payload.name}_metadata`,
-						{
-							type: "application/json",
-						}
-					)
-
-					const metadataCID = await ipfsClient.upload(metadataFile)
-
 					const onComplete = (tx: DeliverTxResponse) => {
 						const parsedLogs = logs.parseRawLog(tx.rawLog)
 						const contractAddressAttr = logs.findAttribute(
@@ -180,14 +152,23 @@ const usePodcasts = defineStore("podcasts", {
 						router.replace(`/podcasts/${contractAddressAttr.value}/details`)
 					}
 
-					transactionManagerStore.instantiateContract<BS721InitMsg>(
+					transactionManagerStore.instantiateContract<PodcastInitMsg>(
 						codeId,
-						payload.name,
+						payload.title,
 						{
+							title: payload.title,
+							description: payload.description,
+							language: payload.language,
+							link: payload.link,
 							minter: authStore.bitsongAddress,
-							name: payload.name,
 							symbol: payload.symbol,
-							uri: `ipfs://${metadataCID}`,
+							itunes: {
+								author: payload.itunesAuthor,
+								channel_type: payload.itunesChannel_type,
+								category: payload.itunesCategory,
+								explicit: payload.itunesExplicit,
+								image: `ipfs://${imageCID}`,
+							},
 						},
 						true,
 						onComplete
@@ -256,55 +237,15 @@ const usePodcasts = defineStore("podcasts", {
 				this.loadingEpisodes = false
 			}
 		},
-		async loadPodcastsMetadata() {
-			try {
-				this.loading = true
-
-				const requests = compact(
-					this.sinfoniaPodcasts.map((collection) => {
-						if (collection.init) {
-							const uri = validateIPFSURI(collection.init.uri)
-
-							if (uri) {
-								return getIPFSFile<CollectionMetadata>(uri)
-							}
-						}
-					})
-				)
-
-				const metadataResponses = await Promise.all(requests)
-
-				const podcastsMetadata = Object.assign({}, this.podcastsMetadata)
-
-				for (const metadataResponse of metadataResponses) {
-					const metadata: CollectionMetadata = {
-						...metadataResponse.result,
-						cover: fromIPFSURIToHttps(metadataResponse.result.cover),
-						image: fromIPFSURIToHttps(metadataResponse.result.image),
-					}
-
-					podcastsMetadata[metadataResponse.CID] = metadata
-				}
-
-				this.podcastsMetadata = podcastsMetadata
-			} catch (error) {
-				console.error(error)
-				throw error
-			} finally {
-				this.loading = false
-			}
-		},
 		async loadPodcast(address: string) {
 			try {
 				this.loading = true
 
 				const results = [
-					await sinfoniaClient.contractWithDetails<BS721InitMsg>(address),
+					await sinfoniaClient.contractWithDetails<PodcastInitMsg>(address),
 				]
 
 				this.podcasts = compact(results)
-
-				await this.loadPodcastsMetadata()
 			} catch (error) {
 				console.error(error)
 				throw error
@@ -317,10 +258,8 @@ const usePodcasts = defineStore("podcasts", {
 				this.loading = true
 
 				this.podcasts = compact(
-					await sinfoniaClient.contractsWithDetails<BS721InitMsg>(codeId)
+					await sinfoniaClient.contractsWithDetails<PodcastInitMsg>(codeId)
 				)
-
-				await this.loadPodcastsMetadata()
 			} catch (error) {
 				console.error(error)
 				throw error
@@ -354,7 +293,7 @@ const usePodcasts = defineStore("podcasts", {
 			return (tokenId: string) =>
 				this.sinfoniaEpisodes.find((episode) => episode.token_id === tokenId)
 		},
-		sinfoniaPodcasts: ({ podcasts, podcastsMetadata }): BitsongCollection[] => {
+		sinfoniaPodcasts: ({ podcasts }): Podcast[] => {
 			return podcasts
 				.map((podcast) => {
 					const initEntry = podcast.history?.result.find(
@@ -363,14 +302,10 @@ const usePodcasts = defineStore("podcasts", {
 							ContractCodeHistoryOperationType.CONTRACT_CODE_HISTORY_OPERATION_TYPE_INIT
 					)
 
-					let metadata: CollectionMetadata | undefined = undefined
-
 					if (initEntry) {
-						const uri = validateIPFSURI(initEntry.msg.uri)
-
-						if (uri) {
-							metadata = podcastsMetadata[uri]
-						}
+						initEntry.msg.itunes.image = fromIPFSURIToHttps(
+							initEntry.msg.itunes.image
+						)
 					}
 
 					return {
@@ -380,12 +315,11 @@ const usePodcasts = defineStore("podcasts", {
 						admin: podcast.admin,
 						label: podcast.label,
 						init: initEntry?.msg,
-						metadata,
 					}
 				})
 				.reverse()
 		},
-		myPodcasts(): BitsongCollection[] {
+		myPodcasts(): Podcast[] {
 			const authStore = useAuth()
 
 			if (authStore.bitsongAddress) {
@@ -396,7 +330,7 @@ const usePodcasts = defineStore("podcasts", {
 
 			return []
 		},
-		podcast(): (address: string) => BitsongCollection | undefined {
+		podcast(): (address: string) => Podcast | undefined {
 			return (address: string) =>
 				this.sinfoniaPodcasts.find((podcast) => podcast.address === address)
 		},

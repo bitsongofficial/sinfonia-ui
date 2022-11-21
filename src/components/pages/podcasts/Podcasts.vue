@@ -15,15 +15,7 @@ const collectionsType = ref("all")
 
 const code = route.params.codeId
 	? parseInt(route.params.codeId as string, 10)
-	: parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
-
-const podcasts = computed(() =>
-	podcastsStore.sinfoniaPodcasts.filter((podcast) => {
-		// TODO: replace with correct type from bitsongjs
-		// @ts-ignore
-		return podcast.metadata.type === "podcast"
-	})
-)
+	: parseInt(import.meta.env.VITE_PODCAST_BS721_CODE_ID, 10)
 
 onMounted(() => {
 	podcastsStore.loadPodcasts(code)
@@ -61,7 +53,7 @@ const tabs = [
 			class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24 q-mb-42"
 		>
 			<RouterLink
-				v-for="podcast of podcasts"
+				v-for="podcast of podcastsStore.sinfoniaPodcasts"
 				:to="`/podcasts/${podcast.address}/details`"
 				class="block full-height"
 			>
