@@ -152,6 +152,24 @@ const usePodcasts = defineStore("podcasts", {
 						router.replace(`/podcasts/${contractAddressAttr.value}/details`)
 					}
 
+					console.log(
+						JSON.stringify({
+							title: payload.title,
+							description: payload.description,
+							language: payload.language,
+							link: payload.link,
+							minter: authStore.bitsongAddress,
+							symbol: payload.symbol,
+							itunes: {
+								author: payload.itunesAuthor,
+								channel_type: payload.itunesChannelType,
+								category: payload.itunesCategory.split("|"),
+								explicit: payload.itunesExplicit,
+								image: `ipfs://${imageCID}`,
+							},
+						})
+					)
+
 					transactionManagerStore.instantiateContract<PodcastInitMsg>(
 						codeId,
 						payload.title,
@@ -164,8 +182,8 @@ const usePodcasts = defineStore("podcasts", {
 							symbol: payload.symbol,
 							itunes: {
 								author: payload.itunesAuthor,
-								channel_type: payload.itunesChannel_type,
-								category: payload.itunesCategory,
+								channel_type: payload.itunesChannelType,
+								category: payload.itunesCategory.split("|"),
 								explicit: payload.itunesExplicit,
 								image: `ipfs://${imageCID}`,
 							},

@@ -28,7 +28,7 @@ const podcastWatcher = watch(
 	() => podcast.value,
 	(collection) => {
 		if (collection && collection.init) {
-			settingsStore.breadcrumbPageTitle = collection.init.name
+			settingsStore.breadcrumbPageTitle = collection.init.title
 		}
 	},
 	{ immediate: true }
@@ -55,20 +55,20 @@ const { onCopy } = useClipboard()
 
 const metadata = computed(() => ({
 	title: `Podcast`,
-	description: podcast.value?.metadata?.description,
+	description: podcast.value?.init?.description,
 	og: {
 		type: "website",
 		url: import.meta.env.VITE_BASE_URL,
-		title: `${podcast.value?.init?.name} | NFT`,
-		description: podcast.value?.metadata?.description,
-		image: podcast.value?.metadata?.image,
+		title: `${podcast.value?.init?.title} | Podcast`,
+		description: podcast.value?.init?.description,
+		image: podcast.value?.init?.itunes.image,
 	},
 	twitter: {
 		card: "summary_large_image",
 		url: import.meta.env.VITE_BASE_URL,
-		title: `${podcast.value?.init?.name} | NFT`,
-		description: podcast.value?.metadata?.description,
-		image: podcast.value?.metadata?.image,
+		title: `${podcast.value?.init?.title} | Podcast`,
+		description: podcast.value?.init?.description,
+		image: podcast.value?.init?.itunes.image,
 	},
 }))
 
@@ -80,12 +80,12 @@ useMetadata(metadata)
 		<div v-if="!podcastsStore.loading && podcast">
 			<div class="grid grid-cols-12 grid-row-gap-32 grid-gap-md-32 q-mb-42">
 				<div class="col-span-12 col-span-md-3">
-					<q-img class="rounded-10 shadow-20" :src="podcast?.metadata?.image" />
+					<q-img class="rounded-10 shadow-20" :src="podcast?.init?.itunes.image" />
 				</div>
 				<div class="col-span-12 col-span-md-9 flex column justify-end">
 					<p class="fs-16 opacity-50 q-mb-16">Podcast</p>
 					<Title class="text-weight-bold q-mb-24 fs-40 fs-md-90">{{
-						podcast?.init?.name
+						podcast?.init?.title
 					}}</Title>
 					<p
 						class="fs-24 !leading-38 text-weight-medium cursor-pointer"
@@ -100,7 +100,7 @@ useMetadata(metadata)
 				<div class="col-span-12 col-span-md-4 col-start-md-9">
 					<Title class="text-weight-bold q-mb-16">About</Title>
 					<p class="opacity-50 !leading-24 white-space-pre-line">
-						{{ podcast.metadata?.description }}
+						{{ podcast.init?.description }}
 					</p>
 				</div>
 				<div class="col-span-12 col-span-md-8 row-start-md-1">

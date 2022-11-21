@@ -1,5 +1,10 @@
 import { Option } from "@/types"
 
+export const podcastChannelTypes: Option[] = [
+	{ label: "Episodic", value: "episodic" },
+	{ label: "Serial", value: "serial" },
+]
+
 export const podcastCategories: Option[] = [
 	{
 		label: "Arts",

@@ -5,7 +5,7 @@ export interface PodcastITunes {
 	author: string
 	channel_type: string
 	explicit: boolean
-	category: string
+	category: string[]
 	image: string
 }
 
@@ -21,10 +21,11 @@ export interface Podcast extends CosmWasmContractInfo {
 	init?: PodcastInitMsg
 }
 
-export interface CreatePodcastRequest extends Omit<PodcastInitMsg, "itunes"> {
+export interface CreatePodcastRequest
+	extends Omit<PodcastInitMsg, "itunes" | "minter"> {
 	image?: FilePondFile[] | null
 	itunesAuthor: string
-	itunesChannel_type: string
+	itunesChannelType: string
 	itunesExplicit: boolean
 	itunesCategory: string
 }
