@@ -5,21 +5,14 @@ import {
 	Podcast,
 	PodcastInitMsg,
 	NftTokenInfo,
-	BitsongNFT,
+	PodcastEpisode,
 	CreateEpisodeRequest,
+	PodcastEpisodeExtension,
 } from "@/types"
 import { compact } from "lodash"
 import { acceptHMRUpdate, defineStore } from "pinia"
-import {
-	convertListToMap,
-	fromIPFSURIToHttps,
-	notifyError,
-	notifyLoading,
-	validateIPFSURI,
-} from "@/common"
-import { NFTMetadata, NFTMetadataSchema } from "@bitsongjs/nft"
+import { fromIPFSURIToHttps, notifyError, notifyLoading } from "@/common"
 import { ContractCodeHistoryOperationType } from "cosmjs-types/cosmwasm/wasm/v1/types"
-import { getIPFSFile } from "@/services/ipfs"
 import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 import { router } from "@/configs/routes"
@@ -28,24 +21,20 @@ import { DeliverTxResponse, logs } from "@cosmjs/stargate"
 export interface PodcastsState {
 	loading: boolean
 	loadingEpisodes: boolean
-	loadingEpisodesMetadata: boolean
 	creatingPodcast: boolean
 	creatingEpisode: boolean
 	podcasts: ContractWithDetails<PodcastInitMsg>[]
 	episodes: NftTokenInfo[]
-	episodesMetdata: Record<string, NFTMetadata>
 }
 
 const usePodcasts = defineStore("podcasts", {
 	state: (): PodcastsState => ({
 		loading: false,
 		loadingEpisodes: false,
-		loadingEpisodesMetadata: false,
 		creatingPodcast: false,
 		creatingEpisode: false,
 		podcasts: [],
 		episodes: [],
-		episodesMetdata: {},
 	}),
 	actions: {
 		async createEpisode(
@@ -201,53 +190,11 @@ const usePodcasts = defineStore("podcasts", {
 				loadingNotification()
 			}
 		},
-		async loadEpisodesMetadata() {
-			try {
-				this.loadingEpisodesMetadata = true
-
-				const requests = compact(
-					this.episodes.map((nft) => {
-						if (nft.token_uri) {
-							const uri = validateIPFSURI(nft.token_uri)
-
-							if (uri) {
-								return getIPFSFile<NFTMetadata>(uri)
-							}
-						}
-					})
-				)
-
-				const metadataResponses = await Promise.all(requests)
-
-				const episodesMetdata = Object.assign({}, this.episodesMetdata)
-
-				for (const metadataResponse of metadataResponses) {
-					const metadata: NFTMetadata = {
-						...metadataResponse.result,
-						image: fromIPFSURIToHttps(metadataResponse.result.image),
-						animation_url: metadataResponse.result.animation_url
-							? fromIPFSURIToHttps(metadataResponse.result.animation_url)
-							: undefined,
-					}
-
-					episodesMetdata[metadataResponse.CID] = metadata
-				}
-
-				this.episodesMetdata = episodesMetdata
-			} catch (error) {
-				console.error(error)
-				throw error
-			} finally {
-				this.loadingEpisodesMetadata = false
-			}
-		},
 		async loadEpisodes(address: string) {
 			try {
 				this.loadingEpisodes = true
 
 				this.episodes = compact(await sinfoniaClient.nfts(address))
-
-				await this.loadEpisodesMetadata()
 			} catch (error) {
 				console.error(error)
 				throw error
@@ -287,27 +234,30 @@ const usePodcasts = defineStore("podcasts", {
 		},
 	},
 	getters: {
-		sinfoniaEpisodes: ({ episodes, episodesMetdata }): BitsongNFT[] => {
-			return episodes
+		sinfoniaEpisodes: ({ episodes }): PodcastEpisode[] => {
+			const tempEpisodes = episodes
 				.map((nft) => {
-					let metadata: NFTMetadata | undefined = undefined
+					if (nft.extension) {
+						const tempExtension = nft.extension as unknown
+						const extension = tempExtension as PodcastEpisodeExtension
 
-					if (nft.token_uri) {
-						const uri = validateIPFSURI(nft.token_uri)
+						if (extension) {
+							extension.itunes.image = fromIPFSURIToHttps(extension.itunes.image)
 
-						if (uri) {
-							metadata = episodesMetdata[uri]
+							extension.enclosure.url = fromIPFSURIToHttps(extension.enclosure.url)
 						}
-					}
 
-					return {
-						...nft,
-						metadata,
+						return {
+							...nft,
+							extension,
+						}
 					}
 				})
 				.reverse()
+
+			return compact(tempEpisodes)
 		},
-		episode(): (tokenId: string) => BitsongNFT | undefined {
+		episode(): (tokenId: string) => PodcastEpisode | undefined {
 			return (tokenId: string) =>
 				this.sinfoniaEpisodes.find((episode) => episode.token_id === tokenId)
 		},

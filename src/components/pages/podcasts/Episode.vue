@@ -38,7 +38,7 @@ const {
 } = useSinfoniaMediaPlayer()
 
 const playTrack = () => {
-	if (episode.value && episode.value.metadata?.animation_url) {
+	if (episode.value && episode.value.extension) {
 		play(episode.value)
 	}
 }
@@ -65,17 +65,17 @@ onMounted(() => {
 const episodeWatcher = watch(
 	() => episode.value,
 	(currentEpisode) => {
-		if (currentEpisode && currentEpisode.metadata) {
-			settingsStore.breadcrumbPageTitle = currentEpisode.metadata.name
+		if (currentEpisode && currentEpisode.extension) {
+			settingsStore.breadcrumbPageTitle = currentEpisode.extension.title
 			settingsStore.breadcrumbPrepend = [
 				{
-					label: podcast.value?.init?.name ?? "",
+					label: podcast.value?.init?.title ?? "",
 					to: `/podcasts/${podcast.value?.address}/details`,
 				},
 			]
 
-			if (currentEpisode.metadata.animation_url) {
-				addTrack(currentEpisode.metadata.animation_url)
+			if (currentEpisode.extension) {
+				addTrack(currentEpisode.extension.enclosure.url)
 			}
 		}
 	},
@@ -88,21 +88,21 @@ onUnmounted(() => {
 })
 
 const metadata = computed(() => ({
-	title: `${episode.value?.metadata?.name} | ${podcast.value?.init?.name}`,
-	description: episode.value?.metadata?.description,
+	title: `${episode.value?.extension.title} | ${podcast.value?.init?.title}`,
+	description: episode.value?.extension.description,
 	og: {
 		type: "website",
 		url: import.meta.env.VITE_BASE_URL,
-		title: `${episode.value?.metadata?.name} | ${podcast.value?.init?.name}`,
-		description: episode.value?.metadata?.description,
-		image: episode.value?.metadata?.image,
+		title: `${episode.value?.extension.title} | ${podcast.value?.init?.title}`,
+		description: episode.value?.extension.description,
+		image: episode.value?.extension.itunes.image,
 	},
 	twitter: {
 		card: "summary_large_image",
 		url: import.meta.env.VITE_BASE_URL,
-		title: `${episode.value?.metadata?.name} | ${podcast.value?.init?.name}`,
-		description: episode.value?.metadata?.description,
-		image: episode.value?.metadata?.image,
+		title: `${episode.value?.extension.title} | ${podcast.value?.init?.title}`,
+		description: episode.value?.extension.description,
+		image: episode.value?.extension.itunes.image,
 	},
 }))
 
@@ -114,17 +114,20 @@ useMetadata(metadata)
 		<div v-if="!podcastsStore.loadingEpisodes && episode">
 			<div class="grid grid-cols-12 grid-row-gap-32 grid-gap-md-32 q-mb-42">
 				<div class="col-span-12 col-span-md-3">
-					<q-img class="rounded-10 shadow-20" :src="episode.metadata?.image" />
+					<q-img
+						class="rounded-10 shadow-20"
+						:src="episode.extension.itunes.image"
+					/>
 				</div>
 				<div class="col-span-12 col-span-md-9 flex column justify-end">
 					<p class="fs-16 opacity-50 q-mb-16">Podcast Episode</p>
 					<Title class="text-weight-bold q-mb-24 !fs-28 !fs-md-32">
-						{{ episode.metadata?.name }}
+						{{ episode.extension.title }}
 					</Title>
 
 					<RouterLink :to="`/podcasts/${podcast?.address}/details`">
 						<p class="fs-24 !leading-38 text-weight-medium">
-							{{ podcast?.init?.name }}
+							{{ podcast?.init?.title }}
 						</p>
 					</RouterLink>
 				</div>
@@ -173,7 +176,7 @@ useMetadata(metadata)
 					<Title class="text-weight-bold q-mb-16">Description</Title>
 
 					<p class="opacity-50 !leading-24 q-mb-48">
-						{{ episode.metadata?.description }}
+						{{ episode.extension.description }}
 					</p>
 
 					<StandardButton :to="`/podcasts/${podcast?.address}/details`">

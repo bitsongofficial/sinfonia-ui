@@ -1,7 +1,7 @@
 import { Howl, Howler } from "howler"
 import { computed, reactive, ref, watch } from "vue"
 import { formatDurationLocale } from "@/common"
-import { BitsongNFT } from "@/types"
+import { PodcastEpisode } from "@/types"
 
 const format = ["mp3", "wav", "mp4", "webm", "mpeg"]
 
@@ -9,7 +9,7 @@ const sinfoniaPlayer = ref<Howl>()
 const sinfoniaCurrentTrack = ref("")
 const sinfoniaCurrentTokenID = ref("")
 
-const sinfoniaPlaylist = ref<BitsongNFT[]>([])
+const sinfoniaPlaylist = ref<PodcastEpisode[]>([])
 const currentTrackIndex = ref(0)
 
 const isPlaying = ref(false)
@@ -20,7 +20,7 @@ const sinfoniaLabelAudioDuration = ref("")
 const sinfoniaAudioDuration = ref(0)
 const currentVolume = ref(1)
 
-const sinfoniaCurrentTrackNFT = computed<BitsongNFT>(
+const sinfoniaCurrentTrackNFT = computed<PodcastEpisode>(
 	() => sinfoniaPlaylist.value[currentTrackIndex.value]
 )
 
@@ -30,16 +30,16 @@ const canGoNext = computed(
 
 const canGoPrev = computed(() => currentTrackIndex.value > 0)
 
-const addTrackToPlaylist = (track: BitsongNFT) => {
+const addTrackToPlaylist = (track: PodcastEpisode) => {
 	sinfoniaPlaylist.value.push(track)
 }
 
 const setupAudioPlayer = () => {
 	const nft = sinfoniaPlaylist.value[currentTrackIndex.value]
 
-	if (nft.metadata?.animation_url) {
+	if (nft.extension) {
 		clearAnimations()
-		const src = nft.metadata.animation_url
+		const src = nft.extension.enclosure.url
 		sinfoniaCurrentTrack.value = src
 		sinfoniaCurrentTokenID.value = nft.token_id
 		progress.value = 0
@@ -94,7 +94,7 @@ const setupAudioPlayer = () => {
 	}
 }
 
-const play = (src: BitsongNFT) => {
+const play = (src: PodcastEpisode) => {
 	Howler.stop()
 	currentTrackIndex.value = 0
 	addTrackToPlaylist(src)
