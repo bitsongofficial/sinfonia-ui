@@ -10,12 +10,12 @@ defineProps<{
 	<div class="row justify-between q-px-20 q-pb-20">
 		<div class="column w-full">
 			<div class="row items-center justify-between relative-position">
-				<div class="row items-center">
+				<div class="row items-center no-wrap">
 					<q-avatar class="-q-mt-10">
 						<img class="border-white-2" :src="collection.metadata?.image" />
 					</q-avatar>
 					<p
-						class="fs-21 !leading-24 text-weight-medium text-capitalize q-ml-24 q-mt-12"
+						class="fs-21 !leading-24 text-weight-medium text-capitalize q-ml-24 q-mt-12 text-container-1"
 						v-if="collection.init"
 					>
 						{{ collection.init.name }}

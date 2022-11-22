@@ -66,7 +66,7 @@ const tabs = [
 			<template v-if="myCollections.length > 0">
 				<div
 					v-if="!NFTStore.loading"
-					class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-42"
+					class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-gap-30 q-mb-42"
 				>
 					<RouterLink
 						v-for="(collection, index) in myCollections"
