@@ -83,7 +83,7 @@ const usePodcasts = defineStore("podcasts", {
 							media_type: media.fileType,
 							length: media.fileSize,
 						},
-						pub_date: Date.now(),
+						pub_date: Date.now().toString(),
 					}
 
 					console.log(

@@ -9,7 +9,7 @@ export interface BaseITunes {
 
 export interface PodcastITunes extends BaseITunes {
 	author: string
-	channel_type: String
+	channel_type: string
 	category: string[]
 }
 
@@ -38,21 +38,6 @@ export interface CreatePodcastRequest
  * Podcast Episode Definitions
  */
 
-/*  {
-	"guid": "",
-	"title": "episode title",
-	"description": "episode description",
-	"itunes": {
-			"image": "ipfs://...",
-			"explicit": false
-	},
-	"enclosure": {
-			"url": "ipfs://...",
-			"media_type": "audio/mpeg",
-			"length": 200000
-	},
-	"pub_date": "1668794407"
-} */
 export interface PodcastEpisodeEnclosure {
 	url: string
 	media_type: string
@@ -65,7 +50,7 @@ export interface PodcastEpisodeExtension {
 	description: string
 	itunes: BaseITunes
 	enclosure: PodcastEpisodeEnclosure
-	pub_date: number
+	pub_date: string
 }
 
 export interface PodcastEpisode extends Omit<NftTokenInfo, "extension"> {
