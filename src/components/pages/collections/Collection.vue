@@ -80,7 +80,7 @@ useMetadata(metadata)
 		<div class="w-full position-relative q-mb-60">
 			<q-img
 				class="w-full rounded-20"
-				:src="collection.metadata?.cover"
+				:src="`https://pimg.sinfonia.zone/1345x300/${collection.metadata?.cover}`"
 				ratio="16/9"
 				alt="Cover"
 				title="Cover"
@@ -90,7 +90,7 @@ useMetadata(metadata)
 
 			<img
 				class="absolute-bottom !left-24 !-bottom-24 border-white-2 w-126 h-126 rounded-full object-cover z-1"
-				:src="collection.metadata?.image"
+				:src="`https://pimg.sinfonia.zone/125x125/${collection.metadata?.image}`"
 			/>
 		</div>
 		<div class="q-mb-40 grid grid-cols-12 gap-24">

@@ -12,7 +12,10 @@ defineProps<{
 			<div class="row items-center justify-between relative-position">
 				<div class="row items-center">
 					<q-avatar class="-q-mt-10">
-						<img class="border-white-2" :src="collection.metadata?.image" />
+						<img
+							class="border-white-2"
+							:src="`https://pimg.sinfonia.zone/48x48/${collection.metadata?.image}`"
+						/>
 					</q-avatar>
 					<p
 						class="fs-21 !leading-24 text-weight-medium text-capitalize q-ml-24 q-mt-12"

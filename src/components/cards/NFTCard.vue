@@ -17,7 +17,7 @@ defineProps<{
 		class="full-width text-white cursor-pointer transition-all hover:bg-white-10 !rounded-10 light:bg-white full-height !flex column justify-between no-wrap"
 	>
 		<q-img
-			:src="nft.metadata?.image"
+			:src="`https://pimg.sinfonia.zone/315x200/${nft.metadata?.image}`"
 			ratio="16/9"
 			width="100%"
 			height="200px"
