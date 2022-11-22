@@ -20,9 +20,9 @@ defineProps<{
 				{{ track.extension.title }}
 			</p>
 
-			<p class="fs-14 !leading-22">
+			<!-- <p class="fs-14 !leading-22">
 				{{ track.extension.itunes.author }}
-			</p>
+			</p> -->
 		</div>
 	</div>
 </template>
