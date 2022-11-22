@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { BitsongNFT } from "@/types"
+import { PodcastEpisode } from "@/types"
 
 defineProps<{
-	track: BitsongNFT
+	track: PodcastEpisode
 }>()
 </script>
 
@@ -10,19 +10,19 @@ defineProps<{
 	<div class="row items-center">
 		<q-img
 			class="rounded-10"
-			:src="track.metadata?.image"
+			:src="track.extension.itunes.image"
 			width="56px"
 			height="56px"
 		/>
 
 		<div class="column q-ml-12 h-full items-start">
 			<p class="text-white fs-14 !leading-22 text-bold">
-				{{ track.metadata?.name }}
+				{{ track.extension.title }}
 			</p>
 
-			<!-- <p class="fs-14 !leading-22">
-        {{ track.owner }}
-      </p> -->
+			<p class="fs-14 !leading-22">
+				{{ track.extension.itunes.author }}
+			</p>
 		</div>
 	</div>
 </template>

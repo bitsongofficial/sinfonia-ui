@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { BitsongCollection } from "@/types"
+import { Podcast } from "@/types"
 import Card from "@/components/cards/Card.vue"
 import { formatShortAddress } from "@/common"
 
 defineProps<{
-	podcast: BitsongCollection
+	podcast: Podcast
 }>()
 </script>
 
@@ -16,7 +16,7 @@ defineProps<{
 		class="full-width text-white cursor-pointer transition-all hover:bg-white-10 !rounded-10 light:bg-white full-height !flex column justify-between no-wrap"
 	>
 		<q-img
-			:src="podcast.metadata?.image"
+			:src="podcast.init?.itunes.image"
 			ratio="1/1"
 			width="100%"
 			height="140px"
@@ -24,7 +24,7 @@ defineProps<{
 		/>
 
 		<p class="text-white text-weight-bold !leading-26 q-mb-8">
-			{{ podcast.init?.name }}
+			{{ podcast.init?.title }}
 		</p>
 
 		<p class="opacity-50 !leading-22">

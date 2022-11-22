@@ -41,7 +41,7 @@ const podcastWatcher = watch(
 
 const validationSchema = toFormValidator(
 	z.object({
-		name: z.string().min(1, "Name is a required field"),
+		title: z.string().min(1, "Title is a required field"),
 		tokenId: z.string().min(1, "Token ID is a required field"),
 		paymentAddress: z
 			.string()
@@ -58,19 +58,21 @@ const validationSchema = toFormValidator(
 			),
 		media: z.array(z.any()).length(1),
 		cover: z.array(z.any()).length(1),
-		sellerFee: z.number().int().optional().default(0),
 		description: z.string().optional(),
+		explicit: z.boolean(),
+		sellerFee: z.number().default(0),
 	})
 )
 
 const initialValues: CreateEpisodeRequest = {
 	paymentAddress: "",
-	sellerFee: 0,
-	name: "",
+	title: "",
 	tokenId: "",
+	explicit: false,
 	media: null,
 	cover: null,
 	description: "",
+	sellerFee: 0,
 }
 
 const { handleSubmit, values, meta, setFieldValue } =
@@ -96,14 +98,6 @@ onUnmounted(() => {
 	<div>
 		<div class="grid grid-cols-12 q-mb-42">
 			<Title class="col-span-12 q-mb-16"> Set up a new episode </Title>
-			<p class="col-span-12 opacity-50">
-				Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-				ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis
-				parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,
-				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec
-				pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo,
-				rhoncus ut,
-			</p>
 		</div>
 
 		<div class="grid grid-cols-12">
@@ -114,8 +108,9 @@ onUnmounted(() => {
 					<p class="text-weight-medium text-uppercase q-mb-8">Audio Track</p>
 
 					<p class="opacity-50 q-mb-12">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-						ligula eget.
+						Import here your episode.<br />
+						Supported formats: .webm, .mp3, .wav, .ogg<br />
+						Image size: 3000x3000
 					</p>
 
 					<StandardFilePicker
@@ -123,7 +118,7 @@ onUnmounted(() => {
 						name="media"
 						placeholder="Drag & drop files here to upload, or browse."
 						alternative
-						file-types="audio/webm, audio/mpeg"
+						file-types="audio/webm, audio/mpeg, audio/wav, audio/ogg"
 					/>
 				</div>
 
@@ -131,8 +126,10 @@ onUnmounted(() => {
 					<p class="text-weight-medium text-uppercase q-mb-8">Artwork</p>
 
 					<p class="opacity-50 q-mb-12">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-						ligula eget.
+						Your episode deserves a cover, select an image that appeals to your
+						audience.<br />
+						Supported formats: .jpeg, .png and .webp<br />
+						Image size: 3000x3000
 					</p>
 
 					<StandardFilePicker
@@ -148,23 +145,19 @@ onUnmounted(() => {
 				</div>
 
 				<div class="col-span-12">
-					<p class="text-weight-medium text-uppercase q-mb-8">Episode name</p>
+					<p class="text-weight-medium text-uppercase q-mb-8">Episode title</p>
 
 					<p class="opacity-50 q-mb-12">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-						ligula eget.
+						Give a title to your episode! The name is really important, choose the
+						best one!<br />
+						(eg. “BitSong Podcast / The Beginnings”)
 					</p>
 
-					<StandardInput name="name" alternative counter maxlength="200" />
+					<StandardInput name="title" alternative counter maxlength="200" />
 				</div>
 
 				<div class="col-span-12">
 					<p class="text-weight-medium text-uppercase q-mb-8">Episode token ID</p>
-
-					<p class="opacity-50 q-mb-12">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-						ligula eget.
-					</p>
 
 					<StandardInput name="tokenId" alternative>
 						<template v-slot:append>
@@ -181,20 +174,18 @@ onUnmounted(() => {
 				<div class="col-span-12">
 					<p class="text-weight-medium text-uppercase q-mb-8">Payment address</p>
 
-					<p class="opacity-50 q-mb-12">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-						ligula eget.
-					</p>
-
 					<StandardInput name="paymentAddress" alternative />
 				</div>
 
 				<div class="col-span-12">
-					<p class="text-weight-medium text-uppercase q-mb-8">Podcast description</p>
+					<p class="text-weight-medium text-uppercase q-mb-8">Episode description</p>
 
 					<p class="opacity-50 q-mb-12">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
-						ligula eget.
+						An episode description is a short bit of text that tells listeners what to
+						expect when they play your episode. This may include the main points you
+						discuss, who your guest is, and other information relevant to the episode.
+						Think of it like the blurb you read on a TV streaming service when
+						deciding whether to watch a show.
 					</p>
 
 					<StandardInput
@@ -213,7 +204,7 @@ onUnmounted(() => {
 						:disable="
 							!authStore.session ||
 							!meta.valid ||
-							podcastsStore.creatingPodcast ||
+							podcastsStore.creatingEpisode ||
 							transactionManagerStore.loadingAndSign
 						"
 					>

@@ -2,14 +2,14 @@
 import Title from "@/components/typography/Title.vue"
 import Card from "@/components/cards/Card.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
-import { BitsongNFT, BitsongCollection } from "@/types"
+import { Podcast, PodcastEpisode } from "@/types"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import { onUnmounted, toRef, watch, ref } from "vue"
 import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
 
 const props = defineProps<{
-	episode: BitsongNFT
-	collection?: BitsongCollection
+	episode: PodcastEpisode
+	collection?: Podcast
 }>()
 
 const episodeRef = toRef(props, "episode")
@@ -28,8 +28,8 @@ const {
 const episodeWatcher = watch(
 	() => episodeRef.value,
 	(value) => {
-		if (value && value.metadata?.animation_url) {
-			addTrack(value.metadata.animation_url)
+		if (value && value.extension) {
+			addTrack(value.extension.enclosure.url)
 		}
 	},
 	{
@@ -42,7 +42,7 @@ onUnmounted(() => {
 })
 
 const playTrack = () => {
-	if (episodeRef.value && episodeRef.value.metadata?.animation_url) {
+	if (episodeRef.value && episodeRef.value.extension) {
 		play(episodeRef.value)
 	}
 }
@@ -55,7 +55,7 @@ const playTrack = () => {
 	>
 		<q-img
 			class="rounded-10 shadow-20 min-w-100"
-			:src="episode.metadata?.image"
+			:src="episode.extension.itunes.image"
 			height="100px"
 			width="100px"
 		/>
@@ -63,7 +63,7 @@ const playTrack = () => {
 		<div>
 			<div class="row justify-between items-center q-mb-16">
 				<Title class="text-weight-bold" :font-size="16">
-					{{ episode.metadata?.name }}
+					{{ episode.extension.title }}
 				</Title>
 				<IconButton
 					icon="vertical-dots"
@@ -80,7 +80,7 @@ const playTrack = () => {
 			</div>
 
 			<p class="fs-14 !leading-22 opacity-50 text-container q-mb-16">
-				{{ episode.metadata?.description }}
+				{{ episode.extension.description }}
 			</p>
 
 			<div class="row items-center">
