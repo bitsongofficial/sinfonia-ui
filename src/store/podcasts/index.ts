@@ -54,7 +54,7 @@ const usePodcasts = defineStore("podcasts", {
 
 				if (payload.media && authStore.bitsongAddress) {
 					const [media] = payload.media
-					console.log(media)
+
 					const mediaCID = await ipfsClient.upload(media.file as File)
 
 					let coverCID: string | undefined = undefined
@@ -85,16 +85,6 @@ const usePodcasts = defineStore("podcasts", {
 						},
 						pub_date: Date.now().toString(),
 					}
-
-					console.log(
-						JSON.stringify({
-							owner: authStore.bitsongAddress,
-							token_id: payload.tokenId,
-							/* payment_address: payload.paymentAddress, */
-							token_uri: "",
-							extension,
-						})
-					)
 
 					transactionManagerStore.executeContract(
 						collectionAddress,
@@ -147,24 +137,6 @@ const usePodcasts = defineStore("podcasts", {
 
 						router.replace(`/podcasts/${contractAddressAttr.value}/details`)
 					}
-
-					console.log(
-						JSON.stringify({
-							title: payload.title,
-							description: payload.description,
-							language: payload.language,
-							link: payload.link,
-							minter: authStore.bitsongAddress,
-							symbol: payload.symbol,
-							itunes: {
-								author: payload.itunesAuthor,
-								channel_type: payload.itunesChannelType,
-								category: payload.itunesCategory.split("|"),
-								explicit: payload.itunesExplicit,
-								image: `ipfs://${imageCID}`,
-							},
-						})
-					)
 
 					transactionManagerStore.instantiateContract<PodcastInitMsg>(
 						codeId,

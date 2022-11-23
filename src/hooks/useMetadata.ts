@@ -24,7 +24,7 @@ export const queryAndSetMetadata = (metadata: WebMetadata) => {
 	const titleMetadata = window.document.querySelector("title")
 
 	if (titleMetadata && metadata.title) {
-		titleMetadata.text = metadata.title
+		titleMetadata.innerHTML = metadata.title
 	}
 
 	const descriptionMetadata = window.document.querySelector(
