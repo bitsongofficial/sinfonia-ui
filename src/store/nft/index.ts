@@ -361,7 +361,6 @@ const useNFT = defineStore("nft", {
 			collectionsMetadata,
 		}): BitsongCollection[] => {
 			return collections
-				.filter((collection) => collectionsWhitelist.includes(collection.address))
 				.map((collection) => {
 					const initEntry = collection.history?.result.find(
 						(el) =>
@@ -390,6 +389,11 @@ const useNFT = defineStore("nft", {
 					}
 				})
 				.reverse()
+		},
+		whitelistCollections(): BitsongCollection[] {
+			return this.bitsongCollections.filter((collection) =>
+				collectionsWhitelist.includes(collection.address)
+			)
 		},
 		myCollections(): BitsongCollection[] {
 			const authStore = useAuth()

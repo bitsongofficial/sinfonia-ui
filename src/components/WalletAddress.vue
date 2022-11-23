@@ -9,26 +9,20 @@ import { computed } from "vue"
 
 const authStore = useAuth()
 const route = useRoute()
-const router = useRouter()
 
 const fantoken = computed(() => route.name === "Fantoken")
 
 const { onCopy } = useClipboard()
 
 const keplrInstalled = window.keplr !== undefined
-
-const goToProfile = async () => {
-	await router.push({ name: "Profile" })
-}
 </script>
 <template>
 	<div
 		v-if="authStore.session"
-		class="row items-center bg-rounded-translucent q-pl-24 q-pr-18 q-py-15 no-wrap w-fit cursor-pointer"
+		class="row items-center bg-rounded-translucent q-pl-24 q-pr-18 q-py-15 no-wrap w-fit"
 		:class="{
 			'!shadow-10 !bg-white-20': fantoken,
 		}"
-		@click="goToProfile"
 	>
 		<div class="q-mr-50">
 			<p class="text-primary-light text-uppercase text-caption fs-8 q-mb-3">
