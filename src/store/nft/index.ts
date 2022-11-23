@@ -320,8 +320,6 @@ const useNFT = defineStore("nft", {
 
 				this.collections = compact(colletions)
 
-				console.log("LOAD COLLECTIONS", this.collections)
-
 				await this.loadCollectionsMetadata()
 			} catch (error) {
 				console.error(error)
