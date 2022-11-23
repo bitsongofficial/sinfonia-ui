@@ -29,6 +29,7 @@ import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 import { router } from "@/configs/routes"
 import { DeliverTxResponse, logs } from "@cosmjs/stargate"
+import { collectionsWhitelist } from "@/configs/config"
 
 export interface NFTState {
 	loading: boolean
@@ -313,9 +314,13 @@ const useNFT = defineStore("nft", {
 			try {
 				this.loading = true
 
-				this.collections = compact(
-					await sinfoniaClient.contractsWithDetails<BS721InitMsg>(codeId)
+				const colletions = await sinfoniaClient.contractsWithDetails<BS721InitMsg>(
+					codeId
 				)
+
+				this.collections = compact(colletions)
+
+				console.log("LOAD COLLECTIONS", this.collections)
 
 				await this.loadCollectionsMetadata()
 			} catch (error) {
@@ -384,6 +389,11 @@ const useNFT = defineStore("nft", {
 					}
 				})
 				.reverse()
+		},
+		whitelistCollections(): BitsongCollection[] {
+			return this.bitsongCollections.filter((collection) =>
+				collectionsWhitelist.includes(collection.address)
+			)
 		},
 		myCollections(): BitsongCollection[] {
 			const authStore = useAuth()

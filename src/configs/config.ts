@@ -12,3 +12,8 @@ export const coinsConfig = {
 	joinPoolSlippage: 0.025,
 	exitPoolSlippage: 0.025,
 }
+
+export const collectionsWhitelist = [
+	"bitsong18a0pvw326fydfdat5tzyf4t8lhz0v6fyfaujpeg07fwqkygcxejsv0vqlr",
+	"bitsong19jq6mj84cnt9p7sagjxqf8hxtczwc8wlpuwe4sh62w45aheseueststug5",
+]

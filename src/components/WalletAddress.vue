@@ -4,7 +4,7 @@ import IconButton from "@/components/buttons/IconButton.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import useAuth from "@/store/auth"
 import useClipboard from "@/hooks/useClipboard"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { computed } from "vue"
 
 const authStore = useAuth()
@@ -41,7 +41,7 @@ const keplrInstalled = window.keplr !== undefined
 			height="20"
 			class="text-primary-light fs-16"
 			v-if="authStore.bitsongAddress"
-			@click="onCopy(authStore.bitsongAddress)"
+			@click.stop="onCopy(authStore.bitsongAddress)"
 		/>
 	</div>
 	<div v-else>

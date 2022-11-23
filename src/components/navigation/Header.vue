@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, useRoute } from "vue-router"
+import { RouterLink, useRoute, useRouter } from "vue-router"
 import { useQuasar } from "quasar"
 import { resolveIcon } from "@/common"
 import { computed, ref } from "vue"
@@ -18,6 +18,7 @@ import TransactionItem from "./TransactionItem.vue"
 
 const $q = useQuasar()
 const route = useRoute()
+const router = useRouter()
 const bankStore = useBank()
 const authStore = useAuth()
 const transactionStore = useTransactionManager()
@@ -37,6 +38,10 @@ const otherSwapTransactions = computed(() =>
 )
 
 const fantoken = computed(() => route.name === "Fantoken")
+
+const goToProfile = async () => {
+	await router.push({ name: "Profile" })
+}
 </script>
 <template>
 	<div v-if="$q.screen.gt.md" class="row justify-between items-center">
@@ -166,6 +171,14 @@ const fantoken = computed(() => route.name === "Fantoken")
 					</q-menu>
 				</div>
 				<WalletAddress></WalletAddress>
+
+				<q-avatar
+					class="q-ml-16 bg-rounded-translucent cursor-pointer"
+					@click="goToProfile"
+					v-if="authStore.session"
+				>
+					<q-icon :name="resolveIcon('profile', 15, 17)" size="16px" />
+				</q-avatar>
 			</div>
 		</div>
 	</div>
