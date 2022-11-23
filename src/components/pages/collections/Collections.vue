@@ -5,40 +5,20 @@ import LargeButton from "@/components/buttons/LargeButton.vue"
 import useNFT from "@/store/nft"
 import Spinner from "@/components/Spinner"
 import Tabs from "@/components/Tabs.vue"
-import { onMounted, ref, computed } from "vue"
+import { ref } from "vue"
 import { useRoute, RouterLink } from "vue-router"
 
 const route = useRoute()
 const NFTStore = useNFT()
-const collectionsType = ref("all")
+const collectionsType = ref("notable")
 
 const code = route.params.codeId
 	? parseInt(route.params.codeId as string, 10)
 	: parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
 
-const collections = computed(() =>
-	NFTStore.bitsongCollections.filter((collection) => {
-		// TODO: replace with correct type from bitsongjs
-		// @ts-ignore
-		return !collection.metadata.type
-	})
-)
+NFTStore.loadCollections(code)
 
-const myCollections = computed(() =>
-	NFTStore.myCollections.filter((collection) => {
-		// TODO: replace with correct type from bitsongjs
-		// @ts-ignore
-		return !collection.metadata.type
-	})
-)
-onMounted(() => {
-	NFTStore.loadCollections(code)
-})
-
-const tabs = [
-	{ name: "all", label: "All Collections" },
-	{ name: "mycollections", label: "My Collections" },
-]
+const tabs = [{ name: "notable", label: "Notable Collections" }]
 
 // TODO: Add virtual scroll
 </script>
@@ -62,29 +42,12 @@ const tabs = [
 
 		<Spinner v-if="NFTStore.loading" class="!w-50 !h-50 q-mx-auto" />
 
-		<template v-if="collectionsType === 'mycollections'">
-			<template v-if="myCollections.length > 0">
-				<div
-					v-if="!NFTStore.loading"
-					class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-gap-30 q-mb-42"
-				>
-					<RouterLink
-						v-for="(collection, index) in myCollections"
-						:key="index"
-						:to="`/nfts/${collection.address}/details`"
-						class="block full-height"
-					>
-						<CollectionCard :collection="collection" />
-					</RouterLink>
-				</div>
-			</template>
-		</template>
 		<div
-			v-else
+			v-if="collectionsType === 'notable'"
 			class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
 		>
 			<RouterLink
-				v-for="(collection, index) in collections"
+				v-for="(collection, index) in NFTStore.bitsongCollections"
 				:key="index"
 				:to="`/nfts/${collection.address}/details`"
 				class="block full-height"

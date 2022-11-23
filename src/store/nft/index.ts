@@ -29,6 +29,7 @@ import useTransactionManager from "@/store/transaction-manager"
 import useAuth from "@/store/auth"
 import { router } from "@/configs/routes"
 import { DeliverTxResponse, logs } from "@cosmjs/stargate"
+import { collectionsWhitelist } from "@/configs/config"
 
 export interface NFTState {
 	loading: boolean
@@ -356,6 +357,7 @@ const useNFT = defineStore("nft", {
 			collectionsMetadata,
 		}): BitsongCollection[] => {
 			return collections
+				.filter((collection) => collectionsWhitelist.includes(collection.address))
 				.map((collection) => {
 					const initEntry = collection.history?.result.find(
 						(el) =>
