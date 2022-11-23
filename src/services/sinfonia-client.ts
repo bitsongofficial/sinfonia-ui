@@ -91,6 +91,8 @@ export default class SinfoniaClient {
 		try {
 			const bitsongClient = this.bitsongClient
 
+			console.log(this.bitsongClient)
+
 			if (bitsongClient) {
 				const response = await bitsongClient.contracts(codeId)
 				const contracts = response.data.result ? response.data.result : []
@@ -415,6 +417,7 @@ export default class SinfoniaClient {
 			this.osmosisClient = new OsmosisClient(
 				this.assetListsConfig.osmosisToken.apiURL
 			)
+
 			this.bitsongClient = new BitsongClient(
 				this.assetListsConfig.bitsongToken.apiURL
 			)

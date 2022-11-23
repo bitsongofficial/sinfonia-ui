@@ -192,6 +192,24 @@ const routes: RouteRecordRaw[] = [
 			},
 		],
 	},
+	{
+		path: "/profile",
+		name: "ProfileWrapper",
+		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Profile",
+		},
+		children: [
+			{
+				path: ":address?",
+				name: "Profile",
+				component: () => import("@/components/pages/profile/Profile.vue"),
+				meta: {
+					breadcrumbHide: true,
+				},
+			},
+		],
+	},
 	/* {
 		path: "/airdrops",
 		name: "Airdrops",

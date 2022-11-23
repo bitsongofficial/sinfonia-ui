@@ -7,6 +7,7 @@ import Spinner from "@/components/Spinner"
 import Tabs from "@/components/Tabs.vue"
 import { ref } from "vue"
 import { useRoute, RouterLink } from "vue-router"
+import onAppReady from "@/hooks/onAppReady"
 
 const route = useRoute()
 const NFTStore = useNFT()
@@ -16,9 +17,11 @@ const code = route.params.codeId
 	? parseInt(route.params.codeId as string, 10)
 	: parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
 
-NFTStore.loadCollections(code)
-
 const tabs = [{ name: "notable", label: "Notable Collections" }]
+
+onAppReady(() => {
+	NFTStore.loadCollections(code)
+})
 
 // TODO: Add virtual scroll
 </script>
