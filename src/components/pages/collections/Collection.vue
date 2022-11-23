@@ -10,12 +10,14 @@ import NFTCard from "@/components/cards/NFTCard.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import { formatShortAddress, isValidContractAddress } from "@/common"
 import { computed, onMounted, onUnmounted, watch } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { useRoute, useRouter, RouterLink } from "vue-router"
 import { useMetadata } from "@/hooks/useMetadata"
 import useClipboard from "@/hooks/useClipboard"
+import useAuth from "@/store/auth"
 
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuth()
 const configStore = useConfig()
 const settingsStore = useSettings()
 const NFTStore = useNFT()
@@ -97,10 +99,12 @@ useMetadata(metadata)
 			<div class="col-span-12 col-span-md-7">
 				<Title :font-size="32" class="q-mb-16">{{ collection?.init?.name }}</Title>
 
-				<p class="text-dark q-mb-16">
-					<span class="opacity-40 light:opacity-100">Created by</span>
-					{{ formatShortAddress(collection.creator) }}
-				</p>
+				<RouterLink :to="`/profile/${collection.creator}`">
+					<p class="text-dark q-mb-16">
+						<span class="opacity-40 light:opacity-100">Created by</span>
+						{{ formatShortAddress(collection.creator) }}
+					</p>
+				</RouterLink>
 
 				<Title
 					v-if="collection.metadata && collection.metadata.description"
@@ -115,6 +119,7 @@ useMetadata(metadata)
 					:padding-y="14"
 					fit
 					:to="`/nfts/${address}/mint`"
+					v-if="authStore.bitsongAddress === collection.creator"
 				>
 					Mint NFT
 				</LargeButton>

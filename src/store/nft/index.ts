@@ -406,6 +406,12 @@ const useNFT = defineStore("nft", {
 
 			return []
 		},
+		collectionsByAddress(): (address: string) => BitsongCollection[] {
+			return (address: string) =>
+				this.bitsongCollections.filter(
+					(collection) => collection.creator === address
+				)
+		},
 		collection(): (address: string) => BitsongCollection | undefined {
 			return (address: string) =>
 				this.bitsongCollections.find((collection) => collection.address === address)

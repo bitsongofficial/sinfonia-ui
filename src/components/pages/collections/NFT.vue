@@ -100,10 +100,12 @@ useMetadata(metadata)
 					nft?.metadata?.name
 				}}</Title>
 
-				<p class="text-dark cursor-pointer" @click="onCopy(collection?.creator)">
-					<span class="opacity-40 light:opacity-100">Created by</span>
-					{{ formatShortAddress(collection?.creator) }}
-				</p>
+				<RouterLink :to="`/profile/${collection?.creator}`">
+					<p class="text-dark">
+						<span class="opacity-40 light:opacity-100">Created by</span>
+						{{ formatShortAddress(collection?.creator) }}
+					</p>
+				</RouterLink>
 			</div>
 			<div class="grid grid-cols-12 grid-gap-24">
 				<div class="col-span-12 q-mb-32 col-span-md-8 col-start-md-1">
