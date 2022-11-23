@@ -6,12 +6,28 @@ import { formatShortAddress, resolveIcon } from "@/common"
 import useAuth from "@/store/auth"
 import useNFT from "@/store/nft"
 import onAppReady from "@/hooks/onAppReady"
-import { RouterLink } from "vue-router"
+import { RouterLink, useRoute } from "vue-router"
+import { computed } from "vue"
 
+const route = useRoute()
 const authStore = useAuth()
 const NFTStore = useNFT()
 
 const code = parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
+
+const address = computed(() =>
+	route.params.address
+		? (route.params.address as string)
+		: authStore.bitsongAddress
+)
+
+const collections = computed(() => {
+	if (address.value) {
+		return NFTStore.collectionsByAddress(address.value)
+	}
+
+	return []
+})
 
 onAppReady(() => {
 	NFTStore.loadCollections(code)
@@ -44,22 +60,22 @@ onAppReady(() => {
 		<div class="q-mb-40 grid grid-cols-12 gap-24">
 			<div class="col-span-12 col-span-md-7">
 				<Title :font-size="32" class="q-mb-16">{{
-					formatShortAddress(authStore.bitsongAddress)
+					formatShortAddress(address)
 				}}</Title>
 			</div>
 		</div>
 
-		<Title class="q-mb-24">My Collections</Title>
+		<Title class="q-mb-24">User Collections</Title>
 
 		<Spinner v-if="NFTStore.loading" class="!w-50 !h-50 q-mx-auto" />
 
 		<template v-else>
 			<div
 				class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
-				v-if="NFTStore.myCollections.length > 0"
+				v-if="collections.length > 0"
 			>
 				<RouterLink
-					v-for="(collection, index) in NFTStore.myCollections"
+					v-for="(collection, index) in collections"
 					:key="index"
 					:to="`/nfts/${collection.address}/details`"
 					class="block full-height"
