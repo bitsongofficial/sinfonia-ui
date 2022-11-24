@@ -2,16 +2,21 @@
 import Title from "@/components/typography/Title.vue"
 import CollectionCard from "@/components/cards/CollectionCard.vue"
 import Spinner from "@/components/Spinner"
-import { formatShortAddress, resolveIcon } from "@/common"
+import Tabs from "@/components/Tabs.vue"
+import { resolveIcon } from "@/common"
 import useAuth from "@/store/auth"
 import useNFT from "@/store/nft"
 import onAppReady from "@/hooks/onAppReady"
 import { RouterLink, useRoute } from "vue-router"
-import { computed } from "vue"
+import { computed, ref } from "vue"
 
 const route = useRoute()
 const authStore = useAuth()
 const NFTStore = useNFT()
+
+const collectionsType = ref("mycollections")
+
+const tabs = [{ name: "mycollections", label: "User Collections" }]
 
 const code = parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
 
@@ -63,7 +68,9 @@ onAppReady(() => {
 			</div>
 		</div>
 
-		<Title class="q-mb-24">User Collections</Title>
+		<div class="q-mb-xs-20 q-mb-24">
+			<Tabs v-model="collectionsType" :options="tabs" border />
+		</div>
 
 		<Spinner v-if="NFTStore.loading" class="!w-50 !h-50 q-mx-auto" />
 

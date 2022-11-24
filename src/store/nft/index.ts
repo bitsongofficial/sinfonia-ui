@@ -389,9 +389,15 @@ const useNFT = defineStore("nft", {
 				.reverse()
 		},
 		whitelistCollections(): BitsongCollection[] {
-			return this.bitsongCollections.filter((collection) =>
-				collectionsWhitelist.includes(collection.address)
-			)
+			const collections = collectionsWhitelist.map((address) => {
+				const collection = this.bitsongCollections.find(
+					(el) => el.address === address
+				)
+
+				return collection
+			})
+
+			return compact(collections)
 		},
 		latestCollections(): BitsongCollection[] {
 			return this.bitsongCollections.slice(0, 15)

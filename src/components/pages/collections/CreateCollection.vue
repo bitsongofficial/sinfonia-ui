@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Title from "@/components/typography/Title.vue"
+import FillSelect from "@/components/inputs/FillSelect.vue"
 import StandardInput from "@/components/inputs/StandardInput.vue"
 import StandardFilePicker from "@/components/inputs/StandardFilePicker.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
@@ -12,7 +13,7 @@ import useAuth from "@/store/auth"
 import { useFieldArray, useForm } from "vee-validate"
 import { toFormValidator } from "@vee-validate/zod"
 import useTransactionManager from "@/store/transaction-manager"
-import { CreateCollectionRequest, CollectionLinkRequest } from "@/types"
+import { CreateCollectionRequest, CollectionLinkRequest, Option } from "@/types"
 import { z } from "zod"
 
 const route = useRoute()
@@ -24,6 +25,45 @@ const NFTStore = useNFT()
 const code = route.params.codeId
 	? parseInt(route.params.codeId as string, 10)
 	: parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
+
+const collectionsSocials: Option[] = [
+	{
+		label: "Website",
+		value: "Website",
+	},
+	{
+		label: "Twitter",
+		value: "Twitter",
+	},
+	{
+		label: "Facebook",
+		value: "Facebook",
+	},
+	{
+		label: "Telegram",
+		value: "Telegram",
+	},
+	{
+		label: "Instagram",
+		value: "Instagram",
+	},
+	{
+		label: "Medium",
+		value: "Medium",
+	},
+	{
+		label: "Youtube",
+		value: "Youtube",
+	},
+	{
+		label: "Twitch",
+		value: "Twitch",
+	},
+	{
+		label: "Linkedin",
+		value: "Linkedin",
+	},
+]
 
 const validationSchema = toFormValidator(
 	z.object({
@@ -144,11 +184,12 @@ const onSubmit = handleSubmit(() => {
 						class="col-span-12 grid grid-cols-12 grid-gap-16 items-center"
 					>
 						<div class="col-span-10 grid grid-cols-12 grid-gap-16">
-							<StandardInput
+							<FillSelect
 								class="col-span-12 col-span-md-6"
 								:name="`links[${idx}].key`"
-								placeholder="Key"
-								alternative
+								:options="collectionsSocials"
+								light
+								large
 							/>
 
 							<StandardInput
