@@ -40,7 +40,7 @@ const otherSwapTransactions = computed(() =>
 const fantoken = computed(() => route.name === "Fantoken")
 
 const goToProfile = async () => {
-	await router.push({ name: "Profile" })
+	await router.push(`/profile/${authStore.bitsongAddress}`)
 }
 </script>
 <template>

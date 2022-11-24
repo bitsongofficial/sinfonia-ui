@@ -59,9 +59,7 @@ onAppReady(() => {
 		</div>
 		<div class="q-mb-40 grid grid-cols-12 gap-24">
 			<div class="col-span-12 col-span-md-7">
-				<Title :font-size="32" class="q-mb-16">{{
-					formatShortAddress(address)
-				}}</Title>
+				<Title :font-size="28" class="q-mb-16">{{ address }}</Title>
 			</div>
 		</div>
 
