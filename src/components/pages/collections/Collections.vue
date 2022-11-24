@@ -27,15 +27,24 @@ const collectionsColumns = computed<TableColumn[]>(() => [
 		label: "Collection",
 		field: (row) => row.init.name,
 		sortable: true,
-		headerClasses: "w-2/5",
-		classes: "w-2/5",
 	},
 	{
 		name: "symbol",
 		label: "Symbol",
 		field: (row) => row.init.symbol,
-		align: "left",
-		sortable: true,
+		align: "center",
+	},
+	{
+		name: "owners",
+		label: "Owners",
+		field: (row) => "-",
+		align: "center",
+	},
+	{
+		name: "items",
+		label: "Items",
+		field: (row) => "-",
+		align: "center",
 	},
 ])
 </script>

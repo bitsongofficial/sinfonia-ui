@@ -394,7 +394,7 @@ const useNFT = defineStore("nft", {
 			)
 		},
 		latestCollections(): BitsongCollection[] {
-			return this.bitsongCollections.slice(0, 6)
+			return this.bitsongCollections.slice(0, 15)
 		},
 		myCollections(): BitsongCollection[] {
 			const authStore = useAuth()
