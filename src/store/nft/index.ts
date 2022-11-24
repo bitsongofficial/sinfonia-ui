@@ -393,6 +393,9 @@ const useNFT = defineStore("nft", {
 				collectionsWhitelist.includes(collection.address)
 			)
 		},
+		latestCollections(): BitsongCollection[] {
+			return this.bitsongCollections.slice(0, 6)
+		},
 		myCollections(): BitsongCollection[] {
 			const authStore = useAuth()
 

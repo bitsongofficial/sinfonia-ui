@@ -24,6 +24,7 @@ const authStore = useAuth()
 const transactionStore = useTransactionManager()
 
 const code = parseInt(import.meta.env.VITE_BS721_CODE_ID, 10)
+const podcastCode = parseInt(import.meta.env.VITE_PODCAST_BS721_CODE_ID, 10)
 
 const expanded = ref(false)
 
@@ -40,7 +41,7 @@ const otherSwapTransactions = computed(() =>
 const fantoken = computed(() => route.name === "Fantoken")
 
 const goToProfile = async () => {
-	await router.push({ name: "Profile" })
+	await router.push(`/profile/${authStore.bitsongAddress}`)
 }
 </script>
 <template>
@@ -76,10 +77,37 @@ const goToProfile = async () => {
 						width="12"
 						height="12"
 						class="text-white light:text-white fs-14 q-mr-32 w-36"
-						:to="`/nfts/${code}/create`"
 						color="none"
 						:solid="true"
-					/>
+					>
+						<q-menu
+							class="rounded-20 text-white"
+							anchor="bottom middle"
+							self="top middle"
+							:offset="[0, 10]"
+						>
+							<q-list style="min-width: 130px">
+								<q-item
+									clickable
+									:hoverable="false"
+									:to="`/nfts/${code}/create`"
+									active-class="text-white"
+									v-close-popup
+								>
+									<q-item-section> Collection </q-item-section>
+								</q-item>
+								<q-item
+									clickable
+									:hoverable="false"
+									:to="`/podcasts/${podcastCode}/create`"
+									v-close-popup
+									active-class="text-white"
+								>
+									<q-item-section> Podcast </q-item-section>
+								</q-item>
+							</q-list>
+						</q-menu>
+					</IconButton>
 				</div>
 				<div
 					class="notification-wrapper column items-center justify-center position-relative cursor-pointer q-mr-32"

@@ -20,7 +20,7 @@ defineProps<{
 			:src="`https://pimg.sinfonia.zone/315x140/${collection.metadata?.cover}`"
 			ratio="16/9"
 			width="100%"
-			height="140px"
+			height="160px"
 			class="rounded-top-left-10 rounded-top-right-10"
 		/>
 		<CollectionHeader :collection="collection" />

@@ -7,12 +7,14 @@ withDefaults(
 		columns: TableColumn[]
 		alternative?: boolean
 		alternativeIndex?: boolean
+		alternativeNoIndex?: boolean
 		headerBorder?: boolean
 		noBackground?: boolean
 	}>(),
 	{
 		alternative: false,
 		alternativeIndex: false,
+		alternativeNoIndex: false,
 		headerBorder: false,
 	}
 )
@@ -34,6 +36,7 @@ const pagination = {
 			'table-header-border': headerBorder,
 			alternative,
 			'alternative-index': alternativeIndex,
+			'alternative-no-index': alternativeNoIndex,
 			'table-empty': rows.length === 0,
 		}"
 		hide-bottom
