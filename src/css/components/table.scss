@@ -272,6 +272,36 @@ $row-padding-x: 30px;
             }
         }
     }
+
+    &.alternative-no-index {
+        .q-table {
+            thead {
+                tr th:nth-child(2) {
+                    padding-left: 12px;
+                }
+            }
+
+            tbody {
+                tr {
+                    td:nth-child(1) {
+                        padding-left: 12px;
+                        padding-right: 10px;
+                    }
+    
+                    &:hover {
+                        td {
+                            background-color: transparentize($white, 0.95);
+                            box-shadow: none;
+                        }
+                    }
+    
+                    td {    
+                        font-size: 15px;
+                    }
+                }
+            }
+        }
+    }
 }
 
 .hide-header {

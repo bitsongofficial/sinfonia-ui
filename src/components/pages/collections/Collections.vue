@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import Title from "@/components/typography/Title.vue"
 import CollectionCard from "@/components/cards/CollectionCard.vue"
-import LargeButton from "@/components/buttons/LargeButton.vue"
+import LightTable from "@/components/LightTable.vue"
 import useNFT from "@/store/nft"
 import Spinner from "@/components/Spinner"
-import Tabs from "@/components/Tabs.vue"
-import { ref } from "vue"
+import { computed } from "vue"
 import { useRoute, RouterLink } from "vue-router"
 import onAppReady from "@/hooks/onAppReady"
+import { TableColumn } from "@/types"
 
 const route = useRoute()
 const NFTStore = useNFT()
-const collectionsType = ref("featured")
 
 const code = route.params.codeId
 	? parseInt(route.params.codeId as string, 10)
@@ -21,7 +20,24 @@ onAppReady(() => {
 	NFTStore.loadCollections(code)
 })
 
-// TODO: Add virtual scroll
+const collectionsColumns = computed<TableColumn[]>(() => [
+	{
+		name: "name",
+		align: "left",
+		label: "Collection",
+		field: (row) => row.init.name,
+		sortable: true,
+		headerClasses: "w-2/5",
+		classes: "w-2/5",
+	},
+	{
+		name: "symbol",
+		label: "Symbol",
+		field: (row) => row.init.symbol,
+		align: "left",
+		sortable: true,
+	},
+])
 </script>
 <template>
 	<div>
@@ -51,17 +67,33 @@ onAppReady(() => {
 			<Title :font-size="24" class="q-mr-32">Latest Collections</Title>
 		</div>
 
-		<div
-			class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-gap-30 q-mb-74"
+		<LightTable
+			:rows="NFTStore.latestCollections"
+			:columns="collectionsColumns"
+			no-background
+			header-border
+			alternative-no-index
+			class="q-px-0 q-py-0 table-no-padding"
+			@row-click="
+				(_, row) => {
+					$router.push(`/nfts/${row.address}/details`)
+				}
+			"
 		>
-			<RouterLink
-				v-for="(collection, index) in NFTStore.latestCollections"
-				:key="index"
-				:to="`/nfts/${collection.address}/details`"
-				class="block full-height"
-			>
-				<CollectionCard :collection="collection" />
-			</RouterLink>
-		</div>
+			<template v-slot:body-cell-name="slotProps">
+				<q-td :props="slotProps">
+					<div class="flex no-wrap items-center">
+						<q-img
+							:src="slotProps.row?.metadata?.image"
+							class="rounded cover s-40 q-mr-22"
+							fit="cover"
+						/>
+						<p class="fs-14 text-weight-medium">
+							{{ slotProps.row.init.name }}
+						</p>
+					</div>
+				</q-td>
+			</template>
+		</LightTable>
 	</div>
 </template>
