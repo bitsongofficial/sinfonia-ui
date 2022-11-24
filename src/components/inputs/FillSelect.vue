@@ -10,9 +10,11 @@ const props = withDefaults(
 		value?: unknown
 		options?: string[] | Option[]
 		light?: boolean
+		large?: boolean
 	}>(),
 	{
 		light: false,
+		large: false,
 	}
 )
 
@@ -44,6 +46,7 @@ const updateModelValue = (e: unknown) => {
 			class="fill-select text-white text-capitalize fs-14 text-weight-medium"
 			:class="{
 				'fill-select-light': light,
+				large,
 			}"
 			popup-content-class="text-white alternative"
 			rounded
@@ -111,6 +114,11 @@ const updateModelValue = (e: unknown) => {
 	background: transparentize($color: $white, $amount: 0.9);
 }
 
+.fill-select.large:deep(.q-field__control) {
+	min-height: 52px;
+	height: 52px;
+}
+
 .fill-select.fill-select-light:deep(.q-field__control) {
 	background: transparentize($color: $white, $amount: 0.95);
 }
@@ -126,6 +134,11 @@ const updateModelValue = (e: unknown) => {
 
 .fill-select:deep(.q-field__native) {
 	min-height: 42px;
+	color: inherit;
+}
+
+.fill-select.large:deep(.q-field__native) {
+	min-height: 52px;
 	color: inherit;
 }
 
