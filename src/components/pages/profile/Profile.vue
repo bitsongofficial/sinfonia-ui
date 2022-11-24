@@ -71,7 +71,7 @@ onAppReady(() => {
 
 		<template v-else>
 			<div
-				class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-cols-lg-4 grid-gap-30 q-mb-74"
+				class="grid grid-cols-min-xs-1 grid-cols-2 grid-cols-md-3 grid-gap-30 q-mb-74"
 				v-if="collections.length > 0"
 			>
 				<RouterLink
