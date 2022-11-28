@@ -47,19 +47,69 @@ onAppReady(() => {
 				class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24 q-mb-42"
 			>
 				<RouterLink :to="`/podcasts/category/science`" class="block full-height">
-					<PodcastCategoryCard category="Science" icon="" />
+					<PodcastCategoryCard category="Science">
+						<template #image>
+							<q-img
+								src="@/assets/images/podcast-science.png"
+								ratio="1/1"
+								width="100%"
+								fit="contain"
+								height="100%"
+							/>
+						</template>
+					</PodcastCategoryCard>
 				</RouterLink>
 				<RouterLink :to="`/podcasts/category/politics`" class="block full-height">
-					<PodcastCategoryCard category="Politics" icon="" />
+					<PodcastCategoryCard category="Politics">
+						<template #image>
+							<q-img
+								src="@/assets/images/podcast-politics.png"
+								ratio="1/1"
+								width="100%"
+								fit="contain"
+								height="100%"
+							/>
+						</template>
+					</PodcastCategoryCard>
 				</RouterLink>
-				<RouterLink :to="`/podcasts/category/politics`" class="block full-height">
-					<PodcastCategoryCard category="Sports" icon="" />
+				<RouterLink :to="`/podcasts/category/sports`" class="block full-height">
+					<PodcastCategoryCard category="Sports">
+						<template #image>
+							<q-img
+								src="@/assets/images/podcast-sports.png"
+								ratio="1/1"
+								width="100%"
+								fit="contain"
+								height="100%"
+							/>
+						</template>
+					</PodcastCategoryCard>
 				</RouterLink>
 				<RouterLink :to="`/podcasts/category/true-crime`" class="block full-height">
-					<PodcastCategoryCard category="True crime" icon="" />
+					<PodcastCategoryCard category="True crime">
+						<template #image>
+							<q-img
+								src="@/assets/images/podcast-true-crime.png"
+								ratio="1/1"
+								width="100%"
+								fit="contain"
+								height="100%"
+							/>
+						</template>
+					</PodcastCategoryCard>
 				</RouterLink>
-				<RouterLink :to="`/podcasts/category/comedy`" class="block full-height">
-					<PodcastCategoryCard category="Comedy" icon="" />
+				<RouterLink :to="`/podcasts/category/music`" class="block full-height">
+					<PodcastCategoryCard category="Music">
+						<template #image>
+							<q-img
+								src="@/assets/images/podcast-music.png"
+								ratio="1/1"
+								width="100%"
+								fit="contain"
+								height="100%"
+							/>
+						</template>
+					</PodcastCategoryCard>
 				</RouterLink>
 			</div>
 		</template>
