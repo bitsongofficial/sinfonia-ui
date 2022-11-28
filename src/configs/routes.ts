@@ -210,6 +210,24 @@ const routes: RouteRecordRaw[] = [
 			},
 		],
 	},
+	{
+		path: "/search",
+		name: "SearchWrapper",
+		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Search",
+		},
+		children: [
+			{
+				path: "",
+				name: "Search",
+				component: () => import("@/components/pages/search/Search.vue"),
+				meta: {
+					breadcrumbHide: true,
+				},
+			},
+		],
+	},
 	/* {
 		path: "/airdrops",
 		name: "Airdrops",
@@ -255,6 +273,12 @@ export const menuItems: MenuItem[] = [
 		icon: { name: "suitcase", width: 18, height: 16 },
 		label: "Assets",
 		path: "/assets",
+		disabled: disabledRoutes,
+	},
+	{
+		icon: { name: "search-large", width: 24, height: 24 },
+		label: "Search",
+		path: "/search",
 		disabled: disabledRoutes,
 	},
 	{
