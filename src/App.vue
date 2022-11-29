@@ -2,7 +2,8 @@
 import { RouterView } from "vue-router"
 import { externalWebsites } from "./configs/config"
 import { useQuasar } from "quasar"
-import { onBeforeMount, ref } from "vue"
+import { onBeforeMount, provide, ref } from "vue"
+import { DefaultApolloClient } from "@vue/apollo-composable"
 import MediaPlayer from "@/components/player/MediaPlayer.vue"
 import Header from "@/components/navigation/Header.vue"
 import SideMenu from "@/components/navigation/SideMenu.vue"
@@ -12,6 +13,7 @@ import useSettings from "@/store/settings"
 import LightModeSwitch from "@/components/inputs/LightModeSwitch.vue"
 import DisclaimerModal from "@/components/modals/DisclaimerModal.vue"
 import useTransactionManager from "@/store/transaction-manager"
+import apolloClient from "./services/sinfonia-gql"
 
 const settingsStore = useSettings()
 const transactionManagerStore = useTransactionManager()
@@ -37,6 +39,9 @@ const disclaimerUpdate = (value: boolean) => {
 		showDisclaimer.value = false
 	}
 }
+
+// Inject apollo client through the app
+provide(DefaultApolloClient, apolloClient)
 </script>
 
 <template>

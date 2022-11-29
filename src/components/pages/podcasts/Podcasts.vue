@@ -1,45 +1,104 @@
 <script setup lang="ts">
+import { useRoute, RouterLink } from "vue-router"
+import { useQuery } from "@vue/apollo-composable"
 import Title from "@/components/typography/Title.vue"
-import PodcastCard from "@/components/cards/PodcastCard.vue"
+import GQLPodcastCard from "@/components/cards/GQLPodcastCard.vue"
+import StandardButton from "@/components/buttons/StandardButton.vue"
 import PodcastCategoryCard from "@/components/cards/PodcastCategoryCard.vue"
 import Spinner from "@/components/Spinner"
-import { useRoute, RouterLink } from "vue-router"
 import usePodcasts from "@/store/podcasts"
 import onAppReady from "@/hooks/onAppReady"
+import { PODCASTS } from "@/graphql"
+import { GraphQLResponse, GraphQLPodcast } from "@/types"
 
 const route = useRoute()
 const podcastsStore = usePodcasts()
 
-const code = route.params.codeId
+/* const code = route.params.codeId
 	? parseInt(route.params.codeId as string, 10)
 	: parseInt(import.meta.env.VITE_PODCAST_BS721_CODE_ID, 10)
 
 onAppReady(() => {
 	podcastsStore.loadPodcasts(code)
+}) */
+
+const { result, loading, fetchMore } = useQuery<
+	GraphQLResponse<"podcasts", GraphQLPodcast>
+>(PODCASTS, {
+	first: 20,
 })
+
+const loadMore = () => {
+	if (!result.value) {
+		return
+	}
+
+	fetchMore({
+		variables: {
+			first: 20,
+			after: result.value.podcasts.pageInfo.startCursor,
+		},
+		updateQuery: (previousResult, { fetchMoreResult }) => {
+			const newEdges = fetchMoreResult?.podcasts.edges ?? []
+			const pageInfo = fetchMoreResult?.podcasts.pageInfo
+
+			return newEdges.length
+				? {
+						...previousResult,
+						feed: {
+							...previousResult.podcasts,
+							// Concat edges
+							edges: [...(previousResult.podcasts.edges ?? []), ...newEdges],
+							// Override with new pageInfo
+							pageInfo,
+						},
+				  }
+				: previousResult
+		},
+	})
+}
 </script>
+
 <template>
 	<div>
-		<Spinner v-if="podcastsStore.loading" class="!w-50 !h-50 q-mx-auto" />
+		<Spinner v-if="loading" class="!w-50 !h-50 q-mx-auto" />
 
 		<template v-else>
 			<div class="column row-md align-items-end-md q-mb-42">
 				<Title>Top Podcasts</Title>
 			</div>
 
-			<div
-				class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24 q-mb-42"
+			<q-virtual-scroll
+				class="virtual-grid q-mb-42"
+				v-if="result && result.podcasts.edges"
+				style="max-height: 100%"
+				:items="result.podcasts.edges"
+				separator
+				v-slot="{ item, index }"
 			>
 				<RouterLink
-					v-for="podcast of podcastsStore.sinfoniaPodcasts"
-					:to="`/podcasts/${podcast.address}/details`"
+					:key="index"
+					:to="`/podcasts/${item.node._id}/details`"
 					class="block full-height"
 				>
-					<PodcastCard :podcast="podcast" />
+					<GQLPodcastCard :podcast="item.node" />
 				</RouterLink>
+			</q-virtual-scroll>
+
+			<div class="flex w-full">
+				<StandardButton
+					:padding-x="30"
+					:padding-y="14"
+					fit
+					class="q-mx-auto"
+					:disabled="loading"
+					@click="loadMore"
+				>
+					Load More
+				</StandardButton>
 			</div>
 
-			<div class="column row-md align-items-end-md q-mb-42">
+			<!-- <div class="column row-md align-items-end-md q-mb-42">
 				<Title>Categories</Title>
 			</div>
 
@@ -111,7 +170,7 @@ onAppReady(() => {
 						</template>
 					</PodcastCategoryCard>
 				</RouterLink>
-			</div>
+			</div> -->
 		</template>
 	</div>
 </template>
