@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PodcastEpisode } from "@/types"
+import { PodcastEpisode } from "@/graphql/ts/graphql"
 
 defineProps<{
 	track: PodcastEpisode
@@ -9,19 +9,19 @@ defineProps<{
 <template>
 	<div class="row items-center">
 		<q-img
-			class="rounded-10"
-			:src="track.extension.itunes.image"
+			class="rounded-10 min-w-56"
+			:src="track.image ?? ''"
 			width="56px"
 			height="56px"
 		/>
 
 		<div class="column q-ml-12 h-full items-start">
-			<p class="text-white fs-14 !leading-22 text-bold">
-				{{ track.extension.title }}
+			<p class="text-white fs-14 !leading-22 text-bold text-container">
+				{{ track.title }}
 			</p>
 
 			<!-- <p class="fs-14 !leading-22">
-				{{ track.extension.itunes.author }}
+				{{ track. }}
 			</p> -->
 		</div>
 	</div>

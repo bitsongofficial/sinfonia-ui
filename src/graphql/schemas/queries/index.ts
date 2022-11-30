@@ -1,1 +1,1 @@
-export * from "./podcast-paginated"
+export * from "./podcast"

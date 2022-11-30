@@ -22,7 +22,7 @@ defineProps<{
 			class="rounded-5 q-mb-16"
 		/>
 
-		<p class="text-white text-weight-bold !leading-26 q-mb-8">
+		<p class="text-white text-weight-bold !leading-26 q-mb-8 text-container-1">
 			{{ podcast.title }}
 		</p>
 

@@ -1,7 +1,7 @@
 import { Howl, Howler } from "howler"
-import { computed, reactive, ref, watch } from "vue"
+import { computed, ref } from "vue"
 import { formatDurationLocale } from "@/common"
-import { PodcastEpisode } from "@/types"
+import { PodcastEpisode } from "@/graphql/ts/graphql"
 
 const format = ["mp3", "wav", "mp4", "webm", "mpeg"]
 
@@ -37,11 +37,17 @@ const addTrackToPlaylist = (track: PodcastEpisode) => {
 const setupAudioPlayer = () => {
 	const nft = sinfoniaPlaylist.value[currentTrackIndex.value]
 
-	if (nft.extension) {
+	if (nft.enclosures && nft.enclosures.length > 0) {
+		const [enclosure] = nft.enclosures
+
+		if (!enclosure?.url) {
+			return
+		}
+
 		clearAnimations()
-		const src = nft.extension.enclosure.url
+		const src = enclosure.url
 		sinfoniaCurrentTrack.value = src
-		sinfoniaCurrentTokenID.value = nft.token_id
+		sinfoniaCurrentTokenID.value = nft._id
 		progress.value = 0
 		durationProgress.value = 0
 

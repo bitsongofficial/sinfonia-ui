@@ -167,7 +167,7 @@ const routes: RouteRecordRaw[] = [
 				},
 			},
 			{
-				path: ":address/details",
+				path: ":id/details",
 				name: "PodcastDetails",
 				component: () => import("@/components/pages/podcasts/Podcast.vue"),
 				meta: {

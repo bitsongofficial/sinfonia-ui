@@ -1,25 +1,11 @@
 <script setup lang="ts">
-import { useRoute, RouterLink } from "vue-router"
+import { RouterLink } from "vue-router"
 import { useQuery } from "@vue/apollo-composable"
 import Title from "@/components/typography/Title.vue"
 import GQLPodcastCard from "@/components/cards/GQLPodcastCard.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
-import PodcastCategoryCard from "@/components/cards/PodcastCategoryCard.vue"
 import Spinner from "@/components/Spinner"
-import usePodcasts from "@/store/podcasts"
-import onAppReady from "@/hooks/onAppReady"
 import { PodcastsPaginated } from "@/graphql"
-
-const route = useRoute()
-const podcastsStore = usePodcasts()
-
-/* const code = route.params.codeId
-	? parseInt(route.params.codeId as string, 10)
-	: parseInt(import.meta.env.VITE_PODCAST_BS721_CODE_ID, 10)
-
-onAppReady(() => {
-	podcastsStore.loadPodcasts(code)
-}) */
 
 const { result, loading, fetchMore } = useQuery(PodcastsPaginated, {
 	first: 20,
