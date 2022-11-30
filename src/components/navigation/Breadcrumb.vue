@@ -60,6 +60,7 @@ const breadcrumb = computed(() => {
 			<span class="opacity-50 q-mr-12" v-if="index === 0">/</span>
 			<RouterLink
 				:to="route.to ?? ''"
+				class="text-container-1 max-w-200"
 				:class="{
 					'no-pointer-events': !route.to,
 				}"

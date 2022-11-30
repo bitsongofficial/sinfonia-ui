@@ -12,6 +12,8 @@ import { computed, onMounted, onUnmounted, watch, ref } from "vue"
 import { useRoute, useRouter, RouterLink } from "vue-router"
 import { useMetadata } from "@/hooks/useMetadata"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
+import { useQuery } from "@vue/apollo-composable"
+import { PodcastEpisode } from "@/graphql"
 
 const route = useRoute()
 const router = useRouter()
@@ -19,13 +21,14 @@ const configStore = useConfig()
 const settingsStore = useSettings()
 const podcastsStore = usePodcasts()
 
-const address = route.params.address as string
-const tokenId = route.params.tokenId as string
+const podcastId = route.params.podcastId as string
+const episodeId = route.params.episodeId as string
 
 const show = ref(false)
 
-const podcast = computed(() => podcastsStore.podcast(address))
-const episode = computed(() => podcastsStore.episode(tokenId))
+const { result, loading } = useQuery(PodcastEpisode, {
+	id: episodeId,
+})
 
 const {
 	addTrack,
@@ -38,44 +41,35 @@ const {
 } = useSinfoniaMediaPlayer()
 
 const playTrack = () => {
-	if (episode.value && episode.value.extension) {
-		play(episode.value)
+	if (result.value && result.value.podcastEpisode) {
+		play(result.value.podcastEpisode)
 	}
 }
 
 const addToPlaylist = () => {
-	if (episode.value) {
-		addTrackToPlaylist(episode.value)
+	if (result.value && result.value.podcastEpisode) {
+		addTrackToPlaylist(result.value.podcastEpisode)
 	}
 }
 
-onMounted(() => {
-	if (
-		!address ||
-		(configStore.bitsongToken &&
-			!isValidContractAddress(address, configStore.bitsongToken.addressPrefix))
-	) {
-		router.replace({ name: "NotFound" })
-	}
-
-	podcastsStore.loadPodcast(address)
-	podcastsStore.loadEpisodes(address)
-})
-
 const episodeWatcher = watch(
-	() => episode.value,
+	() => result.value,
 	(currentEpisode) => {
-		if (currentEpisode && currentEpisode.extension) {
-			settingsStore.breadcrumbPageTitle = currentEpisode.extension.title
+		if (currentEpisode && currentEpisode.podcastEpisode) {
+			settingsStore.breadcrumbPageTitle = currentEpisode.podcastEpisode.title ?? ""
 			settingsStore.breadcrumbPrepend = [
 				{
-					label: podcast.value?.init?.title ?? "",
-					to: `/podcasts/${podcast.value?.address}/details`,
+					label: "Podcast",
+					to: `/podcasts/${podcastId}/details`,
 				},
 			]
 
-			if (currentEpisode.extension) {
-				addTrack(currentEpisode.extension.enclosure.url)
+			if (currentEpisode.podcastEpisode.enclosures) {
+				const [enclosure] = currentEpisode.podcastEpisode.enclosures
+
+				if (enclosure && enclosure.url) {
+					addTrack(enclosure.url)
+				}
 			}
 		}
 	},
@@ -88,21 +82,22 @@ onUnmounted(() => {
 })
 
 const metadata = computed(() => ({
-	title: `${episode.value?.extension.title} | ${podcast.value?.init?.title}`,
-	description: episode.value?.extension.description,
+	/* title: `${result.value?.podcastEpisode?.title} | ${podcast.value?.init?.title}`, */
+	title: result.value?.podcastEpisode?.title,
+	description: result.value?.podcastEpisode?.description,
 	og: {
 		type: "website",
 		url: import.meta.env.VITE_BASE_URL,
-		title: `${episode.value?.extension.title} | ${podcast.value?.init?.title}`,
-		description: episode.value?.extension.description,
-		image: episode.value?.extension.itunes.image,
+		title: result.value?.podcastEpisode?.title,
+		description: result.value?.podcastEpisode?.description,
+		image: result.value?.podcastEpisode?.image,
 	},
 	twitter: {
 		card: "summary_large_image",
 		url: import.meta.env.VITE_BASE_URL,
-		title: `${episode.value?.extension.title} | ${podcast.value?.init?.title}`,
-		description: episode.value?.extension.description,
-		image: episode.value?.extension.itunes.image,
+		title: result.value?.podcastEpisode?.title,
+		description: result.value?.podcastEpisode?.description,
+		image: result.value?.podcastEpisode?.image,
 	},
 }))
 
@@ -111,24 +106,22 @@ useMetadata(metadata)
 
 <template>
 	<div class="text-white">
-		<div v-if="!podcastsStore.loadingEpisodes && episode">
+		<div v-if="!loading && result && result.podcastEpisode">
 			<div class="grid grid-cols-12 grid-row-gap-32 grid-gap-md-32 q-mb-42">
 				<div class="col-span-12 col-span-md-3">
 					<q-img
 						class="rounded-10 shadow-20"
-						:src="episode.extension.itunes.image"
+						:src="result.podcastEpisode.image ?? ''"
 					/>
 				</div>
 				<div class="col-span-12 col-span-md-9 flex column justify-end">
 					<p class="fs-16 opacity-50 q-mb-16">Podcast Episode</p>
 					<Title class="text-weight-bold q-mb-24 !fs-28 !fs-md-32">
-						{{ episode.extension.title }}
+						{{ result.podcastEpisode.title }}
 					</Title>
 
-					<RouterLink :to="`/podcasts/${podcast?.address}/details`">
-						<p class="fs-24 !leading-38 text-weight-medium">
-							{{ podcast?.init?.title }}
-						</p>
+					<RouterLink :to="`/podcasts/${podcastId}/details`">
+						<p class="fs-24 !leading-38 text-weight-medium">Podcast</p>
 					</RouterLink>
 				</div>
 			</div>
@@ -137,7 +130,7 @@ useMetadata(metadata)
 				<div class="col-span-12 col-span-md-8">
 					<div class="row q-mb-32 items-center">
 						<IconButton
-							v-if="isPlaying && sinfoniaCurrentTokenID === episode.token_id"
+							v-if="isPlaying && sinfoniaCurrentTokenID === result.podcastEpisode._id"
 							icon="pause"
 							width="24"
 							height="24"
@@ -167,7 +160,7 @@ useMetadata(metadata)
 							height="16"
 							class="fs-20 s-28 q-ml-auto opacity-50 hover:opacity-100"
 							@click.native.prevent="show = true"
-							v-if="episode"
+							v-if="result.podcastEpisode"
 						>
 							<EpisodeContextMenu v-model="show" @addtoplaylist="addToPlaylist" />
 						</IconButton>
@@ -176,10 +169,10 @@ useMetadata(metadata)
 					<Title class="text-weight-bold q-mb-16">Description</Title>
 
 					<p class="opacity-50 !leading-24 q-mb-48">
-						{{ episode.extension.description }}
+						{{ result.podcastEpisode.description }}
 					</p>
 
-					<StandardButton :to="`/podcasts/${podcast?.address}/details`">
+					<StandardButton :to="`/podcasts/${podcastId}/details`">
 						See all episodes
 					</StandardButton>
 				</div>

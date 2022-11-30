@@ -183,7 +183,7 @@ const routes: RouteRecordRaw[] = [
 				},
 			},
 			{
-				path: ":address/episode/:tokenId",
+				path: ":podcastId/episode/:episodeId",
 				name: "PodcastEpisode",
 				component: () => import("@/components/pages/podcasts/Episode.vue"),
 				meta: {

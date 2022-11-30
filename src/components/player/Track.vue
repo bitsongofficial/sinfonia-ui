@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-	<div class="row items-center">
+	<div class="row items-center no-wrap">
 		<q-img
 			class="rounded-10 min-w-56"
 			:src="track.image ?? ''"

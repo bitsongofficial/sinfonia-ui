@@ -17,6 +17,7 @@ const documents = {
     "\n\tquery podcastEpisodes($podcast_id: ObjectID!) {\n\t\tpodcastEpisodes(podcast_id: $podcast_id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tenclosures {\n\t\t\t\turl\n\t\t\t\ttype\n\t\t\t\tlength\n\t\t\t}\n\t\t}\n\t}\n": types.PodcastEpisodesDocument,
     "\n\tquery podcast($id: ObjectID!) {\n\t\tpodcast(id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tauthor\n\t\t}\n\t}\n": types.PodcastDocument,
     "\n\tquery podcastWithEpisodes($id: ObjectID!) {\n\t\tpodcast(id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tauthor\n\t\t}\n\t\tpodcastEpisodes(podcast_id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tpodcast_id\n\t\t\tenclosures {\n\t\t\t\turl\n\t\t\t\ttype\n\t\t\t\tlength\n\t\t\t}\n\t\t}\n\t}\n": types.PodcastWithEpisodesDocument,
+    "\n\tquery podcastEpisode($id: ObjectID!) {\n\t\tpodcastEpisode(id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tpodcast_id\n\t\t\tenclosures {\n\t\t\t\turl\n\t\t\t\ttype\n\t\t\t\tlength\n\t\t\t}\n\t\t}\n\t}\n": types.PodcastEpisodeDocument,
 };
 
 /**
@@ -35,6 +36,10 @@ export function graphql(source: "\n\tquery podcast($id: ObjectID!) {\n\t\tpodcas
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n\tquery podcastWithEpisodes($id: ObjectID!) {\n\t\tpodcast(id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tauthor\n\t\t}\n\t\tpodcastEpisodes(podcast_id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tpodcast_id\n\t\t\tenclosures {\n\t\t\t\turl\n\t\t\t\ttype\n\t\t\t\tlength\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery podcastWithEpisodes($id: ObjectID!) {\n\t\tpodcast(id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tauthor\n\t\t}\n\t\tpodcastEpisodes(podcast_id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tpodcast_id\n\t\t\tenclosures {\n\t\t\t\turl\n\t\t\t\ttype\n\t\t\t\tlength\n\t\t\t}\n\t\t}\n\t}\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n\tquery podcastEpisode($id: ObjectID!) {\n\t\tpodcastEpisode(id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tpodcast_id\n\t\t\tenclosures {\n\t\t\t\turl\n\t\t\t\ttype\n\t\t\t\tlength\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery podcastEpisode($id: ObjectID!) {\n\t\tpodcastEpisode(id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tpodcast_id\n\t\t\tenclosures {\n\t\t\t\turl\n\t\t\t\ttype\n\t\t\t\tlength\n\t\t\t}\n\t\t}\n\t}\n"];
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
