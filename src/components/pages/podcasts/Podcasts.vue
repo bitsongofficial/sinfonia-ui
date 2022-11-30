@@ -9,6 +9,9 @@ import { PodcastsPaginated } from "@/graphql"
 
 const { result, loading, fetchMore } = useQuery(PodcastsPaginated, {
 	first: 20,
+	after: "",
+	last: 0,
+	before: "",
 })
 
 const loadMore = () => {
@@ -19,7 +22,9 @@ const loadMore = () => {
 	fetchMore({
 		variables: {
 			first: 20,
-			after: result.value.podcasts.pageInfo.endCursor,
+			after: result.value.podcasts.pageInfo.endCursor ?? "",
+			last: 0,
+			before: "",
 		},
 		updateQuery: (previousResult, { fetchMoreResult }) => {
 			const newEdges = fetchMoreResult?.podcasts.edges ?? []
