@@ -8,8 +8,7 @@ import PodcastCategoryCard from "@/components/cards/PodcastCategoryCard.vue"
 import Spinner from "@/components/Spinner"
 import usePodcasts from "@/store/podcasts"
 import onAppReady from "@/hooks/onAppReady"
-import { PODCASTS } from "@/graphql"
-import { GraphQLResponse, GraphQLPodcast } from "@/types"
+import { PodcastsPaginated } from "@/graphql"
 
 const route = useRoute()
 const podcastsStore = usePodcasts()
@@ -22,9 +21,7 @@ onAppReady(() => {
 	podcastsStore.loadPodcasts(code)
 }) */
 
-const { result, loading, fetchMore } = useQuery<
-	GraphQLResponse<"podcasts", GraphQLPodcast>
->(PODCASTS, {
+const { result, loading, fetchMore } = useQuery(PodcastsPaginated, {
 	first: 20,
 })
 
@@ -36,19 +33,21 @@ const loadMore = () => {
 	fetchMore({
 		variables: {
 			first: 20,
-			after: result.value.podcasts.pageInfo.startCursor,
+			after: result.value.podcasts.pageInfo.endCursor,
 		},
 		updateQuery: (previousResult, { fetchMoreResult }) => {
 			const newEdges = fetchMoreResult?.podcasts.edges ?? []
-			const pageInfo = fetchMoreResult?.podcasts.pageInfo
+			const pageInfo =
+				fetchMoreResult?.podcasts.pageInfo ?? previousResult.podcasts.pageInfo
+			const previousEdges = previousResult.podcasts.edges ?? []
 
 			return newEdges.length
 				? {
 						...previousResult,
-						feed: {
+						podcasts: {
 							...previousResult.podcasts,
 							// Concat edges
-							edges: [...(previousResult.podcasts.edges ?? []), ...newEdges],
+							edges: [...previousEdges, ...newEdges],
 							// Override with new pageInfo
 							pageInfo,
 						},
@@ -61,7 +60,7 @@ const loadMore = () => {
 
 <template>
 	<div>
-		<Spinner v-if="loading" class="!w-50 !h-50 q-mx-auto" />
+		<Spinner v-if="loading && !result" class="!w-50 !h-50 q-mx-auto" />
 
 		<template v-else>
 			<div class="column row-md align-items-end-md q-mb-42">
@@ -85,7 +84,9 @@ const loadMore = () => {
 				</RouterLink>
 			</q-virtual-scroll>
 
-			<div class="flex w-full">
+			<Spinner v-if="loading && result" class="!w-50 !h-50 q-mx-auto" />
+
+			<div class="flex w-full" v-else>
 				<StandardButton
 					:padding-x="30"
 					:padding-y="14"

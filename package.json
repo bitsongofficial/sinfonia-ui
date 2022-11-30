@@ -10,7 +10,8 @@
 		"preview": "vite preview",
 		"type-check": "vue-tsc --noEmit",
 		"lint": "eslint --ignore-path .gitignore --ignore-path .eslintignore --fix src --ext .js --ext .ts ",
-		"format": "prettier --ignore-path .prettierignore --write ."
+		"format": "prettier --ignore-path .prettierignore --write .",
+		"codegen": "graphql-codegen --config codegen.ts"
 	},
 	"engines": {
 		"node": ">=16.16.0"
@@ -53,7 +54,7 @@
 		"filepond-plugin-image-preview": "^4.6.11",
 		"filepond-plugin-image-validate-size": "^1.2.7",
 		"fuse.js": "^6.6.2",
-		"graphql": "^16.5.0",
+		"graphql": "^16.6.0",
 		"graphql-tag": "^2.12.6",
 		"howler": "^2.2.3",
 		"lodash": "^4.17.21",
@@ -72,6 +73,9 @@
 		"zod": "^3.19.1"
 	},
 	"devDependencies": {
+		"@graphql-codegen/cli": "2.15.0",
+		"@graphql-codegen/client-preset": "1.2.0",
+		"@graphql-typed-document-node/core": "^3.1.1",
 		"@kelchy/pre-commit": "^1.2.4",
 		"@keplr-wallet/types": "^0.9.12",
 		"@quasar/vite-plugin": "^1.0.5",
@@ -90,6 +94,7 @@
 		"vite": "^2.8.0",
 		"vite-plugin-checker": "^0.4.4",
 		"vite-plugin-html-env": "^1.1.2",
-		"vue-tsc": "^0.29.8"
+		"vue-tsc": "^0.29.8",
+		"@graphql-codegen/introspection": "2.2.1"
 	}
 }

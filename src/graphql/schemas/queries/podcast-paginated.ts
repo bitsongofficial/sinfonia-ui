@@ -1,7 +1,12 @@
-import gql from "graphql-tag"
+import { graphql } from "@/graphql/ts"
 
-export const PODCASTS = gql`
-	query podcasts($first: Int, $after: String, $last: Int, $before: String) {
+export const PodcastsPaginated = graphql(`
+	query PodcastsPaginated(
+		$first: Int
+		$after: String
+		$last: Int
+		$before: String
+	) {
 		podcasts(
 			pagination: { first: $first, after: $after, last: $last, before: $before }
 		) {
@@ -35,4 +40,4 @@ export const PODCASTS = gql`
 			}
 		}
 	}
-`
+`)
