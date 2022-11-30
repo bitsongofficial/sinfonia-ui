@@ -1,25 +1,19 @@
 <script setup lang="ts">
-import useConfig from "@/store/config"
-import usePodcasts from "@/store/podcasts"
 import useSettings from "@/store/settings"
 import Spinner from "@/components/Spinner"
 import IconButton from "@/components/buttons/IconButton.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import Title from "@/components/typography/Title.vue"
 import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
-import { isValidContractAddress } from "@/common"
-import { computed, onMounted, onUnmounted, watch, ref } from "vue"
-import { useRoute, useRouter, RouterLink } from "vue-router"
+import { computed, onUnmounted, watch, ref } from "vue"
+import { useRoute, RouterLink } from "vue-router"
 import { useMetadata } from "@/hooks/useMetadata"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import { useQuery } from "@vue/apollo-composable"
 import { PodcastEpisode } from "@/graphql"
 
 const route = useRoute()
-const router = useRouter()
-const configStore = useConfig()
 const settingsStore = useSettings()
-const podcastsStore = usePodcasts()
 
 const podcastId = route.params.podcastId as string
 const episodeId = route.params.episodeId as string
