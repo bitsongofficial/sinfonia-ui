@@ -108,7 +108,7 @@ useMetadata(metadata)
 						:src="result.podcastEpisode.image ?? ''"
 					/>
 				</div>
-				<div class="col-span-12 col-span-md-9 flex column justify-end">
+				<div class="col-span-12 col-span-md-9 flex column justify-end items-start">
 					<p class="fs-16 opacity-50 q-mb-16">Podcast Episode</p>
 					<Title class="text-weight-bold q-mb-24 !fs-28 !fs-md-32">
 						{{ result.podcastEpisode.title }}

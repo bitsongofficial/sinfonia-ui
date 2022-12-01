@@ -15,7 +15,7 @@ defineEmits<{
 		<q-list style="min-width: 130px">
 			<q-item clickable :hoverable="false" v-close-popup>
 				<q-item-section @click="$emit('addtoplaylist')">
-					Add To Playlist
+					Add To Queue
 				</q-item-section>
 			</q-item>
 		</q-list>

@@ -63,7 +63,7 @@ const playTrack = () => {
 			width="100px"
 		/>
 
-		<div>
+		<div class="flex-1">
 			<div class="row justify-between items-center no-wrap q-mb-16">
 				<Title class="text-weight-bold text-container-1" :font-size="16">
 					{{ episode.title }}
