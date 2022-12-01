@@ -173,9 +173,13 @@ const routes: RouteRecordRaw[] = [
 		name: "PodcastWrapper",
 		component: () => import("@/components/pages/Wrapper.vue"),
 		meta: {
-			title: "Podcast",
+			title: "Podcasts",
 		},
 		children: [
+			{
+				path: "",
+				redirect: "/podcasts",
+			},
 			{
 				path: ":id",
 				name: "PodcastDetails",
