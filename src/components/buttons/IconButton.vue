@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import StandardButton from "./StandardButton.vue"
 import { resolveIcon } from "@/common/resolvers"
+import { computed } from "vue"
 
 const props = defineProps([
 	"icon",
@@ -12,8 +13,8 @@ const props = defineProps([
 	"iconClass",
 ])
 
-const icon = resolveIcon(props.icon, props.width, props.height)
-const color = props.color ? props.color : "white"
+const icon = computed(() => resolveIcon(props.icon, props.width, props.height))
+const color = computed(() => (props.color ? props.color : "white"))
 </script>
 <template>
 	<q-btn

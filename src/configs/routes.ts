@@ -289,12 +289,12 @@ export const menuItems: MenuItem[] = [
 		path: "/assets",
 		disabled: disabledRoutes,
 	},
-	/* {
+	{
 		icon: { name: "search-large", width: 24, height: 24 },
 		label: "Search",
 		path: "/search",
 		disabled: disabledRoutes,
-	}, */
+	},
 	{
 		icon: { name: "box", width: 24, height: 24 },
 		label: "Collections",

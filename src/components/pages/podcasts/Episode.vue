@@ -19,6 +19,7 @@ const podcastId = route.params.podcastId as string
 const episodeId = route.params.episodeId as string
 
 const show = ref(false)
+const like = ref(false)
 
 const { result, loading, onResult } = useQuery(PodcastEpisode, {
 	id: episodeId,
@@ -150,10 +151,20 @@ useMetadata(metadata)
 						<q-skeleton class="min-w-56" type="text" v-else />
 
 						<IconButton
+							icon="thumbs-up"
+							width="24"
+							height="24"
+							class="fs-20 s-28 q-ml-auto"
+							@click.native.prevent="like = !like"
+							v-if="result.podcastEpisode"
+							:color="!like ? 'white' : 'primary'"
+						/>
+
+						<IconButton
 							icon="vertical-dots"
 							width="4"
 							height="16"
-							class="fs-20 s-28 q-ml-auto opacity-50 hover:opacity-100"
+							class="fs-20 s-28 q-ml-12 opacity-50 hover:opacity-100"
 							@click.native.prevent="show = true"
 							v-if="result.podcastEpisode"
 						>
