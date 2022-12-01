@@ -98,6 +98,12 @@ const setupAudioPlayer = () => {
 					loadingTrack.value = false
 				}
 			},
+			onloaderror: (_, error) => {
+				console.error("Load error: ", error)
+			},
+			onplayerror: (_, error) => {
+				console.error("Play error: ", error)
+			},
 		})
 	}
 }
@@ -217,9 +223,6 @@ export const useSinfoniaMediaPlayer = () => {
 			preload: "metadata",
 			format,
 			html5: true,
-			onloaderror: (_, error) => {
-				console.log(error)
-			},
 			onload: () => {
 				if (infoPlayer.value) {
 					const fullDuration = infoPlayer.value.duration()
@@ -227,6 +230,12 @@ export const useSinfoniaMediaPlayer = () => {
 				}
 
 				loadingMetadata.value = false
+			},
+			onloaderror: (_, error) => {
+				console.error("Load metadata error: ", error)
+			},
+			onplayerror: (_, error) => {
+				console.error("Play metadata error: ", error)
 			},
 		})
 	}
