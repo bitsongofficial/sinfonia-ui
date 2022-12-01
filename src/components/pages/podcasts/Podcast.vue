@@ -7,18 +7,26 @@ import { useRoute, RouterLink } from "vue-router"
 import { useMetadata } from "@/hooks/useMetadata"
 import { useQuery } from "@vue/apollo-composable"
 import { PodcastWithEpisodes } from "@/graphql"
+import useSettings from "@/store/settings"
 
 const route = useRoute()
+const settingsStore = useSettings()
 
 // MongoDB ObjectID
 const id = route.params.id as string
 
-const { result, loading } = useQuery(PodcastWithEpisodes, {
+const { result, loading, onResult } = useQuery(PodcastWithEpisodes, {
 	id,
 })
 
+onResult(() => {
+	if (result.value) {
+		settingsStore.breadcrumbPageTitle = result.value.podcast?.title ?? ""
+	}
+})
+
 const metadata = computed(() => ({
-	title: `Podcast`,
+	title: `${result.value?.podcast?.title} | Podcast`,
 	description: result.value?.podcast?.description,
 	og: {
 		type: "website",

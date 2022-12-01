@@ -5,7 +5,7 @@ import IconButton from "@/components/buttons/IconButton.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
 import Title from "@/components/typography/Title.vue"
 import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
-import { computed, onUnmounted, watch, ref } from "vue"
+import { computed, onUnmounted, ref } from "vue"
 import { useRoute, RouterLink } from "vue-router"
 import { useMetadata } from "@/hooks/useMetadata"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
@@ -20,7 +20,7 @@ const episodeId = route.params.episodeId as string
 
 const show = ref(false)
 
-const { result, loading } = useQuery(PodcastEpisode, {
+const { result, loading, onResult } = useQuery(PodcastEpisode, {
 	id: episodeId,
 	podcast_id: podcastId,
 })
@@ -47,32 +47,27 @@ const addToPlaylist = () => {
 	}
 }
 
-const episodeWatcher = watch(
-	() => result.value,
-	(currentEpisode) => {
-		if (currentEpisode && currentEpisode.podcastEpisode) {
-			settingsStore.breadcrumbPageTitle = currentEpisode.podcastEpisode.title ?? ""
-			settingsStore.breadcrumbPrepend = [
-				{
-					label: currentEpisode.podcast?.title ?? "",
-					to: `/podcast/${podcastId}`,
-				},
-			]
+onResult(() => {
+	if (result.value) {
+		settingsStore.breadcrumbPageTitle = result.value.podcastEpisode?.title ?? ""
+		settingsStore.breadcrumbPrepend = [
+			{
+				label: result.value.podcast?.title ?? "",
+				to: `/podcast/${podcastId}`,
+			},
+		]
 
-			if (currentEpisode.podcastEpisode.enclosures) {
-				const [enclosure] = currentEpisode.podcastEpisode.enclosures
+		if (result.value.podcastEpisode && result.value.podcastEpisode.enclosures) {
+			const [enclosure] = result.value.podcastEpisode.enclosures
 
-				if (enclosure && enclosure.url) {
-					addTrack(enclosure.url)
-				}
+			if (enclosure && enclosure.url) {
+				addTrack(enclosure.url)
 			}
 		}
-	},
-	{ immediate: true }
-)
+	}
+})
 
 onUnmounted(() => {
-	episodeWatcher()
 	settingsStore.breadcrumbPrepend = []
 })
 
