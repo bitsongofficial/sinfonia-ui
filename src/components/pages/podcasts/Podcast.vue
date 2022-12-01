@@ -1,74 +1,46 @@
 <script setup lang="ts">
-import useConfig from "@/store/config"
-import useSettings from "@/store/settings"
 import Spinner from "@/components/Spinner"
-import EpisodeItem from "@/components/cards/EpisodeItem.vue"
 import Title from "@/components/typography/Title.vue"
-import StandardButton from "@/components/buttons/StandardButton.vue"
-import { formatShortAddress, isValidContractAddress } from "@/common"
-import { computed, onMounted, onUnmounted, watch } from "vue"
-import { useRoute, useRouter, RouterLink } from "vue-router"
+import EpisodeItem from "@/components/cards/EpisodeItem.vue"
+import { computed } from "vue"
+import { useRoute, RouterLink } from "vue-router"
 import { useMetadata } from "@/hooks/useMetadata"
-import useClipboard from "@/hooks/useClipboard"
-import usePodcasts from "@/store/podcasts"
-import useAuth from "@/store/auth"
+import { useQuery } from "@vue/apollo-composable"
+import { PodcastWithEpisodes } from "@/graphql"
+import useSettings from "@/store/settings"
 
 const route = useRoute()
-const router = useRouter()
-const configStore = useConfig()
-const authStore = useAuth()
 const settingsStore = useSettings()
-const podcastsStore = usePodcasts()
 
-const address = route.params.address as string
+// MongoDB ObjectID
+const id = route.params.id as string
 
-const podcast = computed(() => podcastsStore.podcast(address))
+const { result, loading, onResult } = useQuery(PodcastWithEpisodes, {
+	id,
+})
 
-const podcastWatcher = watch(
-	() => podcast.value,
-	(collection) => {
-		if (collection && collection.init) {
-			settingsStore.breadcrumbPageTitle = collection.init.title
-		}
-	},
-	{ immediate: true }
-)
-
-onMounted(() => {
-	if (
-		!address ||
-		(configStore.bitsongToken &&
-			!isValidContractAddress(address, configStore.bitsongToken.addressPrefix))
-	) {
-		router.replace({ name: "NotFound" })
+onResult(() => {
+	if (result.value) {
+		settingsStore.breadcrumbPageTitle = result.value.podcast?.title ?? ""
 	}
-
-	podcastsStore.loadPodcast(address)
-	podcastsStore.loadEpisodes(address)
 })
-
-onUnmounted(() => {
-	podcastWatcher()
-})
-
-const { onCopy } = useClipboard()
 
 const metadata = computed(() => ({
-	title: `Podcast`,
-	description: podcast.value?.init?.description,
+	title: `${result.value?.podcast?.title} | Podcast`,
+	description: result.value?.podcast?.description,
 	og: {
 		type: "website",
 		url: import.meta.env.VITE_BASE_URL,
-		title: `${podcast.value?.init?.title} | Podcast`,
-		description: podcast.value?.init?.description,
-		image: podcast.value?.init?.itunes.image,
+		title: `${result.value?.podcast?.title} | Podcast`,
+		description: result.value?.podcast?.description,
+		image: result.value?.podcast?.image,
 	},
 	twitter: {
 		card: "summary_large_image",
 		url: import.meta.env.VITE_BASE_URL,
-		title: `${podcast.value?.init?.title} | Podcast`,
-		description: podcast.value?.init?.description,
-		image: podcast.value?.init?.itunes.image,
+		title: `${result.value?.podcast?.title} | Podcast`,
+		description: result.value?.podcast?.description,
+		image: result.value?.podcast?.image,
 	},
 }))
 
@@ -77,21 +49,18 @@ useMetadata(metadata)
 
 <template>
 	<div class="text-white">
-		<div v-if="!podcastsStore.loading && podcast">
+		<div v-if="!loading && result && result.podcast">
 			<div class="grid grid-cols-12 grid-row-gap-32 grid-gap-md-32 q-mb-42">
 				<div class="col-span-12 col-span-md-3">
-					<q-img class="rounded-10 shadow-20" :src="podcast?.init?.itunes.image" />
+					<q-img class="rounded-10 shadow-20" :src="result.podcast.image ?? ''" />
 				</div>
 				<div class="col-span-12 col-span-md-9 flex column justify-end">
 					<p class="fs-16 opacity-50 q-mb-16">Podcast</p>
 					<Title class="text-weight-bold q-mb-24 fs-40 fs-md-90">{{
-						podcast?.init?.title
+						result.podcast.title
 					}}</Title>
-					<p
-						class="fs-24 !leading-38 text-weight-medium cursor-pointer"
-						@click="onCopy(podcast?.creator)"
-					>
-						{{ formatShortAddress(podcast?.creator) }}
+					<p class="fs-24 !leading-38 text-weight-medium">
+						{{ result.podcast.author }}
 					</p>
 				</div>
 			</div>
@@ -100,11 +69,11 @@ useMetadata(metadata)
 				<div class="col-span-12 col-span-md-4 col-start-md-9">
 					<Title class="text-weight-bold q-mb-16">About</Title>
 					<p class="opacity-50 !leading-24 white-space-pre-line">
-						{{ podcast.init?.description }}
+						{{ result.podcast.description }}
 					</p>
 				</div>
 				<div class="col-span-12 col-span-md-8 row-start-md-1">
-					<div class="row justify-between items-center q-mb-16">
+					<!-- <div class="row justify-between items-center q-mb-16">
 						<Title class="text-weight-bold">All Episodes</Title>
 						<StandardButton
 							:padding-x="30"
@@ -115,23 +84,25 @@ useMetadata(metadata)
 						>
 							Create Episode
 						</StandardButton>
-					</div>
+					</div> -->
 
 					<div class="grid grid-cols-12 grid-gap-16">
 						<p
 							class="col-span-12 opacity-50"
-							v-if="podcastsStore.episodes.length === 0"
+							v-if="!result.podcastEpisodes || result.podcastEpisodes.length === 0"
 						>
 							There are no episodes available
 						</p>
-						<template v-else>
-							<RouterLink
-								v-for="episode in podcastsStore.sinfoniaEpisodes"
-								class="col-span-12"
-								:to="`/podcasts/${address}/episode/${episode.token_id}`"
-							>
-								<EpisodeItem :episode="episode" />
-							</RouterLink>
+						<template v-else-if="result.podcastEpisodes">
+							<template v-for="episode in result.podcastEpisodes">
+								<RouterLink
+									v-if="episode"
+									class="col-span-12"
+									:to="`/podcast/${id}/episode/${episode?._id}`"
+								>
+									<EpisodeItem :episode="episode" />
+								</RouterLink>
+							</template>
 						</template>
 					</div>
 				</div>

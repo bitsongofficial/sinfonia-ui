@@ -2,11 +2,17 @@
 import { computed, ref } from "vue"
 import { formatDurationWithSeparator } from "@/common"
 
-const props = defineProps<{
-	modelValue: number
-	min: number
-	max: number
-}>()
+const props = withDefaults(
+	defineProps<{
+		modelValue: number
+		min: number
+		max: number
+		disable?: boolean
+	}>(),
+	{
+		disable: false,
+	}
+)
 
 const emit = defineEmits<{
 	(e: "update:modelValue", value: number): void
@@ -57,6 +63,7 @@ const pan = (value: "start" | "end") => {
 			class="gradient-slider rounded"
 			:min="min"
 			:max="max"
+			:disable="disable"
 		/>
 		<span class="text-white fs-12 text-left min-w-40 q-ml-4">{{
 			endTimeStr

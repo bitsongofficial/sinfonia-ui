@@ -7,6 +7,10 @@
     padding: 0 30px;
 }
 
+.virtual-grid .q-virtual-scroll__content {
+    @extend .grid, .grid-cols-min-xs-1, .grid-cols-3, .grid-cols-md-5, .grid-gap-24;
+}
+
 .overscroll-behavior-y-contain {
     overscroll-behavior-y: contain;
 }
@@ -233,6 +237,15 @@
     height: 21px;
 }
 
+.h-140 {
+    height: 140px;
+}
+
+.size-100 {
+    width: 100px;
+    height: 100px;
+}
+
 .\!h-16 {
     height: 16px !important;
 }
@@ -273,6 +286,10 @@
     max-width: 160px;
 }
 
+.max-w-200 {
+    max-width: 200px;
+}
+
 .max-w-582 {
     max-width: 582px;
 }
@@ -303,6 +320,10 @@
 
 .min-w-40 {
     min-width: 40px;
+}
+
+.min-w-56 {
+    min-width: 56px;
 }
 
 .min-w-60 {
@@ -495,6 +516,22 @@
 
     .rounded-top-right-#{$val} {
         border-top-right-radius: #{$val}px;
+    }
+
+    .rounded-bottom-left-#{$val} {
+        border-bottom-left-radius: #{$val}px;
+    }
+
+    .rounded-bottom-right-#{$val} {
+        border-bottom-right-radius: #{$val}px;
+    }
+
+    .\!rounded-bottom-left-#{$val} {
+        border-bottom-left-radius: #{$val}px !important;
+    }
+
+    .\!rounded-bottom-right-#{$val} {
+        border-bottom-right-radius: #{$val}px !important;
     }
 }
 

@@ -29,7 +29,7 @@ const color = props.color ? props.color : "white"
 		<slot></slot>
 	</q-btn>
 	<StandardButton class="q-py-6 q-px-6" :no-padding="true" v-else>
-		<q-icon :class="iconClass" :name="icon" :color="color" size="size"></q-icon>
+		<q-icon :class="iconClass" :name="icon" :color="color" :size="size"></q-icon>
 		<slot></slot>
 	</StandardButton>
 </template>

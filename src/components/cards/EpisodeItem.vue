@@ -2,14 +2,14 @@
 import Title from "@/components/typography/Title.vue"
 import Card from "@/components/cards/Card.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
-import { Podcast, PodcastEpisode } from "@/types"
+import Spinner from "@/components/Spinner"
+import { PodcastEpisode } from "@/graphql/ts/graphql"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import { onUnmounted, toRef, watch, ref } from "vue"
 import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
 
 const props = defineProps<{
 	episode: PodcastEpisode
-	collection?: Podcast
 }>()
 
 const episodeRef = toRef(props, "episode")
@@ -22,14 +22,20 @@ const {
 	addTrackToPlaylist,
 	isPlaying,
 	audioFullDuration,
+	loadingTrack,
+	loadingMetadata,
 	sinfoniaCurrentTokenID,
 } = useSinfoniaMediaPlayer()
 
 const episodeWatcher = watch(
 	() => episodeRef.value,
 	(value) => {
-		if (value && value.extension) {
-			addTrack(value.extension.enclosure.url)
+		if (value && value.enclosures && value.enclosures.length > 0) {
+			const [enclosure] = value.enclosures
+
+			if (enclosure && enclosure.url) {
+				addTrack(enclosure.url)
+			}
 		}
 	},
 	{
@@ -42,7 +48,7 @@ onUnmounted(() => {
 })
 
 const playTrack = () => {
-	if (episodeRef.value && episodeRef.value.extension) {
+	if (episodeRef.value) {
 		play(episodeRef.value)
 	}
 }
@@ -55,15 +61,15 @@ const playTrack = () => {
 	>
 		<q-img
 			class="rounded-10 shadow-20 min-w-100"
-			:src="episode.extension.itunes.image"
+			:src="episode.image ?? ''"
 			height="100px"
 			width="100px"
 		/>
 
-		<div>
-			<div class="row justify-between items-center q-mb-16">
-				<Title class="text-weight-bold" :font-size="16">
-					{{ episode.extension.title }}
+		<div class="flex-1">
+			<div class="row justify-between items-center no-wrap q-mb-16">
+				<Title class="text-weight-bold text-container-1" :font-size="16">
+					{{ episode.title }}
 				</Title>
 				<IconButton
 					icon="vertical-dots"
@@ -80,12 +86,16 @@ const playTrack = () => {
 			</div>
 
 			<p class="fs-14 !leading-22 opacity-50 text-container q-mb-16">
-				{{ episode.extension.description }}
+				{{ episode.description }}
 			</p>
 
 			<div class="row items-center">
+				<Spinner
+					class="!w-36 !h-36 q-mr-16"
+					v-if="loadingTrack && sinfoniaCurrentTokenID === episode._id"
+				/>
 				<IconButton
-					v-if="isPlaying && sinfoniaCurrentTokenID === episode.token_id"
+					v-else-if="isPlaying && sinfoniaCurrentTokenID === episode._id"
 					icon="pause"
 					width="24"
 					height="24"
@@ -107,7 +117,8 @@ const playTrack = () => {
 					@click.prevent.stop="playTrack"
 				/>
 
-				<p class="opacity-50">{{ audioFullDuration }}</p>
+				<p class="opacity-50" v-if="!loadingMetadata">{{ audioFullDuration }}</p>
+				<q-skeleton class="min-w-56" type="text" v-else />
 			</div>
 		</div>
 	</Card>

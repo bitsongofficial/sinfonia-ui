@@ -2,6 +2,7 @@
 import Track from "@/components/player/Track.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
 import TrackBar from "@/components/player/TrackBar.vue"
+import Spinner from "@/components/Spinner"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 
 const {
@@ -12,6 +13,7 @@ const {
 	currentVolume,
 	canGoNext,
 	canGoPrev,
+	loadingTrack,
 	volume,
 	pause,
 	resume,
@@ -19,6 +21,7 @@ const {
 	toggleVolume,
 	next,
 	prev,
+	stop,
 } = useSinfoniaMediaPlayer()
 
 const durationUpdate = (seekValue: number | null) => {
@@ -31,12 +34,12 @@ const durationUpdate = (seekValue: number | null) => {
 <template>
 	<Transition name="fade" mode="out-in">
 		<div
-			class="fixed bottom-20 left-50 -translate-x-50 w-full container"
+			class="fixed bottom-0 left-50 -translate-x-50 w-full z-10"
 			v-if="sinfoniaCurrentTrackNFT"
 		>
-			<div class="w-full q-ml-auto !w-xs-full !w-md-5/6">
+			<div class="w-full q-ml-auto !w-xs-full">
 				<div
-					class="bg-secondary-80 light:bg-white blur-20 shadow-10 row no-wrap items-center rounded-20 h-80 q-pa-10"
+					class="bg-secondary light:bg-white shadow-10 row no-wrap items-center rounded-20 !rounded-bottom-left-0 !rounded-bottom-right-0 h-90 q-pa-20"
 				>
 					<Track
 						:track="sinfoniaCurrentTrackNFT"
@@ -56,8 +59,9 @@ const durationUpdate = (seekValue: number | null) => {
 									:disabled="!canGoPrev"
 								/>
 							</div>
+							<Spinner class="!w-36 !h-36" v-if="loadingTrack" />
 							<IconButton
-								v-if="isPlaying"
+								v-else-if="isPlaying"
 								icon="pause"
 								width="24"
 								height="24"
@@ -97,11 +101,14 @@ const durationUpdate = (seekValue: number | null) => {
 							:max="sinfoniaAudioDuration"
 							class="w-full hidden flex-min-xs"
 							@update:model-value="durationUpdate"
+							:disable="loadingTrack"
 						/>
 					</div>
 
-					<div class="w-3/10 min-w-180 q-pr-8 hidden block-min-xs">
-						<div class="row items-center no-wrap q-ml-auto max-w-160">
+					<div
+						class="row justify-end items-center w-3/10 min-w-180 q-pr-8 hidden flex-min-xs"
+					>
+						<div class="row items-center no-wrap max-w-160 w-full">
 							<IconButton
 								icon="volume"
 								width="24"
@@ -119,6 +126,16 @@ const durationUpdate = (seekValue: number | null) => {
 								:step="0.1"
 							/>
 						</div>
+
+						<IconButton
+							icon="close"
+							:width="12"
+							:height="12"
+							class="text-white light:text-secondary fs-20 w-32 h-32 q-ml-20"
+							color="none"
+							size="14px"
+							@click.prevent.stop="stop"
+						/>
 					</div>
 				</div>
 
@@ -129,6 +146,7 @@ const durationUpdate = (seekValue: number | null) => {
 						:max="sinfoniaAudioDuration"
 						class="w-full"
 						@update:model-value="durationUpdate"
+						:disable="loadingTrack"
 					/>
 				</div>
 			</div>

@@ -166,8 +166,22 @@ const routes: RouteRecordRaw[] = [
 					title: "Create Podcast",
 				},
 			},
+		],
+	},
+	{
+		path: "/podcast",
+		name: "PodcastWrapper",
+		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Podcasts",
+		},
+		children: [
 			{
-				path: ":address/details",
+				path: "",
+				redirect: "/podcasts",
+			},
+			{
+				path: ":id",
 				name: "PodcastDetails",
 				component: () => import("@/components/pages/podcasts/Podcast.vue"),
 				meta: {
@@ -183,7 +197,7 @@ const routes: RouteRecordRaw[] = [
 				},
 			},
 			{
-				path: ":address/episode/:tokenId",
+				path: ":podcastId/episode/:episodeId",
 				name: "PodcastEpisode",
 				component: () => import("@/components/pages/podcasts/Episode.vue"),
 				meta: {
@@ -204,6 +218,24 @@ const routes: RouteRecordRaw[] = [
 				path: ":address?",
 				name: "Profile",
 				component: () => import("@/components/pages/profile/Profile.vue"),
+				meta: {
+					breadcrumbHide: true,
+				},
+			},
+		],
+	},
+	{
+		path: "/search",
+		name: "SearchWrapper",
+		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Search",
+		},
+		children: [
+			{
+				path: "",
+				name: "Search",
+				component: () => import("@/components/pages/search/Search.vue"),
 				meta: {
 					breadcrumbHide: true,
 				},
@@ -257,6 +289,12 @@ export const menuItems: MenuItem[] = [
 		path: "/assets",
 		disabled: disabledRoutes,
 	},
+	/* {
+		icon: { name: "search-large", width: 24, height: 24 },
+		label: "Search",
+		path: "/search",
+		disabled: disabledRoutes,
+	}, */
 	{
 		icon: { name: "box", width: 24, height: 24 },
 		label: "Collections",

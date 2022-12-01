@@ -1,7 +1,7 @@
 import { Howl, Howler } from "howler"
-import { computed, reactive, ref, watch } from "vue"
+import { computed, ref } from "vue"
 import { formatDurationLocale } from "@/common"
-import { PodcastEpisode } from "@/types"
+import { PodcastEpisode } from "@/graphql/ts/graphql"
 
 const format = ["mp3", "wav", "mp4", "webm", "mpeg"]
 
@@ -13,6 +13,7 @@ const sinfoniaPlaylist = ref<PodcastEpisode[]>([])
 const currentTrackIndex = ref(0)
 
 const isPlaying = ref(false)
+const loadingTrack = ref(false)
 const progress = ref(0) // Percentage
 const durationProgress = ref(0) // seconds
 const currentPlayTime = ref("0:00")
@@ -37,13 +38,20 @@ const addTrackToPlaylist = (track: PodcastEpisode) => {
 const setupAudioPlayer = () => {
 	const nft = sinfoniaPlaylist.value[currentTrackIndex.value]
 
-	if (nft.extension) {
+	if (nft.enclosures && nft.enclosures.length > 0) {
+		const [enclosure] = nft.enclosures
+
+		if (!enclosure?.url) {
+			return
+		}
+
 		clearAnimations()
-		const src = nft.extension.enclosure.url
+		const src = enclosure.url
 		sinfoniaCurrentTrack.value = src
-		sinfoniaCurrentTokenID.value = nft.token_id
+		sinfoniaCurrentTokenID.value = nft._id
 		progress.value = 0
 		durationProgress.value = 0
+		loadingTrack.value = true
 
 		sinfoniaPlayer.value = new Howl({
 			src,
@@ -72,7 +80,6 @@ const setupAudioPlayer = () => {
 				clearAnimations()
 			},
 			onseek: () => {
-				console.log("on seek")
 				const requestID = requestAnimationFrame(() => updateProgress())
 
 				requestIDs.push(requestID)
@@ -88,6 +95,7 @@ const setupAudioPlayer = () => {
 					progress.value = 0
 					durationProgress.value = 0
 					currentPlayTime.value = "0:00"
+					loadingTrack.value = false
 				}
 			},
 		})
@@ -97,6 +105,7 @@ const setupAudioPlayer = () => {
 const play = (src: PodcastEpisode) => {
 	Howler.stop()
 	currentTrackIndex.value = 0
+	sinfoniaPlaylist.value = []
 	addTrackToPlaylist(src)
 	setupAudioPlayer()
 
@@ -199,8 +208,10 @@ const updateProgress = () => {
 export const useSinfoniaMediaPlayer = () => {
 	const infoPlayer = ref<Howl>()
 	const audioFullDuration = ref("")
+	const loadingMetadata = ref(false)
 
 	const setupInfoPlayer = (src: string) => {
+		loadingMetadata.value = true
 		infoPlayer.value = new Howl({
 			src,
 			preload: "metadata",
@@ -214,6 +225,8 @@ export const useSinfoniaMediaPlayer = () => {
 					const fullDuration = infoPlayer.value.duration()
 					audioFullDuration.value = formatDurationLocale(Math.round(fullDuration))
 				}
+
+				loadingMetadata.value = false
 			},
 		})
 	}
@@ -238,6 +251,8 @@ export const useSinfoniaMediaPlayer = () => {
 		currentVolume,
 		canGoNext,
 		canGoPrev,
+		loadingTrack,
+		loadingMetadata,
 		addTrack,
 		play,
 		stop,

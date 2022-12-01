@@ -237,6 +237,12 @@ label:not(.q-field--with-bottom):not(.move-error-to-bottom) {
     }
 }
 
+.min-height-input {
+    .q-field__control {
+        height: fit-content;
+    }
+}
+
 .input-no-append .q-field__append {
     display: none;
 }
