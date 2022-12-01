@@ -18,6 +18,7 @@ const show = ref(false)
 const {
 	addTrack,
 	play,
+	resume,
 	pause,
 	addTrackToPlaylist,
 	isPlaying,
@@ -49,7 +50,11 @@ onUnmounted(() => {
 
 const playTrack = () => {
 	if (episodeRef.value) {
-		play(episodeRef.value)
+		if (sinfoniaCurrentTokenID.value === episodeRef.value._id) {
+			resume()
+		} else {
+			play(episodeRef.value)
+		}
 	}
 }
 </script>
