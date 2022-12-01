@@ -8,9 +8,9 @@ import Spinner from "@/components/Spinner"
 import { PodcastsPaginated } from "@/graphql"
 
 const { result, loading, fetchMore } = useQuery(PodcastsPaginated, {
-	first: 20,
+	first: 0,
 	after: "",
-	last: 0,
+	last: 20,
 	before: "",
 })
 
@@ -21,10 +21,10 @@ const loadMore = () => {
 
 	fetchMore({
 		variables: {
-			first: 20,
-			after: result.value.podcasts.pageInfo.endCursor ?? "",
-			last: 0,
-			before: "",
+			first: 0,
+			after: "",
+			last: 20,
+			before: result.value.podcasts.pageInfo.startCursor ?? "",
 		},
 		updateQuery: (previousResult, { fetchMoreResult }) => {
 			const newEdges = fetchMoreResult?.podcasts.edges ?? []
@@ -77,7 +77,10 @@ const loadMore = () => {
 
 			<Spinner v-if="loading && result" class="!w-50 !h-50 q-mx-auto" />
 
-			<div class="flex w-full" v-else-if="result?.podcasts.pageInfo.hasNextPage">
+			<div
+				class="flex w-full"
+				v-else-if="result?.podcasts.pageInfo.hasPreviousPage"
+			>
 				<StandardButton
 					:padding-x="30"
 					:padding-y="14"
