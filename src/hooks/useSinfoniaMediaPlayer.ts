@@ -105,6 +105,7 @@ const setupAudioPlayer = () => {
 const play = (src: PodcastEpisode) => {
 	Howler.stop()
 	currentTrackIndex.value = 0
+	sinfoniaPlaylist.value = []
 	addTrackToPlaylist(src)
 	setupAudioPlayer()
 

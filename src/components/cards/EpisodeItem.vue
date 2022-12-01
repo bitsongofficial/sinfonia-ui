@@ -2,6 +2,7 @@
 import Title from "@/components/typography/Title.vue"
 import Card from "@/components/cards/Card.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
+import Spinner from "@/components/Spinner"
 import { PodcastEpisode } from "@/graphql/ts/graphql"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import { onUnmounted, toRef, watch, ref } from "vue"
@@ -21,6 +22,7 @@ const {
 	addTrackToPlaylist,
 	isPlaying,
 	audioFullDuration,
+	loadingTrack,
 	sinfoniaCurrentTokenID,
 } = useSinfoniaMediaPlayer()
 
@@ -87,8 +89,12 @@ const playTrack = () => {
 			</p>
 
 			<div class="row items-center">
+				<Spinner
+					class="!w-36 !h-36 q-mr-16"
+					v-if="loadingTrack && sinfoniaCurrentTokenID === episode._id"
+				/>
 				<IconButton
-					v-if="isPlaying && sinfoniaCurrentTokenID === episode._id"
+					v-else-if="isPlaying && sinfoniaCurrentTokenID === episode._id"
 					icon="pause"
 					width="24"
 					height="24"
