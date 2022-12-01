@@ -19,6 +19,7 @@ const {
 	toggleVolume,
 	next,
 	prev,
+	stop,
 } = useSinfoniaMediaPlayer()
 
 const durationUpdate = (seekValue: number | null) => {
@@ -100,8 +101,10 @@ const durationUpdate = (seekValue: number | null) => {
 						/>
 					</div>
 
-					<div class="w-3/10 min-w-180 q-pr-8 hidden block-min-xs">
-						<div class="row items-center no-wrap q-ml-auto max-w-160">
+					<div
+						class="row justify-end items-center w-3/10 min-w-180 q-pr-8 hidden flex-min-xs"
+					>
+						<div class="row items-center no-wrap max-w-160 w-full">
 							<IconButton
 								icon="volume"
 								width="24"
@@ -119,6 +122,16 @@ const durationUpdate = (seekValue: number | null) => {
 								:step="0.1"
 							/>
 						</div>
+
+						<IconButton
+							icon="close"
+							:width="12"
+							:height="12"
+							class="text-white light:text-secondary fs-20 w-32 h-32 q-ml-20"
+							color="none"
+							size="14px"
+							@click.prevent.stop="stop"
+						/>
 					</div>
 				</div>
 
