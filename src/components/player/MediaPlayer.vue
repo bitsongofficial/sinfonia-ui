@@ -2,6 +2,7 @@
 import Track from "@/components/player/Track.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
 import TrackBar from "@/components/player/TrackBar.vue"
+import Spinner from "@/components/Spinner"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 
 const {
@@ -12,6 +13,7 @@ const {
 	currentVolume,
 	canGoNext,
 	canGoPrev,
+	loadingTrack,
 	volume,
 	pause,
 	resume,
@@ -57,8 +59,9 @@ const durationUpdate = (seekValue: number | null) => {
 									:disabled="!canGoPrev"
 								/>
 							</div>
+							<Spinner class="!w-36 !h-36" v-if="loadingTrack" />
 							<IconButton
-								v-if="isPlaying"
+								v-else-if="isPlaying"
 								icon="pause"
 								width="24"
 								height="24"
@@ -98,6 +101,7 @@ const durationUpdate = (seekValue: number | null) => {
 							:max="sinfoniaAudioDuration"
 							class="w-full hidden flex-min-xs"
 							@update:model-value="durationUpdate"
+							:disable="loadingTrack"
 						/>
 					</div>
 
@@ -142,6 +146,7 @@ const durationUpdate = (seekValue: number | null) => {
 						:max="sinfoniaAudioDuration"
 						class="w-full"
 						@update:model-value="durationUpdate"
+						:disable="loadingTrack"
 					/>
 				</div>
 			</div>

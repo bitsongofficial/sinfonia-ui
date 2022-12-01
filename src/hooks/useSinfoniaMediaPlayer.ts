@@ -13,6 +13,7 @@ const sinfoniaPlaylist = ref<PodcastEpisode[]>([])
 const currentTrackIndex = ref(0)
 
 const isPlaying = ref(false)
+const loadingTrack = ref(false)
 const progress = ref(0) // Percentage
 const durationProgress = ref(0) // seconds
 const currentPlayTime = ref("0:00")
@@ -50,6 +51,7 @@ const setupAudioPlayer = () => {
 		sinfoniaCurrentTokenID.value = nft._id
 		progress.value = 0
 		durationProgress.value = 0
+		loadingTrack.value = true
 
 		sinfoniaPlayer.value = new Howl({
 			src,
@@ -78,7 +80,6 @@ const setupAudioPlayer = () => {
 				clearAnimations()
 			},
 			onseek: () => {
-				console.log("on seek")
 				const requestID = requestAnimationFrame(() => updateProgress())
 
 				requestIDs.push(requestID)
@@ -94,6 +95,7 @@ const setupAudioPlayer = () => {
 					progress.value = 0
 					durationProgress.value = 0
 					currentPlayTime.value = "0:00"
+					loadingTrack.value = false
 				}
 			},
 		})
@@ -244,6 +246,7 @@ export const useSinfoniaMediaPlayer = () => {
 		currentVolume,
 		canGoNext,
 		canGoPrev,
+		loadingTrack,
 		addTrack,
 		play,
 		stop,
