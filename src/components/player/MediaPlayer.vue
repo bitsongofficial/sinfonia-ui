@@ -31,12 +31,12 @@ const durationUpdate = (seekValue: number | null) => {
 <template>
 	<Transition name="fade" mode="out-in">
 		<div
-			class="fixed bottom-0 left-50 -translate-x-50 w-full"
+			class="fixed bottom-0 left-50 -translate-x-50 w-full z-10"
 			v-if="sinfoniaCurrentTrackNFT"
 		>
 			<div class="w-full q-ml-auto !w-xs-full">
 				<div
-					class="bg-secondary-80 light:bg-white blur-20 shadow-10 row no-wrap items-center rounded-20 h-90 q-pa-20"
+					class="bg-secondary light:bg-white shadow-10 row no-wrap items-center rounded-20 !rounded-bottom-left-0 !rounded-bottom-right-0 h-90 q-pa-20"
 				>
 					<Track
 						:track="sinfoniaCurrentTrackNFT"

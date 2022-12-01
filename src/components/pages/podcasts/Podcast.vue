@@ -90,7 +90,7 @@ useMetadata(metadata)
 								<RouterLink
 									v-if="episode"
 									class="col-span-12"
-									:to="`/podcasts/${id}/episode/${episode?._id}`"
+									:to="`/podcast/${id}/episode/${episode?._id}`"
 								>
 									<EpisodeItem :episode="episode" />
 								</RouterLink>

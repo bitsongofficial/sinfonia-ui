@@ -68,7 +68,7 @@ const loadMore = () => {
 			>
 				<RouterLink
 					:key="index"
-					:to="`/podcasts/${item.node._id}/details`"
+					:to="`/podcast/${item.node._id}`"
 					class="block full-height"
 				>
 					<GQLPodcastCard :podcast="item.node" />

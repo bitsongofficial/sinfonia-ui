@@ -517,6 +517,22 @@
     .rounded-top-right-#{$val} {
         border-top-right-radius: #{$val}px;
     }
+
+    .rounded-bottom-left-#{$val} {
+        border-bottom-left-radius: #{$val}px;
+    }
+
+    .rounded-bottom-right-#{$val} {
+        border-bottom-right-radius: #{$val}px;
+    }
+
+    .\!rounded-bottom-left-#{$val} {
+        border-bottom-left-radius: #{$val}px !important;
+    }
+
+    .\!rounded-bottom-right-#{$val} {
+        border-bottom-right-radius: #{$val}px !important;
+    }
 }
 
 .col-span-full {

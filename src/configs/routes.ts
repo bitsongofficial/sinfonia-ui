@@ -166,8 +166,18 @@ const routes: RouteRecordRaw[] = [
 					title: "Create Podcast",
 				},
 			},
+		],
+	},
+	{
+		path: "/podcast",
+		name: "PodcastWrapper",
+		component: () => import("@/components/pages/Wrapper.vue"),
+		meta: {
+			title: "Podcast",
+		},
+		children: [
 			{
-				path: ":id/details",
+				path: ":id",
 				name: "PodcastDetails",
 				component: () => import("@/components/pages/podcasts/Podcast.vue"),
 				meta: {
