@@ -95,7 +95,11 @@ export const PodcastWithEpisodes = graphql(`
 `)
 
 export const PodcastEpisode = graphql(`
-	query podcastEpisode($id: ObjectID!) {
+	query podcastEpisode($id: ObjectID!, $podcast_id: ObjectID!) {
+		podcast(id: $podcast_id) {
+			_id
+			title
+		}
 		podcastEpisode(id: $id) {
 			_id
 			title

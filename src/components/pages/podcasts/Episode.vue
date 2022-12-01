@@ -22,6 +22,7 @@ const show = ref(false)
 
 const { result, loading } = useQuery(PodcastEpisode, {
 	id: episodeId,
+	podcast_id: podcastId,
 })
 
 const {
@@ -53,8 +54,8 @@ const episodeWatcher = watch(
 			settingsStore.breadcrumbPageTitle = currentEpisode.podcastEpisode.title ?? ""
 			settingsStore.breadcrumbPrepend = [
 				{
-					label: "Podcast",
-					to: `/podcasts/${podcastId}/details`,
+					label: currentEpisode.podcast?.title ?? "",
+					to: `/podcast/${podcastId}`,
 				},
 			]
 
@@ -76,20 +77,19 @@ onUnmounted(() => {
 })
 
 const metadata = computed(() => ({
-	/* title: `${result.value?.podcastEpisode?.title} | ${podcast.value?.init?.title}`, */
-	title: result.value?.podcastEpisode?.title,
+	title: `${result.value?.podcastEpisode?.title} | ${result.value?.podcast?.title}`,
 	description: result.value?.podcastEpisode?.description,
 	og: {
 		type: "website",
 		url: import.meta.env.VITE_BASE_URL,
-		title: result.value?.podcastEpisode?.title,
+		title: `${result.value?.podcastEpisode?.title} | ${result.value?.podcast?.title}`,
 		description: result.value?.podcastEpisode?.description,
 		image: result.value?.podcastEpisode?.image,
 	},
 	twitter: {
 		card: "summary_large_image",
 		url: import.meta.env.VITE_BASE_URL,
-		title: result.value?.podcastEpisode?.title,
+		title: `${result.value?.podcastEpisode?.title} | ${result.value?.podcast?.title}`,
 		description: result.value?.podcastEpisode?.description,
 		image: result.value?.podcastEpisode?.image,
 	},
@@ -114,8 +114,10 @@ useMetadata(metadata)
 						{{ result.podcastEpisode.title }}
 					</Title>
 
-					<RouterLink :to="`/podcasts/${podcastId}/details`">
-						<p class="fs-24 !leading-38 text-weight-medium">Podcast</p>
+					<RouterLink :to="`/podcast/${podcastId}`">
+						<p class="fs-24 !leading-38 text-weight-medium">
+							{{ result.podcast?.title }}
+						</p>
 					</RouterLink>
 				</div>
 			</div>
