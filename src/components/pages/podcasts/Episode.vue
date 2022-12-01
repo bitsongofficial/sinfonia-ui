@@ -163,7 +163,7 @@ useMetadata(metadata)
 						{{ result.podcastEpisode.description }}
 					</p>
 
-					<StandardButton :to="`/podcasts/${podcastId}/details`">
+					<StandardButton :to="`/podcast/${podcastId}`">
 						See all episodes
 					</StandardButton>
 				</div>
