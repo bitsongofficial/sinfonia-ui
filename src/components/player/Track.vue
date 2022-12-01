@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { PodcastEpisode } from "@/graphql/ts/graphql"
+import { RouterLink } from "vue-router"
 
 defineProps<{
 	track: PodcastEpisode
@@ -7,7 +8,10 @@ defineProps<{
 </script>
 
 <template>
-	<div class="row items-center no-wrap">
+	<RouterLink
+		:to="`/podcast/${track.podcast_id}/episode/${track._id}`"
+		class="row items-center no-wrap"
+	>
 		<q-img
 			class="rounded-10 min-w-56"
 			:src="track.image ?? ''"
@@ -24,5 +28,5 @@ defineProps<{
 				{{ track. }}
 			</p> -->
 		</div>
-	</div>
+	</RouterLink>
 </template>
