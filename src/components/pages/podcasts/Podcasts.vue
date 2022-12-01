@@ -77,7 +77,7 @@ const loadMore = () => {
 
 			<Spinner v-if="loading && result" class="!w-50 !h-50 q-mx-auto" />
 
-			<div class="flex w-full" v-else>
+			<div class="flex w-full" v-else-if="result?.podcasts.pageInfo.hasNextPage">
 				<StandardButton
 					:padding-x="30"
 					:padding-y="14"
