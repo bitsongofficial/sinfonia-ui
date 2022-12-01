@@ -208,8 +208,10 @@ const updateProgress = () => {
 export const useSinfoniaMediaPlayer = () => {
 	const infoPlayer = ref<Howl>()
 	const audioFullDuration = ref("")
+	const loadingMetadata = ref(false)
 
 	const setupInfoPlayer = (src: string) => {
+		loadingMetadata.value = true
 		infoPlayer.value = new Howl({
 			src,
 			preload: "metadata",
@@ -223,6 +225,8 @@ export const useSinfoniaMediaPlayer = () => {
 					const fullDuration = infoPlayer.value.duration()
 					audioFullDuration.value = formatDurationLocale(Math.round(fullDuration))
 				}
+
+				loadingMetadata.value = false
 			},
 		})
 	}
@@ -248,6 +252,7 @@ export const useSinfoniaMediaPlayer = () => {
 		canGoNext,
 		canGoPrev,
 		loadingTrack,
+		loadingMetadata,
 		addTrack,
 		play,
 		stop,

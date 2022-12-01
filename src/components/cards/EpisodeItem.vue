@@ -23,6 +23,7 @@ const {
 	isPlaying,
 	audioFullDuration,
 	loadingTrack,
+	loadingMetadata,
 	sinfoniaCurrentTokenID,
 } = useSinfoniaMediaPlayer()
 
@@ -116,7 +117,8 @@ const playTrack = () => {
 					@click.prevent.stop="playTrack"
 				/>
 
-				<p class="opacity-50">{{ audioFullDuration }}</p>
+				<p class="opacity-50" v-if="!loadingMetadata">{{ audioFullDuration }}</p>
+				<q-skeleton class="min-w-56" type="text" v-else />
 			</div>
 		</div>
 	</Card>

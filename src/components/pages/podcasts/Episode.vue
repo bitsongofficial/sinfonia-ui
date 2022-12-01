@@ -33,6 +33,7 @@ const {
 	isPlaying,
 	audioFullDuration,
 	sinfoniaCurrentTokenID,
+	loadingMetadata,
 } = useSinfoniaMediaPlayer()
 
 const playTrack = () => {
@@ -143,7 +144,10 @@ useMetadata(metadata)
 							@click.prevent.stop="playTrack"
 						/>
 
-						<p class="fs-18 opacity-50">{{ audioFullDuration }}</p>
+						<p class="fs-18 opacity-50" v-if="!loadingMetadata">
+							{{ audioFullDuration }}
+						</p>
+						<q-skeleton class="min-w-56" type="text" v-else />
 
 						<IconButton
 							icon="vertical-dots"
