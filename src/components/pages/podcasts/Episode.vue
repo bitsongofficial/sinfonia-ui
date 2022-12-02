@@ -175,7 +175,7 @@ useMetadata(metadata)
 						</p>
 
 						<IconButton
-							icon="thumbs-up"
+							:icon="!like ? 'heart' : 'heart-fill'"
 							width="24"
 							height="24"
 							class="fs-20 s-28 q-ml-auto"

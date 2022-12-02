@@ -15,6 +15,7 @@ const props = defineProps<{
 
 const episodeRef = toRef(props, "episode")
 const show = ref(false)
+const like = ref(false)
 
 const img = computed(() => {
 	if (props.episode.image && props.episode.image.length > 0) {
@@ -110,6 +111,15 @@ const playTrack = () => {
 					color="none"
 					:solid="true"
 					@click.prevent.stop="playTrack"
+				/>
+
+				<IconButton
+					:icon="!like ? 'heart' : 'heart-fill'"
+					width="24"
+					height="24"
+					class="fs-20 s-28 q-mr-16"
+					@click.native.prevent="like = !like"
+					:color="!like ? 'white' : 'primary'"
 				/>
 
 				<p class="opacity-50">{{ episode.duration }}</p>
