@@ -8,9 +8,16 @@ import { computed, onMounted, ref } from "vue"
 import { QInput } from "quasar"
 import { useLazyQuery } from "@vue/apollo-composable"
 import { SearchPodcasts } from "@/graphql"
-import { RouterLink } from "vue-router"
+import { RouterLink, useRoute, useRouter } from "vue-router"
+import useFavorite from "@/store/favorite"
 
-const searchValue = ref("")
+const router = useRouter()
+const route = useRoute()
+const favoriteStore = useFavorite()
+
+const search = route.query.s as string
+
+const searchValue = ref(search ?? "")
 const searchInput = ref<QInput>()
 
 const currentPage = ref(1)
@@ -32,7 +39,15 @@ const onSearch = () => {
 		text: searchValue.value,
 		start: 0,
 	})
+
+	router.push({ path: "/search", query: { s: searchValue.value } })
 }
+
+onMounted(() => {
+	if (searchValue.value.length > 0) {
+		onSearch()
+	}
+})
 
 const loadMore = () => {
 	if (!result.value) {
@@ -98,13 +113,26 @@ onMounted(() => {
 			</div>
 		</div>
 
+		<template v-if="!result">
+			<div class="column row-md align-items-end-md q-mb-42">
+				<Title>Recent searches</Title>
+			</div>
+
+			<div class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24">
+				<RouterLink
+					v-for="(podcast, index) in favoriteStore.podcastsHistory"
+					:to="`/podcast/${podcast?._id}`"
+					class="block full-height"
+					:key="index"
+				>
+					<GQLPodcastCard :podcast="podcast" />
+				</RouterLink>
+			</div>
+		</template>
+
 		<Spinner v-if="loading" class="!w-50 !h-50 q-mx-auto" />
 
 		<template v-else-if="result">
-			<!-- <div class="column row-md align-items-end-md q-mb-42">
-				<Title>Podcasts & Shows</Title>
-			</div> -->
-
 			<q-virtual-scroll
 				class="virtual-grid q-mb-42"
 				v-if="result?.searchPodcasts?.docs"
@@ -117,6 +145,7 @@ onMounted(() => {
 					:to="`/podcast/${item?._id}`"
 					class="block full-height"
 					:key="index"
+					@click="favoriteStore.appendHistory(item)"
 				>
 					<GQLPodcastCard :podcast="item" />
 				</RouterLink>

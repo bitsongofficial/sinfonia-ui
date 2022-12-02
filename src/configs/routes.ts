@@ -1,6 +1,5 @@
 import { MenuItem } from "@/types"
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
-import { externalWebsites } from "./config"
 
 export const disabledRoutes =
 	import.meta.env.VITE_PLAYGROUND_DISABLE_ROUTES === "true"
@@ -17,7 +16,7 @@ export const disabledPodcasts = import.meta.env.VITE_PODCASTS_DISABLE === "true"
 const routes: RouteRecordRaw[] = [
 	{
 		path: "/",
-		redirect: "/assets",
+		redirect: "/podcasts",
 	},
 	/* {
 		path: "/fantokens",
