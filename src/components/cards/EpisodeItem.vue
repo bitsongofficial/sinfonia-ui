@@ -5,7 +5,7 @@ import IconButton from "@/components/buttons/IconButton.vue"
 import Spinner from "@/components/Spinner"
 import { PodcastEpisode } from "@/graphql/ts/graphql"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
-import { onUnmounted, toRef, watch, ref } from "vue"
+import { toRef, ref } from "vue"
 import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
 
 const props = defineProps<{
@@ -16,37 +16,14 @@ const episodeRef = toRef(props, "episode")
 const show = ref(false)
 
 const {
-	addTrack,
 	play,
 	resume,
 	pause,
 	addTrackToPlaylist,
 	isPlaying,
-	audioFullDuration,
 	loadingTrack,
-	loadingMetadata,
 	sinfoniaCurrentTokenID,
 } = useSinfoniaMediaPlayer()
-
-const episodeWatcher = watch(
-	() => episodeRef.value,
-	(value) => {
-		if (value && value.enclosures && value.enclosures.length > 0) {
-			const [enclosure] = value.enclosures
-
-			/* if (enclosure && enclosure.url) {
-				addTrack(enclosure.url)
-			} */
-		}
-	},
-	{
-		immediate: true,
-	}
-)
-
-onUnmounted(() => {
-	episodeWatcher()
-})
 
 const playTrack = () => {
 	if (episodeRef.value) {
@@ -122,8 +99,7 @@ const playTrack = () => {
 					@click.prevent.stop="playTrack"
 				/>
 
-				<!-- <p class="opacity-50" v-if="!loadingMetadata">{{ audioFullDuration }}</p>
-				<q-skeleton class="min-w-56" type="text" v-else /> -->
+				<p class="opacity-50">{{ episode.duration }}</p>
 			</div>
 		</div>
 	</Card>

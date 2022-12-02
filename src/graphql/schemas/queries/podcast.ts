@@ -85,6 +85,7 @@ export const PodcastWithEpisodes = graphql(`
 			description
 			image
 			podcast_id
+			duration
 			enclosures {
 				url
 				type
@@ -106,6 +107,7 @@ export const PodcastEpisode = graphql(`
 			description
 			image
 			podcast_id
+			duration
 			enclosures {
 				url
 				type
