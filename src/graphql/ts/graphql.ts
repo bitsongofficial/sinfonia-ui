@@ -72,7 +72,7 @@ export type PodcastEpisode = {
   __typename?: 'PodcastEpisode';
   _id: Scalars['ObjectID'];
   description?: Maybe<Scalars['String']>;
-  duration?: Maybe<Scalars['String']>;
+  duration: Scalars['Int'];
   episode?: Maybe<Scalars['String']>;
   episode_type?: Maybe<Scalars['String']>;
   guid?: Maybe<Scalars['String']>;
@@ -246,7 +246,7 @@ export type PodcastEpisodesQueryVariables = Exact<{
 }>;
 
 
-export type PodcastEpisodesQuery = { __typename?: 'Query', podcastEpisodes: { __typename?: 'PodcastEpisodeConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasPreviousPage?: boolean | null, hasNextPage?: boolean | null }, edges: Array<{ __typename?: 'PodcastEpisodeEdge', cursor: any, node?: { __typename?: 'PodcastEpisode', _id: any, title?: string | null, description?: string | null, image?: string | null, podcast_id: any, duration?: string | null } | null } | null> } };
+export type PodcastEpisodesQuery = { __typename?: 'Query', podcastEpisodes: { __typename?: 'PodcastEpisodeConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasPreviousPage?: boolean | null, hasNextPage?: boolean | null }, edges: Array<{ __typename?: 'PodcastEpisodeEdge', cursor: any, node?: { __typename?: 'PodcastEpisode', _id: any, title?: string | null, description?: string | null, image?: string | null, podcast_id: any, duration: number } | null } | null> } };
 
 export type PodcastQueryVariables = Exact<{
   id: Scalars['ObjectID'];
@@ -261,7 +261,7 @@ export type PodcastEpisodeQueryVariables = Exact<{
 }>;
 
 
-export type PodcastEpisodeQuery = { __typename?: 'Query', podcast?: { __typename?: 'Podcast', _id: any, title?: string | null, image?: string | null } | null, podcastEpisode?: { __typename?: 'PodcastEpisode', _id: any, title?: string | null, description?: string | null, image?: string | null, podcast_id: any, duration?: string | null } | null };
+export type PodcastEpisodeQuery = { __typename?: 'Query', podcast?: { __typename?: 'Podcast', _id: any, title?: string | null, image?: string | null } | null, podcastEpisode?: { __typename?: 'PodcastEpisode', _id: any, title?: string | null, description?: string | null, image?: string | null, podcast_id: any, duration: number } | null };
 
 export type SearchPodcastsQueryVariables = Exact<{
   text: Scalars['String'];
