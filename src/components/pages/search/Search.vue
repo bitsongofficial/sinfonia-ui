@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Title from "@/components/typography/Title.vue"
 import GQLPodcastCard from "@/components/cards/GQLPodcastCard.vue"
-import StandardButton from "@/components/buttons/StandardButton.vue"
 import EpisodeItem from "@/components/cards/EpisodeItem.vue"
 import Spinner from "@/components/Spinner"
 import { resolveIcon } from "@/common"
@@ -116,7 +115,7 @@ onMounted(() => {
 			</div>
 		</div>
 
-		<template v-if="!result">
+		<template v-if="!result && favoriteStore.podcastsHistory.length > 0">
 			<div class="column row-md align-items-end-md q-mb-42">
 				<Title>Recent searches</Title>
 			</div>
