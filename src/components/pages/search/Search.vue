@@ -2,13 +2,13 @@
 import Title from "@/components/typography/Title.vue"
 import GQLPodcastCard from "@/components/cards/GQLPodcastCard.vue"
 import StandardButton from "@/components/buttons/StandardButton.vue"
+import EpisodeItem from "@/components/cards/EpisodeItem.vue"
 import Spinner from "@/components/Spinner"
 import { resolveIcon } from "@/common"
 import { computed, onMounted, ref } from "vue"
 import { QInput } from "quasar"
 import { useLazyQuery } from "@vue/apollo-composable"
-import { SearchPodcasts } from "@/graphql"
-import { SearchPodcastsQuery } from "@/graphql/ts/graphql"
+import { Search } from "@/graphql"
 import { RouterLink, useRoute, useRouter } from "vue-router"
 import useFavorite from "@/store/favorite"
 
@@ -23,7 +23,7 @@ const searchInput = ref<QInput>()
 
 const currentPage = ref(1)
 
-const { result, loading, load, fetchMore } = useLazyQuery(SearchPodcasts)
+const { result, loading, load, fetchMore } = useLazyQuery(Search)
 
 const totalPages = computed(() => {
 	if (result.value?.searchPodcasts?.numFound) {
@@ -154,7 +154,23 @@ onMounted(() => {
 				</RouterLink>
 			</q-virtual-scroll>
 
-			<Spinner v-if="loading && result" class="!w-50 !h-50 q-mx-auto" />
+			<div
+				class="grid grid-cols-12 grid-gap-16"
+				v-if="result.searchPodcastEpisodes?.docs"
+			>
+				<Title class="q-mb-24 col-span-12">Episodes</Title>
+				<template v-for="episode in result.searchPodcastEpisodes.docs">
+					<RouterLink
+						v-if="episode"
+						class="col-span-12 col-span-md-8"
+						:to="`/podcast/${episode.podcast_id}/episode/${episode._id}`"
+					>
+						<EpisodeItem :episode="episode" />
+					</RouterLink>
+				</template>
+			</div>
+
+			<!-- <Spinner v-if="loading && result" class="!w-50 !h-50 q-mx-auto" />
 
 			<div class="flex w-full" v-else-if="currentPage < totalPages">
 				<StandardButton
@@ -167,7 +183,7 @@ onMounted(() => {
 				>
 					Load More
 				</StandardButton>
-			</div>
+			</div> -->
 		</template>
 	</div>
 </template>

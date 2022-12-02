@@ -19,6 +19,7 @@ const documents = {
     "\n\tquery podcastEpisode($id: ObjectID!, $podcast_id: ObjectID!) {\n\t\tpodcast(id: $podcast_id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\timage\n\t\t}\n\t\tpodcastEpisode(id: $id) {\n\t\t\t_id\n\t\t\ttitle\n\t\t\tdescription\n\t\t\timage\n\t\t\tpodcast_id\n\t\t\tduration\n\t\t}\n\t}\n": types.PodcastEpisodeDocument,
     "\n\tquery searchPodcasts($text: String!, $start: Int) {\n\t\tsearchPodcasts(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tauthor\n\t\t\t}\n\t\t}\n\t}\n": types.SearchPodcastsDocument,
     "\n\tquery searchPodcastEpisodes($text: String!, $start: Int) {\n\t\tsearchPodcastEpisodes(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tdescription\n\t\t\t\tduration\n\t\t\t\tpub_date\n\t\t\t}\n\t\t}\n\t}\n": types.SearchPodcastEpisodesDocument,
+    "\n\tquery search($text: String!, $start: Int) {\n\t\tsearchPodcasts(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tauthor\n\t\t\t}\n\t\t}\n\t\tsearchPodcastEpisodes(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tdescription\n\t\t\t\tduration\n\t\t\t\tpodcast_id\n\t\t\t\tpub_date\n\t\t\t}\n\t\t}\n\t}\n": types.SearchDocument,
     "\n\tquery podcastEpisodeEnclosure($id: ObjectID!) {\n\t\tpodcastEpisodeEnclosure(id: $id) {\n\t\t\turl\n\t\t\tlength\n\t\t\ttype\n\t\t}\n\t}\n": types.PodcastEpisodeEnclosureDocument,
 };
 
@@ -46,6 +47,10 @@ export function graphql(source: "\n\tquery searchPodcasts($text: String!, $start
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n\tquery searchPodcastEpisodes($text: String!, $start: Int) {\n\t\tsearchPodcastEpisodes(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tdescription\n\t\t\t\tduration\n\t\t\t\tpub_date\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery searchPodcastEpisodes($text: String!, $start: Int) {\n\t\tsearchPodcastEpisodes(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tdescription\n\t\t\t\tduration\n\t\t\t\tpub_date\n\t\t\t}\n\t\t}\n\t}\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n\tquery search($text: String!, $start: Int) {\n\t\tsearchPodcasts(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tauthor\n\t\t\t}\n\t\t}\n\t\tsearchPodcastEpisodes(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tdescription\n\t\t\t\tduration\n\t\t\t\tpodcast_id\n\t\t\t\tpub_date\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery search($text: String!, $start: Int) {\n\t\tsearchPodcasts(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tauthor\n\t\t\t}\n\t\t}\n\t\tsearchPodcastEpisodes(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tdescription\n\t\t\t\tduration\n\t\t\t\tpodcast_id\n\t\t\t\tpub_date\n\t\t\t}\n\t\t}\n\t}\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

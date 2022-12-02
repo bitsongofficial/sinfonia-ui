@@ -138,6 +138,34 @@ export const SearchPodcastEpisodes = graphql(`
 	}
 `)
 
+export const Search = graphql(`
+	query search($text: String!, $start: Int) {
+		searchPodcasts(text: $text, start: $start) {
+			numFound
+			start
+			docs {
+				_id
+				title
+				image
+				author
+			}
+		}
+		searchPodcastEpisodes(text: $text, start: $start) {
+			numFound
+			start
+			docs {
+				_id
+				title
+				image
+				description
+				duration
+				podcast_id
+				pub_date
+			}
+		}
+	}
+`)
+
 export const PodcastEpisodeEnclosure = graphql(`
 	query podcastEpisodeEnclosure($id: ObjectID!) {
 		podcastEpisodeEnclosure(id: $id) {

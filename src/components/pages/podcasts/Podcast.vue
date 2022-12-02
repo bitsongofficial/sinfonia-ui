@@ -17,7 +17,7 @@ import { episodePlaceholderImage } from "@/common"
 const route = useRoute()
 const settingsStore = useSettings()
 
-const { play, addTracksToPlaylist } = useSinfoniaMediaPlayer()
+/* const { play, addTracksToPlaylist } = useSinfoniaMediaPlayer() */
 
 const like = ref(false)
 
@@ -163,7 +163,7 @@ useMetadata(metadata)
 				</div>
 				<div class="col-span-12 col-span-md-9 flex column justify-end">
 					<p class="fs-16 opacity-50 q-mb-16">Podcast</p>
-					<Title class="text-weight-bold q-mb-24 fs-40 fs-md-90">{{
+					<Title class="text-weight-bold q-mb-24 fs-40 fs-md-90 text-container-3">{{
 						result.podcast.title
 					}}</Title>
 					<p class="fs-24 !leading-38 text-weight-medium">

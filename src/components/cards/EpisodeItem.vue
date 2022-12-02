@@ -3,7 +3,7 @@ import Title from "@/components/typography/Title.vue"
 import Card from "@/components/cards/Card.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
 import Spinner from "@/components/Spinner"
-import { PodcastEpisode } from "@/graphql/ts/graphql"
+import { PodcastEpisode, SearchPodcastEpisodeDoc } from "@/graphql/ts/graphql"
 import { PodcastEpisodeEnclosure } from "@/graphql"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import { toRef, ref, computed } from "vue"
@@ -12,7 +12,7 @@ import { episodePlaceholderImage } from "@/common"
 import { useLazyQuery } from "@vue/apollo-composable"
 
 const props = defineProps<{
-	episode: PodcastEpisode
+	episode: PodcastEpisode | SearchPodcastEpisodeDoc
 	placeholderSrc?: string
 }>()
 
@@ -22,7 +22,7 @@ const show = ref(false)
 const like = ref(false)
 
 const img = computed(() =>
-	episodePlaceholderImage(props.episode, props.placeholderSrc)
+	episodePlaceholderImage(props.episode as PodcastEpisode, props.placeholderSrc)
 )
 
 const {
@@ -63,8 +63,10 @@ const playTrack = async () => {
 		if (sinfoniaCurrentTokenID.value === episodeRef.value._id) {
 			resume()
 		} else {
+			const episode = episodeRef.value as PodcastEpisode
+
 			play({
-				...episodeRef.value,
+				...episode,
 				image: img.value,
 				enclosure: {
 					...resultEnclosure?.value.podcastEpisodeEnclosure,
@@ -80,8 +82,10 @@ const addToPlaylist = () => {
 	})
 
 	if (episodeRef.value && resultEnclosure?.value?.podcastEpisodeEnclosure) {
+		const episode = episodeRef.value as PodcastEpisode
+
 		addTrackToPlaylist({
-			...episodeRef.value,
+			...episode,
 			image: img.value,
 			enclosure: {
 				...resultEnclosure?.value.podcastEpisodeEnclosure,
