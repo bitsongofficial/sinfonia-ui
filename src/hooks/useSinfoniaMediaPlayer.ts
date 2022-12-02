@@ -1,7 +1,11 @@
 import { Howl, Howler } from "howler"
 import { computed, ref } from "vue"
 import { formatDurationLocale } from "@/common"
-import { PodcastEpisode } from "@/graphql/ts/graphql"
+import { PodcastEpisode, PodcastEpisodeEnclosure } from "@/graphql/ts/graphql"
+
+export type PodcastEpisodeWithEnclosure = PodcastEpisode & {
+	enclosure: PodcastEpisodeEnclosure
+}
 
 const format = ["mp3", "wav", "mp4", "webm", "mpeg"]
 
@@ -9,7 +13,7 @@ const sinfoniaPlayer = ref<Howl>()
 const sinfoniaCurrentTrack = ref("")
 const sinfoniaCurrentTokenID = ref("")
 
-const sinfoniaPlaylist = ref<PodcastEpisode[]>([])
+const sinfoniaPlaylist = ref<PodcastEpisodeWithEnclosure[]>([])
 const currentTrackIndex = ref(0)
 
 const isPlaying = ref(false)
@@ -21,7 +25,7 @@ const sinfoniaLabelAudioDuration = ref("")
 const sinfoniaAudioDuration = ref(0)
 const currentVolume = ref(1)
 
-const sinfoniaCurrentTrackNFT = computed<PodcastEpisode>(
+const sinfoniaCurrentTrackNFT = computed<PodcastEpisodeWithEnclosure>(
 	() => sinfoniaPlaylist.value[currentTrackIndex.value]
 )
 
@@ -31,26 +35,24 @@ const canGoNext = computed(
 
 const canGoPrev = computed(() => currentTrackIndex.value > 0)
 
-const addTrackToPlaylist = (track: PodcastEpisode) => {
+const addTrackToPlaylist = (track: PodcastEpisodeWithEnclosure) => {
 	sinfoniaPlaylist.value.push(track)
 }
 
-const addTracksToPlaylist = (tracks: PodcastEpisode[]) => {
+const addTracksToPlaylist = (tracks: PodcastEpisodeWithEnclosure[]) => {
 	sinfoniaPlaylist.value = [...sinfoniaPlaylist.value, ...tracks]
 }
 
 const setupAudioPlayer = () => {
 	const nft = sinfoniaPlaylist.value[currentTrackIndex.value]
 
-	if (nft.enclosures && nft.enclosures.length > 0) {
-		const [enclosure] = nft.enclosures
-
-		if (!enclosure?.url) {
+	if (nft.enclosure) {
+		if (!nft.enclosure.url) {
 			return
 		}
 
 		clearAnimations()
-		const src = enclosure.url
+		const src = nft.enclosure.url
 		sinfoniaCurrentTrack.value = src
 		sinfoniaCurrentTokenID.value = nft._id
 		progress.value = 0
@@ -112,7 +114,7 @@ const setupAudioPlayer = () => {
 	}
 }
 
-const play = (src: PodcastEpisode) => {
+const play = (src: PodcastEpisodeWithEnclosure) => {
 	Howler.stop()
 	currentTrackIndex.value = 0
 	sinfoniaPlaylist.value = []

@@ -9,8 +9,8 @@ import { computed, onUnmounted, ref } from "vue"
 import { useRoute, RouterLink } from "vue-router"
 import { useMetadata } from "@/hooks/useMetadata"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
-import { useQuery } from "@vue/apollo-composable"
-import { PodcastEpisode } from "@/graphql"
+import { useQuery, useLazyQuery } from "@vue/apollo-composable"
+import { PodcastEpisode, PodcastEpisodeEnclosure } from "@/graphql"
 import { episodePlaceholderImage } from "@/common"
 
 const route = useRoute()
@@ -19,6 +19,7 @@ const settingsStore = useSettings()
 const podcastId = route.params.podcastId as string
 const episodeId = route.params.episodeId as string
 
+const mode = ref<"play" | "playlist">("play")
 const show = ref(false)
 const like = ref(false)
 
@@ -26,6 +27,13 @@ const { result, loading, onResult } = useQuery(PodcastEpisode, {
 	id: episodeId,
 	podcast_id: podcastId,
 })
+
+const {
+	result: resultEnclosure,
+	loading: loadingEnclosure,
+	load,
+	onResult: onResultEnclosure,
+} = useLazyQuery(PodcastEpisodeEnclosure)
 
 const img = computed(() =>
 	episodePlaceholderImage(
@@ -44,20 +52,50 @@ const {
 	loadingTrack,
 } = useSinfoniaMediaPlayer()
 
-const playTrack = () => {
-	if (result.value && result.value.podcastEpisode) {
+onResultEnclosure(() => {
+	if (mode.value === "play") {
+		playTrack()
+	} else {
+		addToPlaylist()
+	}
+})
+
+const loadEnclosure = (modestr: "play" | "playlist") => {
+	mode.value = modestr
+
+	load(PodcastEpisodeEnclosure, {
+		id: result.value?.podcastEpisode?._id,
+	})
+}
+
+const playTrack = async () => {
+	if (
+		result.value &&
+		result.value.podcastEpisode &&
+		resultEnclosure?.value?.podcastEpisodeEnclosure
+	) {
 		play({
 			...result.value.podcastEpisode,
 			image: img.value,
+			enclosure: {
+				...resultEnclosure?.value.podcastEpisodeEnclosure,
+			},
 		})
 	}
 }
 
-const addToPlaylist = () => {
-	if (result.value && result.value.podcastEpisode) {
+const addToPlaylist = async () => {
+	if (
+		result.value &&
+		result.value.podcastEpisode &&
+		resultEnclosure?.value?.podcastEpisodeEnclosure
+	) {
 		addTrackToPlaylist({
 			...result.value.podcastEpisode,
 			image: img.value,
+			enclosure: {
+				...resultEnclosure?.value.podcastEpisodeEnclosure,
+			},
 		})
 	}
 }
@@ -71,14 +109,6 @@ onResult(() => {
 				to: `/podcast/${podcastId}`,
 			},
 		]
-
-		if (result.value.podcastEpisode && result.value.podcastEpisode.enclosures) {
-			const [enclosure] = result.value.podcastEpisode.enclosures
-
-			if (enclosure && enclosure.url) {
-				addTrack(enclosure.url)
-			}
-		}
 	}
 })
 
@@ -139,7 +169,9 @@ useMetadata(metadata)
 						<Spinner
 							class="!w-48 !h-48 q-mr-16"
 							v-if="
-								loadingTrack && sinfoniaCurrentTokenID === result.podcastEpisode._id
+								(loadingTrack &&
+									sinfoniaCurrentTokenID === result.podcastEpisode._id) ||
+								loadingEnclosure
 							"
 						/>
 						<IconButton
@@ -164,7 +196,7 @@ useMetadata(metadata)
 							icon-class="rotate-90"
 							color="none"
 							:solid="true"
-							@click.prevent.stop="playTrack"
+							@click.prevent.stop="loadEnclosure('play')"
 						/>
 
 						<p class="fs-18 opacity-50">
@@ -189,7 +221,10 @@ useMetadata(metadata)
 							@click.native.prevent="show = true"
 							v-if="result.podcastEpisode"
 						>
-							<EpisodeContextMenu v-model="show" @addtoplaylist="addToPlaylist" />
+							<EpisodeContextMenu
+								v-model="show"
+								@addtoplaylist="loadEnclosure('playlist')"
+							/>
 						</IconButton>
 					</div>
 
