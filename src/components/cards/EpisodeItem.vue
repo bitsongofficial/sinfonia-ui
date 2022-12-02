@@ -5,15 +5,24 @@ import IconButton from "@/components/buttons/IconButton.vue"
 import Spinner from "@/components/Spinner"
 import { PodcastEpisode } from "@/graphql/ts/graphql"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
-import { toRef, ref } from "vue"
+import { toRef, ref, computed } from "vue"
 import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
 
 const props = defineProps<{
 	episode: PodcastEpisode
+	placeholderSrc?: string
 }>()
 
 const episodeRef = toRef(props, "episode")
 const show = ref(false)
+
+const img = computed(() => {
+	if (props.episode.image && props.episode.image.length > 0) {
+		return props.episode.image
+	}
+
+	return props.placeholderSrc
+})
 
 const {
 	play,
@@ -30,7 +39,10 @@ const playTrack = () => {
 		if (sinfoniaCurrentTokenID.value === episodeRef.value._id) {
 			resume()
 		} else {
-			play(episodeRef.value)
+			play({
+				...episodeRef.value,
+				image: img.value,
+			})
 		}
 	}
 }
@@ -43,7 +55,8 @@ const playTrack = () => {
 	>
 		<q-img
 			class="rounded-10 shadow-20 min-w-100"
-			:src="episode.image ?? ''"
+			:src="img"
+			:placeholder-src="placeholderSrc"
 			height="100px"
 			width="100px"
 		/>

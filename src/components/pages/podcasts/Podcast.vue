@@ -100,7 +100,10 @@ useMetadata(metadata)
 									class="col-span-12"
 									:to="`/podcast/${id}/episode/${episode?._id}`"
 								>
-									<EpisodeItem :episode="episode" />
+									<EpisodeItem
+										:episode="episode"
+										:placeholder-src="result.podcast.image ?? ''"
+									/>
 								</RouterLink>
 							</template>
 						</template>

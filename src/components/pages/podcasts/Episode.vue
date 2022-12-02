@@ -26,26 +26,42 @@ const { result, loading, onResult } = useQuery(PodcastEpisode, {
 	podcast_id: podcastId,
 })
 
+const img = computed(() => {
+	if (
+		result.value?.podcastEpisode?.image &&
+		result.value.podcastEpisode.image.length > 0
+	) {
+		return result.value.podcastEpisode.image
+	}
+
+	return result.value?.podcast?.image ?? ""
+})
+
 const {
 	addTrack,
 	play,
 	pause,
 	addTrackToPlaylist,
 	isPlaying,
-	audioFullDuration,
 	sinfoniaCurrentTokenID,
-	loadingMetadata,
+	loadingTrack,
 } = useSinfoniaMediaPlayer()
 
 const playTrack = () => {
 	if (result.value && result.value.podcastEpisode) {
-		play(result.value.podcastEpisode)
+		play({
+			...result.value.podcastEpisode,
+			image: img.value,
+		})
 	}
 }
 
 const addToPlaylist = () => {
 	if (result.value && result.value.podcastEpisode) {
-		addTrackToPlaylist(result.value.podcastEpisode)
+		addTrackToPlaylist({
+			...result.value.podcastEpisode,
+			image: img.value,
+		})
 	}
 }
 
@@ -102,7 +118,8 @@ useMetadata(metadata)
 				<div class="col-span-12 col-span-md-3">
 					<q-img
 						class="rounded-10 shadow-20"
-						:src="result.podcastEpisode.image ?? ''"
+						:src="img"
+						:placeholder-src="result.podcast?.image ?? ''"
 					/>
 				</div>
 				<div class="col-span-12 col-span-md-9 flex column justify-end items-start">
@@ -122,8 +139,16 @@ useMetadata(metadata)
 			<div class="grid grid-cols-12 grid-row-gap-32 grid-gap-md-32">
 				<div class="col-span-12 col-span-md-8">
 					<div class="row q-mb-32 items-center">
+						<Spinner
+							class="!w-48 !h-48 q-mr-16"
+							v-if="
+								loadingTrack && sinfoniaCurrentTokenID === result.podcastEpisode._id
+							"
+						/>
 						<IconButton
-							v-if="isPlaying && sinfoniaCurrentTokenID === result.podcastEpisode._id"
+							v-else-if="
+								isPlaying && sinfoniaCurrentTokenID === result.podcastEpisode._id
+							"
 							icon="pause"
 							width="24"
 							height="24"
@@ -145,10 +170,9 @@ useMetadata(metadata)
 							@click.prevent.stop="playTrack"
 						/>
 
-						<p class="fs-18 opacity-50" v-if="!loadingMetadata">
-							{{ audioFullDuration }}
+						<p class="fs-18 opacity-50">
+							{{ result.podcastEpisode.duration }}
 						</p>
-						<q-skeleton class="min-w-56" type="text" v-else />
 
 						<IconButton
 							icon="thumbs-up"

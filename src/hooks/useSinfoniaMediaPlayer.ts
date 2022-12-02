@@ -56,7 +56,7 @@ const setupAudioPlayer = () => {
 		sinfoniaPlayer.value = new Howl({
 			src,
 			html5: true,
-			preload: "metadata",
+			preload: true,
 			autoplay: true,
 			format,
 			volume: currentVolume.value,

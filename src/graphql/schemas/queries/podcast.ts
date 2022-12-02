@@ -100,6 +100,7 @@ export const PodcastEpisode = graphql(`
 		podcast(id: $podcast_id) {
 			_id
 			title
+			image
 		}
 		podcastEpisode(id: $id) {
 			_id
