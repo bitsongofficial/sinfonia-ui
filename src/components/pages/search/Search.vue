@@ -8,6 +8,7 @@ import { computed, onMounted, ref } from "vue"
 import { QInput } from "quasar"
 import { useLazyQuery } from "@vue/apollo-composable"
 import { SearchPodcasts } from "@/graphql"
+import { SearchPodcastsQuery } from "@/graphql/ts/graphql"
 import { RouterLink, useRoute, useRouter } from "vue-router"
 import useFavorite from "@/store/favorite"
 
@@ -68,6 +69,8 @@ const loadMore = () => {
 						...previousResult,
 						searchPodcasts: {
 							...previousResult.searchPodcasts,
+							numFound: previousResult.searchPodcasts?.numFound ?? 0,
+							start: previousResult.searchPodcasts?.start ?? 0,
 							// Concat edges
 							docs: [...previousEdges, ...newEdges],
 						},

@@ -3,11 +3,12 @@ import Spinner from "@/components/Spinner"
 import Title from "@/components/typography/Title.vue"
 import EpisodeItem from "@/components/cards/EpisodeItem.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
+import StandardButton from "@/components/buttons/StandardButton.vue"
 import { computed, ref } from "vue"
 import { useRoute, RouterLink } from "vue-router"
 import { useMetadata } from "@/hooks/useMetadata"
 import { useQuery } from "@vue/apollo-composable"
-import { PodcastWithEpisodes } from "@/graphql"
+import { Podcast, PodcastEpisodes } from "@/graphql"
 import useSettings from "@/store/settings"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import { compact } from "lodash"
@@ -23,8 +24,20 @@ const like = ref(false)
 // MongoDB ObjectID
 const id = route.params.id as string
 
-const { result, loading, onResult } = useQuery(PodcastWithEpisodes, {
+const { result, loading, onResult } = useQuery(Podcast, {
 	id,
+})
+
+const {
+	result: resultEpisodes,
+	loading: loadingEpisodes,
+	fetchMore,
+} = useQuery(PodcastEpisodes, {
+	podcast_id: id,
+	first: 0,
+	after: "",
+	last: 20,
+	before: "",
 })
 
 onResult(() => {
@@ -33,12 +46,55 @@ onResult(() => {
 	}
 })
 
-const addEpisodesToPlaylist = () => {
+const loadMore = async () => {
+	if (!resultEpisodes.value) {
+		return
+	}
+
+	await fetchMore({
+		variables: {
+			podcast_id: id,
+			first: 0,
+			after: "",
+			last: 20,
+			before: resultEpisodes.value.podcastEpisodes.pageInfo.startCursor ?? "",
+		},
+		updateQuery: (previousResult, { fetchMoreResult }) => {
+			const newEdges = fetchMoreResult?.podcastEpisodes.edges ?? []
+			const pageInfo =
+				fetchMoreResult?.podcastEpisodes.pageInfo ??
+				previousResult.podcastEpisodes.pageInfo
+			const previousEdges = previousResult.podcastEpisodes.edges ?? []
+
+			return newEdges.length
+				? {
+						...previousResult,
+						podcasts: {
+							...previousResult.podcastEpisodes,
+							// Concat edges
+							edges: [...previousEdges, ...newEdges],
+							// Override with new pageInfo
+							pageInfo,
+						},
+				  }
+				: previousResult
+		},
+	})
+}
+
+/* const addEpisodesToPlaylist = () => {
 	if (
-		result.value?.podcastEpisodes &&
-		result.value?.podcastEpisodes.length > 0
+		resultEpisodes.value?.podcastEpisodes &&
+		resultEpisodes.value?.podcastEpisodes.edges.length > 0
 	) {
-		const episodes = [...result.value.podcastEpisodes]
+		const episodes = compact(
+			compact([...resultEpisodes.value?.podcastEpisodes.edges]).map(
+				(el) => el.node
+			)
+		)
+
+		episodes.slice(0, 10)
+
 		const episode = episodes.shift()
 
 		if (episode) {
@@ -66,7 +122,7 @@ const addEpisodesToPlaylist = () => {
 			)
 		}
 	}
-}
+} */
 
 const metadata = computed(() => ({
 	title: `${result.value?.podcast?.title} | Podcast`,
@@ -92,7 +148,15 @@ useMetadata(metadata)
 
 <template>
 	<div class="text-white">
-		<div v-if="!loading && result && result.podcast">
+		<div
+			v-if="
+				!loading &&
+				result &&
+				result.podcast &&
+				!loadingEpisodes &&
+				resultEpisodes?.podcastEpisodes
+			"
+		>
 			<div class="grid grid-cols-12 grid-row-gap-32 grid-gap-md-32 q-mb-42">
 				<div class="col-span-12 col-span-md-3">
 					<q-img class="rounded-10 shadow-20" :src="result.podcast.image ?? ''" />
@@ -117,7 +181,7 @@ useMetadata(metadata)
 				</div>
 				<div class="col-span-12 col-span-md-8 row-start-md-1">
 					<div class="row q-mb-32 items-center">
-						<IconButton
+						<!-- <IconButton
 							icon="triangle"
 							width="22"
 							height="17"
@@ -126,7 +190,7 @@ useMetadata(metadata)
 							color="none"
 							:solid="true"
 							@click="addEpisodesToPlaylist"
-						/>
+						/> -->
 
 						<IconButton
 							:icon="!like ? 'heart' : 'heart-fill'"
@@ -153,24 +217,48 @@ useMetadata(metadata)
 					<div class="grid grid-cols-12 grid-gap-16">
 						<p
 							class="col-span-12 opacity-50"
-							v-if="!result.podcastEpisodes || result.podcastEpisodes.length === 0"
+							v-if="
+								!resultEpisodes?.podcastEpisodes ||
+								resultEpisodes.podcastEpisodes.edges.length === 0
+							"
 						>
 							There are no episodes available
 						</p>
-						<template v-else-if="result.podcastEpisodes">
-							<template v-for="episode in result.podcastEpisodes">
+						<template v-else-if="resultEpisodes.podcastEpisodes">
+							<template v-for="episode in resultEpisodes.podcastEpisodes.edges">
 								<RouterLink
-									v-if="episode"
+									v-if="episode?.node"
 									class="col-span-12"
-									:to="`/podcast/${id}/episode/${episode?._id}`"
+									:to="`/podcast/${id}/episode/${episode.node?._id}`"
 								>
 									<EpisodeItem
-										:episode="episode"
+										:episode="episode.node"
 										:placeholder-src="result.podcast.image ?? ''"
 									/>
 								</RouterLink>
 							</template>
 						</template>
+					</div>
+
+					<Spinner
+						v-if="loadingEpisodes && resultEpisodes"
+						class="!w-50 !h-50 q-mx-auto q-mt-42"
+					/>
+
+					<div
+						class="flex w-full"
+						v-else-if="resultEpisodes.podcastEpisodes.pageInfo.hasPreviousPage"
+					>
+						<StandardButton
+							:padding-x="30"
+							:padding-y="14"
+							fit
+							class="q-mx-auto q-mt-42"
+							:disabled="loadingEpisodes"
+							@click="loadMore"
+						>
+							Load More
+						</StandardButton>
 					</div>
 				</div>
 			</div>
