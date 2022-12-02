@@ -90,7 +90,7 @@ onMounted(() => {
 						borderless
 						v-model="searchValue"
 						@update:model-value="onSearch"
-						debounce="500"
+						debounce="100"
 						dense
 						placeholder="What do you want to listen to?"
 					/>
