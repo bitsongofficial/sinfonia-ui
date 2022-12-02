@@ -1,24 +1,68 @@
 <script setup lang="ts">
 import Title from "@/components/typography/Title.vue"
-import PodcastCard from "@/components/cards/PodcastCard.vue"
+import GQLPodcastCard from "@/components/cards/GQLPodcastCard.vue"
+import StandardButton from "@/components/buttons/StandardButton.vue"
 import Spinner from "@/components/Spinner"
 import { resolveIcon } from "@/common"
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { QInput } from "quasar"
-import usePodcasts from "@/store/podcasts"
-import onAppReady from "@/hooks/onAppReady"
+import { useLazyQuery } from "@vue/apollo-composable"
+import { SearchPodcasts } from "@/graphql"
+import { RouterLink } from "vue-router"
 
 const searchValue = ref("")
 const searchInput = ref<QInput>()
-const podcastsStore = usePodcasts()
 
-const onSearch = () => {}
+const currentPage = ref(1)
 
-const code = parseInt(import.meta.env.VITE_PODCAST_BS721_CODE_ID, 10)
+const { result, loading, load, fetchMore } = useLazyQuery(SearchPodcasts)
 
-onAppReady(() => {
-	podcastsStore.loadPodcasts(code)
+const totalPages = computed(() => {
+	if (result.value?.searchPodcasts?.numFound) {
+		return Math.ceil(result.value.searchPodcasts.numFound / 20)
+	}
+
+	return 1
 })
+
+const onSearch = () => {
+	currentPage.value = 1
+
+	load(undefined, {
+		text: searchValue.value,
+		start: 0,
+	})
+}
+
+const loadMore = () => {
+	if (!result.value) {
+		return
+	}
+
+	fetchMore({
+		variables: {
+			text: searchValue.value,
+			start: 20 * currentPage.value,
+		},
+		updateQuery: (previousResult, { fetchMoreResult }) => {
+			const newEdges = fetchMoreResult?.searchPodcasts?.docs ?? []
+			const previousEdges = previousResult?.searchPodcasts?.docs ?? []
+
+			return newEdges.length
+				? {
+						...previousResult,
+						searchPodcasts: {
+							...previousResult.searchPodcasts,
+							// Concat edges
+							docs: [...previousEdges, ...newEdges],
+						},
+				  }
+				: previousResult
+		},
+	})
+
+	currentPage.value = currentPage.value + 1
+}
 
 onMounted(() => {
 	if (searchInput.value) {
@@ -54,23 +98,43 @@ onMounted(() => {
 			</div>
 		</div>
 
-		<Spinner v-if="podcastsStore.loading" class="!w-50 !h-50 q-mx-auto" />
+		<Spinner v-if="loading" class="!w-50 !h-50 q-mx-auto" />
 
-		<template v-else>
-			<div class="column row-md align-items-end-md q-mb-42">
+		<template v-else-if="result">
+			<!-- <div class="column row-md align-items-end-md q-mb-42">
 				<Title>Podcasts & Shows</Title>
-			</div>
+			</div> -->
 
-			<div
-				class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24 q-mb-42"
+			<q-virtual-scroll
+				class="virtual-grid q-mb-42"
+				v-if="result?.searchPodcasts?.docs"
+				style="max-height: 100%"
+				:items="result.searchPodcasts.docs"
+				separator
+				v-slot="{ item, index }"
 			>
 				<RouterLink
-					v-for="podcast of podcastsStore.sinfoniaPodcasts"
-					:to="`/podcasts/${podcast.address}/details`"
+					:to="`/podcast/${item?._id}`"
 					class="block full-height"
+					:key="index"
 				>
-					<PodcastCard :podcast="podcast" />
+					<GQLPodcastCard :podcast="item" />
 				</RouterLink>
+			</q-virtual-scroll>
+
+			<Spinner v-if="loading && result" class="!w-50 !h-50 q-mx-auto" />
+
+			<div class="flex w-full" v-else-if="currentPage < totalPages">
+				<StandardButton
+					:padding-x="30"
+					:padding-y="14"
+					fit
+					class="q-mx-auto"
+					:disabled="loading"
+					@click="loadMore"
+				>
+					Load More
+				</StandardButton>
 			</div>
 		</template>
 	</div>
