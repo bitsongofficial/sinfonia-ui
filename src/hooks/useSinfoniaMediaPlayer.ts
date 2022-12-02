@@ -35,6 +35,10 @@ const addTrackToPlaylist = (track: PodcastEpisode) => {
 	sinfoniaPlaylist.value.push(track)
 }
 
+const addTracksToPlaylist = (tracks: PodcastEpisode[]) => {
+	sinfoniaPlaylist.value = [...sinfoniaPlaylist.value, ...tracks]
+}
+
 const setupAudioPlayer = () => {
 	const nft = sinfoniaPlaylist.value[currentTrackIndex.value]
 
@@ -273,5 +277,6 @@ export const useSinfoniaMediaPlayer = () => {
 		next,
 		prev,
 		addTrackToPlaylist,
+		addTracksToPlaylist,
 	}
 }

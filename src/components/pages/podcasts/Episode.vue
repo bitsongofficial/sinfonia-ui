@@ -11,6 +11,7 @@ import { useMetadata } from "@/hooks/useMetadata"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import { useQuery } from "@vue/apollo-composable"
 import { PodcastEpisode } from "@/graphql"
+import { episodePlaceholderImage } from "@/common"
 
 const route = useRoute()
 const settingsStore = useSettings()
@@ -26,16 +27,12 @@ const { result, loading, onResult } = useQuery(PodcastEpisode, {
 	podcast_id: podcastId,
 })
 
-const img = computed(() => {
-	if (
-		result.value?.podcastEpisode?.image &&
-		result.value.podcastEpisode.image.length > 0
-	) {
-		return result.value.podcastEpisode.image
-	}
-
-	return result.value?.podcast?.image ?? ""
-})
+const img = computed(() =>
+	episodePlaceholderImage(
+		result.value?.podcastEpisode,
+		result.value?.podcast?.image
+	)
+)
 
 const {
 	addTrack,

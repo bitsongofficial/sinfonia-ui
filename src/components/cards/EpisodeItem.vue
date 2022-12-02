@@ -7,6 +7,7 @@ import { PodcastEpisode } from "@/graphql/ts/graphql"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import { toRef, ref, computed } from "vue"
 import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
+import { episodePlaceholderImage } from "@/common"
 
 const props = defineProps<{
 	episode: PodcastEpisode
@@ -17,13 +18,9 @@ const episodeRef = toRef(props, "episode")
 const show = ref(false)
 const like = ref(false)
 
-const img = computed(() => {
-	if (props.episode.image && props.episode.image.length > 0) {
-		return props.episode.image
-	}
-
-	return props.placeholderSrc
-})
+const img = computed(() =>
+	episodePlaceholderImage(props.episode, props.placeholderSrc)
+)
 
 const {
 	play,
