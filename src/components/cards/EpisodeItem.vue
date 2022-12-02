@@ -34,9 +34,9 @@ const episodeWatcher = watch(
 		if (value && value.enclosures && value.enclosures.length > 0) {
 			const [enclosure] = value.enclosures
 
-			if (enclosure && enclosure.url) {
+			/* if (enclosure && enclosure.url) {
 				addTrack(enclosure.url)
-			}
+			} */
 		}
 	},
 	{
@@ -122,8 +122,8 @@ const playTrack = () => {
 					@click.prevent.stop="playTrack"
 				/>
 
-				<p class="opacity-50" v-if="!loadingMetadata">{{ audioFullDuration }}</p>
-				<q-skeleton class="min-w-56" type="text" v-else />
+				<!-- <p class="opacity-50" v-if="!loadingMetadata">{{ audioFullDuration }}</p>
+				<q-skeleton class="min-w-56" type="text" v-else /> -->
 			</div>
 		</div>
 	</Card>
