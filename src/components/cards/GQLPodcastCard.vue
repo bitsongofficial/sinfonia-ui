@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { GraphQLPodcast } from "@/types"
+import { Podcast } from "@/graphql/ts/graphql"
 import Card from "@/components/cards/Card.vue"
 
 defineProps<{
-	podcast: GraphQLPodcast
+	podcast: Podcast
 }>()
 </script>
 
@@ -15,7 +15,7 @@ defineProps<{
 		class="full-width text-white cursor-pointer transition-all hover:bg-white-10 !rounded-10 light:bg-white full-height !flex column justify-between no-wrap"
 	>
 		<q-img
-			:src="podcast.image"
+			:src="podcast.image ?? ''"
 			ratio="1/1"
 			width="100%"
 			height="140px"

@@ -3,53 +3,94 @@ import Title from "@/components/typography/Title.vue"
 import Card from "@/components/cards/Card.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
 import Spinner from "@/components/Spinner"
-import { PodcastEpisode } from "@/graphql/ts/graphql"
+import { PodcastEpisode, SearchPodcastEpisodeDoc } from "@/graphql/ts/graphql"
+import { PodcastEpisodeEnclosure } from "@/graphql"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
-import { onUnmounted, toRef, watch, ref } from "vue"
+import { toRef, ref, computed } from "vue"
 import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
+import { episodePlaceholderImage } from "@/common"
+import { useLazyQuery } from "@vue/apollo-composable"
 
 const props = defineProps<{
-	episode: PodcastEpisode
+	episode: PodcastEpisode | SearchPodcastEpisodeDoc
+	placeholderSrc?: string
 }>()
 
 const episodeRef = toRef(props, "episode")
+const mode = ref<"play" | "playlist">("play")
 const show = ref(false)
+const like = ref(false)
+
+const img = computed(() =>
+	episodePlaceholderImage(props.episode as PodcastEpisode, props.placeholderSrc)
+)
 
 const {
-	addTrack,
+	loading: loadingEnclosure,
+	result: resultEnclosure,
+	load,
+	onResult,
+} = useLazyQuery(PodcastEpisodeEnclosure)
+
+const {
 	play,
+	resume,
 	pause,
 	addTrackToPlaylist,
 	isPlaying,
-	audioFullDuration,
 	loadingTrack,
-	loadingMetadata,
 	sinfoniaCurrentTokenID,
 } = useSinfoniaMediaPlayer()
 
-const episodeWatcher = watch(
-	() => episodeRef.value,
-	(value) => {
-		if (value && value.enclosures && value.enclosures.length > 0) {
-			const [enclosure] = value.enclosures
-
-			/* if (enclosure && enclosure.url) {
-				addTrack(enclosure.url)
-			} */
-		}
-	},
-	{
-		immediate: true,
+onResult(() => {
+	if (mode.value === "play") {
+		playTrack()
+	} else {
+		addToPlaylist()
 	}
-)
-
-onUnmounted(() => {
-	episodeWatcher()
 })
 
-const playTrack = () => {
-	if (episodeRef.value) {
-		play(episodeRef.value)
+const loadEnclosure = (modestr: "play" | "playlist") => {
+	mode.value = modestr
+
+	load(PodcastEpisodeEnclosure, {
+		id: props.episode._id,
+	})
+}
+
+const playTrack = async () => {
+	if (episodeRef.value && resultEnclosure?.value?.podcastEpisodeEnclosure) {
+		if (sinfoniaCurrentTokenID.value === episodeRef.value._id) {
+			resume()
+		} else {
+			const episode = episodeRef.value as PodcastEpisode
+
+			play({
+				...episode,
+				image: img.value,
+				enclosure: {
+					...resultEnclosure?.value.podcastEpisodeEnclosure,
+				},
+			})
+		}
+	}
+}
+
+const addToPlaylist = () => {
+	load(PodcastEpisodeEnclosure, {
+		id: props.episode._id,
+	})
+
+	if (episodeRef.value && resultEnclosure?.value?.podcastEpisodeEnclosure) {
+		const episode = episodeRef.value as PodcastEpisode
+
+		addTrackToPlaylist({
+			...episode,
+			image: img.value,
+			enclosure: {
+				...resultEnclosure?.value.podcastEpisodeEnclosure,
+			},
+		})
 	}
 }
 </script>
@@ -61,7 +102,8 @@ const playTrack = () => {
 	>
 		<q-img
 			class="rounded-10 shadow-20 min-w-100"
-			:src="episode.image ?? ''"
+			:src="img"
+			:placeholder-src="placeholderSrc"
 			height="100px"
 			width="100px"
 		/>
@@ -80,7 +122,7 @@ const playTrack = () => {
 				>
 					<EpisodeContextMenu
 						v-model="show"
-						@addtoplaylist="addTrackToPlaylist(episode)"
+						@addtoplaylist="loadEnclosure('playlist')"
 					></EpisodeContextMenu>
 				</IconButton>
 			</div>
@@ -92,7 +134,10 @@ const playTrack = () => {
 			<div class="row items-center">
 				<Spinner
 					class="!w-36 !h-36 q-mr-16"
-					v-if="loadingTrack && sinfoniaCurrentTokenID === episode._id"
+					v-if="
+						(loadingTrack && sinfoniaCurrentTokenID === episode._id) ||
+						loadingEnclosure
+					"
 				/>
 				<IconButton
 					v-else-if="isPlaying && sinfoniaCurrentTokenID === episode._id"
@@ -114,11 +159,19 @@ const playTrack = () => {
 					icon-class="rotate-90"
 					color="none"
 					:solid="true"
-					@click.prevent.stop="playTrack"
+					@click.prevent.stop="loadEnclosure('play')"
 				/>
 
-				<!-- <p class="opacity-50" v-if="!loadingMetadata">{{ audioFullDuration }}</p>
-				<q-skeleton class="min-w-56" type="text" v-else /> -->
+				<IconButton
+					:icon="!like ? 'heart' : 'heart-fill'"
+					width="24"
+					height="24"
+					class="fs-20 s-28 q-mr-16"
+					@click.native.prevent="like = !like"
+					:color="!like ? 'white' : 'primary'"
+				/>
+
+				<p class="opacity-50">{{ episode.duration }}</p>
 			</div>
 		</div>
 	</Card>

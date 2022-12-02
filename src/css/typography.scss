@@ -124,3 +124,13 @@ a {
     padding: 0;
     word-break: break-word;
 }
+
+.text-container-3 {
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 0;
+    word-break: break-word;
+}

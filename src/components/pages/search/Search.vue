@@ -1,24 +1,86 @@
 <script setup lang="ts">
 import Title from "@/components/typography/Title.vue"
-import PodcastCard from "@/components/cards/PodcastCard.vue"
+import GQLPodcastCard from "@/components/cards/GQLPodcastCard.vue"
+import StandardButton from "@/components/buttons/StandardButton.vue"
+import EpisodeItem from "@/components/cards/EpisodeItem.vue"
 import Spinner from "@/components/Spinner"
 import { resolveIcon } from "@/common"
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { QInput } from "quasar"
-import usePodcasts from "@/store/podcasts"
-import onAppReady from "@/hooks/onAppReady"
+import { useLazyQuery } from "@vue/apollo-composable"
+import { Search } from "@/graphql"
+import { RouterLink, useRoute, useRouter } from "vue-router"
+import useFavorite from "@/store/favorite"
 
-const searchValue = ref("")
+const router = useRouter()
+const route = useRoute()
+const favoriteStore = useFavorite()
+
+const search = route.query.s as string
+
+const searchValue = ref(search ?? "")
 const searchInput = ref<QInput>()
-const podcastsStore = usePodcasts()
 
-const onSearch = () => {}
+const currentPage = ref(1)
 
-const code = parseInt(import.meta.env.VITE_PODCAST_BS721_CODE_ID, 10)
+const { result, loading, load, fetchMore } = useLazyQuery(Search)
 
-onAppReady(() => {
-	podcastsStore.loadPodcasts(code)
+const totalPages = computed(() => {
+	if (result.value?.searchPodcasts?.numFound) {
+		return Math.ceil(result.value.searchPodcasts.numFound / 20)
+	}
+
+	return 1
 })
+
+const onSearch = () => {
+	currentPage.value = 1
+
+	load(undefined, {
+		text: searchValue.value,
+		start: 0,
+	})
+
+	router.push({ path: "/search", query: { s: searchValue.value } })
+}
+
+onMounted(() => {
+	if (searchValue.value.length > 0) {
+		onSearch()
+	}
+})
+
+const loadMore = () => {
+	if (!result.value) {
+		return
+	}
+
+	fetchMore({
+		variables: {
+			text: searchValue.value,
+			start: 20 * currentPage.value,
+		},
+		updateQuery: (previousResult, { fetchMoreResult }) => {
+			const newEdges = fetchMoreResult?.searchPodcasts?.docs ?? []
+			const previousEdges = previousResult?.searchPodcasts?.docs ?? []
+
+			return newEdges.length
+				? {
+						...previousResult,
+						searchPodcasts: {
+							...previousResult.searchPodcasts,
+							numFound: previousResult.searchPodcasts?.numFound ?? 0,
+							start: previousResult.searchPodcasts?.start ?? 0,
+							// Concat edges
+							docs: [...previousEdges, ...newEdges],
+						},
+				  }
+				: previousResult
+		},
+	})
+
+	currentPage.value = currentPage.value + 1
+}
 
 onMounted(() => {
 	if (searchInput.value) {
@@ -46,7 +108,7 @@ onMounted(() => {
 						borderless
 						v-model="searchValue"
 						@update:model-value="onSearch"
-						debounce="500"
+						debounce="200"
 						dense
 						placeholder="What do you want to listen to?"
 					/>
@@ -54,24 +116,74 @@ onMounted(() => {
 			</div>
 		</div>
 
-		<Spinner v-if="podcastsStore.loading" class="!w-50 !h-50 q-mx-auto" />
-
-		<template v-else>
+		<template v-if="!result">
 			<div class="column row-md align-items-end-md q-mb-42">
-				<Title>Podcasts & Shows</Title>
+				<Title>Recent searches</Title>
 			</div>
 
-			<div
-				class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24 q-mb-42"
-			>
+			<div class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24">
 				<RouterLink
-					v-for="podcast of podcastsStore.sinfoniaPodcasts"
-					:to="`/podcasts/${podcast.address}/details`"
+					v-for="(podcast, index) in favoriteStore.podcastsHistory"
+					:to="`/podcast/${podcast?._id}`"
 					class="block full-height"
+					:key="index"
 				>
-					<PodcastCard :podcast="podcast" />
+					<GQLPodcastCard :podcast="podcast" />
 				</RouterLink>
 			</div>
+		</template>
+
+		<Spinner v-if="loading" class="!w-50 !h-50 q-mx-auto" />
+
+		<template v-else-if="result">
+			<q-virtual-scroll
+				class="virtual-grid q-mb-42"
+				v-if="result?.searchPodcasts?.docs"
+				style="max-height: 100%"
+				:items="result.searchPodcasts.docs"
+				separator
+				v-slot="{ item, index }"
+			>
+				<RouterLink
+					:to="`/podcast/${item?._id}`"
+					class="block full-height"
+					:key="index"
+					@click="favoriteStore.appendHistory(item)"
+				>
+					<GQLPodcastCard :podcast="item" />
+				</RouterLink>
+			</q-virtual-scroll>
+
+			<div
+				class="grid grid-cols-12 grid-gap-16"
+				v-if="result.searchPodcastEpisodes?.docs"
+			>
+				<Title class="q-mb-24 col-span-12">Episodes</Title>
+				<template v-for="episode in result.searchPodcastEpisodes.docs">
+					<RouterLink
+						v-if="episode"
+						class="col-span-12 col-span-md-8"
+						:to="`/podcast/${episode.podcast_id}/episode/${episode._id}`"
+					>
+						<EpisodeItem :episode="episode" />
+					</RouterLink>
+				</template>
+			</div>
+
+			<!-- <Spinner v-if="loading && result" class="!w-50 !h-50 q-mx-auto" />
+
+			<div class="flex w-full" v-else-if="currentPage < totalPages">
+				<StandardButton
+					:padding-x="30"
+					:padding-y="14"
+					fit
+					class="q-mx-auto"
+					:disabled="loading"
+					@click="loadMore"
+				>
+					Load More
+				</StandardButton>
+			</div> -->
 		</template>
 	</div>
 </template>

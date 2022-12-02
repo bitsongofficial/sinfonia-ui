@@ -42,17 +42,35 @@ export const PodcastsPaginated = graphql(`
 	}
 `)
 
-export const PodcastsEpisodes = graphql(`
-	query podcastEpisodes($podcast_id: ObjectID!) {
-		podcastEpisodes(podcast_id: $podcast_id) {
-			_id
-			title
-			description
-			image
-			enclosures {
-				url
-				type
-				length
+export const PodcastEpisodes = graphql(`
+	query podcastEpisodes(
+		$podcast_id: ObjectID!
+		$first: Int!
+		$after: String!
+		$last: Int!
+		$before: String!
+	) {
+		podcastEpisodes(
+			podcast_id: $podcast_id
+			pagination: { first: $first, after: $after, last: $last, before: $before }
+		) {
+			totalCount
+			pageInfo {
+				startCursor
+				endCursor
+				hasPreviousPage
+				hasNextPage
+			}
+			edges {
+				cursor
+				node {
+					_id
+					title
+					description
+					image
+					podcast_id
+					duration
+				}
 			}
 		}
 	}
@@ -70,35 +88,12 @@ export const Podcast = graphql(`
 	}
 `)
 
-export const PodcastWithEpisodes = graphql(`
-	query podcastWithEpisodes($id: ObjectID!) {
-		podcast(id: $id) {
-			_id
-			title
-			description
-			image
-			author
-		}
-		podcastEpisodes(podcast_id: $id) {
-			_id
-			title
-			description
-			image
-			podcast_id
-			enclosures {
-				url
-				type
-				length
-			}
-		}
-	}
-`)
-
 export const PodcastEpisode = graphql(`
 	query podcastEpisode($id: ObjectID!, $podcast_id: ObjectID!) {
 		podcast(id: $podcast_id) {
 			_id
 			title
+			image
 		}
 		podcastEpisode(id: $id) {
 			_id
@@ -106,11 +101,77 @@ export const PodcastEpisode = graphql(`
 			description
 			image
 			podcast_id
-			enclosures {
-				url
-				type
-				length
+			duration
+		}
+	}
+`)
+
+export const SearchPodcasts = graphql(`
+	query searchPodcasts($text: String!, $start: Int) {
+		searchPodcasts(text: $text, start: $start) {
+			numFound
+			start
+			docs {
+				_id
+				title
+				image
+				author
 			}
+		}
+	}
+`)
+
+export const SearchPodcastEpisodes = graphql(`
+	query searchPodcastEpisodes($text: String!, $start: Int) {
+		searchPodcastEpisodes(text: $text, start: $start) {
+			numFound
+			start
+			docs {
+				_id
+				title
+				image
+				description
+				duration
+				pub_date
+			}
+		}
+	}
+`)
+
+export const Search = graphql(`
+	query search($text: String!, $start: Int) {
+		searchPodcasts(text: $text, start: $start) {
+			numFound
+			start
+			docs {
+				_id
+				title
+				image
+				author
+			}
+		}
+		searchPodcastEpisodes(text: $text, start: $start) {
+			numFound
+			start
+			docs {
+				_id
+				title
+				image
+				description
+				duration
+				podcast_id
+				pub_date
+			}
+		}
+	}
+`)
+
+export const PodcastEpisodeEnclosure = graphql(`
+	query podcastEpisodeEnclosure($id: ObjectID!) {
+		podcastEpisodeEnclosure(id: $id) {
+			url
+			length
+			type
 		}
 	}
 `)
