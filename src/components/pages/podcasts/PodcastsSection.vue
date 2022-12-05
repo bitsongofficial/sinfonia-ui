@@ -1,27 +1,31 @@
 <script setup lang="ts">
-import { RouterLink, useRoute } from "vue-router"
+import { RouterLink, useRoute, useRouter } from "vue-router"
 import { useQuery } from "@vue/apollo-composable"
 import Title from "@/components/typography/Title.vue"
 import GQLPodcastCard from "@/components/cards/GQLPodcastCard.vue"
-import StandardButton from "@/components/buttons/StandardButton.vue"
 import Spinner from "@/components/Spinner"
 import { PodcastExploreSection } from "@/graphql"
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { useMetadata } from "@/hooks/useMetadata"
 import useSettings from "@/store/settings"
+import { startCase } from "lodash"
 
 const route = useRoute()
+const router = useRouter()
 const settingsStore = useSettings()
 
 // Base64 has more id
 const sectionId = route.params.id as string
-const start = route.query.start ? parseInt(route.query.start as string, 10) : 0
+
+const start = ref(
+	route.query.start ? parseInt(route.query.start as string, 10) : 0
+)
 
 const { result, loading, fetchMore, onResult } = useQuery(
 	PodcastExploreSection,
 	{
 		section: sectionId,
-		start,
+		start: start.value,
 	}
 )
 
@@ -41,39 +45,69 @@ onResult(() => {
 	}
 })
 
-/* const loadMore = () => {
-	if (!result.value) {
+const loadMore = (_: number, done: (stop: boolean) => void) => {
+	if (!result.value || loading.value) {
 		return
 	}
 
+	start.value = start.value + 20
+
 	fetchMore({
 		variables: {
-			first: 0,
-			after: "",
-			last: 20,
-			before: result.value.podcasts.pageInfo.startCursor ?? "",
+			section: sectionId,
+			start: start.value,
 		},
 		updateQuery: (previousResult, { fetchMoreResult }) => {
-			const newEdges = fetchMoreResult?.podcasts.edges ?? []
-			const pageInfo =
-				fetchMoreResult?.podcasts.pageInfo ?? previousResult.podcasts.pageInfo
-			const previousEdges = previousResult.podcasts.edges ?? []
+			const newElements = fetchMoreResult?.podcastExploreSection.elements ?? []
+			const previousElements = previousResult.podcastExploreSection.elements ?? []
+			let disablePagination = false
 
-			return newEdges.length
+			const [newElement] = newElements
+			const [prevElement] = previousElements
+
+			if (
+				newElement &&
+				(newElement.items.length === 0 || newElement.items.length < 20)
+			) {
+				disablePagination = true
+			}
+
+			if (!prevElement) {
+				disablePagination = true
+				done(disablePagination)
+				return previousResult
+			}
+
+			if (!newElement) {
+				disablePagination = true
+			}
+
+			done(disablePagination)
+
+			router.push({
+				path: `/podcasts/section/${sectionId}`,
+				query: { start: start.value },
+			})
+
+			return newElements.length
 				? {
 						...previousResult,
-						podcasts: {
-							...previousResult.podcasts,
-							// Concat edges
-							edges: [...previousEdges, ...newEdges],
-							// Override with new pageInfo
-							pageInfo,
+						podcastExploreSection: {
+							...previousResult.podcastExploreSection,
+							// Concat elements
+							elements: [
+								{
+									...prevElement,
+									...newElement,
+									items: [...prevElement.items, ...(newElement?.items ?? [])],
+								},
+							],
 						},
 				  }
 				: previousResult
 		},
 	})
-} */
+}
 
 const metadata = computed(() => ({
 	title: `${section.value?.title}`,
@@ -101,46 +135,46 @@ useMetadata(metadata)
 	<div>
 		<Spinner v-if="loading && !section" class="!w-50 !h-50 q-mx-auto" />
 
-		<template v-else>
-			<div class="column row-md align-items-end-md q-mb-42">
-				<Title>{{ section?.title }}</Title>
-			</div>
+		<div
+			class="column row-md align-items-end-md q-mb-42"
+			v-if="!loading && section"
+		>
+			<Title>{{ section?.title }}</Title>
+		</div>
 
-			<q-virtual-scroll
-				class="virtual-grid q-mb-42"
-				v-if="section?.items"
-				style="max-height: 100%"
-				:items="section.items"
-				separator
-				v-slot="{ item, index }"
+		<div v-if="section?.items">
+			<q-infinite-scroll
+				:disable="loading"
+				@load="loadMore"
+				:offset="500"
+				class="q-mb-48"
+				scroll-target="#app"
 			>
-				<RouterLink :key="index" :to="`/${item.link}`" class="block full-height">
-					<GQLPodcastCard
-						v-if="item"
-						:title="item.title"
-						:image="item.image"
-						:subtitle="item.subtitle"
-					/>
-				</RouterLink>
-			</q-virtual-scroll>
-
-			<!-- <Spinner v-if="loading && result" class="!w-50 !h-50 q-mx-auto" />
-
-			<div
-				class="flex w-full"
-				v-else-if="result?.podcasts.pageInfo.hasPreviousPage"
-			>
-				<StandardButton
-					:padding-x="30"
-					:padding-y="14"
-					fit
-					class="q-mx-auto"
-					:disabled="loading"
-					@click="loadMore"
+				<div
+					class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24"
+					id="element"
 				>
-					Load More
-				</StandardButton>
-			</div> -->
-		</template>
+					<RouterLink
+						v-for="item of section.items"
+						:key="item?._id"
+						:to="`/${item?.link}`"
+						class="block full-height"
+					>
+						<GQLPodcastCard
+							v-if="item"
+							:title="item.title"
+							:image="item.image"
+							:subtitle="item.subtitle"
+						/>
+					</RouterLink>
+				</div>
+
+				<template v-slot:loading>
+					<div class="row justify-center q-my-md">
+						<Spinner class="!w-50 !h-50" />
+					</div>
+				</template>
+			</q-infinite-scroll>
+		</div>
 	</div>
 </template>

@@ -362,6 +362,10 @@ const router = createRouter({
 			return { el: to.hash }
 		}
 
+		if (to.query.start || to.query.s) {
+			return
+		}
+
 		const app = document.getElementById("app")
 
 		if (app) {
