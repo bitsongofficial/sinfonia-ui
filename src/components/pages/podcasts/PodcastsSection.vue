@@ -136,7 +136,7 @@ useMetadata(metadata)
 		<Spinner v-if="loading && !section" class="!w-50 !h-50 q-mx-auto" />
 
 		<div
-			class="column row-md align-items-end-md q-mb-42"
+			class="column row-md align-items-end-md q-mt-20 q-mb-20"
 			v-if="!loading && section"
 		>
 			<Title>{{ section?.title }}</Title>
