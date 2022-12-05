@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router"
 import { useQuery } from "@vue/apollo-composable"
-import Title from "@/components/typography/Title.vue"
-import GQLPodcastCard from "@/components/cards/GQLPodcastCard.vue"
-import StandardButton from "@/components/buttons/StandardButton.vue"
 import Spinner from "@/components/Spinner"
 import { PodcastExplore } from "@/graphql"
+import PodcastsGrid from "./components/PodcastsGrid.vue"
 
 const { result, loading } = useQuery(PodcastExplore)
 </script>
@@ -16,38 +13,7 @@ const { result, loading } = useQuery(PodcastExplore)
 
 		<template v-else>
 			<div class="q-mb-48" v-for="section of result?.podcastExplore.elements">
-				<div
-					class="column row-md align-items-end-md justify-between q-mt-20 q-mb-20 full-width"
-				>
-					<Title>{{ section?.title }}</Title>
-
-					<RouterLink
-						:to="`/podcasts/section/${section.hasMore}`"
-						v-if="section?.hasMore"
-						class="text-bold opacity-50 hover:opacity-100"
-					>
-						Show More
-					</RouterLink>
-				</div>
-
-				<div
-					class="grid grid-cols-min-xs-1 grid-cols-3 grid-cols-md-5 grid-gap-24"
-					v-if="section?.items"
-				>
-					<RouterLink
-						v-for="item of section.items"
-						:key="item?._id"
-						:to="`/${item?.link}`"
-						class="block full-height"
-					>
-						<GQLPodcastCard
-							v-if="item"
-							:title="item.title"
-							:image="item.image"
-							:subtitle="item.subtitle"
-						/>
-					</RouterLink>
-				</div>
+				<PodcastsGrid :section="section" v-if="section" />
 			</div>
 
 			<!-- <div class="column row-md align-items-end-md q-mb-42">

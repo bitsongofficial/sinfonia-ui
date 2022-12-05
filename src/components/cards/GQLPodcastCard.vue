@@ -29,7 +29,7 @@ defineProps<{
 			{{ title }}
 		</p>
 
-		<p class="opacity-50 !leading-22">
+		<p class="opacity-50 !leading-22 text-container-1">
 			{{ subtitle }}
 		</p>
 	</Card>
