@@ -21,6 +21,8 @@ const documents = {
     "\n\tquery searchPodcastEpisodes($text: String!, $start: Int) {\n\t\tsearchPodcastEpisodes(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tdescription\n\t\t\t\tduration\n\t\t\t\tpub_date\n\t\t\t}\n\t\t}\n\t}\n": types.SearchPodcastEpisodesDocument,
     "\n\tquery search($text: String!, $start: Int) {\n\t\tsearchPodcasts(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tauthor\n\t\t\t}\n\t\t}\n\t\tsearchPodcastEpisodes(text: $text, start: $start) {\n\t\t\tnumFound\n\t\t\tstart\n\t\t\tdocs {\n\t\t\t\t_id\n\t\t\t\ttitle\n\t\t\t\timage\n\t\t\t\tdescription\n\t\t\t\tduration\n\t\t\t\tpodcast_id\n\t\t\t\tpub_date\n\t\t\t}\n\t\t}\n\t}\n": types.SearchDocument,
     "\n\tquery podcastEpisodeEnclosure($id: ObjectID!) {\n\t\tpodcastEpisodeEnclosure(id: $id) {\n\t\t\turl\n\t\t\tlength\n\t\t\ttype\n\t\t}\n\t}\n": types.PodcastEpisodeEnclosureDocument,
+    "\n\tquery podcastExplore {\n\t\tpodcastExplore {\n\t\t\telements {\n\t\t\t\ttitle\n\t\t\t\thasMore\n\t\t\t\tviewMode\n\t\t\t\titems {\n\t\t\t\t\t_id\n\t\t\t\t\timage\n\t\t\t\t\ttitle\n\t\t\t\t\tsubtitle\n\t\t\t\t\tlink\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n": types.PodcastExploreDocument,
+    "\n\tquery podcastExploreSection($section: String!, $start: Int!) {\n\t\tpodcastExploreSection(section: $section, start: $start) {\n\t\t\telements {\n\t\t\t\ttitle\n\t\t\t\thasMore\n\t\t\t\tviewMode\n\t\t\t\titems {\n\t\t\t\t\t_id\n\t\t\t\t\timage\n\t\t\t\t\ttitle\n\t\t\t\t\tsubtitle\n\t\t\t\t\tlink\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n": types.PodcastExploreSectionDocument,
 };
 
 /**
@@ -55,6 +57,14 @@ export function graphql(source: "\n\tquery search($text: String!, $start: Int) {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n\tquery podcastEpisodeEnclosure($id: ObjectID!) {\n\t\tpodcastEpisodeEnclosure(id: $id) {\n\t\t\turl\n\t\t\tlength\n\t\t\ttype\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery podcastEpisodeEnclosure($id: ObjectID!) {\n\t\tpodcastEpisodeEnclosure(id: $id) {\n\t\t\turl\n\t\t\tlength\n\t\t\ttype\n\t\t}\n\t}\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n\tquery podcastExplore {\n\t\tpodcastExplore {\n\t\t\telements {\n\t\t\t\ttitle\n\t\t\t\thasMore\n\t\t\t\tviewMode\n\t\t\t\titems {\n\t\t\t\t\t_id\n\t\t\t\t\timage\n\t\t\t\t\ttitle\n\t\t\t\t\tsubtitle\n\t\t\t\t\tlink\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery podcastExplore {\n\t\tpodcastExplore {\n\t\t\telements {\n\t\t\t\ttitle\n\t\t\t\thasMore\n\t\t\t\tviewMode\n\t\t\t\titems {\n\t\t\t\t\t_id\n\t\t\t\t\timage\n\t\t\t\t\ttitle\n\t\t\t\t\tsubtitle\n\t\t\t\t\tlink\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n\tquery podcastExploreSection($section: String!, $start: Int!) {\n\t\tpodcastExploreSection(section: $section, start: $start) {\n\t\t\telements {\n\t\t\t\ttitle\n\t\t\t\thasMore\n\t\t\t\tviewMode\n\t\t\t\titems {\n\t\t\t\t\t_id\n\t\t\t\t\timage\n\t\t\t\t\ttitle\n\t\t\t\t\tsubtitle\n\t\t\t\t\tlink\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery podcastExploreSection($section: String!, $start: Int!) {\n\t\tpodcastExploreSection(section: $section, start: $start) {\n\t\t\telements {\n\t\t\t\ttitle\n\t\t\t\thasMore\n\t\t\t\tviewMode\n\t\t\t\titems {\n\t\t\t\t\t_id\n\t\t\t\t\timage\n\t\t\t\t\ttitle\n\t\t\t\t\tsubtitle\n\t\t\t\t\tlink\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n"];
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

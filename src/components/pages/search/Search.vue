@@ -127,7 +127,12 @@ onMounted(() => {
 					class="block full-height"
 					:key="index"
 				>
-					<GQLPodcastCard :podcast="podcast" />
+					<GQLPodcastCard
+						v-if="podcast"
+						:title="podcast.title ?? ''"
+						:image="podcast.image ?? ''"
+						:subtitle="podcast.author ?? ''"
+					/>
 				</RouterLink>
 			</div>
 		</template>
@@ -149,7 +154,12 @@ onMounted(() => {
 					:key="index"
 					@click="favoriteStore.appendHistory(item)"
 				>
-					<GQLPodcastCard :podcast="item" />
+					<GQLPodcastCard
+						v-if="item"
+						:title="item.title"
+						:image="item.image"
+						:subtitle="item.author"
+					/>
 				</RouterLink>
 			</q-virtual-scroll>
 

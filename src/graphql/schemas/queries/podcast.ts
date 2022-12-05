@@ -177,3 +177,41 @@ export const PodcastEpisodeEnclosure = graphql(`
 		}
 	}
 `)
+
+export const PodcastExplore = graphql(`
+	query podcastExplore {
+		podcastExplore {
+			elements {
+				title
+				hasMore
+				viewMode
+				items {
+					_id
+					image
+					title
+					subtitle
+					link
+				}
+			}
+		}
+	}
+`)
+
+export const PodcastExploreSection = graphql(`
+	query podcastExploreSection($section: String!, $start: Int!) {
+		podcastExploreSection(section: $section, start: $start) {
+			elements {
+				title
+				hasMore
+				viewMode
+				items {
+					_id
+					image
+					title
+					subtitle
+					link
+				}
+			}
+		}
+	}
+`)

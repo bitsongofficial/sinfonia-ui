@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { Podcast } from "@/graphql/ts/graphql"
 import Card from "@/components/cards/Card.vue"
+import { string } from "zod"
 
 defineProps<{
-	podcast: Podcast
+	image: string
+	title: string
+	subtitle: string
 }>()
 </script>
 
@@ -15,7 +18,7 @@ defineProps<{
 		class="full-width text-white cursor-pointer transition-all hover:bg-white-10 !rounded-10 light:bg-white full-height !flex column justify-between no-wrap"
 	>
 		<q-img
-			:src="podcast.image ?? ''"
+			:src="image"
 			ratio="1/1"
 			width="100%"
 			height="140px"
@@ -23,11 +26,11 @@ defineProps<{
 		/>
 
 		<p class="text-white text-weight-bold !leading-26 q-mb-8 text-container-1">
-			{{ podcast.title }}
+			{{ title }}
 		</p>
 
 		<p class="opacity-50 !leading-22">
-			{{ podcast.author }}
+			{{ subtitle }}
 		</p>
 	</Card>
 </template>
