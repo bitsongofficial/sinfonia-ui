@@ -10,7 +10,7 @@ import { toRef, ref, computed } from "vue"
 import EpisodeContextMenu from "@/components/navigation/EpisodeContextMenu.vue"
 import { episodePlaceholderImage } from "@/common"
 import { useLazyQuery } from "@vue/apollo-composable"
-import { formatDurationLocale } from "@/common"
+import { formatDurationLocale, formatPubDate } from "@/common"
 
 const props = defineProps<{
 	episode: PodcastEpisode | SearchPodcastEpisodeDoc
@@ -172,7 +172,10 @@ const addToPlaylist = () => {
 					:color="!like ? 'white' : 'primary'"
 				/>
 
-				<p class="opacity-50">{{ formatDurationLocale(episode.duration) }}</p>
+				<p class="opacity-50">
+					{{ formatPubDate(episode.pub_date) }} ·
+					{{ formatDurationLocale(episode.duration) }}
+				</p>
 			</div>
 		</div>
 	</Card>

@@ -2,6 +2,7 @@ import { createApp } from "vue"
 import { createPinia } from "pinia"
 import { Quasar, Notify, Dialog } from "quasar"
 import { createPersistedStatePlugin } from "pinia-plugin-persistedstate-2"
+
 import "@/common/validation"
 import VueGtag from "vue-gtag"
 import VueCountdown from "@chenfengyuan/vue-countdown"

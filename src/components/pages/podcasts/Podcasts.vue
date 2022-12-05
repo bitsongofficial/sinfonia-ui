@@ -1,52 +1,10 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router"
 import { useQuery } from "@vue/apollo-composable"
-import Title from "@/components/typography/Title.vue"
-import GQLPodcastCard from "@/components/cards/GQLPodcastCard.vue"
-import StandardButton from "@/components/buttons/StandardButton.vue"
 import Spinner from "@/components/Spinner"
-import { PodcastsPaginated } from "@/graphql"
+import { PodcastExplore } from "@/graphql"
+import PodcastsGrid from "./components/PodcastsGrid.vue"
 
-const { result, loading, fetchMore } = useQuery(PodcastsPaginated, {
-	first: 0,
-	after: "",
-	last: 20,
-	before: "",
-})
-
-const loadMore = () => {
-	if (!result.value) {
-		return
-	}
-
-	fetchMore({
-		variables: {
-			first: 0,
-			after: "",
-			last: 20,
-			before: result.value.podcasts.pageInfo.startCursor ?? "",
-		},
-		updateQuery: (previousResult, { fetchMoreResult }) => {
-			const newEdges = fetchMoreResult?.podcasts.edges ?? []
-			const pageInfo =
-				fetchMoreResult?.podcasts.pageInfo ?? previousResult.podcasts.pageInfo
-			const previousEdges = previousResult.podcasts.edges ?? []
-
-			return newEdges.length
-				? {
-						...previousResult,
-						podcasts: {
-							...previousResult.podcasts,
-							// Concat edges
-							edges: [...previousEdges, ...newEdges],
-							// Override with new pageInfo
-							pageInfo,
-						},
-				  }
-				: previousResult
-		},
-	})
-}
+const { result, loading } = useQuery(PodcastExplore)
 </script>
 
 <template>
@@ -54,43 +12,8 @@ const loadMore = () => {
 		<Spinner v-if="loading && !result" class="!w-50 !h-50 q-mx-auto" />
 
 		<template v-else>
-			<div class="column row-md align-items-end-md q-mb-42">
-				<Title>Top Podcasts</Title>
-			</div>
-
-			<q-virtual-scroll
-				class="virtual-grid q-mb-42"
-				v-if="result && result.podcasts.edges"
-				style="max-height: 100%"
-				:items="result.podcasts.edges"
-				separator
-				v-slot="{ item, index }"
-			>
-				<RouterLink
-					:key="index"
-					:to="`/podcast/${item.node._id}`"
-					class="block full-height"
-				>
-					<GQLPodcastCard :podcast="item.node" />
-				</RouterLink>
-			</q-virtual-scroll>
-
-			<Spinner v-if="loading && result" class="!w-50 !h-50 q-mx-auto" />
-
-			<div
-				class="flex w-full"
-				v-else-if="result?.podcasts.pageInfo.hasPreviousPage"
-			>
-				<StandardButton
-					:padding-x="30"
-					:padding-y="14"
-					fit
-					class="q-mx-auto"
-					:disabled="loading"
-					@click="loadMore"
-				>
-					Load More
-				</StandardButton>
+			<div class="q-mb-48" v-for="section of result?.podcastExplore.elements">
+				<PodcastsGrid :section="section" v-if="section" />
 			</div>
 
 			<!-- <div class="column row-md align-items-end-md q-mb-42">

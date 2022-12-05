@@ -62,6 +62,7 @@ specifiers:
   quasar: ^2.5.5
   rollup-plugin-node-polyfills: ^0.2.1
   sass: 1.32.0
+  swiper: ^8.4.5
   typescript: ^4.5.4
   vee-validate: ^4.5.11
   vite: ^2.8.0
@@ -119,6 +120,7 @@ dependencies:
   pinia: 2.0.11_5bgd5bbqiynntouprdo6x2bjeu
   pinia-plugin-persistedstate-2: 1.0.0_pinia@2.0.11
   protobufjs: 6.11.2
+  swiper: 8.4.5
   vee-validate: 4.5.11_vue@3.2.31
   vue: 3.2.31
   vue-filepond: 7.0.3_filepond@4.30.4+vue@3.2.31
@@ -4890,6 +4892,12 @@ packages:
       entities: 2.2.0
     dev: true
 
+  /dom7/4.0.4:
+    resolution: {integrity: sha512-DSSgBzQ4rJWQp1u6o+3FVwMNnT5bzQbMb+o31TjYYeRi05uAcpF8koxdfzeoe5ElzPmua7W7N28YJhF7iEKqIw==}
+    dependencies:
+      ssr-window: 4.0.2
+    dev: false
+
   /domelementtype/2.2.0:
     resolution: {integrity: sha512-DtBMo82pv1dFtUmHyr48beiuq792Sxohr+8Hm9zoxklYPfa6n0Z3Byjj2IV7bmr2IyqClnqEQhfgHJJ5QF0R5A==}
     dev: true
@@ -8672,6 +8680,10 @@ packages:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
     dev: false
 
+  /ssr-window/4.0.2:
+    resolution: {integrity: sha512-ISv/Ch+ig7SOtw7G2+qkwfVASzazUnvlDTwypdLoPoySv+6MqlOV10VwPSE6EWkGjhW50lUmghPmpYZXMu/+AQ==}
+    dev: false
+
   /stencil-wormhole/3.4.1:
     resolution: {integrity: sha512-ppYTcWTJnIl4ZAKwF39LTA9f/ypHfbVefsHdN2hpMQGrR57wt1TieZo9tlCM/r1Y4SFiZ5yz/cjho564C921Xw==}
     dev: false
@@ -8810,6 +8822,15 @@ packages:
     dependencies:
       tslib: 2.4.1
     dev: true
+
+  /swiper/8.4.5:
+    resolution: {integrity: sha512-zveyEFBBv4q1sVkbJHnuH4xCtarKieavJ4SxP0QEHvdpPLJRuD7j/Xg38IVVLbp7Db6qrPsLUePvxohYx39Agw==}
+    engines: {node: '>= 4.7.0'}
+    requiresBuild: true
+    dependencies:
+      dom7: 4.0.4
+      ssr-window: 4.0.2
+    dev: false
 
   /symbol-observable/2.0.3:
     resolution: {integrity: sha512-sQV7phh2WCYAn81oAkakC5qjq2Ml0g8ozqz03wOGnx9dDlG1de6yrF+0RAzSJD8fPUow3PTSMf2SAbOGxb93BA==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.com/symbol-observable/-/symbol-observable-2.0.3.tgz}

@@ -70,6 +70,7 @@ export const PodcastEpisodes = graphql(`
 					image
 					podcast_id
 					duration
+					pub_date
 				}
 			}
 		}
@@ -102,6 +103,7 @@ export const PodcastEpisode = graphql(`
 			image
 			podcast_id
 			duration
+			pub_date
 		}
 	}
 `)
@@ -172,6 +174,44 @@ export const PodcastEpisodeEnclosure = graphql(`
 			url
 			length
 			type
+		}
+	}
+`)
+
+export const PodcastExplore = graphql(`
+	query podcastExplore {
+		podcastExplore {
+			elements {
+				title
+				hasMore
+				viewMode
+				items {
+					_id
+					image
+					title
+					subtitle
+					link
+				}
+			}
+		}
+	}
+`)
+
+export const PodcastExploreSection = graphql(`
+	query podcastExploreSection($section: String!, $start: Int!) {
+		podcastExploreSection(section: $section, start: $start) {
+			elements {
+				title
+				hasMore
+				viewMode
+				items {
+					_id
+					image
+					title
+					subtitle
+					link
+				}
+			}
 		}
 	}
 `)

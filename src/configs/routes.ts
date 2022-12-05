@@ -165,6 +165,14 @@ const routes: RouteRecordRaw[] = [
 					title: "Create Podcast",
 				},
 			},
+			{
+				path: "section/:id",
+				name: "PodcastsSection",
+				component: () => import("@/components/pages/podcasts/PodcastsSection.vue"),
+				meta: {
+					title: "Section",
+				},
+			},
 		],
 	},
 	{
@@ -352,6 +360,10 @@ const router = createRouter({
 	scrollBehavior: function (to) {
 		if (to.hash.length > 0) {
 			return { el: to.hash }
+		}
+
+		if (to.query.start || to.query.s) {
+			return
 		}
 
 		const app = document.getElementById("app")
