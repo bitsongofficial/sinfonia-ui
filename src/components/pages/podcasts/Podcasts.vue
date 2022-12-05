@@ -17,7 +17,7 @@ const { result, loading } = useQuery(PodcastExplore)
 		<template v-else>
 			<div class="q-mb-48" v-for="section of result?.podcastExplore.elements">
 				<div
-					class="column row-md align-items-end-md justify-between q-mb-42 full-width"
+					class="column row-md align-items-end-md justify-between q-mt-20 q-mb-20 full-width"
 				>
 					<Title>{{ section?.title }}</Title>
 
