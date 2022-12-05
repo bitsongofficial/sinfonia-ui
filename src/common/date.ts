@@ -4,8 +4,13 @@ import {
 	compareAsc,
 	formatDistanceToNowStrict,
 } from "date-fns"
+import locale from "date-fns/locale/en-US"
 
 const defaultLockEndTime = new Date("0001-01-01T00:00:00Z")
+
+export const formatPubDate = (date: string | Date) => {
+	return format(new Date(date), "d MMM yyyy", { locale })
+}
 
 export const formatTimeLocate = (date: string | Date) => {
 	return format(new Date(date), "MMM d yyyy, HH:mm aaa")

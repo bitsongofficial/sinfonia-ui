@@ -11,7 +11,11 @@ import { useMetadata } from "@/hooks/useMetadata"
 import { useSinfoniaMediaPlayer } from "@/hooks/useSinfoniaMediaPlayer"
 import { useQuery, useLazyQuery } from "@vue/apollo-composable"
 import { PodcastEpisode, PodcastEpisodeEnclosure } from "@/graphql"
-import { episodePlaceholderImage, formatDurationLocale } from "@/common"
+import {
+	episodePlaceholderImage,
+	formatDurationLocale,
+	formatPubDate,
+} from "@/common"
 
 const route = useRoute()
 const settingsStore = useSettings()
@@ -200,6 +204,7 @@ useMetadata(metadata)
 						/>
 
 						<p class="fs-18 opacity-50">
+							{{ formatPubDate(result.podcastEpisode.pub_date) }} ·
 							{{ formatDurationLocale(result.podcastEpisode.duration) }}
 						</p>
 

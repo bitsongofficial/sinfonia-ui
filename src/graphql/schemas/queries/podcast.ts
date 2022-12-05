@@ -70,6 +70,7 @@ export const PodcastEpisodes = graphql(`
 					image
 					podcast_id
 					duration
+					pub_date
 				}
 			}
 		}
@@ -102,6 +103,7 @@ export const PodcastEpisode = graphql(`
 			image
 			podcast_id
 			duration
+			pub_date
 		}
 	}
 `)
