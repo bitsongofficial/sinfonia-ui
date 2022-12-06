@@ -51,7 +51,7 @@ const useAuth = defineStore("auth", {
 			if (window.keplr && this.bitsongAddress && configStore.bitsongToken) {
 				const payload = {
 					domain: import.meta.env.VITE_SINFONIA_GRAPHQL_API,
-					expire_at: Math.round(Date.now() / 1000) + 120, // seconds
+					expire_at: Math.round(Date.now() / 1000) + 3600, // seconds
 				}
 
 				const signedData = await window.keplr.signArbitrary(
