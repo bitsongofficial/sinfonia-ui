@@ -1,7 +1,6 @@
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { AccountData } from "@cosmjs/proto-signing"
-import { tokenToExperimentalSuggestChain, tokenToKeplrCoin } from "@/common"
-import { AppCurrency } from "@keplr-wallet/types"
+import { tokenToExperimentalSuggestChain } from "@/common"
 import useConfig from "@/store/config"
 
 export interface KeplrState {

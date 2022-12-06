@@ -215,3 +215,12 @@ export const PodcastExploreSection = graphql(`
 		}
 	}
 `)
+
+export const Me = graphql(`
+	query me {
+		me {
+			address
+			expire_at
+		}
+	}
+`)

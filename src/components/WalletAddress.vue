@@ -15,6 +15,10 @@ const fantoken = computed(() => route.name === "Fantoken")
 const { onCopy } = useClipboard()
 
 const keplrInstalled = window.keplr !== undefined
+
+const logout = () => {
+	authStore.$reset()
+}
 </script>
 <template>
 	<div
@@ -24,7 +28,10 @@ const keplrInstalled = window.keplr !== undefined
 			'!shadow-10 !bg-white-20': fantoken,
 		}"
 	>
-		<div class="q-mr-50">
+		<div
+			class="q-mr-50 cursor-pointer"
+			@click.stop="onCopy(authStore.bitsongAddress)"
+		>
 			<p class="text-primary-light text-uppercase text-caption fs-8 q-mb-3">
 				Address
 			</p>
@@ -36,12 +43,12 @@ const keplrInstalled = window.keplr !== undefined
 			</p>
 		</div>
 		<IconButton
-			icon="copy"
-			width="20"
-			height="20"
-			class="text-primary-light fs-16"
+			icon="log-out"
+			width="24"
+			height="24"
+			class="text-primary-light fs-18"
 			v-if="authStore.bitsongAddress"
-			@click.stop="onCopy(authStore.bitsongAddress)"
+			@click="logout"
 		/>
 	</div>
 	<div v-else>

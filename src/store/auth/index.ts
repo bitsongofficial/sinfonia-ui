@@ -8,12 +8,14 @@ import useBank from "@/store/bank"
 export interface AuthState {
 	loading: boolean
 	session?: Session
+	token?: string
 }
 
 const useAuth = defineStore("auth", {
 	state: (): AuthState => ({
 		loading: false,
 		session: undefined,
+		token: undefined,
 	}),
 	actions: {
 		async signIn() {
@@ -31,12 +33,44 @@ const useAuth = defineStore("auth", {
 					}
 
 					bankStore.loadBalances()
+
+					if (!this.token) {
+						await this.generateToken()
+					}
 				}
 			} catch (error) {
 				console.error(error)
 				throw error
 			} finally {
 				this.loading = false
+			}
+		},
+		async generateToken() {
+			const configStore = useConfig()
+
+			if (window.keplr && this.bitsongAddress && configStore.bitsongToken) {
+				const payload = {
+					domain: import.meta.env.VITE_SINFONIA_GRAPHQL_API,
+					expire_at: Math.round(Date.now() / 1000) + 120, // seconds
+				}
+
+				const signedData = await window.keplr.signArbitrary(
+					configStore.bitsongToken.chainID,
+					this.bitsongAddress,
+					JSON.stringify(payload)
+				)
+
+				const w3t = {
+					signer: this.bitsongAddress,
+					payload,
+					...signedData,
+				}
+
+				const token = window.btoa(JSON.stringify(w3t))
+
+				this.token = token
+
+				return token
 			}
 		},
 	},
@@ -70,6 +104,10 @@ const useAuth = defineStore("auth", {
 				}
 			}
 		},
+	},
+	persistedState: {
+		persist: true,
+		includePaths: ["loading", "session", "token"],
 	},
 })
 
