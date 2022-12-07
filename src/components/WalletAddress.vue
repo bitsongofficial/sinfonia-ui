@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { formatShortAddress } from "@/common"
+import ConnectModal from "@/components/modals/ConnectModal.vue"
 import IconButton from "@/components/buttons/IconButton.vue"
 import LargeButton from "@/components/buttons/LargeButton.vue"
 import useAuth from "@/store/auth"
 import useClipboard from "@/hooks/useClipboard"
-import { useRoute, useRouter } from "vue-router"
-import { computed } from "vue"
+import { useRoute } from "vue-router"
+import { computed, ref } from "vue"
 
 const authStore = useAuth()
 const route = useRoute()
+
+const openConnectDialog = ref(false)
 
 const fantoken = computed(() => route.name === "Fantoken")
 
@@ -48,7 +51,7 @@ const logout = () => {
 			height="24"
 			class="text-primary-light fs-18"
 			v-if="authStore.bitsongAddress"
-			@click="logout"
+			@click.stop="logout"
 		/>
 	</div>
 	<div v-else>
@@ -56,8 +59,11 @@ const logout = () => {
 			:disable="!keplrInstalled"
 			:padding-x="36"
 			fit
-			@click="authStore.signIn"
-			>Connect to Keplr</LargeButton
+			@click="openConnectDialog = true"
 		>
+			Connect to Keplr
+		</LargeButton>
+
+		<ConnectModal v-model="openConnectDialog" v-if="openConnectDialog" />
 	</div>
 </template>
