@@ -13,8 +13,8 @@ import LightTable from "@/components/LightTable.vue"
 import ImagePair from "@/components/ImagePair.vue"
 const poolsStore = usePools()
 
-const poolsViewType = ref("GRID")
-const myPoolsViewType = ref("GRID")
+const poolsViewType = ref("LIST")
+const myPoolsViewType = ref("LIST")
 
 const poolsViewTypes = [
 	{
