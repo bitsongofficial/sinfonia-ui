@@ -26,7 +26,7 @@ const useKeplr = defineStore("keplr", {
 				if (window.keplr) {
 					window.keplr.defaultOptions = {
 						sign: {
-							preferNoSetFee: true,
+							preferNoSetFee: false,
 						},
 					}
 
