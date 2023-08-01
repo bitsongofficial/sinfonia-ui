@@ -113,7 +113,6 @@ const fantokens = computed(() =>
 	configStore.fantokensRanking
 		.filter((fantoken) => {
 			const tags = fantoken.metadata?.tags ?? []
-
 			if (fantokensType.value === "all") {
 				return !tags.includes("discontinued")
 			}
