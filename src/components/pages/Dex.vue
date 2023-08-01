@@ -106,16 +106,17 @@ const tabs = [
 	{ name: "artist", label: "Artists" },
 	{ name: "label", label: "Labels" },
 	{ name: "magazine", label: "Magazines" },
+	{ name: "discontinued", label: "Discontinued" },
 ]
 
 const fantokens = computed(() =>
 	configStore.fantokensRanking
 		.filter((fantoken) => {
-			if (fantokensType.value === "all") {
-				return true
-			}
-
 			const tags = fantoken.metadata?.tags ?? []
+
+			if (fantokensType.value === "all") {
+				return !tags.includes("discontinued")
+			}
 
 			return tags.includes(fantokensType.value)
 		})
