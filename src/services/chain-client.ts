@@ -21,11 +21,11 @@ export default class ChainClient extends HttpClient {
 
 	public tx = async (txHash: string): Promise<Partial<DeliverTxResponse>> => {
 		try {
-			const response = await this.instance.get<{ txhash: string }>(`cosmos/tx/v1beta1/txs/${txHash}`)
+			const response = await this.instance.get<{ tx_response: { txhash: string } }>(`cosmos/tx/v1beta1/txs/${txHash}`)
 
 			if (response.status === 200) {
 				return {
-					transactionHash: response.data.txhash,
+					transactionHash: response.data.tx_response.txhash,
 					code: 200,
 				}
 			}
