@@ -21,7 +21,7 @@ export default class ChainClient extends HttpClient {
 
 	public tx = async (txHash: string): Promise<Partial<DeliverTxResponse>> => {
 		try {
-			const response = await this.instance.get<{ txhash: string }>(`txs/${txHash}`)
+			const response = await this.instance.get<{ txhash: string }>(`cosmos/tx/v1beta1/txs/${txHash}`)
 
 			if (response.status === 200) {
 				return {

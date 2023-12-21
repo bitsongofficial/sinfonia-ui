@@ -2,7 +2,7 @@
 	"vetur.validation.template": false,
 	"editor.formatOnSave": true,
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true
+		"source.fixAll.eslint": "explicit"
 	},
 	"editor.tabSize": 2,
 	"editor.insertSpaces": true,

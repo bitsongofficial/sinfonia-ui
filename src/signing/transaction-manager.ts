@@ -2,8 +2,10 @@ import { OsmosisRoute, SignerMessage, Token } from "@/types"
 import {
 	Coin,
 	coins,
+	GeneratedType,
 	OfflineDirectSigner,
 	OfflineSigner,
+	Registry,
 } from "@cosmjs/proto-signing"
 import { BigNumber } from "bignumber.js"
 import {
@@ -24,7 +26,7 @@ import {
 	SigningStargateClient,
 } from "@cosmjs/stargate"
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx"
-import { osmosis } from "osmojs"
+import { cosmosProtoRegistry, cosmwasmProtoRegistry, ibcProtoRegistry, osmosis, osmosisProtoRegistry } from "osmojs"
 import { bitsongRegistry } from "./registry"
 import { createBitsongAminoConverters } from "./amino-types"
 import SignerEventEmitter from "./events"
@@ -41,6 +43,9 @@ export class TransactionManager extends SignerEventEmitter {
 
 	private getNetworkFee = (transactionType: string) => {
 		const fees = this.network.fees
+
+		// TODO: Remove this once the fees are updated in osmosis
+		fees.default.gasEstimate = fees.default.gasEstimate * 4
 
 		if (transactionType) {
 			const fee = fees[transactionType]
@@ -267,10 +272,18 @@ export class TransactionManager extends SignerEventEmitter {
 				gas: transactionData.gasEstimate || "350000",
 			}
 
-			const registry = bitsongRegistry()
+			//const registry = bitsongRegistry()
 
-			osmosis.gamm.v1beta1.load(registry)
-			osmosis.lockup.load(registry)
+			//osmosis.gamm.v1beta1.load(registry)
+			//osmosis.lockup.load(registry)
+
+			const protoRegistry: ReadonlyArray<[string, GeneratedType]> = [
+				...cosmosProtoRegistry,
+				...cosmwasmProtoRegistry,
+				...ibcProtoRegistry,
+				...osmosisProtoRegistry
+			];
+			const registry = new Registry(protoRegistry);
 
 			const aminoTypes = new AminoTypes({
 				...createIbcAminoConverters(),
