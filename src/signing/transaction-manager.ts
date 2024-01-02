@@ -45,7 +45,7 @@ export class TransactionManager extends SignerEventEmitter {
 		const fees = this.network.fees
 
 		// TODO: Remove this once the fees are updated in osmosis
-		fees.default.gasEstimate = fees.default.gasEstimate * 4
+		// fees.default.gasEstimate = fees.default.gasEstimate * 4
 
 		if (transactionType) {
 			const fee = fees[transactionType]
