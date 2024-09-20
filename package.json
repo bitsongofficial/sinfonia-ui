@@ -13,7 +13,7 @@
 		"format": "prettier --ignore-path .prettierignore --write ."
 	},
 	"engines": {
-		"node": ">=18.12.0"
+		"node": ">=16.16.0"
 	},
 	"precommit": [
 		"type-check",
