@@ -2,7 +2,7 @@
 
 if [ "$CF_PAGES_BRANCH" == "main" ]; then
 
-  npm install -g pnpm && pnpm i && pnpm run build:mainnet
+  npm install -g pnpm@8.15.9 && pnpm i && pnpm run build:mainnet
 
 elif [ "$CF_PAGES_BRANCH" == "testnet" ]; then
 
