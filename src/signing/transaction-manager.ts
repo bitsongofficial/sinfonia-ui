@@ -272,11 +272,6 @@ export class TransactionManager extends SignerEventEmitter {
 				gas: transactionData.gasEstimate || "350000",
 			}
 
-			//const registry = bitsongRegistry()
-
-			//osmosis.gamm.v1beta1.load(registry)
-			//osmosis.lockup.load(registry)
-
 			const protoRegistry: ReadonlyArray<[string, GeneratedType]> = [
 				...cosmosProtoRegistry,
 				...cosmwasmProtoRegistry,

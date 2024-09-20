@@ -48,5 +48,5 @@ export default class ChainClient extends HttpClient {
 		)
 
 	public blocks = (block?: string) =>
-		this.instance.get<BlockResponse>(`blocks/${block ? block : "latest"}`)
+		this.instance.get<BlockResponse>(`cosmos/base/tendermint/v1beta1/blocks/${block ? block : "latest"}`)
 }

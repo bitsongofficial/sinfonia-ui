@@ -12,7 +12,7 @@ const { joinPool, exitPool, joinSwapExternAmountIn, swapExactAmountIn } =
 const { beginUnlocking, lockTokens } =
 	osmosis.lockup.MessageComposer.withTypeUrl
 
-export type messageTimestamp = string | number | Long.Long | undefined
+export type messageTimestamp = string | number | bigint | undefined
 
 export const SendIbcTokens = (
 	senderAddress: string,
@@ -24,7 +24,7 @@ export const SendIbcTokens = (
 	timeoutTimestamp?: number
 ): SignerMessage<MsgTransfer> => {
 	const timeoutTimestampNanoseconds: messageTimestamp = timeoutTimestamp
-		? Long.fromNumber(timeoutTimestamp).multiply(1_000_000_000)
+		? BigInt(timeoutTimestamp) * BigInt(1_000_000_000)
 		: undefined
 
 	return {
@@ -50,7 +50,7 @@ export const LockTokens = (
 	return lockTokens({
 		owner: senderAddress,
 		duration: {
-			seconds: Long.fromNumber(Math.floor(msgDuration / 1_000_000_000)),
+			seconds: BigInt(Math.floor(msgDuration / 1_000_000_000)),
 			nanos: msgDuration % 1_000_000_000,
 		},
 		coins,
@@ -63,7 +63,7 @@ export const BeginUnlocking = (
 ): SignerMessage<any> => {
 	return beginUnlocking({
 		owner: senderAddress,
-		ID: Long.fromString(id),
+		ID: BigInt(id),
 		coins: [],
 	})
 }
@@ -76,7 +76,7 @@ export const JoinPool = (
 ): SignerMessage<any> => {
 	return joinPool({
 		sender: senderAddress,
-		poolId: Long.fromString(poolId),
+		poolId: BigInt(poolId),
 		shareOutAmount,
 		tokenInMaxs,
 	})
@@ -90,7 +90,7 @@ export const JoinSwapExternAmountIn = (
 ): SignerMessage<any> => {
 	return joinSwapExternAmountIn({
 		sender: senderAddress,
-		poolId: Long.fromString(poolId),
+		poolId: BigInt(poolId),
 		tokenIn,
 		shareOutMinAmount,
 	})
@@ -104,7 +104,7 @@ export const ExitPool = (
 ): SignerMessage<any> => {
 	return exitPool({
 		sender: senderAddress,
-		poolId: Long.fromString(poolId),
+		poolId: BigInt(poolId),
 		shareInAmount,
 		tokenOutMins,
 	})
@@ -120,7 +120,7 @@ export const SwapExactAmountIn = (
 		sender: senderAddress,
 		routes: routes.map((route) => ({
 			...route,
-			poolId: Long.fromString(route.poolId),
+			poolId: BigInt(route.poolId),
 		})),
 		tokenIn,
 		tokenOutMinAmount,
