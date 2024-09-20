@@ -2,6 +2,7 @@ import { OsmosisRoute, SignerMessage, Token } from "@/types"
 import {
 	Coin,
 	coins,
+	decodeTxRaw,
 	GeneratedType,
 	OfflineDirectSigner,
 	OfflineSigner,
@@ -33,9 +34,10 @@ import SignerEventEmitter from "./events"
 
 export class TransactionManager extends SignerEventEmitter {
 	signer: OfflineSigner | OfflineDirectSigner
+	//signer: OfflineSigner
 	network: Token
 
-	constructor(signer: OfflineSigner | OfflineDirectSigner, network: Token) {
+	constructor(signer: OfflineSigner, network: Token) {
 		super()
 		this.signer = signer
 		this.network = network
@@ -271,11 +273,6 @@ export class TransactionManager extends SignerEventEmitter {
 				),
 				gas: transactionData.gasEstimate || "350000",
 			}
-
-			//const registry = bitsongRegistry()
-
-			//osmosis.gamm.v1beta1.load(registry)
-			//osmosis.lockup.load(registry)
 
 			const protoRegistry: ReadonlyArray<[string, GeneratedType]> = [
 				...cosmosProtoRegistry,

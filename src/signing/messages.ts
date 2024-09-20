@@ -1,10 +1,8 @@
 import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx"
-import { Height } from "cosmjs-types/ibc/core/client/v1/client"
 import { OsmosisRoute, SignerMessage } from "@/types"
 import { Coin } from "@cosmjs/proto-signing"
 import { MsgClaim as MerkleDropMsgClaim } from "./codec/bitsong/merkledrop/v1beta1/tx"
 import { osmosis } from "osmojs"
-import { Long } from "@osmonauts/helpers"
 
 const { joinPool, exitPool, joinSwapExternAmountIn, swapExactAmountIn } =
 	osmosis.gamm.v1beta1.MessageComposer.withTypeUrl
@@ -12,7 +10,7 @@ const { joinPool, exitPool, joinSwapExternAmountIn, swapExactAmountIn } =
 const { beginUnlocking, lockTokens } =
 	osmosis.lockup.MessageComposer.withTypeUrl
 
-export type messageTimestamp = string | number | Long.Long | undefined
+export type messageTimestamp = undefined | number | string | bigint
 
 export const SendIbcTokens = (
 	senderAddress: string,
@@ -20,11 +18,14 @@ export const SendIbcTokens = (
 	transferAmount: Coin,
 	sourcePort: string,
 	sourceChannel: string,
-	timeoutHeight?: Height,
+	timeoutHeight?: {
+		revisionNumber?: bigint | undefined;
+		revisionHeight?: bigint | undefined;
+	} | undefined,
 	timeoutTimestamp?: number
 ): SignerMessage<MsgTransfer> => {
 	const timeoutTimestampNanoseconds: messageTimestamp = timeoutTimestamp
-		? Long.fromNumber(timeoutTimestamp).multiply(1_000_000_000)
+		? BigInt(timeoutTimestamp) * BigInt(1_000_000_000)
 		: undefined
 
 	return {
@@ -35,6 +36,7 @@ export const SendIbcTokens = (
 			sender: senderAddress,
 			receiver: recipientAddress,
 			token: transferAmount,
+			timeoutHeight,
 			timeoutTimestamp: timeoutTimestampNanoseconds,
 		}),
 	}
@@ -50,7 +52,7 @@ export const LockTokens = (
 	return lockTokens({
 		owner: senderAddress,
 		duration: {
-			seconds: Long.fromNumber(Math.floor(msgDuration / 1_000_000_000)),
+			seconds: BigInt(Math.floor(msgDuration / 1_000_000_000)),
 			nanos: msgDuration % 1_000_000_000,
 		},
 		coins,
@@ -63,7 +65,7 @@ export const BeginUnlocking = (
 ): SignerMessage<any> => {
 	return beginUnlocking({
 		owner: senderAddress,
-		ID: Long.fromString(id),
+		ID: BigInt(id),
 		coins: [],
 	})
 }
@@ -76,7 +78,7 @@ export const JoinPool = (
 ): SignerMessage<any> => {
 	return joinPool({
 		sender: senderAddress,
-		poolId: Long.fromString(poolId),
+		poolId: BigInt(poolId),
 		shareOutAmount,
 		tokenInMaxs,
 	})
@@ -90,7 +92,7 @@ export const JoinSwapExternAmountIn = (
 ): SignerMessage<any> => {
 	return joinSwapExternAmountIn({
 		sender: senderAddress,
-		poolId: Long.fromString(poolId),
+		poolId: BigInt(poolId),
 		tokenIn,
 		shareOutMinAmount,
 	})
@@ -104,7 +106,7 @@ export const ExitPool = (
 ): SignerMessage<any> => {
 	return exitPool({
 		sender: senderAddress,
-		poolId: Long.fromString(poolId),
+		poolId: BigInt(poolId),
 		shareInAmount,
 		tokenOutMins,
 	})
@@ -120,7 +122,7 @@ export const SwapExactAmountIn = (
 		sender: senderAddress,
 		routes: routes.map((route) => ({
 			...route,
-			poolId: Long.fromString(route.poolId),
+			poolId: BigInt(route.poolId),
 		})),
 		tokenIn,
 		tokenOutMinAmount,

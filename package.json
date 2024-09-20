@@ -21,13 +21,12 @@
 	],
 	"dependencies": {
 		"@apollo/client": "^3.6.5",
-		"@bitsongjs/sdk": "^1.0.0-dev-14",
 		"@chenfengyuan/vue-countdown": "2",
-		"@cosmjs/amino": "^0.31.0",
-		"@cosmjs/encoding": "^0.31.0",
+		"@cosmjs/amino": "^0.32.4",
+		"@cosmjs/encoding": "^0.32.4",
 		"@cosmjs/launchpad": "^0.27.1",
-		"@cosmjs/proto-signing": "^0.31.0",
-		"@cosmjs/stargate": "^0.31.0",
+		"@cosmjs/proto-signing": "^0.32.4",
+		"@cosmjs/stargate": "^0.32.4",
 		"@osmonauts/helpers": "^0.6.0",
 		"@quasar/extras": "^1.12.5",
 		"@storipress/apollo-vue-devtool": "^0.0.4",
@@ -37,7 +36,7 @@
 		"axios": "^0.26.1",
 		"bech32": "^2.0.0",
 		"bignumber.js": "^9.0.2",
-		"cosmjs-types": "^0.4.1",
+		"cosmjs-types": "^0.9.0",
 		"date-fns": "^2.28.0",
 		"decimal.js": "^10.3.1",
 		"duration-fns": "^3.0.0",
@@ -46,10 +45,10 @@
 		"graphql-tag": "^2.12.6",
 		"lodash": "^4.17.21",
 		"long": "^5.2.0",
-		"osmojs": "^0.25.0",
+		"osmojs": "^16.2.0",
 		"path": "^0.12.7",
 		"pinia": "^2.0.11",
-		"pinia-plugin-persistedstate-2": "^1.0.0",
+		"pinia-plugin-persistedstate-2": "^2.0.24",
 		"protobufjs": "^6.11.2",
 		"vee-validate": "^4.5.11",
 		"vue": "^3.2.25",
@@ -60,7 +59,7 @@
 	},
 	"devDependencies": {
 		"@kelchy/pre-commit": "^1.2.4",
-		"@keplr-wallet/types": "^0.9.12",
+		"@keplr-wallet/types": "^0.12.128",
 		"@quasar/vite-plugin": "^1.0.5",
 		"@types/lodash": "^4.14.180",
 		"@typescript-eslint/eslint-plugin": "^5.16.0",
@@ -76,5 +75,6 @@
 		"vite-plugin-checker": "^0.4.4",
 		"vite-plugin-html-env": "^1.1.2",
 		"vue-tsc": "^0.29.8"
-	}
+	},
+	"packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }

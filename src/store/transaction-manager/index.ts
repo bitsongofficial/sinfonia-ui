@@ -527,7 +527,7 @@ const useTransactionManager = defineStore("transactionManager", {
 				const bitsongToken = configStore.bitsongToken
 
 				if (window.keplr && bitsongToken && authStore.bitsongAddress) {
-					const signer = await window.keplr.getOfflineSignerAuto(
+					const signer = await window.keplr.getOfflineSigner(
 						bitsongToken.chainID
 					)
 
@@ -756,7 +756,7 @@ const useTransactionManager = defineStore("transactionManager", {
 		},
 	},
 	persistedState: {
-		persist: true,
+		persist: false,
 		includePaths: ["transactions"],
 	},
 })
