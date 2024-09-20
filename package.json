@@ -19,6 +19,7 @@
 		"type-check",
 		"lint"
 	],
+	"packageManager": "pnpm@9.3.0",
 	"dependencies": {
 		"@apollo/client": "^3.6.5",
 		"@chenfengyuan/vue-countdown": "2",
