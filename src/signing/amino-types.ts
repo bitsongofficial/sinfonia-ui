@@ -28,7 +28,7 @@ export interface AminoMsgLockTokens {
 export interface MsgLockTokens {
 	owner: string // Owner
 	duration: {
-		seconds: Long
+		seconds: BigInt
 		nanos: number
 	} // Duration's unit is expected to be the second.
 	coins: Coin[]
@@ -91,7 +91,7 @@ export const createBitsongAminoConverters = (): AminoConverters => {
 			toAmino: ({ owner, duration, coins }: MsgLockTokens) => {
 				return {
 					owner,
-					duration: (duration.seconds.toInt() * 1_000_000_000).toString(),
+					duration: (Number(duration.seconds) * 1_000_000_000).toString(),
 					coins,
 				}
 			},
@@ -101,7 +101,7 @@ export const createBitsongAminoConverters = (): AminoConverters => {
 				return {
 					owner,
 					duration: {
-						seconds: Long.fromNumber(Math.floor(msgDuration / 1_000_000_000)),
+						seconds: BigInt(Math.floor(msgDuration / 1_000_000_000)),
 						nanos: msgDuration % 1_000_000_000,
 					},
 					coins,
