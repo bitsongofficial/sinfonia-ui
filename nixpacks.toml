@@ -1,0 +1,9 @@
+[phases.build]
+cmds = ['pnpm run build:mainnet']
+
+[start]
+cmd = 'pnpm preview --host --port=8174'
+
+[variables]
+NODE_ENV = 'production'
+NIXPACKS_NODE_VERSION = '22'
