@@ -44,7 +44,7 @@ export default class ChainClient extends HttpClient {
 
 	public supplyByDenom = (denom: string) =>
 		this.instance.get<ChainData<"amount", Coin>>(
-			`cosmos/bank/v1beta1/supply/${denom}`
+			`cosmos/bank/v1beta1/supply/by_denom?denom=${denom}`
 		)
 
 	public blocks = (block?: string) =>
